@@ -1,0 +1,112 @@
+package com.example.procesos2.Model;
+
+import com.example.procesos2.Config.Util.JsonAdmin;
+import com.example.procesos2.Config.sqlConect;
+import com.example.procesos2.Model.interfaz.Detalles;
+import com.example.procesos2.Model.tab.DetallesTab;
+import com.example.procesos2.Model.tab.IndexTab;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+public class iDetalles extends sqlConect implements Detalles {
+
+    public List<DetallesTab> D1 = new ArrayList<>();
+    Connection cn = null;
+    String path = null;
+    JsonAdmin  ja = null;
+
+    public String nombre = "Preguntas";
+
+    public  String all = "SELECT [Id_Detalle]\n" +
+                        "      ,[Id_proceso]\n" +
+                        "      ,[Codigo_Detalle]\n" +
+                        "      ,[Nombre_Detalle]\n" +
+                        "      ,[Tipo]\n" +
+                        "  FROM [dbo].[Procesos_Detalle]";
+
+    public iDetalles(String path) throws Exception{
+            this.cn = getConexion();
+            getPath(path);
+    }
+
+    public void getPath(String path){
+        ja = new JsonAdmin();
+        this.path = path;
+    }
+
+    @Override
+    public List<IndexTab> forDetalle(long id_proceso, String nom_proceso) throws Exception {
+        return null;
+    }
+
+    @Override
+    public boolean local(Long id_proceso) throws Exception {
+        return false;
+    }
+
+    @Override
+    public String insert(DetallesTab o) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String update(DetallesTab o, Long id) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String delete(Long id) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String limpiar(DetallesTab o) throws Exception {
+        return null;
+    }
+
+    @Override
+    public DetallesTab oneId(Long id) throws Exception {
+        return null;
+    }
+
+    @Override
+    public boolean local() throws Exception {
+        ResultSet rs;
+        PreparedStatement ps = cn.prepareStatement(all);
+        rs = ps.executeQuery();
+
+        while (rs.next()){
+            D1.add(gift(rs));
+        }
+
+        closeConexion(cn,rs);
+        String contenido = D1.toString();
+
+        return ja.WriteJson(path,nombre,contenido);
+    }
+
+    @Override
+    public List<DetallesTab> all() throws Exception {
+
+        Gson gson = new Gson();
+        D1 = gson.fromJson(ja.ObtenerLista(path,nombre),new TypeToken<List<DetallesTab>>(){
+        }.getType());
+
+        return D1;
+    }
+
+    private DetallesTab gift(ResultSet rs) throws Exception{
+        DetallesTab d = new DetallesTab();
+        d.setIdProceso(rs.getLong("Id_proceso"));
+        d.setCodDetalle(rs.getLong("Codigo_Detalle"));
+        d.setQuesDetalle(rs.getString("Nombre_Detalle").trim());
+        d.setTipoDetalle(rs.getString("Tipo").trim());
+        return d;
+    }
+}
