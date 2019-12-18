@@ -9,7 +9,8 @@ import android.widget.Toast;
 public class CheckedConexion {
 
     Context context;
-    private Activity mContex;
+
+
 
     ConnectivityManager cm;
     NetworkInfo ni;

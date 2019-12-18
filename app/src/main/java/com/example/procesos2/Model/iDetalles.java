@@ -28,7 +28,11 @@ public class iDetalles extends sqlConect implements Detalles {
                         "      ,[Codigo_Detalle]\n" +
                         "      ,[Nombre_Detalle]\n" +
                         "      ,[Tipo]\n" +
-                        "  FROM [dbo].[Procesos_Detalle]";
+                        "      ,[Lista_Desp]\n"+
+                        "      ,[Tipo_M]\n"+
+                        "      ,[Porcentaje]\n"+
+                        " FROM [dbo].[Procesos_Detalle]" +
+                        " ORDER BY [Id_Detalle] , [Codigo_Detalle]";
 
     public iDetalles(String path) throws Exception{
             this.cn = getConexion();
@@ -107,6 +111,9 @@ public class iDetalles extends sqlConect implements Detalles {
         d.setCodDetalle(rs.getLong("Codigo_Detalle"));
         d.setQuesDetalle(rs.getString("Nombre_Detalle").trim());
         d.setTipoDetalle(rs.getString("Tipo").trim());
+        d.setListaDesplegable(rs.getString("Lista_Desp"));
+        d.setTipoModulo(rs.getString("Tipo_M"));
+        d.setPorcentaje(rs.getFloat("Porcentaje"));
         return d;
     }
 }

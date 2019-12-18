@@ -1,35 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".genated"
     android:weightSum="10"
     android:orientation="vertical">
 
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:layout_weight="1"
-        android:padding="10sp">
+        android:layout_weight="0.5"
+        android:layout_gravity="center_vertical">
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/EncabTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#2980B9"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:paddingTop="5sp"/>
+
+    </LinearLayout>
 
     <LinearLayout
-        android:layout_weight="9"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:paddingTop="20sp"
-        android:padding="10sp">
+        android:layout_weight="3">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10sp"
             android:paddingTop="10sp">
+
+            <LinearLayout
+                android:id="@+id/LinearHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="5.5"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:padding="10sp">
+
+        <ScrollView
+            android:id="@+id/scrollForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="4sp">
 
             <LinearLayout
                 android:id="@+id/LinearCheck"
@@ -43,4 +73,68 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            >
+
+            <RelativeLayout
+                android:layout_weight="1"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:padding="5sp">
+
+                <Button
+                    android:id="@+id/guardar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#2980B9"
+                    android:onClick="registroJson"
+                    android:text="GUARDAR"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold">
+
+                </Button>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_weight="1"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:padding="5sp">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#16A085"
+                    android:text="ENVIAR"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:onClick="Enviar">
+
+                </Button>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:clickable="true"
+            app:backgroundTint="#E67E22"
+            app:layout_anchorGravity="top|end"
+            app:srcCompat="@drawable/strella"
+            android:layout_marginRight="10sp"/>
+
+    </LinearLayout>
+
 </LinearLayout>
+

@@ -43,14 +43,14 @@ public class Index extends AppCompatActivity {
 
         try {
             iIndex iI = new iIndex(path);
-            iI.nombre="procesos";
+            iI.nombre="Procesos";
 
             if(Cc.checkedConexionValidate(this)){
                 iI.local();
                 iP = iI.all();
                 CargaMenu();
             }else{
-                Toast.makeText(getApplicationContext(), "Por el momenta la app esta trabando con recursos internos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Por el momento la app esta trabando con recursos internos", Toast.LENGTH_LONG).show();
                 iP = iI.all();
                 CargaMenu();
             }
@@ -75,7 +75,7 @@ public class Index extends AppCompatActivity {
         for(int i=0;  i<iP.size(); i++){
             //creando boton dinamico
             ArrayList<check> lista =  new ArrayList<check>();
-            String nombreTrim = iP.get(i).getNomProceso().trim();
+            final String nombreTrim = iP.get(i).getNomProceso().trim();
 
             lista.add(new check(iP.get(i).getCodProceso().intValue(),nombreTrim));
 
@@ -90,8 +90,9 @@ public class Index extends AppCompatActivity {
                 btn.setId(c.codigo);
                 btn.setTextColor(Color.parseColor("#FDFEFE"));
                 btn.setTextSize(20);
-                btn.setBackgroundColor(Color.parseColor("#2980B9"));
+                btn.setBackgroundColor(Color.parseColor("#1ABC9C"));
                 btn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                btn.setHeight(100);
 
                 //agregando check dinamicos
                 linearCheck.addView(btn,layoutParams);
@@ -99,15 +100,14 @@ public class Index extends AppCompatActivity {
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         SharedPreferences.Editor edit = sp.edit();
                         edit.putInt("cod_proceso", view.getId());
+                        edit.putString("nom_proceso" ,nombreTrim);
+                        edit.putString("blanquear","");
                         edit.apply();
 
                         Intent intent = new Intent(getApplicationContext(),genated.class);
                         startActivity(intent);
-
-                        //Toast.makeText(getApplicationContext(),"cod \n"+view.getId(),Toast.LENGTH_SHORT).show();
                     }
                 });
             }

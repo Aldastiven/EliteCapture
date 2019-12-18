@@ -1,21 +1,16 @@
 package com.example.procesos2.Model;
 
 
-import android.content.Context;
-import android.widget.TableLayout;
-
 import com.example.procesos2.Config.Util.JsonAdmin;
 import com.example.procesos2.Config.sqlConect;
 import com.example.procesos2.Model.interfaz.index;
 import com.example.procesos2.Model.tab.IndexTab;
-import com.example.procesos2.Model.tab.procesosTap;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +22,7 @@ public class iIndex extends sqlConect implements index {
     String path = null;
     JsonAdmin ja = null;
 
-    public String nombre = "procesos";
+    public String nombre;
 
     final String one = "SELECT [codigo_proceso] ,[Nombre_proceso]\n" +
                         "  FROM [dbo].[Procesos]\n" +

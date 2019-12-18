@@ -6,19 +6,26 @@ public class DetallesTab {
     private Long codDetalle;
     private String quesDetalle;
     private String tipoDetalle;
+    private String listaDesplegable;
+    private String tipoModulo;
+    private Float porcentaje;
 
     //CONSTRUCTOR VACIO
     public DetallesTab() {
     }
 
     //CONSTRUCTOR CON PARAMETROS A USAR
-    public DetallesTab(Long idProceso, Long codDetalle, String quesDetalle, String tipoDetalle) {
+
+
+    public DetallesTab(Long idProceso, Long codDetalle, String quesDetalle, String tipoDetalle, String listaDesplegable, String tipoModulo, Float porcentaje) {
         this.idProceso = idProceso;
         this.codDetalle = codDetalle;
         this.quesDetalle = quesDetalle;
         this.tipoDetalle = tipoDetalle;
+        this.listaDesplegable = listaDesplegable;
+        this.tipoModulo = tipoModulo;
+        this.porcentaje = porcentaje;
     }
-
 
     //SG
     public Long getIdProceso() {
@@ -53,13 +60,40 @@ public class DetallesTab {
         this.tipoDetalle = tipoDetalle;
     }
 
+    public String getListaDesplegable() {
+        return listaDesplegable;
+    }
+
+    public void setListaDesplegable(String listaDesplegable) {
+        this.listaDesplegable = listaDesplegable;
+    }
+
+    public String getTipoModulo() {
+        return tipoModulo;
+    }
+
+    public void setTipoModulo(String tipoModulo) {
+        this.tipoModulo = tipoModulo;
+    }
+
+    public Float getPorcentaje() {
+        return porcentaje;
+    }
+
+    public void setPorcentaje(Float porcentaje) {
+        this.porcentaje = porcentaje;
+    }
+
     //JSON
     public String toString(){
         return"\n{" +
                 "\"idProceso\":"+idProceso+",\n"+
                 "\"codDetalle\":"+codDetalle+",\n"+
                 "\"quesDetalle\": \"" + quesDetalle + "\",\n" +
-                "\"tipoDetalle\": \"" +tipoDetalle+ "\"\n"+
+                "\"tipoDetalle\": \"" +tipoDetalle+ "\",\n"+
+                "\"listaDesplegable\": \"" +listaDesplegable+ "\",\n"+
+                "\"tipoModulo\": \"" +tipoModulo+ "\",\n"+
+                "\"porcentaje\": \"" +porcentaje+ "\"\n"+
                 "}";
     }
 }

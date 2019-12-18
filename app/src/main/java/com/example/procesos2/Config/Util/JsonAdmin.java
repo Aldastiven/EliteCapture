@@ -15,9 +15,10 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class JsonAdmin {
+    private int idtabla;
 
     //ESCRIBE DATOS EN EL JSON
-    public Boolean WriteJson(String path, String nombre, String contenido){
+    public Boolean WriteJson(String path, String nombre, String contenido) {
         boolean ok = false;
         try {
             FileOutputStream fos = null;
@@ -50,6 +51,31 @@ public class JsonAdmin {
 
         return jsonString;
 
+    }
+
+    public String JsonDes(String path, String nombre , int pos)     {
+        JsonParser parser = new JsonParser();
+        String f = path+nombre+".json";
+        try {
+            Object obj = parser.parse(new FileReader(f));
+            JsonArray jsonArray = (JsonArray) obj;
+
+            JsonObject objeto = jsonArray.get(pos).getAsJsonObject();
+            JsonArray datoJson = (JsonArray) objeto.get("respuestasTab");
+
+            for (int i=0; i<datoJson.size(); i++){
+                JsonObject objidRes = datoJson.get(i).getAsJsonObject();
+                String datoidRes = objidRes.get("idPregunta").toString();
+
+                JsonObject objRes = datoJson.get(i).getAsJsonObject();
+                String datoRes = objRes.get("Respuesta").toString();
+                return "ID : "+datoidRes+"\n RES "+datoRes;
+            }
+
+        }catch (Exception ex){
+            return "Exception al deserializar el json "+ex.toString();
+        }
+        return "";
     }
 
     public String EliminarLista(String path, String nombre) throws Exception {
@@ -86,6 +112,7 @@ public class JsonAdmin {
         }
         return msj;
     }
+
 
 
 }
