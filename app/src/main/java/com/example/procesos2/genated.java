@@ -36,7 +36,6 @@ import com.example.procesos2.Model.iRespuestas;
 import com.example.procesos2.Model.tab.DesplegableTab;
 import com.example.procesos2.Model.tab.DetallesTab;
 import com.example.procesos2.Model.tab.RespuestasTab;
-import com.example.procesos2.Tools.Dialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -1265,7 +1264,8 @@ public class genated extends AppCompatActivity {
 
             TextView tvv = new TextView(this);
             tvv.setText(msg);
-            tvv.setTextSize(40);
+            tvv.setTextSize(50);
+            tvv.setTextColor(Color.parseColor("#5DADE2"));
             tvv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
             linearLayout.addView(tvv);
@@ -1291,7 +1291,6 @@ public class genated extends AppCompatActivity {
         }
 
     }
-
 
     //elimina los controles dentro del linear del formulario
     public void eliminarHijos(){
@@ -1333,7 +1332,7 @@ public class genated extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    Dialog(SumarCalificacion().toString());
+                    Dialog(SumarCalificacion().toString()+"  /100");
                     //Toast.makeText(genated.this, ""+SumarCalificacion(), Toast.LENGTH_SHORT).show();
 
                     //Dialog dd = new Dialog();
