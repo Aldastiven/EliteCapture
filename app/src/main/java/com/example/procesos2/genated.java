@@ -114,8 +114,6 @@ public class genated extends AppCompatActivity {
                     iD.nombre = "Detalles";
                     iP = iD.all();
                 }
-                //ValidarTipoRespuesta();
-                //ButtonEnabled();
 
                 CrearHeader();
                 onckickBTNfloating();
@@ -1131,7 +1129,6 @@ public class genated extends AppCompatActivity {
         try {
 
             for(String i : al){
-                Toast.makeText(this, ""+i, Toast.LENGTH_SHORT).show();
                 String cadena[] = i.split("--");
                 RegisterRespuestas(cadena[0],Long.parseLong(cadena[1]),cadena[2],cadena[3]);
                 //Toast.makeText(this, ""+cadena[0]+"\n"+cadena[1]+"\n"+cadena[2]+"\n"+cadena[3], Toast.LENGTH_SHORT).show();
@@ -1191,6 +1188,7 @@ public class genated extends AppCompatActivity {
                                 rc.setIdProceso(rc.getIdProceso());
                                 rc.setIdPregunta(rc.getIdPregunta());
                                 rc.setRespuesta(rc.getRespuesta());
+                                rc.setPorcentaje(rc.getPorcentaje());
                                 rc.setTerminal(rc.getTerminal());
 
                                 irr.Record(rc);
