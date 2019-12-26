@@ -1,6 +1,7 @@
 package com.example.procesos2.Model.tab;
 
 public class DesplegableTab {
+    private String filtro;
     private String cod;
     private String Options;
 
@@ -9,12 +10,24 @@ public class DesplegableTab {
     }
 
     //CONSTRUCTOR
-    public DesplegableTab(String cod, String options) {
+
+    public DesplegableTab(String filtro, String cod, String options) {
+        this.filtro = filtro;
         this.cod = cod;
         Options = options;
     }
 
+
     //S&G
+
+
+    public String getFiltro() {
+        return filtro;
+    }
+
+    public void setFiltro(String filtro) {
+        this.filtro = filtro;
+    }
 
     public String getCod() {
         return cod;
@@ -35,6 +48,7 @@ public class DesplegableTab {
     @Override
     public String toString(){
         return "{\n" +
+                "\"filtro\":\""+ filtro +"\",\n"+
                 "\"cod\":\""+ cod +"\",\n"+
                 "\"Options\":\""+ Options +"\"\n"+
                 "}";

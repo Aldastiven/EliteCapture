@@ -21,14 +21,15 @@ public class iDesplegable extends sqlConect implements Desplegable {
 
     public String nombre = "Desplegables";
 
-    public String all= "SELECT [Codigo]\n" +
+    public String all= "SELECT [Filtro]\n" +
+                        "     ,[Codigo]\n" +
                         "     ,[Opcion]\n" +
                         "  FROM [dbo].[Desplegables]";
 
 
-    public String group= "SELECT [Codigo]\n" +
+    public String group= "SELECT [Filtro]\n" +
                         "  FROM [dbo].[Desplegables]\n" +
-                        "  Group by [Codigo]";
+                        "  Group by [Filtro]";
 
 
     public iDesplegable(String path) throws Exception{
@@ -117,10 +118,11 @@ public class iDesplegable extends sqlConect implements Desplegable {
         try {
             ResultSet rs;
             PreparedStatement ps = cn.prepareStatement("SELECT [id_Desplegable]\n" +
+                                                            "      ,[Filtro]\n" +
                                                             "      ,[Codigo]\n" +
                                                             "      ,[Opcion]\n" +
                                                             "  FROM [dbo].[Desplegables]\n" +
-                                                            "  WHERE [Codigo]='"+nombreD+"'");
+                                                            "  WHERE [Filtro]='"+nombreD+"'");
             rs = ps.executeQuery();
             while (rs.next()) {
                 DT.add(gift(rs));
@@ -146,6 +148,7 @@ public class iDesplegable extends sqlConect implements Desplegable {
 
     public DesplegableTab gift(ResultSet rs) throws Exception{
         DesplegableTab d = new DesplegableTab();
+        d.setFiltro(rs.getString("Filtro"));
         d.setCod(rs.getString("Codigo"));
         d.setOptions(rs.getString("Opcion"));
         return d;

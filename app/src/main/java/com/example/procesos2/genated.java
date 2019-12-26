@@ -17,6 +17,7 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -155,6 +156,7 @@ public class genated extends AppCompatActivity {
                 String tipo4 = "ETN"; //EDITTEXT NUMERICO
                 String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
                 String tipo6 = "CBX"; //SPINNER
+                String tipo7 = "FIL"; //FLITROS JSON
 
                 if (d.getTipoDetalle().equals(tipo3) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
                     Long id = d.getCodDetalle();
@@ -184,6 +186,14 @@ public class genated extends AppCompatActivity {
                     Float porcentaje = d.getPorcentaje();
                     CrearSpinner(modulo, id, pregunta, desplegable, porcentaje);
 
+                }else if (d.getTipoDetalle().equals(tipo7) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
+                    Long id = d.getCodDetalle();
+                    String pregunta = d.getQuesDetalle();
+                    String modulo = d.getTipoModulo();
+                    String desplegable = d.getListaDesplegable();
+                    Float porcen = d.getPorcentaje();
+
+                    CrearFiltro(modulo, id, pregunta, desplegable);
                 }
             }
         }catch (Exception exception){
@@ -205,6 +215,7 @@ public class genated extends AppCompatActivity {
             String tipo4 = "ETN"; //EDITTEXT NUMERICO
             String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
             String tipo6 = "CBX"; //SPINNER
+
 
             if (d.getTipoDetalle().equals(tipo1) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
                 Long id = d.getCodDetalle();
@@ -464,6 +475,7 @@ public class genated extends AppCompatActivity {
 
                 list.add(new SPINNER(id.intValue(), pregunta, iP.get(i).getTipoDetalle(),desplegable, pocentaje));
 
+
                 for (SPINNER spi : list) {
                     LinearLayout.LayoutParams llparams = new
                             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -491,7 +503,7 @@ public class genated extends AppCompatActivity {
                     ArrayList<String> OptionArray = new ArrayList<>(200);
                     OptionArray.add("selecciona");
                     for(DesplegableTab ds : iDES.all()){
-                        if(ds.getCod().equals(spi.desplegable)){
+                        if(ds.getFiltro().equals(spi.desplegable)){
                             OptionArray.add(ds.getOptions());
                         }else {}
                     }
@@ -537,7 +549,7 @@ public class genated extends AppCompatActivity {
         }catch (Exception ex){
             Toast.makeText(this,"Se genero un exception \n " +
                     "al crear el tipo de respuesta \n" +
-                    "en el metodo SPINNER",Toast.LENGTH_LONG).show();
+                    "en el metodo SPINNER \n \n"+ex.toString(),Toast.LENGTH_LONG).show();
         }
     }
 
@@ -557,6 +569,119 @@ public class genated extends AppCompatActivity {
         LLprincipal.addView(v2);
 
         return LLprincipal;
+    }
+
+    public void CrearFiltro(final String modulo, Long id, String pregunta , final String desplegable){
+        try{
+
+
+            for(int i = 0; i<1; i++){
+                ArrayList<FILTRO> lista = new ArrayList<>();
+                lista.add(new FILTRO(id.intValue(), pregunta, desplegable ));
+
+                for(final FILTRO fl : lista){
+
+                    final TextView tv = new TextView(getApplicationContext());
+                    tv.setId(id.intValue());
+                    tv.setText("Resultados :");
+                    tv.setTextColor(Color.parseColor("#979A9A"));
+                    tv.setPadding(5,5,5,5);
+                    tv.setBackgroundColor(Color.parseColor("#ffffff"));
+                    tv.setTypeface(null, Typeface.BOLD);
+
+                    LinearLayout.LayoutParams llparamsPrincipal = new
+                            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+
+                    LinearLayout LLprincipal = new LinearLayout(getApplicationContext());
+                    LLprincipal.setLayoutParams(llparamsPrincipal);
+                    LLprincipal.setWeightSum(2);
+                    LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
+                    LLprincipal.setPadding(5,5,5,5);
+                    LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
+
+                    LinearLayout.LayoutParams llparamsTXT1 =new
+                            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+
+                    llparamsTXT1.weight =(float) 0.5;
+                    llparamsTXT1.setMargins(5,10,5,5);
+
+                    final EditText edt = new EditText(getApplicationContext());
+                    edt.setHint(""+fl.pregunta);
+                    edt.setHintTextColor(Color.parseColor("#626567"));
+                    edt.setBackgroundColor(Color.parseColor("#ffffff"));
+                    edt.setTextColor(Color.parseColor("#1C2833"));
+                    edt.setLayoutParams(llparamsTXT1);
+                    edt.setTypeface(null, Typeface.BOLD);
+                    edt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    edt.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+                    LinearLayout.LayoutParams llparamsBtn =new
+                            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+
+                    llparamsBtn.weight =(float) 1.5;
+                    llparamsBtn.setMargins(5,10,5,5);
+
+
+                    final Button btn = new Button(getApplicationContext());
+                    btn.setBackgroundColor(Color.TRANSPARENT);
+                    btn.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.lupa,0);
+                    btn.setPadding(10,10,10,10);
+                    btn.setLayoutParams(llparamsBtn);
+
+                    LLprincipal.addView(edt);
+                    LLprincipal.addView(btn);
+
+                    linearHeader.addView(tv);
+                    linearHeader.addView(LLprincipal);
+
+                    final String quest = String.valueOf(tv.getId());
+                    al.add(modulo +"--"+quest+"--"+"NULL"+"--0");
+
+                    CheckedConexion Cc = new CheckedConexion();
+
+                    final iDesplegable iDES = new iDesplegable(path);
+                    iDES.nombre = desplegable;
+
+                    if (Cc.checkedConexionValidate(this)){
+                        iDES.traerDesplegable(desplegable);
+                    }
+                    iDES.all();
+
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            try {
+
+                                for (DesplegableTab ds : iDES.all()) {
+                                    try {
+                                        if (ds.getCod().equals(valueOf(edt.getText()))) {
+                                            tv.setText("Resultado :    "+ds.getOptions());
+                                            tv.setTextColor(Color.parseColor("#2ECC71"));
+
+
+                                            String[] dato = tv.getText().toString().split(":");
+
+                                            String alData = modulo+"--"+quest+"--"+dato[1].trim();
+                                            al.set((tv.getId())-1,alData+"--0");
+                                        } else {
+                                            //Toast.makeText(genated.this, "no se encontraron resultados", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }catch (Exception ex){
+                                        Toast.makeText(genated.this, "Exception en resultado \n \n"+ex.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }catch (Exception ex){
+                                Toast.makeText(genated.this, "Exeption al filtrar \n \n"+ex.toString(), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+
+                }
+            }
+        }catch (Exception ex) {
+            Toast.makeText(this, "Exception al crear el filtro \n \n"+ex.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -758,7 +883,7 @@ public class genated extends AppCompatActivity {
                     iDES.all();
                     ArrayList<String> OptionArray = new ArrayList<>(200);
                     for(DesplegableTab ds : iDES.all()){
-                        if(ds.getCod().equals(desplegable)){
+                        if(ds.getFiltro().equals(desplegable)){
                             OptionArray.add(ds.getOptions());
                         }else {}
                     }
@@ -839,7 +964,7 @@ public class genated extends AppCompatActivity {
         }catch (Exception ex){
             Toast.makeText(this,"Se genero un exception \n " +
                     "al crear el tipo de respuesta \n" +
-                    "en el metodo SPINNER",Toast.LENGTH_LONG).show();
+                    "en el metodo SPINNER \n \n"+ex.toString(),Toast.LENGTH_LONG).show();
         }
     }
 
@@ -1118,8 +1243,6 @@ public class genated extends AppCompatActivity {
         }
      }
 
-     public void CrearFiltro(){
-     }
 
 
 
@@ -1129,6 +1252,7 @@ public class genated extends AppCompatActivity {
         try {
 
             for(String i : al){
+
                 String cadena[] = i.split("--");
                 RegisterRespuestas(cadena[0],Long.parseLong(cadena[1]),cadena[2],cadena[3]);
                 //Toast.makeText(this, ""+cadena[0]+"\n"+cadena[1]+"\n"+cadena[2]+"\n"+cadena[3], Toast.LENGTH_SHORT).show();
