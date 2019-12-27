@@ -613,7 +613,7 @@ public class genated extends AppCompatActivity {
                     edt.setLayoutParams(llparamsTXT1);
                     edt.setTypeface(null, Typeface.BOLD);
                     edt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    edt.setImeOptions(EditorInfo.IME_ACTION_DONE);
+                    edt.setRawInputType (Configuration.KEYBOARD_QWERTY);
 
                     LinearLayout.LayoutParams llparamsBtn =new
                             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
@@ -652,6 +652,8 @@ public class genated extends AppCompatActivity {
                         public void onClick(View view) {
                             try {
 
+                                KeyDown(edt);
+
                                 for (DesplegableTab ds : iDES.all()) {
                                     try {
                                         if (ds.getCod().equals(valueOf(edt.getText()))) {
@@ -663,6 +665,9 @@ public class genated extends AppCompatActivity {
 
                                             String alData = modulo+"--"+quest+"--"+dato[1].trim();
                                             al.set((tv.getId())-1,alData+"--0");
+
+
+
                                         } else {
                                             //Toast.makeText(genated.this, "no se encontraron resultados", Toast.LENGTH_SHORT).show();
                                         }
@@ -682,6 +687,13 @@ public class genated extends AppCompatActivity {
         }catch (Exception ex) {
             Toast.makeText(this, "Exception al crear el filtro \n \n"+ex.toString(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //BAJAR TECLADO
+
+    public void KeyDown(EditText et){
+        InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
 
 
@@ -891,8 +903,11 @@ public class genated extends AppCompatActivity {
                     final Spinner spinner = new Spinner(getApplicationContext());
                     spinner.setId(id.intValue());
 
+
+
                     ArrayAdapter<String> spinnerArray = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_personal, OptionArray);
                     spinner.setAdapter(spinnerArray);
+                    spinner.setSelection(1);
                     spinner.setLayoutParams(llparams);
 
                     linearPrinc.addView(llpregunta);
