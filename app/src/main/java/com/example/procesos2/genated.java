@@ -666,8 +666,6 @@ public class genated extends AppCompatActivity {
                                             String alData = modulo+"--"+quest+"--"+dato[1].trim();
                                             al.set((tv.getId())-1,alData+"--0");
 
-
-
                                         } else {
                                             //Toast.makeText(genated.this, "no se encontraron resultados", Toast.LENGTH_SHORT).show();
                                         }
