@@ -23,7 +23,7 @@ public class iDetalles extends sqlConect implements Detalles {
 
     public String nombre = "Preguntas";
 
-    public  String all = "SELECT [Id_Detalle]\n" +
+    public  String all = "SELECT [id_detalle]\n" +
                         "      ,[Id_proceso]\n" +
                         "      ,[Codigo_Detalle]\n" +
                         "      ,[Nombre_Detalle]\n" +
@@ -107,6 +107,7 @@ public class iDetalles extends sqlConect implements Detalles {
 
     private DetallesTab gift(ResultSet rs) throws Exception{
         DetallesTab d = new DetallesTab();
+        d.setIdConsecutivo((long) rs.getInt("id_detalle"));
         d.setIdProceso(rs.getLong("Id_proceso"));
         d.setCodDetalle(rs.getLong("Codigo_Detalle"));
         d.setQuesDetalle(rs.getString("Nombre_Detalle").trim());

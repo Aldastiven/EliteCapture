@@ -19,17 +19,7 @@ public class iDesplegable extends sqlConect implements Desplegable {
     String path = null;
     JsonAdmin ja = null;
 
-    public String nombre = "Desplegables";
-
-    public String all= "SELECT [Filtro]\n" +
-                        "     ,[Codigo]\n" +
-                        "     ,[Opcion]\n" +
-                        "  FROM [dbo].[Desplegables]";
-
-
-    public String group= "SELECT [Filtro]\n" +
-                        "  FROM [dbo].[Desplegables]\n" +
-                        "  Group by [Filtro]";
+    public String nombre = "";
 
 
     public iDesplegable(String path) throws Exception{
@@ -80,7 +70,10 @@ public class iDesplegable extends sqlConect implements Desplegable {
     @Override
     public boolean local() throws Exception {
         ResultSet rs;
-        PreparedStatement ps = cn.prepareStatement(all);
+        PreparedStatement ps = cn.prepareStatement("SELECT [Filtro]\n" +
+                                                        ",[Codigo]\n" +
+                                                        ",[Opcion]\n" +
+                                                        "FROM [dbo].[Desplegables]");
         rs = ps.executeQuery();
 
         while (rs.next()){
@@ -98,14 +91,18 @@ public class iDesplegable extends sqlConect implements Desplegable {
         List<String> nombresdesp = new ArrayList<>();
         try {
             ResultSet rs;
-            PreparedStatement ps = cn.prepareStatement(group);
+            PreparedStatement ps = cn.prepareStatement("SELECT [Filtro]\n" +
+                                                            "FROM [dbo].[Desplegables]\n" +
+                                                            "Group by [Filtro]");
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                nombresdesp.add(rs.getString("Codigo"));
+                nombresdesp.add(rs.getString("Filtro"));
             }
 
-            return nombresdesp.toString();
+            //return nombresdesp.toString();
+            return  nombresdesp.toString();
+
         }catch (Exception EX){
             return nombresdesp.toString()+"\n"+EX;
         }
@@ -117,8 +114,8 @@ public class iDesplegable extends sqlConect implements Desplegable {
         //DT.clear();
         try {
             ResultSet rs;
-            PreparedStatement ps = cn.prepareStatement("SELECT [id_Desplegable]\n" +
-                                                            "      ,[Filtro]\n" +
+            PreparedStatement ps = cn.prepareStatement("SELECT \n" +
+                                                            "      [Filtro]\n" +
                                                             "      ,[Codigo]\n" +
                                                             "      ,[Opcion]\n" +
                                                             "  FROM [dbo].[Desplegables]\n" +

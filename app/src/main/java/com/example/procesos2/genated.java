@@ -105,7 +105,7 @@ public class genated extends AppCompatActivity {
 
 
                 iDetalles iD = new iDetalles(path);
-                iDesplegable iDES = new iDesplegable(path);
+
 
                 if(Cc.checkedConexionValidate(this)){
                     iD.nombre = "Detalles";
@@ -139,6 +139,7 @@ public class genated extends AppCompatActivity {
 
             String desp=id.group();
 
+
         }catch (Exception ex){
             Toast.makeText(this, "Error al cargar planos "+ex, Toast.LENGTH_SHORT).show();
         }
@@ -159,41 +160,47 @@ public class genated extends AppCompatActivity {
                 String tipo7 = "FIL"; //FLITROS JSON
 
                 if (d.getTipoDetalle().equals(tipo3) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
+                    Long idCons = d.getIdConsecutivo();
                     Long id = d.getCodDetalle();
                     String pregunta = d.getQuesDetalle();
                     String modulo = d.getTipoModulo();
-                    CrearTextViewFecha(modulo, id, pregunta);
+                    CrearTextViewFecha(idCons, modulo, id, pregunta);
 
 
                 } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
+                    Long idCons = d.getIdConsecutivo();
                     Long id = d.getCodDetalle();
                     String pregunta = d.getQuesDetalle();
                     String modulo = d.getTipoModulo();
-                    CrearEditTextNumeric(modulo, id, pregunta);
+                    CrearEditTextNumeric(idCons,modulo, id, pregunta);
 
 
                 } else if (d.getTipoDetalle().equals(tipo5) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
+                    Long idCons = d.getIdConsecutivo();
                     Long id = d.getCodDetalle();
                     String pregunta = d.getQuesDetalle();
                     String modulo = d.getTipoModulo();
-                    CrearEditTextAlfanumeric(modulo, id, pregunta);
+                    CrearEditTextAlfanumeric(idCons, modulo, id, pregunta);
 
                 } else if (d.getTipoDetalle().equals(tipo6) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
+                    Long idCons = d.getIdConsecutivo();
                     Long id = d.getCodDetalle();
                     String pregunta = d.getQuesDetalle();
                     String modulo = d.getTipoModulo();
                     String desplegable = d.getListaDesplegable();
                     Float porcentaje = d.getPorcentaje();
-                    CrearSpinner(modulo, id, pregunta, desplegable, porcentaje);
+                    CrearSpinner(idCons,modulo, id, pregunta, desplegable, porcentaje);
 
                 }else if (d.getTipoDetalle().equals(tipo7) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
+                    Long idCons = d.getIdConsecutivo();
+                    Toast.makeText(this,"id \n"+idCons,Toast.LENGTH_LONG).show();
                     Long id = d.getCodDetalle();
                     String pregunta = d.getQuesDetalle();
                     String modulo = d.getTipoModulo();
                     String desplegable = d.getListaDesplegable();
                     Float porcen = d.getPorcentaje();
 
-                    CrearFiltro(modulo, id, pregunta, desplegable);
+                    CrearFiltro(idCons,modulo, id, pregunta, desplegable);
                 }
             }
         }catch (Exception exception){
@@ -218,37 +225,42 @@ public class genated extends AppCompatActivity {
 
 
             if (d.getTipoDetalle().equals(tipo1) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
+                Long idCons = d.getIdConsecutivo();
                 Long id = d.getCodDetalle();
                 String pregunta = d.getQuesDetalle();
                 String modulo = d.getTipoModulo();
                 Float porce = d.getPorcentaje();
-                CrearSumRes(modulo, id, pregunta, porce);
+                CrearSumRes(idCons,modulo, id, pregunta, porce);
 
             } else if (d.getTipoDetalle().equals(tipo2) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
+                Long idCons = d.getIdConsecutivo();
                 Long id = d.getCodDetalle();
                 String pregunta = d.getQuesDetalle();
                 String modulo = d.getTipoModulo();
-                CrearSwicht(modulo, id, pregunta);
+                CrearSwicht(idCons,modulo, id, pregunta);
 
             } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
+                Long idCons = d.getIdConsecutivo();
                 Long id = d.getCodDetalle();
                 String pregunta = d.getQuesDetalle();
                 String modulo = d.getTipoModulo();
-                CrearEditTextNumericQ(modulo, id, pregunta);
+                CrearEditTextNumericQ(idCons,modulo, id, pregunta);
 
             } else if (d.getTipoDetalle().equals(tipo5) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
+                Long idCons = d.getIdConsecutivo();
                 Long id = d.getCodDetalle();
                 String pregunta = d.getQuesDetalle();
                 String modulo = d.getTipoModulo();
-                CrearEditTextAlfaQ(modulo, id, pregunta);
+                CrearEditTextAlfaQ(idCons,modulo, id, pregunta);
 
             } else if (d.getTipoDetalle().equals(tipo6) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
+                Long idCons = d.getIdConsecutivo();
                 Long id = d.getCodDetalle();
                 String pregunta = d.getQuesDetalle();
                 String modulo = d.getTipoModulo();
                 String desplegable = d.getListaDesplegable();
                 Float porcen = d.getPorcentaje();
-                CrearEditTextSpinnerQ(modulo, id, pregunta, desplegable, porcen);
+                CrearEditTextSpinnerQ(idCons,modulo, id, pregunta, desplegable, porcen);
 
             }
         }
@@ -283,7 +295,7 @@ public class genated extends AppCompatActivity {
 
     //ENCABEZADO
 
-    public String CrearTextViewFecha(String modulo, Long id, String pregunta){
+    public String CrearTextViewFecha(Long idcons, String modulo, Long id, String pregunta){
 
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
@@ -291,7 +303,7 @@ public class genated extends AppCompatActivity {
 
         for(int i=0; i<1; i++){
             ArrayList<TVF> lista = new ArrayList<>();
-            lista.add(new TVF(id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
+            lista.add(new TVF(idcons, id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
 
             for(TVF tv: lista){
 
@@ -325,19 +337,19 @@ public class genated extends AppCompatActivity {
                 String quest = String.valueOf(tvp.getId());
                 String respuesta = tvr.getText().toString();
 
-                al.add(modulo +"--"+quest+"--"+respuesta+"--0");
+                al.add(idcons+"--"+modulo +"--"+quest+"--"+respuesta+"--0");
 
-                String alData = modulo+"--"+quest+"--"+respuesta+"--0";
+                String alData = idcons+"--"+modulo+"--"+quest+"--"+respuesta+"--0";
                 al.set((tvp.getId())-1,alData);
             }
         }
         return null;
     }
 
-    public void CrearEditTextNumeric(final String modulo, final Long id, String pregunta){
+    public void CrearEditTextNumeric(final Long idcons,final String modulo, final Long id, String pregunta){
         for(int i=0; i<1; i++){
             ArrayList<ET> lista = new ArrayList<>();
-            lista.add(new ET(id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
+            lista.add(new ET(idcons ,id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
 
             for (ET et : lista){
 
@@ -373,7 +385,7 @@ public class genated extends AppCompatActivity {
 
                 final String quest = String.valueOf(tvp.getId());
                 final String resp = etxtN.getHint().toString();
-                al.add(modulo +"--"+quest+"--"+resp+"--0");
+                al.add(idcons+"--"+modulo +"--"+quest+"--"+resp+"--0");
 
 
                 etxtN.addTextChangedListener(new TextWatcher() {
@@ -383,7 +395,7 @@ public class genated extends AppCompatActivity {
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        String alData = modulo+"--"+quest+"--"+charSequence+"--0";
+                        String alData = idcons+"--"+modulo+"--"+quest+"--"+charSequence+"--0";
 
                         al.set((tvp.getId())-1,alData);
 
@@ -404,10 +416,10 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    public void CrearEditTextAlfanumeric(final String modulo, Long id, String pregunta){
+    public void CrearEditTextAlfanumeric(final Long idcons, final String modulo, Long id, String pregunta){
         for(int i=0; i<1; i++){
             ArrayList<ET> lista = new ArrayList<>();
-            lista.add(new ET(id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
+            lista.add(new ET(idcons,id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
 
             for (ET et : lista){
 
@@ -442,19 +454,19 @@ public class genated extends AppCompatActivity {
 
                 final String quest = String.valueOf(tvp.getId());
                 String resp = etxtA.getHint().toString();
-                al.add(modulo +"--"+quest+"--"+resp+"--0");
+                al.add(idcons+"--"+modulo +"--"+quest+"--"+resp+"--0");
 
                 etxtA.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                         charSequence = " ";
-                        String alData = modulo+"--"+quest+"--"+charSequence+"--0";
+                        String alData = idcons+"--"+modulo+"--"+quest+"--"+charSequence+"--0";
                         al.set((tvp.getId())-1,alData);
                     }
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        String alData = modulo+"--"+quest+"--"+charSequence+"--0";
+                        String alData = idcons+"--"+modulo+"--"+quest+"--"+charSequence+"--0";
 
                         al.set((tvp.getId())-1,alData);
                     }
@@ -468,12 +480,12 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    public void CrearSpinner(final String modulo, Long id, String pregunta, String desplegable, Float pocentaje){
+    public void CrearSpinner(final Long idcons, final String modulo, Long id, String pregunta, String desplegable, Float pocentaje){
         try {
             for (int i = 0; i < 1; i++) {
                 ArrayList<SPINNER> list = new ArrayList<>();
 
-                list.add(new SPINNER(id.intValue(), pregunta, iP.get(i).getTipoDetalle(),desplegable, pocentaje));
+                list.add(new SPINNER(idcons, id.intValue(), pregunta, iP.get(i).getTipoDetalle(),desplegable, pocentaje));
 
 
                 for (SPINNER spi : list) {
@@ -497,7 +509,7 @@ public class genated extends AppCompatActivity {
                     iDES.nombre = desplegable;
 
                     if (Cc.checkedConexionValidate(this)){
-                        iDES.traerDesplegable(desplegable);
+                        Toast.makeText(this,""+iDES.group(),Toast.LENGTH_LONG).show();
                     }
                     iDES.all();
                     ArrayList<String> OptionArray = new ArrayList<>(200);
@@ -527,7 +539,7 @@ public class genated extends AppCompatActivity {
                                     if (!seleccionado.equals("Selecciona")) {
                                         int idd=(spinner.getId())-1;
                                         String quest = String.valueOf(spinner.getId());
-                                        al.set(idd,modulo +"--"+quest+"--"+seleccionado+"--0");
+                                        al.set(idd,idcons+"--"+modulo +"--"+quest+"--"+seleccionado+"--0");
                                     } else {
                                     }
                                 }catch (Exception ex){
@@ -541,7 +553,7 @@ public class genated extends AppCompatActivity {
 
                     String quest = String.valueOf(spinner.getId());
                     String respuesta = "Selecciona";
-                    al.add(modulo +"--"+quest+"--"+respuesta+"--0");
+                    al.add(idcons+"--"+modulo +"--"+quest+"--"+respuesta+"--0");
 
 
                 }
@@ -571,13 +583,13 @@ public class genated extends AppCompatActivity {
         return LLprincipal;
     }
 
-    public void CrearFiltro(final String modulo, Long id, String pregunta , final String desplegable){
+    public void CrearFiltro(final Long idcons, final String modulo, Long id, String pregunta , final String desplegable){
         try{
 
 
             for(int i = 0; i<1; i++){
                 ArrayList<FILTRO> lista = new ArrayList<>();
-                lista.add(new FILTRO(id.intValue(), pregunta, desplegable ));
+                lista.add(new FILTRO(idcons, id.intValue(), pregunta, desplegable ));
 
                 for(final FILTRO fl : lista){
 
@@ -635,7 +647,7 @@ public class genated extends AppCompatActivity {
                     linearHeader.addView(LLprincipal);
 
                     final String quest = String.valueOf(tv.getId());
-                    al.add(modulo +"--"+quest+"--"+"NULL"+"--0");
+                    al.add(idcons+"--"+modulo +"--"+quest+"--"+"NULL"+"--0");
 
                     CheckedConexion Cc = new CheckedConexion();
 
@@ -643,7 +655,7 @@ public class genated extends AppCompatActivity {
                     iDES.nombre = desplegable;
 
                     if (Cc.checkedConexionValidate(this)){
-                        iDES.traerDesplegable(desplegable);
+                        Toast.makeText(this,""+iDES.traerDesplegable(desplegable),Toast.LENGTH_SHORT).show();
                     }
                     iDES.all();
 
@@ -663,7 +675,7 @@ public class genated extends AppCompatActivity {
 
                                             String[] dato = tv.getText().toString().split(":");
 
-                                            String alData = modulo+"--"+quest+"--"+dato[1].trim();
+                                            String alData = idcons+"--"+modulo+"--"+quest+"--"+dato[1].trim();
                                             al.set((tv.getId())-1,alData+"--0");
 
                                         } else {
@@ -697,11 +709,11 @@ public class genated extends AppCompatActivity {
 
     //FORMULARIO
 
-    private void CrearEditTextNumericQ(final String modulo, Long id, String pregunta) {
+    private void CrearEditTextNumericQ(final Long idcons,final String modulo, Long id, String pregunta) {
         try {
             for(int i=0; i<1; i++){
                 ArrayList<ET> lista = new ArrayList<>();
-                lista.add(new ET(id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
+                lista.add(new ET(idcons, id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
 
                 for(ET et : lista){
 
@@ -735,19 +747,19 @@ public class genated extends AppCompatActivity {
 
                     final String quest = String.valueOf(tvp.getId());
                     String resp = edt.getHint().toString();
-                    al.add(modulo +"--"+quest+"--"+resp);
+                    al.add(idcons +"--"+modulo +"--"+quest+"--"+resp);
 
                     edt.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                             charSequence = edt.getText().toString();
-                            String alData = modulo+"--"+quest+"--"+charSequence;
+                            String alData =idcons+"--"+ modulo+"--"+quest+"--"+charSequence;
                             al.set((tvp.getId())-1,alData);
                         }
 
                         @Override
                         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                            String alData = modulo+"--"+quest+"--"+charSequence;
+                            String alData = idcons+"--"+modulo+"--"+quest+"--"+charSequence;
 
                             al.set((tvp.getId())-1,alData);
                         }
@@ -764,11 +776,11 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    private void CrearEditTextAlfaQ(final String modulo, Long id, String pregunta) {
+    private void CrearEditTextAlfaQ(final Long idcon, final String modulo, Long id, String pregunta) {
         try {
             for(int i=0; i<1; i++){
                 ArrayList<ET> lista = new ArrayList<>();
-                lista.add(new ET(id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
+                lista.add(new ET(idcon,id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
 
                 for(ET et : lista){
 
@@ -801,19 +813,19 @@ public class genated extends AppCompatActivity {
 
                     final String quest = String.valueOf(tvp.getId());
                     String resp = edt.getHint().toString();
-                    al.add(modulo +"--"+quest+"--"+resp);
+                    al.add(idcon+"--"+modulo +"--"+quest+"--"+resp);
 
                     edt.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                             charSequence = edt.getText().toString();
-                            String alData = modulo+"--"+quest+"--"+charSequence;
+                            String alData = idcon+"--"+modulo+"--"+quest+"--"+charSequence;
                             al.set((tvp.getId())-1,alData);
                         }
 
                         @Override
                         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                            String alData = modulo+"--"+quest+"--"+charSequence;
+                            String alData = idcon+"--"+modulo+"--"+quest+"--"+charSequence;
 
                             al.set((tvp.getId())-1,alData);
                         }
@@ -830,12 +842,12 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    private void CrearEditTextSpinnerQ(final String modulo, Long id, String pregunta ,String desplegable, Float porcen) {
+    private void CrearEditTextSpinnerQ(final Long idcon,  final String modulo, Long id, String pregunta ,String desplegable, Float porcen) {
         try {
             for (int i = 0; i < 1; i++) {
                 ArrayList<SPINNER> list = new ArrayList<>();
 
-                list.add(new SPINNER(id.intValue(), pregunta, iP.get(i).getTipoDetalle(), desplegable , porcen));
+                list.add(new SPINNER(idcon, id.intValue(), pregunta, iP.get(i).getTipoDetalle(), desplegable , porcen));
 
                 for (final SPINNER spi : list) {
                     LinearLayout.LayoutParams llparams = new
@@ -931,7 +943,7 @@ public class genated extends AppCompatActivity {
                                             String porcen = tvpor.getText().toString();
                                             String[] ddd = porcen.split(":");
 
-                                            al.set(idd,modulo +"--"+quest+"--"+seleccionado+"--"+ddd[1].trim());
+                                            al.set(idd,idcon+"--"+modulo +"--"+quest+"--"+seleccionado+"--"+ddd[1].trim());
                                             cal.set(tvpor.getId(),ddd[1].trim());
 
                                         }else if(seleccionado.equals("NO")){
@@ -941,7 +953,7 @@ public class genated extends AppCompatActivity {
                                             String porcen = tvpor.getText().toString();
                                             String[] ddd = porcen.split(":");
 
-                                            al.set(idd,modulo +"--"+quest+"--"+seleccionado+"--"+ddd[1].trim());
+                                            al.set(idd,idcon+"--"+modulo +"--"+quest+"--"+seleccionado+"--"+ddd[1].trim());
                                             cal.set(tvpor.getId(),ddd[1].trim());
 
                                         }else if (seleccionado.equals("N/A")){
@@ -950,7 +962,7 @@ public class genated extends AppCompatActivity {
                                             String porcen = tvpor.getText().toString();
                                             String[] ddd = porcen.split(":");
 
-                                            al.set(idd,modulo +"--"+quest+"--"+seleccionado+"--0");
+                                            al.set(idd,idcon+"--"+modulo +"--"+quest+"--"+seleccionado+"--0");
                                             cal.set(tvpor.getId(),"");
                                         }
 
@@ -968,7 +980,7 @@ public class genated extends AppCompatActivity {
                     String porce = tvpor.getText().toString();
                     String[] ddd = porce.split(":");
 
-                    al.add(modulo +"--"+quest+"--"+respuesta+"--0");
+                    al.add(idcon+"--"+modulo +"--"+quest+"--"+respuesta+"--0");
                     cal.add(ddd[1].trim());
 
 
@@ -981,11 +993,11 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    public void CrearSumRes(final String modulo, Long id, String pregunta, final Float porcen){
+    public void CrearSumRes(final Long idcon, final String modulo, Long id, String pregunta, final Float porcen){
         try{
             for(int i=0; i<1; i++) {
                 final ArrayList<buttonsSumRes> lista = new ArrayList<>();
-                lista.add(new buttonsSumRes(id, pregunta, iP.get(i).getTipoDetalle(), porcen));
+                lista.add(new buttonsSumRes(idcon,id, pregunta, iP.get(i).getTipoDetalle(), porcen));
 
                     for (final buttonsSumRes btnsr : lista) {
 
@@ -1113,7 +1125,7 @@ public class genated extends AppCompatActivity {
 
                                     String porcen = tvpor.getText().toString();
                                     String [] ddd = porcen.split(":");
-                                    String alData = modulo+"--"+id+"--"+resultado+"--"+ddd[1].trim();
+                                    String alData = idcon+"--"+modulo+"--"+id+"--"+resultado+"--"+ddd[1].trim();
 
                                     al.set((tvp.getId())-1,alData);
                                     cal.set(tvpor.getId(),ddd[1].trim());
@@ -1137,7 +1149,7 @@ public class genated extends AppCompatActivity {
                                     String porcen = tvpor.getText().toString();
                                     String [] ddd = porcen.split(":");
 
-                                    String alData = modulo+"--"+id+"--"+resultado+"--"+ddd[1].trim();
+                                    String alData = idcon+"--"+modulo+"--"+id+"--"+resultado+"--"+ddd[1].trim();
                                     al.set((tvp.getId())-1,alData);
                                     cal.set(tvpor.getId(),ddd[1].trim());
                                 }
@@ -1151,7 +1163,7 @@ public class genated extends AppCompatActivity {
                         String [] ddd = porce.split(":");
                         String quest = String.valueOf(tvp.getId());
                         String respuesta = tvr.getText().toString();
-                        al.add(modulo +"--"+quest+"--"+respuesta+"--0");
+                        al.add(idcon+"--"+modulo +"--"+quest+"--"+respuesta+"--0");
                         cal.add(ddd[1]);
                 }
 
@@ -1163,11 +1175,11 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    public void CrearSwicht(final String modulo, Long id, String pregunta){
+    public void CrearSwicht(final Long idcon, final String modulo, Long id, String pregunta){
         try {
             for(int i=0; i<1; i++){
                 ArrayList<SwichtQ> lista = new ArrayList<>();
-                lista.add(new SwichtQ(id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
+                lista.add(new SwichtQ(idcon,id.intValue(),pregunta,iP.get(i).getTipoDetalle()));
 
                 for(SwichtQ sw : lista){
 
@@ -1238,7 +1250,7 @@ public class genated extends AppCompatActivity {
                             Long id = (long)tvp.getId();
                             String respuesta = tvres.getText().toString();
 
-                            String alData = modulo+"--"+id+"--"+respuesta;
+                            String alData = idcon+"--"+modulo+"--"+id+"--"+respuesta;
 
                             al.set((tvp.getId())-1,alData);
                         }
@@ -1246,7 +1258,7 @@ public class genated extends AppCompatActivity {
 
                     String quest = String.valueOf(tvp.getId());
                     String respuesta = tvres.getText().toString();
-                    al.add(modulo +"--"+quest+"--"+respuesta);
+                    al.add(idcon+"--"+modulo +"--"+quest+"--"+respuesta);
                 }
             }
         }catch (Exception ex){
@@ -1267,7 +1279,7 @@ public class genated extends AppCompatActivity {
             for(String i : al){
 
                 String cadena[] = i.split("--");
-                RegisterRespuestas(cadena[0],Long.parseLong(cadena[1]),cadena[2],cadena[3]);
+                RegisterRespuestas(Long.parseLong(cadena[0]),cadena[1],Long.parseLong(cadena[2]),cadena[3],cadena[4]);
                 //Toast.makeText(this, ""+cadena[0]+"\n"+cadena[1]+"\n"+cadena[2]+"\n"+cadena[3], Toast.LENGTH_SHORT).show();
             }
             progressBar( "Guardando", "Se ha guardado exitosamente",50);
@@ -1279,15 +1291,15 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    public  void RegisterRespuestas(String modulo,Long idDetalle,String respuesta,String porcentaje){
+    public  void RegisterRespuestas(Long idcon,String modulo,Long idDetalle,String respuesta,String porcentaje){
         try {
-            RegisterFinal(modulo,idDetalle,respuesta,porcentaje);
+            RegisterFinal(idcon,modulo,idDetalle,respuesta,porcentaje);
         }catch (Exception ex){
             Toast.makeText(this, "Exception ResgisterRespuestas--generated.Java \n"+ex.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void RegisterFinal(String modulo,Long idDetalle,String respuesta,String porcentaje){
+    public void RegisterFinal(Long idcon,String modulo,Long idDetalle,String respuesta,String porcentaje){
         try {
             String nom = sp.getString("nom_proceso", "");
             ir.nombre = "Send " + nom;
@@ -1295,6 +1307,7 @@ public class genated extends AppCompatActivity {
             RespuestasTab rt = new RespuestasTab();
             rt.setFecha(getFecha());
             rt.setIdProceso((long) getcodProceso());
+            rt.setIdcons(idcon);
             rt.setIdPregunta(idDetalle);
             rt.setRespuesta(respuesta);
             rt.setPorcentaje(Double.valueOf(porcentaje));
@@ -1316,6 +1329,7 @@ public class genated extends AppCompatActivity {
 
             List<RespuestasTab> rtt = irr.all();
 
+
             if(rtt.isEmpty()) {
                 Toast.makeText(this, "No hay registros pendientes para enviar", Toast.LENGTH_LONG).show();
             }else {
@@ -1328,8 +1342,8 @@ public class genated extends AppCompatActivity {
                                 rc.setPorcentaje(rc.getPorcentaje());
                                 rc.setTerminal(rc.getTerminal());
 
-                                irr.Record(rc);
-                                irr.delete(rc.getIdreg() - 1);
+                                //irr.Record(rc);
+                                //irr.delete(rc.getIdreg() - 1);
                         }
                         progressBar("Enviando...","Se envio exitosamente.",5);
                     }else {
@@ -1468,6 +1482,7 @@ public class genated extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     Dialog(SumarCalificacion().toString()+"  /100");
+                    Toast.makeText(genated.this,""+al.toString(),Toast.LENGTH_LONG).show();
                     //Toast.makeText(genated.this, ""+SumarCalificacion(), Toast.LENGTH_SHORT).show();
 
                     //Dialog dd = new Dialog();
@@ -1506,12 +1521,14 @@ public class genated extends AppCompatActivity {
     }
 
     class buttonsSumRes{
+        private Long idconsecutivo;
         private Long codDetalle;
         private String pregunta;
         private String tipoRespuesta;
         private  Float porcen;
 
-        public buttonsSumRes(Long codDetalle, String pregunta, String tipoRespuesta, Float porcen) {
+        public buttonsSumRes(Long idconsecutivo, Long codDetalle, String pregunta, String tipoRespuesta, Float porcen) {
+            this.idconsecutivo = idconsecutivo;
             this.codDetalle = codDetalle;
             this.pregunta = pregunta;
             this.tipoRespuesta = tipoRespuesta;
@@ -1521,46 +1538,54 @@ public class genated extends AppCompatActivity {
 
     }
     class SwichtQ{
+        private Long idconsecutivo;
         private int codDetalle;
         private String pregunta;
         private String tipoRespuesta;
 
-        public SwichtQ(int codDetalle, String pregunta, String tipoRespuesta) {
+        public SwichtQ(Long idconsecutivo, int codDetalle, String pregunta, String tipoRespuesta) {
+            this.idconsecutivo = idconsecutivo;
             this.codDetalle = codDetalle;
             this.pregunta = pregunta;
             this.tipoRespuesta = tipoRespuesta;
         }
     }
     class TVF{
+        private Long idconsecutivo;
         private int codDetalle;
         private String pregunta;
         private String tipoRespuesta;
 
-        public TVF(int codDetalle, String pregunta, String tipoRespuesta) {
+        public TVF(Long idconsecutivo, int codDetalle, String pregunta, String tipoRespuesta) {
+            this.idconsecutivo = idconsecutivo;
             this.codDetalle = codDetalle;
             this.pregunta = pregunta;
             this.tipoRespuesta = tipoRespuesta;
         }
     }
     class ET{
+        private Long idconsecutivo;
         private int codDetalle;
         private String pregunta;
         private String tipoRespuesta;
 
-        public ET(int codDetalle, String pregunta, String tipoRespuesta) {
+        public ET(Long idconsecutivo, int codDetalle, String pregunta, String tipoRespuesta) {
+            this.idconsecutivo = idconsecutivo;
             this.codDetalle = codDetalle;
             this.pregunta = pregunta;
             this.tipoRespuesta = tipoRespuesta;
         }
     }
     class SPINNER{
+        private Long idconsecutivo;
         private int codDetalle;
         private String pregunta;
         private String tipoRespuesta;
         private String desplegable;
         private Float porcentaje;
 
-        public SPINNER(int codDetalle, String pregunta, String tipoRespuesta ,String desplegable ,Float porcentaje) {
+        public SPINNER(Long idconsecutivo, int codDetalle, String pregunta, String tipoRespuesta, String desplegable, Float porcentaje) {
+            this.idconsecutivo = idconsecutivo;
             this.codDetalle = codDetalle;
             this.pregunta = pregunta;
             this.tipoRespuesta = tipoRespuesta;
@@ -1569,14 +1594,16 @@ public class genated extends AppCompatActivity {
         }
     }
     class FILTRO{
+        private Long idconsecutivo;
         private int codDetalle;
         private String pregunta;
         private String Desplagable;
 
-        public FILTRO(int codDetalle, String pregunta, String desplagable) {
+        public FILTRO(Long idconsecutivo, int codDetalle, String pregunta, String desplagable) {
+            this.idconsecutivo = idconsecutivo;
             this.codDetalle = codDetalle;
             this.pregunta = pregunta;
-            this.Desplagable = desplagable;
+            Desplagable = desplagable;
         }
     }
 }

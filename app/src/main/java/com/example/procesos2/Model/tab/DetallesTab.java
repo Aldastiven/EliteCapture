@@ -2,6 +2,7 @@ package com.example.procesos2.Model.tab;
 
 public class DetallesTab {
 
+    private Long idConsecutivo;
     private Long idProceso;
     private Long codDetalle;
     private String quesDetalle;
@@ -16,8 +17,8 @@ public class DetallesTab {
 
     //CONSTRUCTOR CON PARAMETROS A USAR
 
-
-    public DetallesTab(Long idProceso, Long codDetalle, String quesDetalle, String tipoDetalle, String listaDesplegable, String tipoModulo, Float porcentaje) {
+    public DetallesTab (Long idConsecutivo, Long idProceso, Long codDetalle, String quesDetalle, String tipoDetalle, String listaDesplegable, String tipoModulo, Float porcentaje) {
+        this.idConsecutivo = idConsecutivo;
         this.idProceso = idProceso;
         this.codDetalle = codDetalle;
         this.quesDetalle = quesDetalle;
@@ -27,7 +28,17 @@ public class DetallesTab {
         this.porcentaje = porcentaje;
     }
 
+
     //SG
+
+    public Long getIdConsecutivo() {
+        return idConsecutivo;
+    }
+
+    public void setIdConsecutivo(Long idConsecutivo) {
+        this.idConsecutivo = idConsecutivo;
+    }
+
     public Long getIdProceso() {
         return idProceso;
     }
@@ -87,6 +98,7 @@ public class DetallesTab {
     //JSON
     public String toString(){
         return"\n{" +
+                "\"idConsecuivo\":"+idConsecutivo+",\n"+
                 "\"idProceso\":"+idProceso+",\n"+
                 "\"codDetalle\":"+codDetalle+",\n"+
                 "\"quesDetalle\": \"" + quesDetalle + "\",\n" +
