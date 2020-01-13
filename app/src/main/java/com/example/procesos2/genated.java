@@ -402,7 +402,6 @@ public class genated extends AppCompatActivity {
                         SharedPreferences.Editor edit = sp.edit();
                         edit.putString("data", charSequence.toString());
                         edit.apply();
-
                     }
 
                     @Override

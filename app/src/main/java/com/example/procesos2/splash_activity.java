@@ -48,7 +48,7 @@ public class splash_activity extends AppCompatActivity {
 
             new Handler().postDelayed(new Runnable() {
                 public void run() {
-                    Intent i = new Intent(splash_activity.this,Index.class);
+                    Intent i = new Intent(splash_activity.this, Login.class);
                     startActivity(i);
                     finish();
                 };
