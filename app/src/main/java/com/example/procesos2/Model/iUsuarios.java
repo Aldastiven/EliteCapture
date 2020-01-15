@@ -104,17 +104,11 @@ public class iUsuarios extends sqlConect implements usuarios {
 
     public UsuariosTab login(int user, int pass) {
             for (UsuariosTab m : ut) {
-                if (m.getIdUsuario() == user || m.getPassUsuario() == pass) {
-                    msj(m.toString());
+                if (m.getIdUsuario() == user && m.getPassUsuario() == pass) {
                     return m;
-                }else {
-                    return null;
                 }
             }
         return null;
     }
 
-    public String msj(String msj){
-        return msj;
-    }
 }

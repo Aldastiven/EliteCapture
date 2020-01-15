@@ -9,20 +9,30 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_weight="0.7"
-        android:layout_gravity="center_vertical">
+        android:layout_gravity="center_vertical"
+        android:weightSum="2">
 
         <TextView
             android:id="@+id/EncabTitulo"
-            android:layout_width="match_parent"
+            android:layout_width="0sp"
             android:layout_height="match_parent"
             android:textColor="#2980B9"
             android:textStyle="bold"
             android:textSize="20sp"
             android:textAlignment="center"
-            android:paddingTop="5sp"/>
+            android:paddingTop="5sp"
+            android:layout_weight="1.5"/>
+
+        <Button
+            android:layout_weight="0.5"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:text="menu"
+            android:onClick="menu"/>
 
     </LinearLayout>
 

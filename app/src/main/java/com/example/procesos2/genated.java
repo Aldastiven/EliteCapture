@@ -17,7 +17,6 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -61,7 +60,6 @@ public class genated extends AppCompatActivity {
     ScrollView scrollForm;
     FloatingActionButton fBtn;
 
-
     String path = null;
     List<DetallesTab> iP = new ArrayList<>();
 
@@ -71,6 +69,8 @@ public class genated extends AppCompatActivity {
     iDesplegable id = null;
 
     int idres=0;
+
+    public boolean Temporal;
 
     ArrayList<String> al = new ArrayList<String>(200);
     ArrayList<String> cal = new ArrayList<String>(1000);
@@ -124,6 +124,56 @@ public class genated extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Error onCreate \n" +ex,Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        //Toast.makeText(this,"Resume",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        getState();
+        //Toast.makeText(this,"Pause",Toast.LENGTH_SHORT).show();
+
+        //Toast.makeText(this, "Temporal para irse "+Temporal, Toast.LENGTH_SHORT).show();
+
+        if (Temporal){
+            SharedPreferences.Editor edit = sp.edit();
+            edit.putBoolean("Temporal", Temporal);
+            edit.commit();
+            edit.apply();
+        }else{
+            SharedPreferences.Editor edit = sp.edit();
+            edit.putBoolean("Temporal", Temporal);
+            edit.commit();
+            edit.apply();
+        }
+    }
+
+    @Override protected void onRestart(){
+        super.onRestart();
+        //Toast.makeText(this,"Restart",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        //Toast.makeText(this,"onDestroy generated",Toast.LENGTH_SHORT).show();
+        Temporal = false;
+
+        if (Temporal){
+            SharedPreferences.Editor edit = sp.edit();
+            edit.putBoolean("Temporal", Temporal);
+            edit.commit();
+            edit.apply();
+        }else{
+            SharedPreferences.Editor edit = sp.edit();
+            edit.putBoolean("Temporal", Temporal);
+            edit.commit();
+            edit.apply();
+        }
+
+        al.clear();
     }
 
 
@@ -395,6 +445,8 @@ public class genated extends AppCompatActivity {
                         SharedPreferences.Editor edit = sp.edit();
                         edit.putString("data", charSequence.toString());
                         edit.apply();
+
+                        saveState();
                     }
 
                     @Override
@@ -461,6 +513,7 @@ public class genated extends AppCompatActivity {
                         String alData = modulo+"--"+quest+"--"+charSequence+"--0";
 
                         al.set((tvp.getId())-1,alData);
+                        saveState();
                     }
 
                     @Override
@@ -501,7 +554,7 @@ public class genated extends AppCompatActivity {
                     iDES.nombre = desplegable;
 
                     if (Cc.checkedConexionValidate(this)){
-                        Toast.makeText(this,""+iDES.group(),Toast.LENGTH_LONG).show();
+                        iDES.group();
                     }
                     iDES.all();
                     ArrayList<String> OptionArray = new ArrayList<>(200);
@@ -532,6 +585,8 @@ public class genated extends AppCompatActivity {
                                         int idd=(spinner.getId())-1;
                                         String quest = String.valueOf(spinner.getId());
                                         al.set(idd,modulo +"--"+quest+"--"+seleccionado+"--0");
+
+                                        saveState();
                                     } else {
                                     }
                                 }catch (Exception ex){
@@ -551,9 +606,9 @@ public class genated extends AppCompatActivity {
                 }
             }
         }catch (Exception ex){
-            Toast.makeText(this,"Se genero un exception \n " +
+            /*Toast.makeText(this,"Se genero un exception \n " +
                     "al crear el tipo de respuesta \n" +
-                    "en el metodo SPINNER \n \n"+ex.toString(),Toast.LENGTH_LONG).show();
+                    "en el metodo SPINNER \n \n"+ex.toString(),Toast.LENGTH_LONG).show();*/
         }
     }
 
@@ -577,7 +632,6 @@ public class genated extends AppCompatActivity {
 
     public void CrearFiltro(final String modulo, Long id, String pregunta , final String desplegable){
         try{
-
 
             for(int i = 0; i<1; i++){
                 ArrayList<FILTRO> lista = new ArrayList<>();
@@ -647,7 +701,7 @@ public class genated extends AppCompatActivity {
                     iDES.nombre = desplegable;
 
                     if (Cc.checkedConexionValidate(this)){
-                        Toast.makeText(this,""+iDES.traerDesplegable(desplegable),Toast.LENGTH_SHORT).show();
+                        iDES.traerDesplegable(desplegable);
                     }
                     iDES.all();
 
@@ -669,6 +723,8 @@ public class genated extends AppCompatActivity {
 
                                             String alData = modulo+"--"+quest+"--"+dato[1].trim();
                                             al.set((tv.getId())-1,alData+"--0");
+
+                                            saveState();
 
                                         } else {
                                             //Toast.makeText(genated.this, "no se encontraron resultados", Toast.LENGTH_SHORT).show();
@@ -752,8 +808,8 @@ public class genated extends AppCompatActivity {
                         @Override
                         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                             String alData = modulo+"--"+quest+"--"+charSequence;
-
                             al.set((tvp.getId())-1,alData);
+                            saveState();
                         }
 
                         @Override
@@ -820,6 +876,7 @@ public class genated extends AppCompatActivity {
                             String alData = modulo+"--"+quest+"--"+charSequence;
 
                             al.set((tvp.getId())-1,alData);
+                            saveState();
                         }
 
                         @Override
@@ -909,7 +966,7 @@ public class genated extends AppCompatActivity {
 
                     ArrayAdapter<String> spinnerArray = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_personal, OptionArray);
                     spinner.setAdapter(spinnerArray);
-                    spinner.setSelection(1);
+                    spinner.setSelection(0);
                     spinner.setLayoutParams(llparams);
 
                     linearPrinc.addView(llpregunta);
@@ -938,6 +995,8 @@ public class genated extends AppCompatActivity {
                                             al.set(idd,modulo +"--"+quest+"--"+seleccionado+"--"+ddd[1].trim());
                                             cal.set(tvpor.getId(),ddd[1].trim());
 
+                                            saveState();
+
                                         }else if(seleccionado.equals("NO")){
                                             int valor = 9;
                                             tvpor.setText("resultado: \n"+OperacionPorcentaje(spi.porcentaje,valor));
@@ -947,6 +1006,8 @@ public class genated extends AppCompatActivity {
 
                                             al.set(idd,modulo +"--"+quest+"--"+seleccionado+"--"+ddd[1].trim());
                                             cal.set(tvpor.getId(),ddd[1].trim());
+
+                                            saveState();
 
                                         }else if (seleccionado.equals("N/A")){
                                             tvpor.setText("resultado: \n");
@@ -974,14 +1035,12 @@ public class genated extends AppCompatActivity {
 
                     al.add(modulo +"--"+quest+"--"+respuesta+"--0");
                     cal.add(ddd[1].trim());
-
-
                 }
             }
         }catch (Exception ex){
-            Toast.makeText(this,"Se genero un exception \n " +
+            /*Toast.makeText(this,"Se genero un exception \n " +
                     "al crear el tipo de respuesta \n" +
-                    "en el metodo SPINNER \n \n"+ex.toString(),Toast.LENGTH_LONG).show();
+                    "en el metodo SPINNER \n \n"+ex.toString(),Toast.LENGTH_LONG).show();*/
         }
     }
 
@@ -1121,6 +1180,8 @@ public class genated extends AppCompatActivity {
 
                                     al.set((tvp.getId())-1,alData);
                                     cal.set(tvpor.getId(),ddd[1].trim());
+
+                                    saveState();
                                 }
                             }
                         });
@@ -1144,6 +1205,8 @@ public class genated extends AppCompatActivity {
                                     String alData = modulo+"--"+id+"--"+resultado+"--"+ddd[1].trim();
                                     al.set((tvp.getId())-1,alData);
                                     cal.set(tvpor.getId(),ddd[1].trim());
+
+                                    saveState();
                                 }
                             }catch (Exception ex){
                                 Toast.makeText(getApplicationContext(),ex.toString(),Toast.LENGTH_SHORT).show();
@@ -1245,12 +1308,15 @@ public class genated extends AppCompatActivity {
                             String alData = modulo+"--"+id+"--"+respuesta;
 
                             al.set((tvp.getId())-1,alData);
+
+                            saveState();
                         }
                     });
 
                     String quest = String.valueOf(tvp.getId());
                     String respuesta = tvres.getText().toString();
                     al.add(modulo +"--"+quest+"--"+respuesta);
+
                 }
             }
         }catch (Exception ex){
@@ -1305,6 +1371,8 @@ public class genated extends AppCompatActivity {
             rt.setIdUsuario(idusuario);
             ir.insert(rt);
 
+            Temporal = false;
+
         }catch (Exception ee){
             Toast.makeText(this, ""+ee, Toast.LENGTH_SHORT).show();
         }
@@ -1334,7 +1402,7 @@ public class genated extends AppCompatActivity {
                                 rc.setTerminal(rc.getTerminal());
                                 rc.setIdUsuario(rc.getIdUsuario());
 
-                                Toast.makeText(this,""+irr.Record(rc),Toast.LENGTH_SHORT).show();
+                                irr.Record(rc);
                                 irr.delete(rc.getIdreg() - 1);
                         }
                         progressBar("Enviando...","Se envio exitosamente.",5);
@@ -1474,11 +1542,7 @@ public class genated extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     Dialog(SumarCalificacion().toString()+"  /100");
-                    Toast.makeText(genated.this,""+al.toString(),Toast.LENGTH_LONG).show();
-                    //Toast.makeText(genated.this, ""+SumarCalificacion(), Toast.LENGTH_SHORT).show();
-
-                    //Dialog dd = new Dialog();
-                    //dd.Dialog("hola mundo");
+                    //Toast.makeText(genated.this, "Temporal "+Temporal, Toast.LENGTH_SHORT).show();
                 }catch (Exception ex){
                     Toast.makeText(genated.this, "Exception \n " + ex, Toast.LENGTH_SHORT).show();
                 }
@@ -1507,9 +1571,39 @@ public class genated extends AppCompatActivity {
     }
 
     //PARA VOLVER A LA ACTIVIDAD ANTERIOR(INDEX)
-    public void onBackPressed() {
+    public void menu(View v){
         Intent i = new Intent(this, Index.class);
-        startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        startActivity(i);
+    }
+
+    public void onBackPressed() {
+        Toast.makeText(this, "Oprime el boton de menu en la parte superior de la pantalla", Toast.LENGTH_LONG).show();
+    }
+
+    //guardar estado de la vista
+    public boolean saveState(){
+        try{
+            SharedPreferences.Editor edit = sp.edit();
+            edit.putString("estadoActividad", al.toString());
+            edit.commit();
+            edit.apply();
+
+            return Temporal = true;
+        }catch (Exception ex){
+            Toast.makeText(this,"se genero una exception al guardar el estado del formulario \n \n"+ex.toString(),Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+    public void getState(){
+        try{
+            String arreglo = sp.getString("estadoActividad", "");
+            //Toast.makeText(this,""+arreglo,Toast.LENGTH_SHORT).show();
+
+            //Toast.makeText(this,""+Temporal,Toast.LENGTH_SHORT).show();
+
+        }catch (Exception ex){
+            Toast.makeText(this,"Se genero una exception al traer el estado del formulario \n \n"+ex.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
 
     class buttonsSumRes{

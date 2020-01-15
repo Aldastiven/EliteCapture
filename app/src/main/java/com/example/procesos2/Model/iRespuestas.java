@@ -15,8 +15,8 @@ import java.util.List;
 public class iRespuestas extends sqlConect implements respuestas {
     public String nombre;
 
-    public String ins = "INSERT INTO Datos_Procesos_Detalle (Fecha, Id_Procesos, Id_Procesos_Detalle, Valor_Resp_D, Porc_Resp_D, Id_Terminal)\n" +
-                        "VALUES (?,?,?,?,?,?)";
+    public String ins = "INSERT INTO Datos_Procesos_Detalle (Fecha, Id_Procesos, Id_Procesos_Detalle, Valor_Resp_D, Porc_Resp_D, Id_Terminal, Id_usuario)\n" +
+                        "VALUES (?,?,?,?,?,?,?)";
 
     List<RespuestasTab> RT = new ArrayList<>();
     Connection cn = null;
@@ -117,6 +117,7 @@ public class iRespuestas extends sqlConect implements respuestas {
             ps.setString(4, o.getRespuesta());
             ps.setDouble(5, o.getPorcentaje());
             ps.setString(6, o.getTerminal());
+            ps.setInt(7, o.getIdUsuario());
 
             ps.executeUpdate();
             return "";

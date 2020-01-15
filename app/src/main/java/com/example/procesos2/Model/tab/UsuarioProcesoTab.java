@@ -36,7 +36,6 @@ public class UsuarioProcesoTab {
     public String toString(){
         return "{\n" +
                 "\"idUsuario\": "+idUsuario+", \n"+
-                "\"idProceso\": "+idProceso+" \n"+
-                "\n}";
+                "\"idProceso\": "+idProceso+"}\n";
     }
 }

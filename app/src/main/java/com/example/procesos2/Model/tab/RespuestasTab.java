@@ -1,14 +1,14 @@
 package com.example.procesos2.Model.tab;
 
-public class RespuestasTab {
+public class    RespuestasTab {
     private Long idreg;
     private String Fecha;
     private Long idProceso;
-    private Long idcons;
     private Long idPregunta;
     private String Respuesta;
     private String Terminal;
     private Double Porcentaje;
+    private int idUsuario;
 
     //CONSTRUCTOR VACIO
     public RespuestasTab() {
@@ -16,15 +16,15 @@ public class RespuestasTab {
 
     //CONSTRUCTOR
 
-    public RespuestasTab(Long idreg, String fecha, Long idProceso, Long idcons, Long idPregunta, String respuesta, String terminal, Double porcentaje) {
+    public RespuestasTab(Long idreg, String fecha, Long idProceso, Long idPregunta, String respuesta, String terminal, Double porcentaje, int idUsuario) {
         this.idreg = idreg;
         Fecha = fecha;
         this.idProceso = idProceso;
-        this.idcons = idcons;
         this.idPregunta = idPregunta;
         Respuesta = respuesta;
         Terminal = terminal;
         Porcentaje = porcentaje;
+        this.idUsuario = idUsuario;
     }
 
 
@@ -53,14 +53,6 @@ public class RespuestasTab {
 
     public void setIdProceso(Long idProceso) {
         this.idProceso = idProceso;
-    }
-
-    public Long getIdcons() {
-        return idcons;
-    }
-
-    public void setIdcons(Long idcons) {
-        this.idcons = idcons;
     }
 
     public Long getIdPregunta() {
@@ -95,17 +87,25 @@ public class RespuestasTab {
         Porcentaje = porcentaje;
     }
 
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
     @Override
     public String toString(){
         return " {" +
                 "\"idreg\" :" + idreg + ",\n" +
                 "\"Fecha\" : \""+ Fecha +"\",\n"+
                 "\"idProceso\" :" + idProceso + ",\n" +
-                "\"idcons\" :" + idcons + ",\n" +
                 "\"idPregunta\" :" + idPregunta + ",\n" +
                 "\"Respuesta\" : \"" + Respuesta + "\",\n" +
                 "\"Porcentaje\" :" + Porcentaje + " ,\n" +
-                "\"Terminal\" : \"" + Terminal + "\" \n" +
+                "\"Terminal\" : \"" + Terminal + "\" ,\n" +
+                "\"idUsuario\" :" + idUsuario + "\n" +
                 "} \n";
     }
 }
