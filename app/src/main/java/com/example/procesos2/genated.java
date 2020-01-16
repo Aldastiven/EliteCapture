@@ -553,10 +553,15 @@ public class genated extends AppCompatActivity {
                     iDesplegable iDES = new iDesplegable(path);
                     iDES.nombre = desplegable;
 
+                    iDES.local();
+
+
                     if (Cc.checkedConexionValidate(this)){
                         iDES.group();
                     }
                     iDES.all();
+
+
                     ArrayList<String> OptionArray = new ArrayList<>(200);
                     OptionArray.add("selecciona");
                     for(DesplegableTab ds : iDES.all()){
@@ -947,6 +952,8 @@ public class genated extends AppCompatActivity {
 
                     iDesplegable iDES = new iDesplegable(path);
                     iDES.nombre = desplegable;
+
+                    iDES.local();
 
                     if (Cc.checkedConexionValidate(this)){
                         iDES.traerDesplegable(desplegable);

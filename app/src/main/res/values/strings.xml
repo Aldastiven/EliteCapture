@@ -1,8 +1,7 @@
 <resources>
-    <string name="app_name">Dinamic App</string>
+    <string name="app_name">EliteCapture</string>
     <string name="subir">SUBIR</string>
     <string name="SUBIR" />
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">Ingresa</string>
     <string name="prompt_email">Email</string>
