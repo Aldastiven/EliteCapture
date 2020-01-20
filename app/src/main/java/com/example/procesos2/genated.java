@@ -107,19 +107,12 @@ public class genated extends AppCompatActivity {
                 iDetalles iD = new iDetalles(path);
 
 
-                if(Cc.checkedConexionValidate(this)){
-                    iD.nombre = "Detalles";
-                    iD.local();
-                    iP = iD.all();
-                }else {
                     iD.nombre = "Detalles";
                     iP = iD.all();
-                }
 
                 CrearHeader();
                 onckickBTNfloating();
-
-
+                crearJsonRes();
         }catch (Exception ex){
                 Toast.makeText(getApplicationContext(),"Error onCreate \n" +ex,Toast.LENGTH_SHORT).show();
         }
@@ -176,6 +169,15 @@ public class genated extends AppCompatActivity {
         al.clear();
     }
 
+    //CREAR EL JSON SINO EXISTE
+    private void crearJsonRes() throws Exception {
+        ir.nombre = "Respuestas";
+        try{
+            ir.all();
+        }catch (Exception ex){
+            ir.local();
+        }
+    }
 
     //VALIDACIÓN PARA LA CREACIÓN DINAMICA
     public void cargarPlanos(){
@@ -320,7 +322,7 @@ public class genated extends AppCompatActivity {
 
     public String getFecha(){
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyy HH:mm:ss");
         String fecha = sdf.format(cal.getTime());
         return fecha;
     }
@@ -553,7 +555,8 @@ public class genated extends AppCompatActivity {
                     iDesplegable iDES = new iDesplegable(path);
                     iDES.nombre = desplegable;
 
-                    iDES.local();
+                    iDES.all();
+                    //iDES.local();
 
 
                     if (Cc.checkedConexionValidate(this)){
@@ -705,9 +708,6 @@ public class genated extends AppCompatActivity {
                     final iDesplegable iDES = new iDesplegable(path);
                     iDES.nombre = desplegable;
 
-                    if (Cc.checkedConexionValidate(this)){
-                        iDES.traerDesplegable(desplegable);
-                    }
                     iDES.all();
 
                     btn.setOnClickListener(new View.OnClickListener() {
@@ -953,11 +953,6 @@ public class genated extends AppCompatActivity {
                     iDesplegable iDES = new iDesplegable(path);
                     iDES.nombre = desplegable;
 
-                    iDES.local();
-
-                    if (Cc.checkedConexionValidate(this)){
-                        iDES.traerDesplegable(desplegable);
-                    }
                     iDES.all();
                     ArrayList<String> OptionArray = new ArrayList<>(200);
                     for(DesplegableTab ds : iDES.all()){
@@ -1340,35 +1335,42 @@ public class genated extends AppCompatActivity {
         try {
 
             for(String i : al){
-
                 String cadena[] = i.split("--");
-                RegisterRespuestas(cadena[0],Long.parseLong(cadena[1]),cadena[2],cadena[3]);
+                RegisterFinal(Long.parseLong(cadena[1]),cadena[2],cadena[3]);
                 //Toast.makeText(this, ""+cadena[0]+"\n"+cadena[1]+"\n"+cadena[2]+"\n"+cadena[3], Toast.LENGTH_SHORT).show();
+
             }
+
+            for(int i=0; i<al.size(); i++){
+                al.clear();
+            }
+
             progressBar( "Guardando", "Se ha guardado exitosamente",50);
             eliminarHijos();
-            CrearForm();
+            CrearHeader();
+
 
         }catch (Exception ex){
             Toast.makeText(getApplicationContext(),"Error registro Json\n"+ex.toString(),Toast.LENGTH_LONG).show();
         }
     }
 
-    public  void RegisterRespuestas(String modulo,Long idDetalle,String respuesta,String porcentaje){
-        try {
-            RegisterFinal(idDetalle,respuesta,porcentaje);
-        }catch (Exception ex){
-            Toast.makeText(this, "Exception ResgisterRespuestas--generated.Java \n"+ex.toString(), Toast.LENGTH_SHORT).show();
-        }
-    }
+
 
     public void RegisterFinal(Long idDetalle,String respuesta,String porcentaje){
         try {
             String nom = sp.getString("nom_proceso", "");
             int idusuario = sp.getInt("codigo",0);
-            ir.nombre = "Send " + nom;
+            //ir.nombre = "Send " + nom;
+            ir.nombre = "Respuestas";
 
             RespuestasTab rt = new RespuestasTab();
+
+            if(ir.all().size()<=0) {
+                rt.setIdreg((long) ir.all().size() + 1);
+            }else{
+                rt.setIdreg(rt.getIdreg());
+            }
             rt.setFecha(getFecha());
             rt.setIdProceso((long) getcodProceso());
             rt.setIdPregunta(idDetalle);
@@ -1376,6 +1378,8 @@ public class genated extends AppCompatActivity {
             rt.setPorcentaje(Double.valueOf(porcentaje));
             rt.setTerminal(getPhoneName());
             rt.setIdUsuario(idusuario);
+
+            //Toast.makeText(this, ""+ir.insert(rt), Toast.LENGTH_SHORT).show();
             ir.insert(rt);
 
             Temporal = false;
@@ -1513,6 +1517,10 @@ public class genated extends AppCompatActivity {
         if(linearPrinc.getChildCount() > 0){
             linearPrinc.removeAllViews();
         }
+        if(linearHeader.getChildCount() > 0){
+            linearHeader.removeAllViews();
+        }
+
     }
 
     public void DesabilitarTeclado(View v) {

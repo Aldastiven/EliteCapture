@@ -46,11 +46,18 @@ public class iRespuestas extends sqlConect implements respuestas {
     @Override
     public String insert(RespuestasTab o) throws Exception {
         try{
-            o.setIdreg((long) RT.size() + 1);
-            RT.add(o);
-            local();
 
-            return "registro de respuestas con exito" + RT.size();
+            if(!local()) {
+                o.setIdreg((long) RT.size());
+                RT.add(o);
+                local();
+                return "registro de respuestas con exito" + RT.size();
+            }else {
+                o.setIdreg((long) all().size());
+                RT.add(o);
+                local();
+                return "registro de respuestas con exito pasado" + all().size();
+            }
 
         }catch (Exception ex){
             return "Error al registrar las respuestas"+ex;

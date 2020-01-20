@@ -83,10 +83,13 @@ public class Index extends AppCompatActivity {
             traerDataUser();
             validateProce();
 
+
         }catch (Exception ex){
             Toast.makeText(getApplicationContext(),"Error \n"+ex,Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
     @Override protected void onResume() {
         super.onResume();
