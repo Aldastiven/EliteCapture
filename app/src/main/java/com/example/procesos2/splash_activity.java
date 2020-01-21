@@ -21,6 +21,8 @@ import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.iDetalles;
 import com.example.procesos2.Model.iIndex;
 import com.example.procesos2.Model.iUsuarios;
+import com.example.procesos2.Model.tab.DesplegableTab;
+import com.example.procesos2.Model.tab.DetallesTab;
 import com.example.procesos2.Model.tab.IndexTab;
 
 import java.io.File;
@@ -38,6 +40,7 @@ public class splash_activity extends AppCompatActivity {
 
     String path = null;
     Calendar calendarDate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,10 +113,15 @@ public class splash_activity extends AppCompatActivity {
         }
 
         private void CargeInicial() {
-            ObtenerUsuarios();
-            ObtenerProcesos();
-            ObtenerDetalles();
-            ObtenerDesplegables();
+            try {
+                ObtenerUsuarios();
+                ObtenerProcesos();
+                ObtenerDetalles();
+                ObtenerDesplegables();
+                cn.close();
+            }catch (Exception ex){
+                Log.i("Error Splash Carge",ex.toString());
+            }
         }
 
         public void ObtenerUsuarios() {
@@ -131,7 +139,7 @@ public class splash_activity extends AppCompatActivity {
         public void ObtenerProcesos() {
             try {
                 txtStatus.setText("Cargando Procesos...");
-                iIndex iI = new iIndex(path);
+                iIndex iI = new iIndex(cn,path);
                 iI.nombre = "Procesos";
                 iI.local();
                 //msgStatus("Cargando...","Datos de procesos Cargado",10);
@@ -143,7 +151,7 @@ public class splash_activity extends AppCompatActivity {
         public void ObtenerDetalles() {
             try {
                 txtStatus.setText("Cargando Detalles...");
-                iDetalles iI = new iDetalles(path);
+                iDetalles iI = new iDetalles(cn,path);
                 iI.nombre = "Detalles";
                 iI.local();
                 //msgStatus("Cargando...","Datos de Detalles Cargado",10);
@@ -154,10 +162,24 @@ public class splash_activity extends AppCompatActivity {
 
         public void ObtenerDesplegables() {
             try {
-                iDesplegable iD = new iDesplegable(path);
-                //iD.nombre = iD.group();
-                iD.traerDesplegable(iD.group());
-                //msgStatus("Cargando...","Datos de desplegables Cargado",10);
+                path = getExternalFilesDir(null)+ File.separator;
+                iDesplegable iDES = new iDesplegable(cn,path);
+
+                //Log.i("resultado ",iDES.group());
+
+                String data = iDES.group().replaceAll("[^\\dA-Za-z ]", "");
+                String [] quitaresp = data.split(" ");
+
+                String resultado;
+
+                for (int i=0; i<quitaresp.length; i++){
+
+                    Log.i("resultado final",quitaresp[i]);
+                    resultado = quitaresp[i];
+                    iDES.nombre = resultado;
+                    iDES.traerDesplegable(resultado);
+                }
+
             } catch (Exception ex) {
                 Log.i("Error", ex.toString());
             }

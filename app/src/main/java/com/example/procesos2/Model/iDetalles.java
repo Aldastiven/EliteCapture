@@ -14,14 +14,14 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class iDetalles extends sqlConect implements Detalles {
+public class iDetalles  implements Detalles {
 
     public List<DetallesTab> D1 = new ArrayList<>();
     Connection cn = null;
     String path = null;
     JsonAdmin  ja = null;
 
-    public String nombre = "Preguntas";
+    public String nombre = "Detalles";
 
     public  String all = "SELECT [id_detalle]\n" +
                         "      ,[Id_proceso]\n" +
@@ -34,8 +34,8 @@ public class iDetalles extends sqlConect implements Detalles {
                         " FROM [dbo].[Procesos_Detalle]" +
                         " ORDER BY [Id_Detalle] , [Codigo_Detalle]";
 
-    public iDetalles(String path) throws Exception{
-            this.cn = getConexion();
+    public iDetalles(Connection cn,String path) throws Exception{
+            this.cn = cn;
             getPath(path);
     }
 
@@ -59,25 +59,12 @@ public class iDetalles extends sqlConect implements Detalles {
         return null;
     }
 
-    @Override
-    public String update(DetallesTab o, Long id) throws Exception {
-        return null;
-    }
 
     @Override
     public String delete(Long id) throws Exception {
         return null;
     }
 
-    @Override
-    public String limpiar(DetallesTab o) throws Exception {
-        return null;
-    }
-
-    @Override
-    public DetallesTab oneId(Long id) throws Exception {
-        return null;
-    }
 
     @Override
     public boolean local() throws Exception {
@@ -89,7 +76,7 @@ public class iDetalles extends sqlConect implements Detalles {
             D1.add(gift(rs));
         }
 
-        closeConexion(cn,rs);
+        //closeConexion(cn,rs);
         String contenido = D1.toString();
 
         return ja.WriteJson(path,nombre,contenido);

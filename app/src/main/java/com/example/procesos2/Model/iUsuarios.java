@@ -49,25 +49,12 @@ public class iUsuarios extends sqlConect implements usuarios {
         return null;
     }
 
-    @Override
-    public String update(UsuariosTab o, Long id) throws Exception {
-        return null;
-    }
 
     @Override
     public String delete(Long id) throws Exception {
         return null;
     }
 
-    @Override
-    public String limpiar(UsuariosTab o) throws Exception {
-        return null;
-    }
-
-    @Override
-    public UsuariosTab oneId(Long id) throws Exception {
-        return null;
-    }
 
     @Override
     public boolean local() throws Exception {

@@ -2,6 +2,7 @@ package com.example.procesos2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -10,6 +11,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
 import android.text.PrecomputedText;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.procesos2.Conexion.CheckedConexion;
+import com.example.procesos2.Config.Util.JsonAdmin;
 import com.example.procesos2.Config.sqlConect;
 import com.example.procesos2.Model.iIndex;
 import com.example.procesos2.Model.iUsuarioProceso;
@@ -28,10 +31,11 @@ import com.example.procesos2.Model.tab.UsuarioProcesoTab;
 import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Index extends AppCompatActivity {
-    LinearLayout linearCheck;
+    LinearLayout linearCheck,titulodata;
     TextView txtPanelid,txtPaneluser,txtELige,txtEstadoActivity;
     RelativeLayout contenUser;
 
@@ -51,6 +55,7 @@ public class Index extends AppCompatActivity {
 
         setContentView(R.layout.activity_index);
         linearCheck = findViewById(R.id.LinearCheck);
+        titulodata = findViewById(R.id.titulodata);
         contenUser = findViewById(R.id.contenUser);
         txtPanelid = findViewById(R.id.txtPanelid);
         txtPaneluser = findViewById(R.id.txtPaneluser);
@@ -62,9 +67,11 @@ public class Index extends AppCompatActivity {
         sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
 
         try {
+            Conexion con = new Conexion(path,this);
+
             txtEstadoActivity.setVisibility(View.INVISIBLE);
 
-            iIndex iI = new iIndex(path);
+            iIndex iI = new iIndex(con.getConexion(), path);
             iI.nombre="Procesos";
 
             iUsuarioProceso iUP = new iUsuarioProceso(path);
@@ -95,19 +102,18 @@ public class Index extends AppCompatActivity {
         super.onResume();
 
         Boolean Temporal = sp.getBoolean("Temporal", false);
-
-        /*if(Temporal){
+        Log.i("Temporal llegada ", String.valueOf(Temporal));
+        if(Temporal){
             txtEstadoActivity.setText("Tienes formularios pendientes");
             txtEstadoActivity.setTextColor(Color.parseColor("#2ecc71"));
         }else{
             txtEstadoActivity.setText("No tienes formularios pendientes");
             txtEstadoActivity.setTextColor(Color.parseColor("#5f6a6a"));
-        }*/
+        }
     }
 
     @Override protected void onPause() {
         super.onPause();
-        //Toast.makeText(this,"Pause",Toast.LENGTH_SHORT).show();
     }
 
     @Override protected void onRestart(){
@@ -164,7 +170,7 @@ public class Index extends AppCompatActivity {
 
     public void Messagenull(int size){
         try{
-            linearCheck.removeView(txtELige);
+            titulodata.removeView(txtELige);
             contenUser.removeView(txtEstadoActivity);
 
             for(int i = 0; i < size; i++) {
@@ -200,9 +206,11 @@ public class Index extends AppCompatActivity {
             if (iP.get(i).getCodProceso() == idProceso) {
                 //creando boton dinamico
                 ArrayList<check> lista = new ArrayList<check>();
+
                 final String nombreTrim = iP.get(i).getNomProceso().trim();
 
                 lista.add(new check(iP.get(i).getCodProceso().intValue(), nombreTrim));
+
 
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -214,10 +222,11 @@ public class Index extends AppCompatActivity {
                     btn.setText(c.nombre);
                     btn.setId(idProceso);
                     btn.setTextColor(Color.parseColor("#FDFEFE"));
-                    btn.setTextSize(20);
-                    btn.setBackgroundColor(Color.parseColor("#1ABC9C"));
+                    btn.setTextSize(16);
+                    btn.setBackgroundColor(Color.parseColor("#3498db"));
                     btn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     btn.setHeight(100);
+
 
                     //agregando check dinamicos
                     linearCheck.addView(btn, layoutParams);
@@ -246,6 +255,25 @@ public class Index extends AppCompatActivity {
     }
 
     public void onBackPressed() {
+    }
+
+    protected class Conexion extends sqlConect{
+        Connection cn = getConexion();
+        String path = null;
+        Context context;
+
+        public Conexion(String path, Context context) {
+            this.path = path;
+            this.context = context;
+            getPath(path);
+        }
+
+        public void getPath(String path) {
+            this.path = path;
+            if (cn != null) {
+            } else {
+            }
+        }
     }
 
     class check{

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class iIndex extends sqlConect implements index {
+public class iIndex implements index {
 
     public List<IndexTab> i1 = new ArrayList<>();
     Connection cn = null;
@@ -29,16 +29,16 @@ public class iIndex extends sqlConect implements index {
                         "  WHERE  [id_proceso] = ?;";
 
     final String all = "SELECT [codigo_proceso] , [Nombre_Proceso]\n" +
-                        "  FROM [dbo].[Procesos] order by [id_proceso];";
+                        "  FROM [dbo].[Procesos] order by [Nombre_Proceso] ASC;";
 
 
-    public iIndex(String path) throws Exception {
-        this.cn = getConexion();
+    public iIndex(Connection cn, String path) throws Exception {
+        this.cn = cn;
         getPath(path);
     }
 
     public void getPath(String path) {
-        ja = new JsonAdmin();
+       ja = new JsonAdmin();
         this.path = path;
     }
 
@@ -50,11 +50,6 @@ public class iIndex extends sqlConect implements index {
 
     @Override
     public String insert(IndexTab o) throws Exception {
-        return null;
-    }
-
-    @Override
-    public String update(IndexTab o, Long id) throws Exception {
         return null;
     }
 
@@ -73,7 +68,6 @@ public class iIndex extends sqlConect implements index {
             i1.add(gift(rs));
         }
 
-        closeConexion(cn,rs);
         String contenido = i1.toString();
 
         return ja.WriteJson(path,nombre,contenido);
@@ -90,7 +84,6 @@ public class iIndex extends sqlConect implements index {
             i1.add(gift(rs));
         }
 
-        closeConexion(cn,rs);
 
         String contenido = i1.toString();
 
@@ -107,25 +100,12 @@ public class iIndex extends sqlConect implements index {
         return i1;
     }
 
-    @Override
-    public String limpiar(IndexTab o) throws Exception {
-        return null;
-    }
-
     private IndexTab gift(ResultSet sr) throws Exception{
         IndexTab i = new IndexTab();
         i.setCodProceso(sr.getLong("codigo_proceso"));
         i.setNomProceso(sr.getString("Nombre_Proceso").trim());
         return i;
     }
-
-    @Override
-    public IndexTab oneId(Long id) throws Exception {
-        return null;
-    }
-
-
-
 
 
 }

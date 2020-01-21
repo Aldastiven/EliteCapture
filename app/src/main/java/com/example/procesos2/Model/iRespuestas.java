@@ -12,8 +12,8 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class iRespuestas extends sqlConect implements respuestas {
-    public String nombre;
+public class iRespuestas  implements respuestas {
+    public String nombre = "Respuestas";
 
     public String ins = "INSERT INTO Datos_Procesos_Detalle (Fecha, Id_Procesos, Id_Procesos_Detalle, Valor_Resp_D, Porc_Resp_D, Id_Terminal, Id_usuario)\n" +
                         "VALUES (?,?,?,?,?,?,?)";
@@ -23,8 +23,8 @@ public class iRespuestas extends sqlConect implements respuestas {
     String path = null;
     JsonAdmin ja = null;
 
-    public iRespuestas(String path){
-        this.cn = getConexion();
+    public iRespuestas(Connection cn,String path){
+        this.cn = cn;
         getPath(path);
     }
 
@@ -64,17 +64,13 @@ public class iRespuestas extends sqlConect implements respuestas {
         }
     }
 
-    @Override
-    public String update(RespuestasTab o, Long id) throws Exception {
-        return null;
-    }
 
     @Override
     public String delete(Long id) throws Exception {
         try {
             all();
             int id2 = (int) id.longValue() - 1;
-            RT.clear();
+            RT.remove(id);
             local();
 
             return "se elimino";
@@ -83,22 +79,6 @@ public class iRespuestas extends sqlConect implements respuestas {
         }
     }
 
-    @Override
-    public String limpiar(RespuestasTab o) throws Exception {
-        try {
-            all();
-            RT.clear();
-            local();
-            return "";
-        }catch (Exception ex){
-            return "Exception al limpiar el archivo \n"+ex;
-        }
-    }
-
-    @Override
-    public RespuestasTab oneId(Long id) throws Exception {
-        return null;
-    }
 
     @Override
     public boolean local() throws Exception {

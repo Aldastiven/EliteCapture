@@ -3,7 +3,6 @@ package com.example.procesos2.Model;
 import com.example.procesos2.Config.DAO;
 import com.example.procesos2.Config.Util.JsonAdmin;
 import com.example.procesos2.Config.sqlConect;
-import com.example.procesos2.Model.tab.DetallesTab;
 import com.example.procesos2.Model.tab.UsuarioProcesoTab;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -44,25 +43,12 @@ public class iUsuarioProceso extends sqlConect implements DAO {
         return null;
     }
 
-    @Override
-    public String update(Object o, Object id) throws Exception {
-        return null;
-    }
 
     @Override
     public String delete(Object id) throws Exception {
         return null;
     }
 
-    @Override
-    public String limpiar(Object o) throws Exception {
-        return null;
-    }
-
-    @Override
-    public Object oneId(Object id) throws Exception {
-        return null;
-    }
 
     @Override
     public boolean local() throws Exception {

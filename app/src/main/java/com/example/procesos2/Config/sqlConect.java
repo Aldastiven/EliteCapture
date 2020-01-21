@@ -14,7 +14,7 @@ public abstract class sqlConect {
 
     Context context;
 
-    String url = "jdbc:jtds:sqlserver://10.50.1.123;instance=Mercedes;databaseName=Temporales";
+    String url = "jdbc:jtds:sqlserver://10.50.1.123;instance=Mercedes;databaseName=Formularios";
     String user = "Inventarios";
     String pass = "Inventarios2016*";
 

@@ -6,7 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".genated"
     android:weightSum="10"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:windowSoftInputMode="adjustPan">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -25,14 +26,8 @@
             android:textSize="20sp"
             android:textAlignment="center"
             android:paddingTop="5sp"
-            android:layout_weight="1.5"/>
+            android:layout_weight="2"/>
 
-        <Button
-            android:layout_weight="0.5"
-            android:layout_width="0sp"
-            android:layout_height="wrap_content"
-            android:text="menu"
-            android:onClick="menu"/>
 
     </LinearLayout>
 
@@ -123,7 +118,7 @@
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#16A085"
+                    android:background=" #28b463 "
                     android:text="ENVIAR"
                     android:textColor="#ffffff"
                     android:textStyle="bold"
@@ -139,7 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:clickable="true"
-            app:backgroundTint="#E67E22"
+            app:backgroundTint=" #a569bd"
             app:layout_anchorGravity="top|end"
             app:srcCompat="@drawable/strella"
             android:layout_marginRight="10sp"/>

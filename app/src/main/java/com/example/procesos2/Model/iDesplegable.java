@@ -1,7 +1,7 @@
 package com.example.procesos2.Model;
 
+
 import com.example.procesos2.Config.Util.JsonAdmin;
-import com.example.procesos2.Config.sqlConect;
 import com.example.procesos2.Model.interfaz.Desplegable;
 import com.example.procesos2.Model.tab.DesplegableTab;
 import com.google.gson.Gson;
@@ -12,18 +12,18 @@ import java.util.List;
 
 import java.sql.*;
 
-public class iDesplegable extends sqlConect implements Desplegable {
+public class iDesplegable implements Desplegable {
 
     public List<DesplegableTab> DT = new ArrayList<>();
-    Connection cn = null;
+    Connection cn;
     String path = null;
     JsonAdmin ja = null;
 
     public String nombre = "";
 
 
-    public iDesplegable(String path) throws Exception{
-        this.cn = getConexion();
+    public iDesplegable(Connection cn,String path) throws Exception{
+        this.cn = cn;
         getPath(path);
     }
 
@@ -47,25 +47,12 @@ public class iDesplegable extends sqlConect implements Desplegable {
         return null;
     }
 
-    @Override
-    public String update(DesplegableTab o, Long id) throws Exception {
-        return null;
-    }
 
     @Override
     public String delete(Long id) throws Exception {
         return null;
     }
 
-    @Override
-    public String limpiar(DesplegableTab o) throws Exception {
-        return null;
-    }
-
-    @Override
-    public DesplegableTab oneId(Long id) throws Exception {
-        return null;
-    }
 
     @Override
     public boolean local() throws Exception {
@@ -80,7 +67,6 @@ public class iDesplegable extends sqlConect implements Desplegable {
             DT.add(gift(rs));
         }
 
-        closeConexion(cn,rs);
         String contenido = DT.toString();
 
         return ja.WriteJson(path,nombre,contenido);
@@ -99,14 +85,10 @@ public class iDesplegable extends sqlConect implements Desplegable {
             while (rs.next()) {
                 nombresdesp.add(rs.getString("Filtro"));
             }
-
-            //return nombresdesp.toString();
-            return  nombresdesp.toString();
-
+            return nombresdesp.toString();
         }catch (Exception EX){
-            return nombresdesp.toString()+"\n"+EX;
+            return null;
         }
-
     }
 
     public boolean traerDesplegable(String nombreD){
@@ -119,7 +101,7 @@ public class iDesplegable extends sqlConect implements Desplegable {
                                                             "      ,[Codigo]\n" +
                                                             "      ,[Opcion]\n" +
                                                             "  FROM [dbo].[Desplegables]\n" +
-                                                            "  WHERE [Filtro]='"+nombreD+"'");
+                                                            "  WHERE [Filtro]='"+nombreD+"' ORDER BY [Opcion] ASC;");
             rs = ps.executeQuery();
             while (rs.next()) {
                 DT.add(gift(rs));
@@ -141,6 +123,20 @@ public class iDesplegable extends sqlConect implements Desplegable {
         DT = gson.fromJson(ja.ObtenerLista(path,nombre), new TypeToken<List<DesplegableTab>>(){
         }.getType());
         return DT;
+    }
+
+    public String clearJson(){
+        String msj = "";
+        try{
+            DT.clear();
+            local();
+
+            msj = "ok";
+            return msj;
+        }catch (Exception ex){
+            msj = "Exception clearBeDelete \n \n"+ex;
+            return msj;
+        }
     }
 
     public DesplegableTab gift(ResultSet rs) throws Exception{
