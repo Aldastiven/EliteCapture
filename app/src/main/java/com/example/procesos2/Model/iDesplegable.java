@@ -93,7 +93,7 @@ public class iDesplegable implements Desplegable {
 
     public boolean traerDesplegable(String nombreD){
 
-        //DT.clear();
+        DT.clear();
         try {
             ResultSet rs;
             PreparedStatement ps = cn.prepareStatement("SELECT \n" +

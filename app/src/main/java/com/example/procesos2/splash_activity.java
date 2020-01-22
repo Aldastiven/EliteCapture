@@ -165,19 +165,14 @@ public class splash_activity extends AppCompatActivity {
                 path = getExternalFilesDir(null)+ File.separator;
                 iDesplegable iDES = new iDesplegable(cn,path);
 
-                //Log.i("resultado ",iDES.group());
-
                 String data = iDES.group().replaceAll("[^\\dA-Za-z ]", "");
                 String [] quitaresp = data.split(" ");
 
-                String resultado;
+                for (String e : quitaresp){
 
-                for (int i=0; i<quitaresp.length; i++){
-
-                    Log.i("resultado final",quitaresp[i]);
-                    resultado = quitaresp[i];
-                    iDES.nombre = resultado;
-                    iDES.traerDesplegable(resultado);
+                    Log.i("resultado final ",e);
+                    iDES.nombre = e;
+                    iDES.traerDesplegable(e);
                 }
 
             } catch (Exception ex) {
@@ -226,7 +221,5 @@ public class splash_activity extends AppCompatActivity {
 
 
     }
-
-
 
 }

@@ -141,8 +141,6 @@ public class genated extends AppCompatActivity {
             CrearHeader();
             onckickBTNfloating();
             crearJsonRes();
-            contarNull();
-            //validarNull();
         }catch (Exception ex){
                Log.i("Error onCreate", ex.toString());
         }
@@ -319,7 +317,6 @@ public class genated extends AppCompatActivity {
                 String desplegable = d.getListaDesplegable();
                 Float porcen = d.getPorcentaje();
                 CrearEditTextSpinnerQ(modulo, id, pregunta, desplegable, porcen);
-
             }
         }
     }
@@ -933,7 +930,7 @@ public class genated extends AppCompatActivity {
 
                     final TextView tvp = new TextView(getApplicationContext());
                     tvp.setId(id.intValue());
-                    tvp.setText(spi.pregunta+"  ("+porcen+"%)");
+                    tvp.setText(spi.pregunta+"  ("+porcen+")");
                     tvp.setTextColor(Color.parseColor("#979A9A"));
                     tvp.setBackgroundColor(Color.parseColor("#ffffff"));
                     tvp.setPadding(10,10,10,10);
@@ -970,6 +967,7 @@ public class genated extends AppCompatActivity {
 
                     final Spinner spinner = new Spinner(getApplicationContext());
                     spinner.setId(id.intValue());
+                    spinner.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
 
 
@@ -1028,7 +1026,7 @@ public class genated extends AppCompatActivity {
                                             String porcen = tvpor.getText().toString();
                                             String[] ddd = porcen.split(":");
 
-                                            al.set(idd,modulo +"--"+quest+"--"+"NULL"+"--0");
+                                            al.set(idd,modulo +"--"+quest+"--"+seleccionado+"--0");
                                             cal.set(tvpor.getId(),"");
                                         }
                                         else if (seleccionado.equals("selecciona")){
@@ -1379,51 +1377,56 @@ public class genated extends AppCompatActivity {
 
     public void registroJson(View v){
         try {
-            contarNull();
+            //realiza el conteo de si encuentra alguno con null en el arreglo
+            cont=0;
+            for(String i : al){
+                String cadena[] = i.split("--");
+
+                if(cadena[2].equals("NULL")){
+                    cont++;
+                }else{}
+            }
             validarNull();
         }catch (Exception ex){
             Log.i("Error registro json\n",ex.toString());
         }
     }
 
-    public void contarNull(){
-        cont=0;
-        for(String i : al){
-            String cadena[] = i.split("--");
-
-            if(cadena[2].equals("NULL")){
-                cont++;
-            }else{ }
-        }
-
-    }
-
     public void validarNull(){
+        try{
+            if(cont != 0){
+                Toast.makeText(this, "No puedes dejar campos vacios", Toast.LENGTH_SHORT).show();
+            }else{
+                for(String resdata : al){
+                    String cadena[] = resdata.split("--");
+                    RegisterFinal(Long.parseLong(cadena[1]),cadena[2],cadena[3]);
+                    Log.i("data al",""+resdata);
+                }
 
-        if(cont != 0){
-            Toast.makeText(this, "No puedes dejar campos vacios", Toast.LENGTH_SHORT).show();
-        }else{
-            for(String resdata : al){
-                String cadena[] = resdata.split("--");
-                RegisterFinal(Long.parseLong(cadena[1]),cadena[2],cadena[3]);
+                Log.i("data for","zzzz");
+                Toast.makeText(this, "Se guardo correctamente", Toast.LENGTH_SHORT).show();
+                EraserQ();
+
             }
-
-            Toast.makeText(this, "Se ha guardado exitosamente", Toast.LENGTH_SHORT).show();
-            validaQ();
+        }catch (Exception ex){
 
         }
     }
 
-    public void validaQ(){
-        for(String i : al){
-            String cadena[] = i.split("--");
-            while (cadena[0].equals("Q")){
-                al.remove(Integer.parseInt(cadena[1])-1);
+    public void EraserQ(){
+        try {
+            for (String i : al) {
+                String cadena[] = i.split("--");
+                while (cadena[0].equals("Q")) {
+                    al.remove(Integer.parseInt(cadena[1]) - 1);
+                }
             }
-        }
+            Log.i("data Eraser ", "llego");
 
-        eliminarHijos();
-        CrearForm();
+        }catch (Exception ex){
+            eliminarHijos();
+            CrearForm();
+        }
     }
 
     public void RegisterFinal(Long idDetalle,String respuesta,String porcentaje){
@@ -1446,7 +1449,7 @@ public class genated extends AppCompatActivity {
             rt.setTerminal(getPhoneName());
             rt.setIdUsuario(idusuario);
 
-            Log.i("insert ",ir.insert(rt));
+            ir.insert(rt);
 
             Temporal = false;
 
@@ -1459,7 +1462,6 @@ public class genated extends AppCompatActivity {
         try {
             iRespuestas irr = new iRespuestas(con.getConexion(),path);
 
-            String nomres = sp.getString("nom_proceso", "");
             irr.nombre="Respuestas";
 
 
@@ -1479,11 +1481,12 @@ public class genated extends AppCompatActivity {
                                 rc.setTerminal(rc.getTerminal());
                                 rc.setIdUsuario(rc.getIdUsuario());
 
-                                irr.Record(rc);
-                                irr.delete(rc.getIdreg());
+                                Log.i("Data Enviar",irr.Record(rc));
+
                         }
-                        //progressBar("Enviando...","Se envio exitosamente.",5);
-                        Toast.makeText(this, "Se envio exitosamente.", Toast.LENGTH_SHORT).show();
+                        irr.delete(null);
+                        Toast.makeText(this, "Se envio correctamente", Toast.LENGTH_SHORT).show();
+
                     }else {
                         Toast.makeText(this, "No tienes conexión ", Toast.LENGTH_SHORT).show();
                     }
@@ -1621,7 +1624,6 @@ public class genated extends AppCompatActivity {
                 try {
                     Dialog(SumarCalificacion().toString()+"");
                     Log.i("data final",al.toString());
-                    contarNull();
                     Log.i("data contador",""+cont);
                 }catch (Exception ex){
                     Toast.makeText(genated.this, "Exception \n " + ex, Toast.LENGTH_SHORT).show();

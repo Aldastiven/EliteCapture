@@ -70,7 +70,7 @@ public class iRespuestas  implements respuestas {
         try {
             all();
             int id2 = (int) id.longValue() - 1;
-            RT.remove(id);
+            RT.clear();
             local();
 
             return "se elimino";
@@ -107,7 +107,9 @@ public class iRespuestas  implements respuestas {
             ps.setInt(7, o.getIdUsuario());
 
             ps.executeUpdate();
-            return "";
+            delete(o.getIdreg());
+            local();
+            return "Se envio";
 
         }catch (Exception ex){
             return "Error al insertar el servidor \n"+ex;
