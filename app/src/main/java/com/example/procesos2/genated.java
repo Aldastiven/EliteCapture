@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.example.procesos2.Conexion.CheckedConexion;
 import com.example.procesos2.Config.sqlConect;
+import com.example.procesos2.Element.ElTextView;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.iDetalles;
 import com.example.procesos2.Model.iRespuestas;
@@ -57,7 +58,7 @@ import static java.lang.String.valueOf;
 
 public class genated extends AppCompatActivity {
 
-    TextView EncabTitulo;
+    TextView EncabTitulo,contcc;
     LinearLayout linearHeader;
     LinearLayout linearPrinc;
     LinearLayout LLprincipal;
@@ -78,13 +79,13 @@ public class genated extends AppCompatActivity {
 
     int idres=0;
     int cont = 0;
+    int contConsec = 1;
 
 
     public boolean Temporal;
 
 
     ArrayList<String> al = new ArrayList<String>(200);
-    ArrayList<String> res = new ArrayList<String>(200);
     ArrayList<String> cal = new ArrayList<String>(1000);
 
     CheckedConexion Cc = new CheckedConexion();
@@ -103,6 +104,7 @@ public class genated extends AppCompatActivity {
         EncabTitulo = findViewById(R.id.EncabTitulo);
         scrollForm = findViewById(R.id.scrollForm);
         fBtn = findViewById(R.id.fBtn);
+        contcc = findViewById(R.id.contcc);
 
 
         sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
@@ -136,7 +138,7 @@ public class genated extends AppCompatActivity {
             edit.putString("dataedittext", "");
             edit.apply();
 
-
+            contcc.setText("1");
 
             CrearHeader();
             onckickBTNfloating();
@@ -221,10 +223,13 @@ public class genated extends AppCompatActivity {
                 String tipo7 = "FIL"; //FLITROS JSON
 
                 if (d.getTipoDetalle().equals(tipo3) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
+
                     Long id = d.getCodDetalle();
                     String pregunta = d.getQuesDetalle();
                     String modulo = d.getTipoModulo();
                     CrearTextViewFecha(modulo, id, pregunta);
+
+                    ElTextView tvv= new ElTextView(getApplicationContext(),pregunta);
 
 
                 } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
@@ -1377,6 +1382,7 @@ public class genated extends AppCompatActivity {
 
     public void registroJson(View v){
         try {
+
             //realiza el conteo de si encuentra alguno con null en el arreglo
             cont=0;
             for(String i : al){
@@ -1385,8 +1391,10 @@ public class genated extends AppCompatActivity {
                 if(cadena[2].equals("NULL")){
                     cont++;
                 }else{}
+
             }
             validarNull();
+
         }catch (Exception ex){
             Log.i("Error registro json\n",ex.toString());
         }
@@ -1403,6 +1411,8 @@ public class genated extends AppCompatActivity {
                     Log.i("data al",""+resdata);
                 }
 
+                contador1_5();
+
                 Log.i("data for","zzzz");
                 Toast.makeText(this, "Se guardo correctamente", Toast.LENGTH_SHORT).show();
                 EraserQ();
@@ -1410,6 +1420,16 @@ public class genated extends AppCompatActivity {
             }
         }catch (Exception ex){
 
+        }
+    }
+
+    public  void contador1_5(){
+        if(Integer.parseInt(contcc.getText().toString())<6){
+            contConsec++;
+            contcc.setText(valueOf(contConsec));
+        }if(Integer.parseInt(contcc.getText().toString())==6){
+            contConsec=1;
+            contcc.setText(valueOf(contConsec));
         }
     }
 
@@ -1624,7 +1644,7 @@ public class genated extends AppCompatActivity {
                 try {
                     Dialog(SumarCalificacion().toString()+"");
                     Log.i("data final",al.toString());
-                    Log.i("data contador",""+cont);
+                    Log.i("data contador",""+contConsec);
                 }catch (Exception ex){
                     Toast.makeText(genated.this, "Exception \n " + ex, Toast.LENGTH_SHORT).show();
                 }
@@ -1706,6 +1726,7 @@ public class genated extends AppCompatActivity {
         }
     }
 
+    public void contarguardados(){}
 
     class buttonsSumRes{
         private Long codDetalle;
