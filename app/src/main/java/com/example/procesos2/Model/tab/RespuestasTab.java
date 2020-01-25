@@ -9,6 +9,7 @@ public class    RespuestasTab {
     private String Terminal;
     private Double Porcentaje;
     private int idUsuario;
+    private int Consecutivo;
 
     //CONSTRUCTOR VACIO
     public RespuestasTab() {
@@ -16,7 +17,7 @@ public class    RespuestasTab {
 
     //CONSTRUCTOR
 
-    public RespuestasTab(Long idreg, String fecha, Long idProceso, Long idPregunta, String respuesta, String terminal, Double porcentaje, int idUsuario) {
+    public RespuestasTab(Long idreg, String fecha, Long idProceso, Long idPregunta, String respuesta, String terminal, Double porcentaje, int idUsuario, int consecutivo) {
         this.idreg = idreg;
         Fecha = fecha;
         this.idProceso = idProceso;
@@ -25,12 +26,11 @@ public class    RespuestasTab {
         Terminal = terminal;
         Porcentaje = porcentaje;
         this.idUsuario = idUsuario;
+        Consecutivo = consecutivo;
     }
 
 
     //S&G
-
-
     public Long getIdreg() {
         return idreg;
     }
@@ -95,6 +95,14 @@ public class    RespuestasTab {
         this.idUsuario = idUsuario;
     }
 
+    public int getConsecutivo() {
+        return Consecutivo;
+    }
+
+    public void setConsecutivo(int consecutivo) {
+        Consecutivo = consecutivo;
+    }
+
     @Override
     public String toString(){
         return " {" +
@@ -105,7 +113,8 @@ public class    RespuestasTab {
                 "\"Respuesta\" : \"" + Respuesta + "\",\n" +
                 "\"Porcentaje\" :" + Porcentaje + " ,\n" +
                 "\"Terminal\" : \"" + Terminal + "\" ,\n" +
-                "\"idUsuario\" :" + idUsuario + "\n" +
+                "\"idUsuario\" :" + idUsuario + ",\n" +
+                "\"Consecutivo\":" + Consecutivo + "\n"+
                 "} \n";
     }
 }

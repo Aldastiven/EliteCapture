@@ -15,8 +15,8 @@ import java.util.List;
 public class iRespuestas  implements respuestas {
     public String nombre = "Respuestas";
 
-    public String ins = "INSERT INTO Datos_Procesos_Detalle (Fecha, Id_Procesos, Id_Procesos_Detalle, Valor_Resp_D, Porc_Resp_D, Id_Terminal, Id_usuario)\n" +
-                        "VALUES (?,?,?,?,?,?,?)";
+    public String ins = "INSERT INTO Datos_Procesos_Detalle (Fecha, Id_Procesos, Id_Procesos_Detalle, Valor_Resp_D, Porc_Resp_D, Id_Terminal, Id_usuario, consec_json)\n" +
+                        "VALUES (?,?,?,?,?,?,?,?)";
 
     List<RespuestasTab> RT = new ArrayList<>();
     Connection cn = null;
@@ -105,6 +105,8 @@ public class iRespuestas  implements respuestas {
             ps.setDouble(5, o.getPorcentaje());
             ps.setString(6, o.getTerminal());
             ps.setInt(7, o.getIdUsuario());
+            ps.setInt(8, o.getConsecutivo());
+
 
             ps.executeUpdate();
             delete(o.getIdreg());
