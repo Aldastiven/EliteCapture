@@ -33,7 +33,8 @@ import android.widget.Toast;
 
 import com.example.procesos2.Conexion.CheckedConexion;
 import com.example.procesos2.Config.sqlConect;
-import com.example.procesos2.Element.ElTextView;
+import com.example.procesos2.ElementH.Cfiltro;
+import com.example.procesos2.ElementH.Ctextview;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.iDetalles;
 import com.example.procesos2.Model.iRespuestas;
@@ -49,7 +50,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -234,9 +234,9 @@ public class genated extends AppCompatActivity {
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
           String modulo = d.getTipoModulo();
-          CrearTextViewFecha(modulo, id, pregunta);
-
-          ElTextView tvv = new ElTextView(getApplicationContext(), pregunta);
+          //CrearTextViewFecha(modulo, id, pregunta);
+          Ctextview Ct = new Ctextview();
+          linearHeader.addView(Ct.textview(getApplicationContext(),id,pregunta));
 
 
         } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
@@ -268,7 +268,11 @@ public class genated extends AppCompatActivity {
           String desplegable = d.getListaDesplegable();
           Float porcen = d.getPorcentaje();
 
-          CrearFiltro(modulo, id, pregunta, desplegable);
+          //CrearFiltro(modulo, id, pregunta, desplegable);
+
+          Cfiltro cf = new Cfiltro();
+          cf.Carga(path);
+          linearHeader.addView(cf.filtro(getApplicationContext(),id,pregunta,desplegable));
         }
       }
     } catch (Exception exception) {
