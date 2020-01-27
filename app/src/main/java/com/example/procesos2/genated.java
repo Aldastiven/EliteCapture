@@ -33,7 +33,6 @@ import android.widget.Toast;
 
 import com.example.procesos2.Conexion.CheckedConexion;
 import com.example.procesos2.Config.sqlConect;
-import com.example.procesos2.Element.ElTextView;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.iDetalles;
 import com.example.procesos2.Model.iRespuestas;
@@ -236,7 +235,7 @@ public class genated extends AppCompatActivity {
           String modulo = d.getTipoModulo();
           CrearTextViewFecha(modulo, id, pregunta);
 
-          ElTextView tvv = new ElTextView(getApplicationContext(), pregunta);
+          //ElTextView tvv = new ElTextView(getApplicationContext(), pregunta);
 
 
         } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
