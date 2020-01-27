@@ -38,4 +38,5 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:design:28.2.0'
     implementation 'com.toptoche.searchablespinner:searchablespinnerlibrary:1.3.1'
+    implementation 'me.dm7.barcodescanner:zbar:1.9.13'
 }

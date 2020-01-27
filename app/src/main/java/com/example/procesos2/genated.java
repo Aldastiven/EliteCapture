@@ -33,7 +33,10 @@ import android.widget.Toast;
 
 import com.example.procesos2.Conexion.CheckedConexion;
 import com.example.procesos2.Config.sqlConect;
+import com.example.procesos2.ElementH.Cetalf;
+import com.example.procesos2.ElementH.Cetnum;
 import com.example.procesos2.ElementH.Cfiltro;
+import com.example.procesos2.ElementH.Cscanner;
 import com.example.procesos2.ElementH.Ctextview;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.iDetalles;
@@ -50,7 +53,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -81,11 +83,10 @@ public class genated extends AppCompatActivity {
   int idres = 0;
   int cont = 0;
   int contConsec = 1;
-  int contrespuesta;
-
-  int consecutivoSPIN = 0;
 
   public boolean Temporal;
+
+  String resultadoBar;
 
 
   ArrayList<String> al = new ArrayList<String>(200);
@@ -156,12 +157,19 @@ public class genated extends AppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
+    try {
+      Log.i("cicloActivity"," ONRESUME ");
+    }catch (Exception ex){
+      Toast.makeText(this, "Exception en onResume \n"+ex.toString(), Toast.LENGTH_SHORT).show();
+    }
   }
 
   @Override
   protected void onPause() {
     super.onPause();
     getState();
+    Log.i("cicloActivity"," ONPAUSE ");
+
     Log.i("Temporal ", String.valueOf(Temporal));
 
     if (Temporal) {
@@ -180,13 +188,13 @@ public class genated extends AppCompatActivity {
   @Override
   protected void onRestart() {
     super.onRestart();
-    //Toast.makeText(this,"Restart",Toast.LENGTH_SHORT).show();
+    Log.i("cicloActivity"," ONRESTART ");
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    //Toast.makeText(this,"onDestroy generated",Toast.LENGTH_SHORT).show();
+    Log.i("cicloActivity"," ONDESTROY ");
     Temporal = false;
 
     if (Temporal) {
@@ -205,6 +213,41 @@ public class genated extends AppCompatActivity {
 
   }
 
+
+  public String getCodeBar() {
+    String datares="";
+    try {
+      Bundle bundle = getIntent().getExtras();
+      if (bundle != null) {
+        String d = bundle.getString("codigo");
+
+        String[] dato = d.split(",");
+        if (dato != null) {
+          resultadoBar = dato[0];
+          Log.i("resultadoCode ",resultadoBar);
+          datares = dato[0];
+        }
+      } else {}
+
+    } catch (Exception EX) {
+      Toast.makeText(this, "EXCEPTION: " + EX.toString(), Toast.LENGTH_LONG).show();
+    }
+    return datares;
+  }
+
+  public Long getID(){
+    Long id = null;
+    try{
+      Bundle bundle = getIntent().getExtras();
+      if(bundle != null){
+        id = bundle.getLong("id");
+      }
+    }catch (Exception ex){
+
+    }
+    return id;
+  }
+
   //CREAR EL JSON SINO EXISTE
   private void crearJsonRes() throws Exception {
     ir.nombre = "Respuestas";
@@ -215,7 +258,6 @@ public class genated extends AppCompatActivity {
       ir.local();
     }
   }
-
 
   public void CrearHeader() {
     try {
@@ -229,6 +271,7 @@ public class genated extends AppCompatActivity {
         String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
         String tipo6 = "CBX"; //SPINNER
         String tipo7 = "FIL"; //FLITROS JSON
+        String tipo8 = "SCA";
 
         if (d.getTipoDetalle().equals(tipo3) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
 
@@ -244,14 +287,20 @@ public class genated extends AppCompatActivity {
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
           String modulo = d.getTipoModulo();
-          CrearEditTextNumeric(modulo, id, pregunta);
+          //CrearEditTextNumeric(modulo, id, pregunta);
+
+          Cetnum cen = new Cetnum();
+          linearHeader.addView(cen.tnumerico(this,id,pregunta));
 
 
         } else if (d.getTipoDetalle().equals(tipo5) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
           String modulo = d.getTipoModulo();
-          CrearEditTextAlfanumeric(modulo, id, pregunta);
+          //CrearEditTextAlfanumeric(modulo, id, pregunta);
+
+          Cetalf cea = new Cetalf();
+          linearHeader.addView(cea.talfanumerico(this,id,pregunta));
 
         } else if (d.getTipoDetalle().equals(tipo6) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
           Long id = d.getCodDetalle();
@@ -275,6 +324,25 @@ public class genated extends AppCompatActivity {
           Cfiltro cf = new Cfiltro();
           cf.Carga(path);
           linearHeader.addView(cf.filtro(this,id,pregunta,desplegable));
+
+        } else if (d.getTipoDetalle().equals(tipo8) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
+
+          Long id = d.getCodDetalle();
+          String pregunta = d.getQuesDetalle();
+
+          //CrearFiltro(modulo, id, pregunta, desplegable);
+
+          Log.i("resultadoCC",getCodeBar());
+
+          Cscanner Cs = new Cscanner();
+          if(resultadoBar != null && id==getID()){
+            linearHeader.addView(Cs.scanner(this,id,resultadoBar));
+            Log.i("validacion","llego a crearse con resultado");
+          }else {
+            linearHeader.addView(Cs.scanner(this,id,pregunta));
+            Log.i("validacion","llego a crearse sin resultado");
+          }
+
         }
       }
     } catch (Exception exception) {
