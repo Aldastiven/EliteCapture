@@ -89,7 +89,6 @@ public class genated extends AppCompatActivity {
 
   String resultadoBar;
 
-
   ArrayList<String> al = new ArrayList<String>(200);
   ArrayList<String> cal = new ArrayList<String>(1000);
   ArrayList<Integer> arraypuntos = new ArrayList<>(10000);
@@ -214,7 +213,6 @@ public class genated extends AppCompatActivity {
 
   }
 
-
   public String getCodeBar() {
     String datares="";
     try {
@@ -265,8 +263,6 @@ public class genated extends AppCompatActivity {
       for (DetallesTab d : iP) {
         int cod = sp.getInt("cod_proceso", 0);
 
-        String tipo1 = "RS"; //BOTON DE CANTIDAD
-        String tipo2 = "SWH"; //BOTON DE SI O NO
         String tipo3 = "TV"; //TEXTVIEW
         String tipo4 = "ETN"; //EDITTEXT NUMERICO
         String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
@@ -278,8 +274,6 @@ public class genated extends AppCompatActivity {
 
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          //CrearTextViewFecha(modulo, id, pregunta);
 
           Ctextview ct = new Ctextview();
           linearHeader.addView(ct.textview(this,id,pregunta));
@@ -287,8 +281,6 @@ public class genated extends AppCompatActivity {
         } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          //CrearEditTextNumeric(modulo, id, pregunta);
 
           Cetnum cen = new Cetnum();
           linearHeader.addView(cen.tnumerico(this,id,pregunta));
@@ -297,8 +289,6 @@ public class genated extends AppCompatActivity {
         } else if (d.getTipoDetalle().equals(tipo5) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          //CrearEditTextAlfanumeric(modulo, id, pregunta);
 
           Cetalf cea = new Cetalf();
           linearHeader.addView(cea.talfanumerico(this,id,pregunta));
@@ -306,10 +296,7 @@ public class genated extends AppCompatActivity {
         } else if (d.getTipoDetalle().equals(tipo6) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
           String desplegable = d.getListaDesplegable();
-          Float porcentaje = d.getPorcentaje();
-          //CrearSpinner(modulo, id, pregunta, desplegable, porcentaje);
 
           Cdesplegable cd = new Cdesplegable();
           cd.Carga(path);
@@ -329,8 +316,6 @@ public class genated extends AppCompatActivity {
 
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
-
-          //CrearFiltro(modulo, id, pregunta, desplegable);
 
           Log.i("resultadoCC",getCodeBar());
 
@@ -429,420 +414,6 @@ public class genated extends AppCompatActivity {
     return idProceso;
   }
 
-
-  //ENCABEZADO
-
-  public String CrearTextViewFecha(String modulo, Long id, String pregunta) {
-
-    Calendar cal = Calendar.getInstance();
-    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
-    String fecha = sdf.format(cal.getTime());
-
-    for (int i = 0; i < 1; i++) {
-      ArrayList<TVF> lista = new ArrayList<>();
-      lista.add(new TVF(id.intValue(), pregunta, iP.get(i).getTipoDetalle()));
-
-      for (TVF tv : lista) {
-
-        LinearLayout.LayoutParams llparamsTXT1 = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        llparamsTXT1.weight = 1;
-        llparamsTXT1.setMargins(5, 10, 5, 5);
-
-        TextView tvp = new TextView(getApplicationContext());
-        tvp.setId(id.intValue());
-        tvp.setText(tv.pregunta);
-        tvp.setTextSize(20);
-        tvp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tvp.setTextColor(Color.parseColor("#979A9A"));
-        tvp.setTypeface(null, Typeface.BOLD);
-        tvp.setLayoutParams(llparamsTXT1);
-
-
-        TextView tvr = new TextView(getApplicationContext());
-        tvr.setId(id.intValue());
-        tvr.setText(fecha);
-        tvr.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tvr.setTextSize(20);
-        tvr.setTextColor(Color.parseColor("#979A9A"));
-        tvr.setTypeface(null, Typeface.BOLD);
-        tvr.setLayoutParams(llparamsTXT1);
-
-        linearHeader.addView(CrearLinearLayoutHeader(tvp, tvr));
-
-        String quest = String.valueOf(tvp.getId());
-        String respuesta = "NULL";
-
-        al.add(modulo + "--" + quest + "--" + respuesta + "--0");
-
-        String alData = modulo + "--" + quest + "--" + respuesta + "--0";
-        al.set((tvp.getId()) - 1, alData);
-      }
-    }
-    return null;
-  }
-
-  public void CrearEditTextNumeric(final String modulo, final Long id, String pregunta) {
-    for (int i = 0; i < 1; i++) {
-      ArrayList<ET> lista = new ArrayList<>();
-      lista.add(new ET(id.intValue(), pregunta, iP.get(i).getTipoDetalle()));
-
-      for (ET et : lista) {
-
-        LinearLayout.LayoutParams llparams = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        llparams.weight = 1;
-        llparams.setMargins(5, 10, 5, 5);
-
-        final TextView tvp = new TextView(getApplicationContext());
-        tvp.setId(id.intValue());
-        tvp.setText(et.pregunta);
-        tvp.setTextSize(20);
-        tvp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tvp.setTextColor(Color.parseColor("#979A9A"));
-        tvp.setTypeface(null, Typeface.BOLD);
-        tvp.setLayoutParams(llparams);
-
-        final EditText etxtN = new EditText(getApplicationContext());
-        etxtN.setId(id.intValue());
-        etxtN.setTextSize(20);
-        etxtN.setHint("NULL");
-        etxtN.setHintTextColor(Color.TRANSPARENT);
-        etxtN.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        etxtN.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        etxtN.setTextColor(Color.parseColor("#515A5A"));
-        etxtN.setBackgroundColor(Color.parseColor("#E5E7E9"));
-        etxtN.setTypeface(null, Typeface.BOLD);
-        etxtN.setLayoutParams(llparams);
-
-        DesabilitarTeclado(etxtN);
-
-        linearHeader.addView(CrearLinearLayoutHeader(tvp, etxtN));
-
-        final String quest = String.valueOf(tvp.getId());
-        final String resp = etxtN.getHint().toString();
-        al.add(modulo + "--" + quest + "--" + "NULL" + "--0");
-
-
-        etxtN.addTextChangedListener(new TextWatcher() {
-          @Override
-          public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-          }
-
-          @Override
-          public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            String alData = modulo + "--" + quest + "--" + charSequence + "--0";
-
-            al.set((tvp.getId()) - 1, alData);
-
-            SharedPreferences.Editor edit = sp.edit();
-            edit.putString("data", charSequence.toString());
-            edit.apply();
-
-            saveState();
-
-            if (charSequence.equals("")) {
-              //desabilitarBTN();
-            }
-          }
-
-          @Override
-          public void afterTextChanged(Editable editable) {
-
-          }
-        });
-
-      }
-    }
-  }
-
-  public void CrearEditTextAlfanumeric(final String modulo, Long id, String pregunta) {
-    for (int i = 0; i < 1; i++) {
-      ArrayList<ET> lista = new ArrayList<>();
-      lista.add(new ET(id.intValue(), pregunta, iP.get(i).getTipoDetalle()));
-
-      for (ET et : lista) {
-
-        LinearLayout.LayoutParams llparams = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        llparams.weight = 1;
-        llparams.setMargins(5, 10, 5, 5);
-
-        final TextView tvp = new TextView(getApplicationContext());
-        tvp.setId(id.intValue());
-        tvp.setText(et.pregunta);
-        tvp.setTextSize(20);
-        tvp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tvp.setTextColor(Color.parseColor("#979A9A"));
-        tvp.setTypeface(null, Typeface.BOLD);
-        tvp.setLayoutParams(llparams);
-
-        EditText etxtA = new EditText(getApplicationContext());
-        etxtA.setId(id.intValue());
-        etxtA.setTextSize(20);
-        etxtA.setHint("NULL");
-        etxtA.setHintTextColor(Color.TRANSPARENT);
-        etxtA.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        etxtA.setTextColor(Color.parseColor("#515A5A"));
-        etxtA.setBackgroundColor(Color.parseColor("#E5E7E9"));
-        etxtA.setTypeface(null, Typeface.BOLD);
-        etxtA.setLayoutParams(llparams);
-
-        DesabilitarTeclado(etxtA);
-
-        linearHeader.addView(CrearLinearLayoutHeader(tvp, etxtA));
-
-        final String quest = String.valueOf(tvp.getId());
-        String resp = etxtA.getHint().toString();
-        al.add(modulo + "--" + quest + "--" + "NULL" + "--0");
-
-        etxtA.addTextChangedListener(new TextWatcher() {
-          @Override
-          public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            charSequence = " ";
-            String alData = modulo + "--" + quest + "--" + charSequence + "--0";
-            al.set((tvp.getId()) - 1, alData);
-          }
-
-          @Override
-          public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            String alData = modulo + "--" + quest + "--" + charSequence + "--0";
-
-            al.set((tvp.getId()) - 1, alData);
-            saveState();
-          }
-
-          @Override
-          public void afterTextChanged(Editable editable) {
-
-          }
-        });
-      }
-    }
-  }
-
-  public void CrearSpinner(final String modulo, Long id, String pregunta, String desplegable, Float pocentaje) {
-    try {
-      for (int i = 0; i < 1; i++) {
-        ArrayList<SPINNER> list = new ArrayList<>();
-
-        list.add(new SPINNER(id.intValue(), pregunta, iP.get(i).getTipoDetalle(), desplegable, pocentaje));
-
-
-        for (SPINNER spi : list) {
-          LinearLayout.LayoutParams llparams = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-          llparams.weight = 1;
-          llparams.setMargins(5, 10, 5, 5);
-
-          final TextView tvp = new TextView(getApplicationContext());
-          tvp.setId(id.intValue());
-          tvp.setText(spi.pregunta);
-          tvp.setTextSize(20);
-          tvp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-          tvp.setTextColor(Color.parseColor("#979A9A"));
-          tvp.setTypeface(null, Typeface.BOLD);
-          tvp.setLayoutParams(llparams);
-
-          Conexion cn = new Conexion(path, this);
-
-          iDesplegable iDES = new iDesplegable(null, path);
-          iDES.nombre = desplegable;
-
-
-          iDES.all();
-          ArrayList<String> OptionArray = new ArrayList<>(200);
-
-          OptionArray.add("selecciona");
-
-          for (DesplegableTab ds : iDES.all()) {
-            if (ds.getFiltro().equals(desplegable)) {
-              OptionArray.add(ds.getOptions());
-            } else {
-            }
-          }
-
-          final Spinner spinner = new Spinner(getApplicationContext());
-          spinner.setId(id.intValue());
-
-          ArrayAdapter<String> spinnerArray = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_personal, OptionArray);
-          spinner.setAdapter(spinnerArray);
-          spinner.setLayoutParams(llparams);
-
-          linearHeader.addView(CrearLinearLayoutHeader(tvp, spinner));
-
-          spinner.setOnItemSelectedListener(
-                  new AdapterView.OnItemSelectedListener() {
-                    public void onItemSelected(AdapterView<?> spn, android.view.View v, int posicion, long id) {
-                      try {
-                        String seleccionado = spn.getItemAtPosition(posicion).toString();
-
-
-                        if (!seleccionado.equals("selecciona")) {
-                          int idd = (spinner.getId()) - 1;
-                          String quest = String.valueOf(spinner.getId());
-                          al.set(idd, modulo + "--" + spinner.getId() + "--" + seleccionado + "--0");
-
-                          saveState();
-                        } else {
-                          int idd = (spinner.getId()) - 1;
-                          String quest = String.valueOf(spinner.getId());
-                          al.set(idd, modulo + "--" + spinner.getId() + "--NULL--0");
-                        }
-                      } catch (Exception ex) {
-                        Toast.makeText(genated.this, "Error HEADER SPINNER" + ex.toString(), Toast.LENGTH_SHORT).show();
-                      }
-
-                    }
-
-                    public void onNothingSelected(AdapterView<?> spn) {
-                    }
-                  });
-
-          String quest = String.valueOf(spinner.getId());
-          String respuesta = "NULL";
-          al.add(modulo + "--" + spinner.getId() + "--" + respuesta + "--0");
-        }
-      }
-    } catch (Exception ex) {
-            /*Toast.makeText(this,"Se genero un exception \n " +
-                    "al crear el tipo de respuesta \n" +
-                    "en el metodo SPINNER \n \n"+ex.toString(),Toast.LENGTH_LONG).show();*/
-    }
-  }
-
-  public LinearLayout CrearLinearLayoutHeader(View v1, View v2) {
-    LinearLayout.LayoutParams llparamsPrincipal = new
-            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-    LinearLayout LLprincipal = new LinearLayout(getApplicationContext());
-    LLprincipal.setLayoutParams(llparamsPrincipal);
-    LLprincipal.setBackgroundColor(Color.parseColor("#ffffff"));
-    LLprincipal.setWeightSum(2);
-    LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
-    LLprincipal.setPadding(5, 5, 5, 5);
-    LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
-
-    LLprincipal.addView(v1);
-    LLprincipal.addView(v2);
-
-    return LLprincipal;
-  }
-
-  public void CrearFiltro(final String modulo, Long id, String pregunta, final String desplegable) {
-    try {
-
-      for (int i = 0; i < 1; i++) {
-        ArrayList<FILTRO> lista = new ArrayList<>();
-        lista.add(new FILTRO(id.intValue(), pregunta, desplegable));
-
-        for (final FILTRO fl : lista) {
-
-          final TextView tv = new TextView(getApplicationContext());
-          tv.setId(id.intValue());
-          tv.setText("Resultados :");
-          tv.setTextColor(Color.parseColor("#979A9A"));
-          tv.setPadding(5, 5, 5, 5);
-          tv.setBackgroundColor(Color.parseColor("#ffffff"));
-          tv.setTypeface(null, Typeface.BOLD);
-
-          LinearLayout.LayoutParams llparamsPrincipal = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-          LinearLayout LLprincipal = new LinearLayout(getApplicationContext());
-          LLprincipal.setLayoutParams(llparamsPrincipal);
-          LLprincipal.setWeightSum(2);
-          LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
-          LLprincipal.setPadding(5, 5, 5, 5);
-          LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
-
-          LinearLayout.LayoutParams llparamsTXT1 = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-          llparamsTXT1.weight = (float) 0.5;
-          llparamsTXT1.setMargins(5, 10, 5, 5);
-
-          final EditText edt = new EditText(getApplicationContext());
-          edt.setHint("" + fl.pregunta);
-          edt.setHintTextColor(Color.parseColor("#626567"));
-          edt.setBackgroundColor(Color.parseColor("#ffffff"));
-          edt.setTextColor(Color.parseColor("#1C2833"));
-          edt.setLayoutParams(llparamsTXT1);
-          edt.setTypeface(null, Typeface.BOLD);
-          edt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-          edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
-
-          LinearLayout.LayoutParams llparamsBtn = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-          llparamsBtn.weight = (float) 1.5;
-          llparamsBtn.setMargins(5, 10, 5, 5);
-
-
-          final Button btn = new Button(getApplicationContext());
-          btn.setBackgroundColor(Color.TRANSPARENT);
-          btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.lupa, 0);
-          btn.setPadding(10, 10, 10, 10);
-          btn.setLayoutParams(llparamsBtn);
-
-          LLprincipal.addView(edt);
-          LLprincipal.addView(btn);
-
-          linearHeader.addView(tv);
-          linearHeader.addView(LLprincipal);
-
-          final String quest = String.valueOf(tv.getId());
-          al.add(modulo + "--" + quest + "--" + "NULL" + "--0");
-
-
-          final iDesplegable iDES = new iDesplegable(con.getConexion(), path);
-          iDES.nombre = desplegable;
-
-
-          iDES.all();
-
-          btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              try {
-
-                KeyDown(edt);
-
-                for (DesplegableTab ds : iDES.all()) {
-                  try {
-                    if (ds.getCod().equals(valueOf(edt.getText()))) {
-                      tv.setText("Resultado :    " + ds.getOptions());
-                      tv.setTextColor(Color.parseColor("#2ECC71"));
-
-
-                      String[] dato = tv.getText().toString().split(":");
-
-                      String alData = modulo + "--" + quest + "--" + dato[1].trim();
-                      al.set((tv.getId()) - 1, alData + "--0");
-
-                      saveState();
-
-                    } else {
-                      //Toast.makeText(genated.this, "no se encontraron resultados", Toast.LENGTH_SHORT).show();
-                    }
-                  } catch (Exception ex) {
-                    Toast.makeText(genated.this, "Exception en resultado \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
-                  }
-                }
-              } catch (Exception ex) {
-                Toast.makeText(genated.this, "Exeption al filtrar \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
-              }
-
-            }
-          });
-
-        }
-      }
-    } catch (Exception ex) {
-      Toast.makeText(this, "Exception al crear el filtro \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
-    }
-  }
 
   //BAJAR TECLADO
 
@@ -1852,7 +1423,6 @@ public class genated extends AppCompatActivity {
 
 
   }
-
   class SwichtQ {
     private int codDetalle;
     private String pregunta;
@@ -1864,19 +1434,6 @@ public class genated extends AppCompatActivity {
       this.tipoRespuesta = tipoRespuesta;
     }
   }
-
-  class TVF {
-    private int codDetalle;
-    private String pregunta;
-    private String tipoRespuesta;
-
-    public TVF(int codDetalle, String pregunta, String tipoRespuesta) {
-      this.codDetalle = codDetalle;
-      this.pregunta = pregunta;
-      this.tipoRespuesta = tipoRespuesta;
-    }
-  }
-
   class ET {
     private int codDetalle;
     private String pregunta;
@@ -1888,7 +1445,6 @@ public class genated extends AppCompatActivity {
       this.tipoRespuesta = tipoRespuesta;
     }
   }
-
   class SPINNER {
     private int codDetalle;
     private String pregunta;
@@ -1905,15 +1461,4 @@ public class genated extends AppCompatActivity {
     }
   }
 
-  class FILTRO {
-    private int codDetalle;
-    private String pregunta;
-    private String Desplagable;
-
-    public FILTRO(int codDetalle, String pregunta, String desplagable) {
-      this.codDetalle = codDetalle;
-      this.pregunta = pregunta;
-      Desplagable = desplagable;
-    }
-  }
 }

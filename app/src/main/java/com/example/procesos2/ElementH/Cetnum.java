@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.procesos2.genated;
+
 import java.util.ArrayList;
 
 public class Cetnum {
@@ -54,6 +56,9 @@ public class Cetnum {
                 //DesabilitarTeclado(etxtN);
 
                 ControlView = CrearLinearLayoutHeader(tvp, etxtN, context);
+
+                genated g = new genated();
+                g.KeyDown(etxtN);
 
             }
 

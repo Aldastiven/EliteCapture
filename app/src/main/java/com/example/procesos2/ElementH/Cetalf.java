@@ -5,14 +5,19 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.procesos2.genated;
+
 import java.util.ArrayList;
+import static androidx.core.content.ContextCompat.getSystemService;
 
 public class Cetalf {
 
+    private static final Context INPUT_METHOD_SERVICE = null;
     View ControlView;
 
     //metodo que crea el control edittext alfanumerico
@@ -50,6 +55,9 @@ public class Cetalf {
 
                 ControlView = CrearLinearLayoutHeader(tvp, etxtA, context);
 
+                genated g = new genated();
+                g.KeyDown(etxtA);
+
             }
 
         }
@@ -73,6 +81,7 @@ public class Cetalf {
 
         return LLprincipal;
     }
+
 
     //constructor
     class consCetalf{

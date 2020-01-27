@@ -17,6 +17,7 @@ import com.example.procesos2.Config.sqlConect;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.tab.DesplegableTab;
 import com.example.procesos2.R;
+import com.example.procesos2.genated;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -128,6 +129,9 @@ public class Cfiltro {
                             }
                         }
                     });
+
+                genated g = new genated();
+                g.KeyDown(edt);
 
             }
         }
