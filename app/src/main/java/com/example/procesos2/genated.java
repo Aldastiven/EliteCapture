@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.example.procesos2.Conexion.CheckedConexion;
 import com.example.procesos2.Config.sqlConect;
+import com.example.procesos2.ElementH.Cdesplegable;
 import com.example.procesos2.ElementH.Cetalf;
 import com.example.procesos2.ElementH.Cetnum;
 import com.example.procesos2.ElementH.Cfiltro;
@@ -271,7 +272,7 @@ public class genated extends AppCompatActivity {
         String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
         String tipo6 = "CBX"; //SPINNER
         String tipo7 = "FIL"; //FLITROS JSON
-        String tipo8 = "SCA";
+        String tipo8 = "SCA"; //SCANNER BAR
 
         if (d.getTipoDetalle().equals(tipo3) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
 
@@ -308,18 +309,17 @@ public class genated extends AppCompatActivity {
           String modulo = d.getTipoModulo();
           String desplegable = d.getListaDesplegable();
           Float porcentaje = d.getPorcentaje();
-          CrearSpinner(modulo, id, pregunta, desplegable, porcentaje);
+          //CrearSpinner(modulo, id, pregunta, desplegable, porcentaje);
+
+          Cdesplegable cd = new Cdesplegable();
+          cd.Carga(path);
+          linearHeader.addView(cd.desplegable(this,id,pregunta,desplegable));
 
         } else if (d.getTipoDetalle().equals(tipo7) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
 
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
           String desplegable = d.getListaDesplegable();
-          Float porcen = d.getPorcentaje();
-
-          //CrearFiltro(modulo, id, pregunta, desplegable);
-
 
           Cfiltro cf = new Cfiltro();
           cf.Carga(path);
