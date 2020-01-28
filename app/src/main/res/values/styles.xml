@@ -25,5 +25,16 @@
         <item name="colorAccent">#00C853</item>
     </style>
 
+    <style name="RadioGood" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:background"> #00C853 </item>
+    </style>
+
+    <style name="RadioNull" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:background"> #7f8c8d </item>
+    </style>
+
+    <style name="RadioBad" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:background">  #ec7063 </item>
+    </style>
 
 </resources>
