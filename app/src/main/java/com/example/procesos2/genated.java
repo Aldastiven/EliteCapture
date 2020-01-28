@@ -31,9 +31,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.procesos2.Chead.Cdesplegable;
+import com.example.procesos2.Chead.Cetalf;
+import com.example.procesos2.Chead.Cetnum;
+import com.example.procesos2.Chead.Cfiltro;
+import com.example.procesos2.Chead.Cscanner;
+import com.example.procesos2.Chead.Ctextview;
 import com.example.procesos2.Conexion.CheckedConexion;
 import com.example.procesos2.Config.sqlConect;
-import com.example.procesos2.Element.ElTextView;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.iDetalles;
 import com.example.procesos2.Model.iRespuestas;
@@ -49,7 +54,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -218,6 +222,9 @@ public class genated extends AppCompatActivity {
 
   public void CrearHeader() {
     try {
+
+      path = getExternalFilesDir(null) + File.separator;
+
       for (DetallesTab d : iP) {
         int cod = sp.getInt("cod_proceso", 0);
 
@@ -228,29 +235,35 @@ public class genated extends AppCompatActivity {
         String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
         String tipo6 = "CBX"; //SPINNER
         String tipo7 = "FIL"; //FLITROS JSON
+        String tipo8 = "SCA"; //SCANNER BAR
 
         if (d.getTipoDetalle().equals(tipo3) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
 
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
           String modulo = d.getTipoModulo();
-          CrearTextViewFecha(modulo, id, pregunta);
+          //CrearTextViewFecha(modulo, id, pregunta);
 
-          ElTextView tvv = new ElTextView(getApplicationContext(), pregunta);
-
+          Ctextview ct = new Ctextview();
+          linearHeader.addView(ct.textview(this, id ,pregunta));
 
         } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
           String modulo = d.getTipoModulo();
-          CrearEditTextNumeric(modulo, id, pregunta);
+          //CrearEditTextNumeric(modulo, id, pregunta);
 
+          Cetnum cen = new Cetnum();
+          linearHeader.addView(cen.tnumerico(this, id, pregunta));
 
         } else if (d.getTipoDetalle().equals(tipo5) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
           Long id = d.getCodDetalle();
           String pregunta = d.getQuesDetalle();
           String modulo = d.getTipoModulo();
-          CrearEditTextAlfanumeric(modulo, id, pregunta);
+          //CrearEditTextAlfanumeric(modulo, id, pregunta);
+
+          Cetalf cal = new Cetalf();
+          linearHeader.addView(cal.talfanumerico(this, id, pregunta));
 
         } else if (d.getTipoDetalle().equals(tipo6) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
           Long id = d.getCodDetalle();
@@ -258,7 +271,11 @@ public class genated extends AppCompatActivity {
           String modulo = d.getTipoModulo();
           String desplegable = d.getListaDesplegable();
           Float porcentaje = d.getPorcentaje();
-          CrearSpinner(modulo, id, pregunta, desplegable, porcentaje);
+          //CrearSpinner(modulo, id, pregunta, desplegable, porcentaje);
+
+          Cdesplegable cd = new Cdesplegable();
+          cd.Carga(path);
+          linearHeader.addView(cd.desplegable(this, id, pregunta, desplegable));
 
         } else if (d.getTipoDetalle().equals(tipo7) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
 
@@ -268,8 +285,23 @@ public class genated extends AppCompatActivity {
           String desplegable = d.getListaDesplegable();
           Float porcen = d.getPorcentaje();
 
-          CrearFiltro(modulo, id, pregunta, desplegable);
+          //CrearFiltro(modulo, id, pregunta, desplegable);
+
+          Cfiltro cf = new Cfiltro();
+          cf.Carga(path);
+          linearHeader.addView(cf.filtro(this, id, pregunta, desplegable));
+
+
+        }else if(d.getTipoDetalle().equals(tipo8) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")){
+
+          Long id = d.getCodDetalle();
+          String pregunta = d.getQuesDetalle();
+
+          Cscanner cs = new Cscanner();
+          linearHeader.addView(cs.scanner(this,id,pregunta));
         }
+
+
       }
     } catch (Exception exception) {
       Toast.makeText(this, "exception en generated \n \n" + exception.toString(), Toast.LENGTH_SHORT).show();
