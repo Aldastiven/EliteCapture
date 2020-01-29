@@ -12,10 +12,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.procesos2.Camera;
 import com.example.procesos2.R;
-
 import java.util.ArrayList;
 
 public class Cscanner {
@@ -125,6 +123,7 @@ public class Cscanner {
             Toast.makeText(context, "Ocurrio un error \n \n"+ex.toString(), Toast.LENGTH_SHORT).show();
         }
     }
+
 
     //constructor
     class consScanner{

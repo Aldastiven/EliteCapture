@@ -30,7 +30,7 @@ public class Cetnum {
                 LinearLayout.LayoutParams llparams = new
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 llparams.weight = 1;
-                llparams.setMargins(5, 10, 5, 5);
+                llparams.setMargins(5, 10, 5, 10);
 
                 final TextView tvp = new TextView(context);
                 tvp.setId(id.intValue());

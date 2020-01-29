@@ -355,10 +355,11 @@ public class genated extends AppCompatActivity {
         Long id = d.getCodDetalle();
         String pregunta = d.getQuesDetalle();
         String desplegable = d.getListaDesplegable();
+        Float porcentaje = d.getPorcentaje();
 
         CradioButton cb = new CradioButton();
         cb.Carga(path);
-        linearPrinc.addView(cb.Tradiobtn(this,id,pregunta,desplegable));
+        linearPrinc.addView(cb.Tradiobtn(this,id,pregunta,desplegable,porcentaje));
       }
     }
   }

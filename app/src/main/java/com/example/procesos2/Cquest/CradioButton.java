@@ -1,13 +1,18 @@
 package com.example.procesos2.Cquest;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.procesos2.Config.sqlConect;
@@ -25,8 +30,9 @@ public class CradioButton {
     Context context;
     ArrayList<String> option = new ArrayList<>();
 
-    int idd = 0;
+    int idd = 0 , idres = 0;
 
+    //obtiene conexion y path
     public void Carga(String path){
         try {
             con = new Conexion(path, context);
@@ -36,46 +42,125 @@ public class CradioButton {
         }
     }
 
-    public View Tradiobtn (final Context context, Long id, final String contenido, String desplegable){
+    //crea el control del radio button y retorna el view
+    public View Tradiobtn (final Context context, Long id, final String contenido, String desplegable, Float porcentaje){
+
+        //ORGANIZA LOS CONTROLES INTEGRADOS
+        LinearLayout.LayoutParams llparamsTotal = new
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+        LinearLayout LLtotal = new LinearLayout(context);
+        LLtotal.setLayoutParams(llparamsTotal);
+        LLtotal.setWeightSum(2);
+        LLtotal.setOrientation(LinearLayout.VERTICAL);
+        LLtotal.setPadding(5, 5, 5, 5);
+        LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
 
         LinearLayout ll = new LinearLayout(context);
         RadioGroup rg = new RadioGroup(context);
         rg.setOrientation(LinearLayout.HORIZONTAL);
+        rg.setGravity(Gravity.CENTER_HORIZONTAL);
 
         int i;
         traerdata(context,desplegable);
+
+        LinearLayout.LayoutParams llparamsText = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        llparamsText.weight = (float) 2.3;
+
+        LinearLayout.LayoutParams llparamsTextpo = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        llparamsText.weight = (float) 0.7;
+
+        final TextView tvp = new TextView(context);
+        tvp.setId(id.intValue());
+        tvp.setText(contenido+"\nponderado: "+porcentaje.toString());
+        tvp.setTextColor(Color.parseColor("#979A9A"));
+        tvp.setPadding(5, 5, 5, 5);
+        tvp.setBackgroundColor(Color.parseColor("#ffffff"));
+        tvp.setTypeface(null, Typeface.BOLD);
+        tvp.setLayoutParams(llparamsText);
+
+        final TextView tvpor = new TextView(context);
+        tvpor.setId(idres++);
+        tvpor.setText("resultado: ");
+        tvpor.setTextColor(Color.parseColor("#979A9A"));
+        tvpor.setBackgroundColor(Color.parseColor("#ffffff"));
+        tvpor.setPadding(10, 10, 10, 10);
+        tvpor.setTypeface(null, Typeface.BOLD);
+        tvpor.setLayoutParams(llparamsTextpo);
 
 
         for (i=0; i<=option.size()-1; i++){
             ArrayList<consradio> lista = new ArrayList<>();
             lista.add(new consradio(context, id, contenido));
 
+            LinearLayout.LayoutParams llrb = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            llrb.setMargins(0,5,10,40);
+
             final RadioButton rb = new RadioButton(context);
             rb.setId(idd++);
             rb.setText(option.get(i));
+            rb.setLayoutParams(llrb);
             rg.addView(rb);
+
+            if(rb.getText().toString().equals("NO APLICA")){
+                rb.setButtonTintList(ColorSelected( 231, 76, 60 ));
+            }else if(rb.getText().toString().equals("NO CUMPLE")){
+                rb.setButtonTintList(ColorSelected( 153, 163, 164 ));
+            }else if(rb.getText().toString().equals("SI CUMPLE")){
+                rb.setButtonTintList(ColorSelected(34, 153, 84 ));
+            }
 
             rb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    if(rb.getId()==0){
-                        Toast.makeText(context, "0", Toast.LENGTH_SHORT).show();
-                        rb.setHighlightColor(Color.parseColor("#0c83bd"));
-                    }else if(rb.getId()==(1)){
-                        Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
-                    }else if(rb.getId()==(2)){
-                        Toast.makeText(context, "2", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(context, ""+rb.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
-        ll.addView(rg);
+        LLtotal.addView(LLPREGUNTA(context,tvp,tvpor));
+        LLtotal.addView(rg);
+
+        ll.addView(LLtotal);
         ControlView = ll;
         return ControlView;
     }
 
+    //retorna view de pregunta y porcentaje
+    public View LLPREGUNTA(Context c,View v1, View v2){
+
+        LinearLayout.LayoutParams llparamspregunta = new
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        LinearLayout llpregunta = new LinearLayout(c);
+        llpregunta.setLayoutParams(llparamspregunta);
+        llpregunta.setWeightSum(3);
+        llpregunta.setOrientation(LinearLayout.HORIZONTAL);
+
+        llpregunta.addView(v1); //retorna pregunta
+        llpregunta.addView(v2); //retorna pocentaje
+
+        return llpregunta;
+    }
+
+    //añade el color al radio segun el texto del control
+    public ColorStateList ColorSelected(int red, int green, int blue){
+        final ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+
+                        Color.DKGRAY
+                        , Color.rgb (red,green,blue),
+                }
+        );
+
+        return colorStateList;
+    }
+
+    //retorna los resultados de los desplegables
     public ArrayList<String> traerdata(Context context, String desplegable){
         iDES.nombre = desplegable;
         try{
@@ -89,6 +174,7 @@ public class CradioButton {
         return option;
     }
 
+    //constructor
     class consradio{
         Context context;
         Long id;
@@ -100,7 +186,6 @@ public class CradioButton {
             this.contenido = contenido;
         }
     }
-
 
     //sql & path
     protected class Conexion extends sqlConect {

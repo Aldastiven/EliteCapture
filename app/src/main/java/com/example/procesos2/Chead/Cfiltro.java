@@ -58,6 +58,14 @@ public class Cfiltro {
                 LLtotal.setPadding(5, 5, 5, 5);
                 LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
 
+                LinearLayout.LayoutParams llparams = new
+                        LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                llparams.weight = 1;
+                llparams.setMargins(5, 0, 5, 10);
+
+                LinearLayout.LayoutParams lltxtres = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                lltxtres.setMargins(0,10,0,0);
+
                 final TextView tv = new TextView(context);
                 tv.setId(id.intValue());
                 tv.setText("Resultados :");
@@ -65,9 +73,11 @@ public class Cfiltro {
                 tv.setPadding(5, 5, 5, 5);
                 tv.setBackgroundColor(Color.parseColor("#ffffff"));
                 tv.setTypeface(null, Typeface.BOLD);
+                tv.setLayoutParams(lltxtres);
 
                 LinearLayout.LayoutParams llparamsPrincipal = new
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                llparamsPrincipal.setMargins(0,0,0,10);
 
                 LinearLayout LLprincipal = new LinearLayout(context);
                 LLprincipal.setLayoutParams(llparamsPrincipal);
