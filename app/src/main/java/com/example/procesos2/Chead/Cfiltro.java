@@ -101,6 +101,7 @@ public class Cfiltro {
                 edt.setTypeface(null, Typeface.BOLD);
                 edt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
+                edt.setBackgroundResource(R.drawable.bordertext);
 
                 LinearLayout.LayoutParams llparamsBtn = new
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);

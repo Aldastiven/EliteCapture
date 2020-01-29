@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.procesos2.R;
 import com.example.procesos2.genated;
 
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class Cetnum {
                 etxtN.setBackgroundColor(Color.parseColor("#E5E7E9"));
                 etxtN.setTypeface(null, Typeface.BOLD);
                 etxtN.setLayoutParams(llparams);
+                etxtN.setBackgroundResource(R.drawable.bordertext);
 
                 //DesabilitarTeclado(etxtN);
 

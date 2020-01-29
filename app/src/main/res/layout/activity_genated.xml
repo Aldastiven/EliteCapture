@@ -7,7 +7,8 @@
     tools:context=".genated"
     android:weightSum="10"
     android:orientation="vertical"
-    android:windowSoftInputMode="adjustPan">
+    android:windowSoftInputMode="adjustPan"
+    android:background="#ffffff">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -46,7 +47,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:layout_weight="2.8  ">
+        android:layout_weight="2.9"
+        android:padding="5sp"
+        android:background="@drawable/bordercontainer"
+        android:layout_marginHorizontal="2sp">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -66,22 +70,16 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_weight="5.5"
+        android:layout_weight="5.4"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:padding="10sp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="2sp"
-            android:background="#839192"
-            />
         <ScrollView
             android:id="@+id/scrollForm"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="4sp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/LinearCheck"

@@ -39,6 +39,7 @@ import com.example.procesos2.Chead.Cscanner;
 import com.example.procesos2.Chead.Ctextview;
 import com.example.procesos2.Conexion.CheckedConexion;
 import com.example.procesos2.Config.sqlConect;
+import com.example.procesos2.Cquest.Cconteos;
 import com.example.procesos2.Cquest.CradioButton;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.iDetalles;
@@ -319,7 +320,9 @@ public class genated extends AppCompatActivity {
         String pregunta = d.getQuesDetalle();
         String modulo = d.getTipoModulo();
         Float porce = d.getPorcentaje();
-        CrearSumRes(modulo, id, pregunta, porce);
+        //CrearSumRes(modulo, id, pregunta, porce);
+        Cconteos cc = new Cconteos();
+        linearPrinc.addView(cc.Cconteo(this,id,pregunta,porce));
 
       } else if (d.getTipoDetalle().equals(tipo2) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
         Long idCons = d.getIdConsecutivo();

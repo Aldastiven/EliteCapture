@@ -5,9 +5,11 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.example.procesos2.Config.sqlConect;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.tab.DesplegableTab;
+import com.example.procesos2.R;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -49,12 +52,15 @@ public class CradioButton {
         LinearLayout.LayoutParams llparamsTotal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
+        llparamsTotal.setMargins(0,0,0,10);
+
         LinearLayout LLtotal = new LinearLayout(context);
         LLtotal.setLayoutParams(llparamsTotal);
         LLtotal.setWeightSum(2);
         LLtotal.setOrientation(LinearLayout.VERTICAL);
-        LLtotal.setPadding(5, 5, 5, 5);
+        LLtotal.setPadding(10,30,10,10);
         LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
+        LLtotal.setBackgroundResource(R.drawable.bordercontainer);
 
         LinearLayout ll = new LinearLayout(context);
         RadioGroup rg = new RadioGroup(context);
@@ -94,7 +100,7 @@ public class CradioButton {
             lista.add(new consradio(context, id, contenido));
 
             LinearLayout.LayoutParams llrb = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-            llrb.setMargins(0,5,10,40);
+            llrb.setMargins(0,5,10,0);
 
             final RadioButton rb = new RadioButton(context);
             rb.setId(idd++);
