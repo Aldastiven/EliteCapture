@@ -50,13 +50,15 @@ public class Cfiltro {
                 //ORGANIZA LOS CONTROLES INTEGRADOS
                 LinearLayout.LayoutParams llparamsTotal = new
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                llparamsTotal.setMargins(2,5,2,5);
 
-                LinearLayout LLtotal = new LinearLayout(context);
+                final LinearLayout LLtotal = new LinearLayout(context);
                 LLtotal.setLayoutParams(llparamsTotal);
                 LLtotal.setWeightSum(2);
                 LLtotal.setOrientation(LinearLayout.VERTICAL);
-                LLtotal.setPadding(5, 5, 5, 5);
+                LLtotal.setPadding(5, 15, 5, 5);
                 LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
+                LLtotal.setBackgroundResource(R.drawable.bordercontainer);
 
                 LinearLayout.LayoutParams llparams = new
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -101,7 +103,7 @@ public class Cfiltro {
                 edt.setTypeface(null, Typeface.BOLD);
                 edt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
-                edt.setBackgroundResource(R.drawable.bordertext);
+                edt.setBackgroundColor(Color.parseColor("#eeeeee"));
 
                 LinearLayout.LayoutParams llparamsBtn = new
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -134,9 +136,11 @@ public class Cfiltro {
                             if(!resultado.isEmpty()){
                                 tv.setText(Buscar(edt.getText().toString(),desplegable));
                                 tv.setTextColor(Color.parseColor("#58d68d"));
+                                LLtotal.setBackgroundResource(R.drawable.bordercontainer);
                             }else {
                                 tv.setText("No se encontraron resultados");
                                 tv.setTextColor(Color.parseColor("#f1948a"));
+                                LLtotal.setBackgroundResource(R.drawable.bordercontainerred);
                             }
                         }
                     });

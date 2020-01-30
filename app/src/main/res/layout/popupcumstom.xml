@@ -4,26 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="10"
-    android:background="#76161616">
+    android:background="#96000000">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@drawable/borderpop"
-        android:orientation="vertical"
-        android:weightSum="10"
-        android:paddingTop="30sp"
-        android:paddingBottom="30sp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="63mm"
-            android:layout_height="0sp"
+            android:layout_width="62mm"
+            android:layout_height="wrap_content"
             android:text="PREGUNTAS INICIALES"
             android:textColor="#839192"
+            android:textSize="25sp"
             android:textStyle="bold"
+            android:background="@drawable/borderpoptitle"
             android:textAlignment="center"
-            android:background="#ffffff"
-            android:layout_weight="0.5"/>
+            android:layout_gravity="center_horizontal"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="10"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/borderpop">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +38,7 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:layout_weight="8">
+            android:layout_weight="10">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -42,31 +49,11 @@
                     android:layout_width="fill_parent"
                     android:layout_height="200sp"
                     android:orientation="vertical">
-
-
                 </LinearLayout>
 
             </ScrollView>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0sp"
-            android:layout_weight="1.5"
-            android:gravity="center_horizontal">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="aceptar"
-                android:textSize="20sp"
-                android:textColor="#2ecc71"
-                android:textStyle="bold"
-                android:paddingHorizontal="40sp"
-                android:background="@drawable/borderconinergreen"
-                />
-
-        </LinearLayout>
 
 
 

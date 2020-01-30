@@ -92,6 +92,7 @@ public class Cdesplegable {
     public LinearLayout CrearLinearLayoutHeader(View v1, View v2, Context context) {
         LinearLayout.LayoutParams llparamsPrincipal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        llparamsPrincipal.setMargins(2,5,2,5);
 
         LinearLayout LLprincipal = new LinearLayout(context);
         LLprincipal.setLayoutParams(llparamsPrincipal);
@@ -100,6 +101,7 @@ public class Cdesplegable {
         LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
         LLprincipal.setPadding(5, 5, 5, 5);
         LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
+        LLprincipal.setBackgroundResource(R.drawable.bordercontainer);
 
         LLprincipal.addView(v1);
         LLprincipal.addView(v2);

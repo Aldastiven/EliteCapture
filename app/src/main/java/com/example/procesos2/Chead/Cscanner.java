@@ -34,20 +34,22 @@ public class Cscanner {
                 //ORGANIZA LOS CONTROLES INTEGRADOS
                 LinearLayout.LayoutParams llparamsTotal = new
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                llparamsTotal.setMargins(2,5,2,5);
 
                 LinearLayout LLtotal = new LinearLayout(context);
                 LLtotal.setLayoutParams(llparamsTotal);
                 LLtotal.setWeightSum(2);
                 LLtotal.setOrientation(LinearLayout.VERTICAL);
-                LLtotal.setPadding(5, 5, 5, 5);
+                LLtotal.setPadding(5, 25, 5, 5);
                 LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
+                LLtotal.setBackgroundResource(R.drawable.bordercontainer);
 
                 //view que va a mostrar el resultado de la lectura
                 final TextView tv = new TextView(context);
                 tv.setId(id.intValue());
                 tv.setText("Escanea el codigo de barras activando la camara:");
                 tv.setTextColor(Color.parseColor("#979A9A"));
-                tv.setPadding(5, 5, 5, 5);
+                tv.setPadding(5, 15, 5, 5);
                 tv.setBackgroundColor(Color.parseColor("#ffffff"));
                 tv.setTypeface(null, Typeface.BOLD);
 
@@ -77,7 +79,7 @@ public class Cscanner {
                 edt.setTypeface(null, Typeface.BOLD);
                 edt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
-                edt.setBackgroundResource(R.drawable.bordertext);
+                edt.setBackgroundColor(Color.parseColor("#eeeeee"));
 
                 LinearLayout.LayoutParams llparamsBtn = new
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
