@@ -45,32 +45,31 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:layout_weight="2.9"
-        android:padding="5sp"
-        android:background="@drawable/bordercontainer"
-        android:layout_marginHorizontal="2sp">
+        android:gravity="right"
+        android:paddingHorizontal="10sp">
 
-        <ScrollView
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/editarEncab"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingTop="10sp">
+            android:textColor="#666666"
+            android:textStyle="bold"
+            android:text="Editar encabezado"
+            android:background="@drawable/bordercontaineryellow"
+            android:paddingHorizontal="10sp"
+            android:onClick="Showpop"
+            android:drawableRight="@drawable/editar"
+            />
 
-            <LinearLayout
-                android:id="@+id/LinearHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-        </ScrollView>
 
     </LinearLayout>
 
+
     <LinearLayout
-        android:layout_weight="5.4"
+        android:layout_weight="7.3"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0sp"

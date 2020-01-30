@@ -3,6 +3,7 @@ package com.example.procesos2;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -66,9 +68,10 @@ public class genated extends AppCompatActivity {
 
   TextView EncabTitulo, contcc;
   LinearLayout linearHeader;
+  LinearLayout linearBodypop;
   LinearLayout linearPrinc;
   LinearLayout LLprincipal;
-  Button btnGuardar;
+  Button btnGuardar,editarEncab;
   ScrollView scrollForm;
   FloatingActionButton fBtn;
 
@@ -80,6 +83,8 @@ public class genated extends AppCompatActivity {
   iRespuestas ir = null;
   iDesplegable id = null;
   iDetalles iD = null;
+
+  Dialog mypop;
 
   public Conexion con = null;
 
@@ -101,14 +106,20 @@ public class genated extends AppCompatActivity {
     setContentView(R.layout.activity_genated);
     getSupportActionBar().hide();
 
-
-    linearHeader = findViewById(R.id.LinearHeader);
+    mypop = new Dialog(this);
+    mypop.setContentView(R.layout.popupcumstom);
     linearPrinc = findViewById(R.id.LinearCheck);
     btnGuardar = findViewById(R.id.guardar);
     EncabTitulo = findViewById(R.id.EncabTitulo);
     scrollForm = findViewById(R.id.scrollForm);
     fBtn = findViewById(R.id.fBtn);
     contcc = findViewById(R.id.contcc);
+    editarEncab = findViewById(R.id.editarEncab);
+
+    linearBodypop = mypop.findViewById(R.id.linearbodypop);
+
+    Window window = mypop.getWindow();
+    window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
 
     sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
@@ -147,6 +158,10 @@ public class genated extends AppCompatActivity {
       CrearHeader();
       onckickBTNfloating();
       crearJsonRes();
+
+      //abre el encabezado
+      mypop.show();
+
     } catch (Exception ex) {
       Log.i("Error onCreate", ex.toString());
     }
@@ -207,6 +222,10 @@ public class genated extends AppCompatActivity {
     }
   }
 
+  public void Showpop(View v){
+    mypop.show();
+  }
+
 
   public void CrearHeader() {
     try {
@@ -233,7 +252,7 @@ public class genated extends AppCompatActivity {
           //CrearTextViewFecha(modulo, id, pregunta);
 
           Ctextview ct = new Ctextview();
-          linearHeader.addView(ct.textview(this, id ,pregunta));
+          linearBodypop.addView(ct.textview(this, id ,pregunta));
 
         } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
           Long id = d.getCodDetalle();
@@ -242,7 +261,7 @@ public class genated extends AppCompatActivity {
           //CrearEditTextNumeric(modulo, id, pregunta);
 
           Cetnum cen = new Cetnum();
-          linearHeader.addView(cen.tnumerico(this, id, pregunta));
+          linearBodypop.addView(cen.tnumerico(genated.this, id, pregunta));
 
         } else if (d.getTipoDetalle().equals(tipo5) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
           Long id = d.getCodDetalle();
@@ -251,7 +270,7 @@ public class genated extends AppCompatActivity {
           //CrearEditTextAlfanumeric(modulo, id, pregunta);
 
           Cetalf cal = new Cetalf();
-          linearHeader.addView(cal.talfanumerico(this, id, pregunta));
+          linearBodypop.addView(cal.talfanumerico(this, id, pregunta));
 
         } else if (d.getTipoDetalle().equals(tipo6) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
           Long id = d.getCodDetalle();
@@ -263,7 +282,7 @@ public class genated extends AppCompatActivity {
 
           Cdesplegable cd = new Cdesplegable();
           cd.Carga(path);
-          linearHeader.addView(cd.desplegable(this, id, pregunta, desplegable));
+          linearBodypop.addView(cd.desplegable(this, id, pregunta, desplegable));
 
         } else if (d.getTipoDetalle().equals(tipo7) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
 
@@ -277,7 +296,7 @@ public class genated extends AppCompatActivity {
 
           Cfiltro cf = new Cfiltro();
           cf.Carga(path);
-          linearHeader.addView(cf.filtro(this, id, pregunta, desplegable));
+          linearBodypop.addView(cf.filtro(this, id, pregunta, desplegable));
 
 
         }else if(d.getTipoDetalle().equals(tipo8) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")){
@@ -286,13 +305,14 @@ public class genated extends AppCompatActivity {
           String pregunta = d.getQuesDetalle();
 
           Cscanner cs = new Cscanner();
-          linearHeader.addView(cs.scanner(this,id,pregunta));
+          linearBodypop.addView(cs.scanner(this,id,pregunta));
         }
 
 
       }
     } catch (Exception exception) {
       Toast.makeText(this, "exception en generated \n \n" + exception.toString(), Toast.LENGTH_SHORT).show();
+      Log.i("Excep on create",exception.toString());
     }
 
     CrearForm();
@@ -329,21 +349,18 @@ public class genated extends AppCompatActivity {
         Long id = d.getCodDetalle();
         String pregunta = d.getQuesDetalle();
         String modulo = d.getTipoModulo();
-        CrearSwicht(modulo, id, pregunta);
 
       } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
         Long idCons = d.getIdConsecutivo();
         Long id = d.getCodDetalle();
         String pregunta = d.getQuesDetalle();
         String modulo = d.getTipoModulo();
-        CrearEditTextNumericQ(modulo, id, pregunta);
 
       } else if (d.getTipoDetalle().equals(tipo5) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
         Long idCons = d.getIdConsecutivo();
         Long id = d.getCodDetalle();
         String pregunta = d.getQuesDetalle();
         String modulo = d.getTipoModulo();
-        CrearEditTextAlfaQ(modulo, id, pregunta);
 
       } else if (d.getTipoDetalle().equals(tipo6) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
         Long idCons = d.getIdConsecutivo();
@@ -352,7 +369,6 @@ public class genated extends AppCompatActivity {
         String modulo = d.getTipoModulo();
         String desplegable = d.getListaDesplegable();
         Float porcen = d.getPorcentaje();
-        CrearEditTextSpinnerQ(modulo, id, pregunta, desplegable, porcen);
 
       } else if(d.getTipoDetalle().equals(tipo7) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")){
         Long id = d.getCodDetalle();
@@ -393,611 +409,6 @@ public class genated extends AppCompatActivity {
   public void KeyDown(EditText et) {
     InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
     imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
-  }
-
-
-  //FORMULARIO
-
-  private void CrearEditTextNumericQ(final String modulo, Long id, String pregunta) {
-    try {
-      for (int i = 0; i < 1; i++) {
-        ArrayList<ET> lista = new ArrayList<>();
-        lista.add(new ET(id.intValue(), pregunta, iP.get(i).getTipoDetalle()));
-
-        for (ET et : lista) {
-
-          final TextView tvp = new TextView(getApplicationContext());
-          tvp.setId(id.intValue());
-          tvp.setText(et.pregunta);
-          tvp.setTextColor(Color.parseColor("#979A9A"));
-          tvp.setPadding(5, 5, 5, 5);
-          tvp.setBackgroundColor(Color.parseColor("#ffffff"));
-          tvp.setTypeface(null, Typeface.BOLD);
-
-          LinearLayout.LayoutParams llparamsTXT1 = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-          llparamsTXT1.setMargins(30, 10, 30, 10);
-
-          final EditText edt = new EditText(getApplicationContext());
-          edt.setId(id.intValue());
-          edt.setTextSize(20);
-          edt.setHint("null");
-          edt.setHintTextColor(Color.TRANSPARENT);
-          edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
-          edt.setTextColor(Color.parseColor("#515A5A"));
-          edt.setBackgroundColor(Color.parseColor("#E5E7E9"));
-          edt.setTypeface(null, Typeface.BOLD);
-          edt.setLayoutParams(llparamsTXT1);
-
-          DesabilitarTeclado(edt);
-
-          linearPrinc.addView(tvp);
-          linearPrinc.addView(edt);
-
-          final String quest = String.valueOf(tvp.getId());
-          String resp = edt.getHint().toString();
-          al.add(modulo + "--" + quest + "--" + "NULL");
-
-          edt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-              charSequence = edt.getText().toString();
-              String alData = modulo + "--" + quest + "--" + charSequence;
-              al.set((tvp.getId()) - 1, alData);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-              String alData = modulo + "--" + quest + "--" + charSequence;
-              al.set((tvp.getId()) - 1, alData);
-              saveState();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-          });
-        }
-      }
-    } catch (Exception ex) {
-      Toast.makeText(this, "Error al crear el EditTex en el formulario" + ex, Toast.LENGTH_LONG).show();
-    }
-  }
-
-  private void CrearEditTextAlfaQ(final String modulo, Long id, String pregunta) {
-    try {
-      for (int i = 0; i < 1; i++) {
-        ArrayList<ET> lista = new ArrayList<>();
-        lista.add(new ET(id.intValue(), pregunta, iP.get(i).getTipoDetalle()));
-
-        for (ET et : lista) {
-
-          final TextView tvp = new TextView(getApplicationContext());
-          tvp.setId(id.intValue());
-          tvp.setText(et.pregunta);
-          tvp.setTextColor(Color.parseColor("#979A9A"));
-          tvp.setPadding(5, 5, 5, 5);
-          tvp.setBackgroundColor(Color.parseColor("#ffffff"));
-          tvp.setTypeface(null, Typeface.BOLD);
-
-          LinearLayout.LayoutParams llparamsTXT1 = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-          llparamsTXT1.setMargins(30, 10, 30, 10);
-
-          final EditText edt = new EditText(getApplicationContext());
-          edt.setId(id.intValue());
-          edt.setTextSize(20);
-          edt.setHint("null");
-          edt.setHintTextColor(Color.TRANSPARENT);
-          edt.setTextColor(Color.parseColor("#515A5A"));
-          edt.setBackgroundColor(Color.parseColor("#E5E7E9"));
-          edt.setTypeface(null, Typeface.BOLD);
-          edt.setLayoutParams(llparamsTXT1);
-
-          DesabilitarTeclado(edt);
-
-          linearPrinc.addView(tvp);
-          linearPrinc.addView(edt);
-
-          final String quest = String.valueOf(tvp.getId());
-          String resp = edt.getHint().toString();
-          al.add(modulo + "--" + quest + "--" + "NULL");
-
-          edt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-              charSequence = edt.getText().toString();
-              String alData = modulo + "--" + quest + "--" + charSequence;
-              al.set((tvp.getId()) - 1, alData);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-              String alData = modulo + "--" + quest + "--" + charSequence;
-
-              al.set((tvp.getId()) - 1, alData);
-              saveState();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-          });
-        }
-      }
-    } catch (Exception ex) {
-      Toast.makeText(this, "Error al crear el EditTex en el formulario" + ex, Toast.LENGTH_LONG).show();
-    }
-  }
-
-  private void CrearEditTextSpinnerQ(final String modulo, Long id, String pregunta, String desplegable, Float porcen) {
-    try {
-      for (int i = 0; i < 1; i++) {
-        ArrayList<SPINNER> list = new ArrayList<>();
-
-        list.add(new SPINNER(id.intValue(), pregunta, iP.get(i).getTipoDetalle(), desplegable, porcen));
-
-        for (final SPINNER spi : list) {
-          LinearLayout.LayoutParams llparams = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-          llparams.weight = 1;
-          llparams.setMargins(5, 10, 5, 5);
-
-          LinearLayout.LayoutParams llparamspregunta = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-          LinearLayout llpregunta = new LinearLayout(getApplicationContext());
-          llpregunta.setLayoutParams(llparamspregunta);
-          llpregunta.setWeightSum(3);
-          llpregunta.setOrientation(LinearLayout.HORIZONTAL);
-
-          LinearLayout.LayoutParams llparamsText = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-          llparamsText.weight = (float) 2.3;
-
-          LinearLayout.LayoutParams llparamsTextpo = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-          llparamsText.weight = (float) 0.7;
-
-          final TextView tvp = new TextView(getApplicationContext());
-          tvp.setId(id.intValue());
-          tvp.setText(spi.pregunta + "  (" + porcen + ")");
-          tvp.setTextColor(Color.parseColor("#979A9A"));
-          tvp.setBackgroundColor(Color.parseColor("#ffffff"));
-          tvp.setPadding(10, 10, 10, 10);
-          tvp.setTypeface(null, Typeface.BOLD);
-          tvp.setLayoutParams(llparamsText);
-
-          final TextView tvpor = new TextView(getApplicationContext());
-          tvpor.setId(idres++);
-          tvpor.setText("resultado: \n" + spi.porcentaje.toString());
-          tvpor.setTextColor(Color.parseColor("#979A9A"));
-          tvpor.setBackgroundColor(Color.parseColor("#ffffff"));
-          tvpor.setPadding(10, 10, 10, 10);
-          tvpor.setTypeface(null, Typeface.BOLD);
-          tvpor.setLayoutParams(llparamsTextpo);
-
-          //Toast.makeText(this, "spinner  "+tvpor.getId(), Toast.LENGTH_SHORT).show();
-
-          llpregunta.addView(tvp);
-          llpregunta.addView(tvpor);
-
-          iDesplegable iDES = new iDesplegable(null, path);
-          iDES.nombre = desplegable;
-
-          iDES.all();
-          ArrayList<String> OptionArray = new ArrayList<>(200);
-
-          OptionArray.add("selecciona");
-
-          for (DesplegableTab ds : iDES.all()) {
-            if (ds.getFiltro().equals(desplegable)) {
-              OptionArray.add(ds.getOptions());
-            } else {
-            }
-          }
-
-          int idspn = 0;
-
-          final Spinner spinner = new Spinner(getApplicationContext());
-          spinner.setId(id.intValue());
-          spinner.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-
-          ArrayAdapter<String> spinnerArray = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_personal, OptionArray);
-          spinner.setAdapter(spinnerArray);
-          spinner.setSelection(0);
-          spinner.setLayoutParams(llparams);
-
-          linearPrinc.addView(llpregunta);
-          linearPrinc.addView(spinner);
-
-          if (spinner.getSelectedItem().toString().equals("selecciona")) {
-            tvpor.setText("resultado: \n");
-          }
-
-          spinner.setOnItemSelectedListener(
-                  new AdapterView.OnItemSelectedListener() {
-                    public void onItemSelected(AdapterView<?> spn, android.view.View v, int posicion, long id) {
-                      try {
-                        String Afirmacion = spn.getItemAtPosition(posicion).toString();
-
-                        int valor = 0;
-                        String texPantalla = "";
-
-                        int idd = (spinner.getId()) - 1;
-                        String quest = String.valueOf(spinner.getId());
-                        Log.i("id ", "id mostrar" + tvpor.getId());
-                        switch (Afirmacion) {
-
-                          case "SI CUMPLE":
-                            valor = spi.porcentaje.intValue();
-                            texPantalla = "resultado: \n" + valor + "";
-                            al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
-                            sumporespuesta.set(tvpor.getId(), valor);
-                            break;
-                          case "NO CUMPLE":
-                            texPantalla = "resultado: \n" + valor + "";
-                            al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
-                            sumporespuesta.set(tvpor.getId(), valor);
-                            break;
-                          case "NO APLICA":
-                            valor = -1;
-                            texPantalla = "resultado: \nN/A";
-                            al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
-                            sumporespuesta.set(tvpor.getId(), valor);
-                            break;
-                          case "selecciona":
-                            valor = 0;
-                            texPantalla = "resultado:";
-                            al.set(idd, modulo + "--" + quest + "--NULL--" + valor);
-                            sumporespuesta.set(tvpor.getId(), valor);
-                            break;
-                          default:
-                            texPantalla = "resultado: ups";
-                            al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--NULL");
-                            break;
-                        }
-
-                        // saveState();
-                        Log.i("prueba de ID spinner", "" + tvpor.getId());
-                        //sumporespuesta.set(idd,valor);
-                        tvpor.setText(texPantalla);
-                        Log.i("prueba cambio control", sumporespuesta.toString());
-
-                      } catch (Exception ex) {
-                        Toast.makeText(genated.this, "Error SPINNER ON CLICK" + ex.toString(), Toast.LENGTH_SHORT).show();
-                      }
-
-                    }
-
-                    public void onNothingSelected(AdapterView<?> spn) {
-                    }
-                  });
-
-          String quest = String.valueOf(spinner.getId());
-          al.add(modulo + "--" + quest + "--" + "NULL" + "--0");
-          Log.i("prueba arreglo", "" + al.toString());
-          sumporespuesta.add(0);
-
-          arraypuntos.add(porcen.intValue());
-        }
-      }
-    } catch (Exception ex) {
-      Toast.makeText(this, "Se genero un exception \n " +
-              "al crear el tipo de respuesta \n" +
-              "en el metodo SPINNER \n \n" + ex.toString(), Toast.LENGTH_LONG).show();
-
-      Log.i("Exception", ex.toString());
-    }
-  }
-
-  public void CrearSumRes(final String modulo, Long id, String pregunta, final Float porcen) {
-    try {
-      for (int i = 0; i < 1; i++) {
-        final ArrayList<buttonsSumRes> lista = new ArrayList<>();
-        lista.add(new buttonsSumRes(id, pregunta, iP.get(i).getTipoDetalle(), porcen));
-
-        for (final buttonsSumRes btnsr : lista) {
-
-          LinearLayout.LayoutParams llparamspregunta = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-          LinearLayout llpregunta = new LinearLayout(getApplicationContext());
-          llpregunta.setLayoutParams(llparamspregunta);
-          llpregunta.setWeightSum(3);
-          llpregunta.setOrientation(LinearLayout.HORIZONTAL);
-
-          LinearLayout.LayoutParams llparamsText = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-          llparamsText.weight = (float) 2.3;
-
-          LinearLayout.LayoutParams llparamsTextpo = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-          llparamsText.weight = (float) 0.7;
-
-          final TextView tvp = new TextView(getApplicationContext());
-          tvp.setId(id.intValue());
-          tvp.setText(btnsr.pregunta + "  (" + btnsr.porcen + "%)");
-          tvp.setTextColor(Color.parseColor("#979A9A"));
-          tvp.setBackgroundColor(Color.parseColor("#ffffff"));
-          tvp.setPadding(10, 10, 10, 10);
-          tvp.setTypeface(null, Typeface.BOLD);
-          tvp.setLayoutParams(llparamsText);
-
-          final TextView tvpor = new TextView(getApplicationContext());
-          tvpor.setId(idres++);
-          tvpor.setText("resultado: \n");
-          tvpor.setTextColor(Color.parseColor("#979A9A"));
-          tvpor.setBackgroundColor(Color.parseColor("#ffffff"));
-          tvpor.setPadding(10, 10, 10, 10);
-          tvpor.setTypeface(null, Typeface.BOLD);
-          tvpor.setLayoutParams(llparamsTextpo);
-
-          //Toast.makeText(this, "sr "+tvpor.getId(), Toast.LENGTH_SHORT).show();
-
-          llpregunta.addView(tvp);
-          llpregunta.addView(tvpor);
-
-
-          LinearLayout.LayoutParams llparamsPrincipal = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-          LLprincipal = new LinearLayout(getApplicationContext());
-          LLprincipal.setLayoutParams(llparamsPrincipal);
-          LLprincipal.setWeightSum(3);
-          LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
-          LLprincipal.setPadding(5, 5, 5, 5);
-          llparamsPrincipal.setMargins(0, 0, 0, 25);
-
-
-          LinearLayout.LayoutParams llparamsTXT = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-          llparamsTXT.weight = 1;
-          llparamsTXT.setMargins(5, 5, 5, 5);
-
-          final TextView tvr = new TextView(getApplicationContext());
-          tvr.setText("-1");
-          tvr.setId(id.intValue());
-          tvr.setTextSize(25);
-          tvr.setTextColor(Color.parseColor("#ffffff"));
-          tvr.setBackgroundColor(Color.parseColor("#CCD1D1"));
-          tvr.setTypeface(null, Typeface.BOLD);
-          tvr.setGravity(Gravity.CENTER);
-
-          tvr.setLayoutParams(llparamsTXT);
-
-          LinearLayout.LayoutParams llparamsBTN2 = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-          llparamsBTN2.weight = 1;
-          llparamsBTN2.setMargins(5, 5, 5, 5);
-
-          Button btn2 = new Button(getApplicationContext());
-          btn2.setBackgroundColor(Color.parseColor("#F1948A"));
-          btn2.setText("-");
-          btn2.setTextSize(25);
-          btn2.setTypeface(null, Typeface.BOLD);
-          btn2.setLayoutParams(llparamsBTN2);
-          btn2.setId(id.intValue());
-
-          LinearLayout.LayoutParams llparamsBTN3 = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-          llparamsBTN3.weight = 1;
-          llparamsBTN3.setMargins(5, 5, 5, 5);
-
-          Button btn3 = new Button(getApplicationContext());
-          btn3.setBackgroundColor(Color.parseColor("#7DCEA0"));
-          btn3.setText("+");
-          tvr.setTypeface(null, Typeface.BOLD);
-          btn3.setTextSize(25);
-          btn3.setLayoutParams(llparamsBTN2);
-          btn3.setId(id.intValue());
-
-
-          LLprincipal.addView(tvr);
-          LLprincipal.addView(btn2);
-          LLprincipal.addView(btn3);
-
-          //agregando check dinamicos
-          linearPrinc.addView(llpregunta);
-          linearPrinc.addView(LLprincipal);
-
-          btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              int n = Integer.parseInt(tvr.getText().toString());
-
-              if (n > -1) {
-
-                Long id = (long) tvp.getId();
-                tvr.setText(valueOf(n - 1));
-                String resultado = tvr.getText().toString();
-
-                tvpor.setText("resultado: \n" + OperacionPorcentaje(btnsr.porcen, Integer.parseInt(resultado)));
-
-                if (tvr.getText().equals("-1")) {
-                  tvpor.setText("resultado: \n");
-
-                  String porcen = tvpor.getText().toString();
-                  String[] ddd = porcen.split(":");
-                  String alData = modulo + "--" + id + "--" + resultado + "--" + ddd[1].trim();
-
-                  al.set((tvp.getId()) - 1, alData);
-                  cal.set(tvpor.getId(), ddd[1].trim());
-
-                  saveState();
-
-                }
-
-                String porcen = tvpor.getText().toString();
-                String[] ddd = porcen.split(":");
-                String alData = modulo + "--" + id + "--" + resultado + "--" + ddd[1].trim();
-
-                al.set((tvp.getId()) - 1, alData);
-                cal.set(tvpor.getId(), ddd[1].trim());
-
-                saveState();
-              } else if (n == -1) {
-                Long id = (long) tvp.getId();
-                String porcen = tvpor.getText().toString();
-                String[] ddd = porcen.split(":");
-                String alData = modulo + "--" + id + "--" + "NULL" + "--" + ddd[1].trim();
-
-                al.set((tvp.getId()) - 1, alData);
-                cal.set(tvpor.getId(), ddd[1].trim());
-              } else {
-                Long id = (long) tvp.getId();
-                String porcen = tvpor.getText().toString();
-                String[] ddd = porcen.split(":");
-                String alData = modulo + "--" + id + "--" + "NULL" + "--" + ddd[1].trim();
-
-                al.set((tvp.getId()) - 1, alData);
-                cal.set(tvpor.getId(), ddd[1].trim());
-              }
-            }
-          });
-
-          btn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              int n = Integer.parseInt(tvr.getText().toString());
-              try {
-                if (n < 9) {
-                  Long id = (long) tvp.getId();
-                  tvr.setText(valueOf(n + 1));
-                  String resultado = tvr.getText().toString();
-
-
-                  tvpor.setText("resultado: \n" + OperacionPorcentaje(btnsr.porcen, Integer.parseInt(resultado)));
-
-                  String porcen = tvpor.getText().toString();
-                  String[] ddd = porcen.split(":");
-
-                  String alData = modulo + "--" + id + "--" + resultado + "--" + ddd[1].trim();
-                  al.set((tvp.getId()) - 1, alData);
-                  cal.set(tvpor.getId(), ddd[1].trim());
-
-                  saveState();
-                }
-              } catch (Exception ex) {
-                Toast.makeText(getApplicationContext(), ex.toString(), Toast.LENGTH_SHORT).show();
-              }
-
-            }
-          });
-          String porce = tvpor.getText().toString();
-          String[] ddd = porce.split(":");
-          String quest = String.valueOf(tvp.getId());
-          al.add(modulo + "--" + quest + "--NULL--0");
-          cal.add(ddd[1]);
-        }
-
-      }
-    } catch (Exception ex) {
-      Toast.makeText(this, "Se genero un exception \n " +
-              "al crear el tipo de respuesta \n" +
-              "en el metodo CrearSumRes \n \n" + ex, Toast.LENGTH_LONG).show();
-    }
-  }
-
-  public void CrearSwicht(final String modulo, Long id, String pregunta) {
-    try {
-      for (int i = 0; i < 1; i++) {
-        ArrayList<SwichtQ> lista = new ArrayList<>();
-        lista.add(new SwichtQ(id.intValue(), pregunta, iP.get(i).getTipoDetalle()));
-
-        for (SwichtQ sw : lista) {
-
-          final TextView tvp = new TextView(getApplicationContext());
-          tvp.setId(id.intValue());
-          tvp.setText(sw.pregunta);
-          tvp.setTextColor(Color.parseColor("#979A9A"));
-          tvp.setPadding(5, 5, 5, 5);
-          tvp.setBackgroundColor(Color.parseColor("#ffffff"));
-          tvp.setTypeface(null, Typeface.BOLD);
-
-
-          LinearLayout.LayoutParams llparamsPrincipal = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-          LinearLayout LLprincipal = new LinearLayout(getApplicationContext());
-          LLprincipal.setLayoutParams(llparamsPrincipal);
-          LLprincipal.setWeightSum(2);
-          LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
-          LLprincipal.setPadding(5, 5, 5, 5);
-          LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
-
-
-          LinearLayout.LayoutParams llparamsTXT1 = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-          llparamsTXT1.weight = 1;
-          llparamsTXT1.setMargins(5, 10, 5, 5);
-
-          final TextView tvres = new TextView(getApplicationContext());
-          tvres.setText("NO");
-          tvres.setId(id.intValue());
-          tvres.setTextSize(30);
-          tvres.setTextColor(Color.parseColor("#ABB2B9"));
-          tvres.setTypeface(null, Typeface.BOLD);
-          tvres.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-          tvres.setLayoutParams(llparamsTXT1);
-
-
-          LinearLayout.LayoutParams llparamsSWC = new
-                  LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-          llparamsSWC.weight = 1;
-          //llparamsSWC.setMargins(5,0,5,0)
-
-          final Switch swit = new Switch(getApplicationContext());
-          swit.setHeight(100);
-          swit.setId(id.intValue());
-
-          swit.setLayoutParams(llparamsSWC);
-
-          LLprincipal.addView(tvres);
-          LLprincipal.addView(swit);
-
-          //agregando check dinamicos
-          linearPrinc.addView(tvp);
-          linearPrinc.addView(LLprincipal);
-
-          swit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              if (tvres.getText().toString().equals("SI")) {
-                tvres.setText("NO");
-              } else {
-                tvres.setText("SI");
-              }
-              Long id = (long) tvp.getId();
-              String respuesta = tvres.getText().toString();
-
-              String alData = modulo + "--" + id + "--" + respuesta;
-
-              al.set((tvp.getId()) - 1, alData);
-
-              saveState();
-            }
-          });
-
-          String quest = String.valueOf(tvp.getId());
-          String respuesta = "NULL";
-          al.add(modulo + "--" + quest + "--" + respuesta);
-
-        }
-      }
-    } catch (Exception ex) {
-      Toast.makeText(this, "Se genero un exception \n " +
-              "al crear el tipo de respuesta \n" +
-              "en el metodo CrearSwicht" + ex, Toast.LENGTH_LONG).show();
-    }
   }
 
 
@@ -1292,11 +703,11 @@ public class genated extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         try {
-          int dato = contarporcenescogido();
+          //int dato = contarporcenescogido();
 
-          Dialog(dato + " %");
+          //Dialog(dato + " %");
           //Log.i("prueba onClick", "" + contarporcenescogido());
-          Log.i("prueba onClick", "" + al.toString());
+          //Log.i("prueba onClick", "" + al.toString());
           //Log.i("prueba null",""+cont);
         } catch (Exception ex) {
           Toast.makeText(genated.this, "Exception \n " + ex, Toast.LENGTH_SHORT).show();
@@ -1380,60 +791,4 @@ public class genated extends AppCompatActivity {
     }
   }
 
-
-  class buttonsSumRes {
-    private Long codDetalle;
-    private String pregunta;
-    private String tipoRespuesta;
-    private Float porcen;
-
-    public buttonsSumRes(Long codDetalle, String pregunta, String tipoRespuesta, Float porcen) {
-      this.codDetalle = codDetalle;
-      this.pregunta = pregunta;
-      this.tipoRespuesta = tipoRespuesta;
-      this.porcen = porcen;
-    }
-
-
-  }
-
-  class SwichtQ {
-    private int codDetalle;
-    private String pregunta;
-    private String tipoRespuesta;
-
-    public SwichtQ(int codDetalle, String pregunta, String tipoRespuesta) {
-      this.codDetalle = codDetalle;
-      this.pregunta = pregunta;
-      this.tipoRespuesta = tipoRespuesta;
-    }
-  }
-
-  class ET {
-    private int codDetalle;
-    private String pregunta;
-    private String tipoRespuesta;
-
-    public ET(int codDetalle, String pregunta, String tipoRespuesta) {
-      this.codDetalle = codDetalle;
-      this.pregunta = pregunta;
-      this.tipoRespuesta = tipoRespuesta;
-    }
-  }
-
-  class SPINNER {
-    private int codDetalle;
-    private String pregunta;
-    private String tipoRespuesta;
-    private String desplegable;
-    private Float porcentaje;
-
-    public SPINNER(int codDetalle, String pregunta, String tipoRespuesta, String desplegable, Float porcentaje) {
-      this.codDetalle = codDetalle;
-      this.pregunta = pregunta;
-      this.tipoRespuesta = tipoRespuesta;
-      this.desplegable = desplegable;
-      this.porcentaje = porcentaje;
-    }
-  }
 }

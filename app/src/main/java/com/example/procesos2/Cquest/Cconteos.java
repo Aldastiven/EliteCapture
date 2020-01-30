@@ -131,7 +131,6 @@ public class Cconteos {
             @Override
             public void onClick(View view) {
                 int n = Integer.parseInt(tvr.getText().toString());
-                Toast.makeText(context, "se oprimio la suma", Toast.LENGTH_SHORT).show();
                 if(n < 9){
                     tvr.setText(valueOf(n + 1));
                 }

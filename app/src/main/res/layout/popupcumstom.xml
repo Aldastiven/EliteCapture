@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    android:background="#76161616">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/borderpop"
+        android:orientation="vertical"
+        android:weightSum="10"
+        android:paddingTop="30sp"
+        android:paddingBottom="30sp">
+
+        <TextView
+            android:layout_width="63mm"
+            android:layout_height="0sp"
+            android:text="PREGUNTAS INICIALES"
+            android:textColor="#839192"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="#ffffff"
+            android:layout_weight="0.5"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="8">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/linearbodypop"
+                    android:layout_width="fill_parent"
+                    android:layout_height="200sp"
+                    android:orientation="vertical">
+
+
+                </LinearLayout>
+
+            </ScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="1.5"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="aceptar"
+                android:textSize="20sp"
+                android:textColor="#2ecc71"
+                android:textStyle="bold"
+                android:paddingHorizontal="40sp"
+                android:background="@drawable/borderconinergreen"
+                />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

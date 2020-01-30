@@ -119,7 +119,7 @@ public class CradioButton {
             rb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, ""+rb.getText().toString(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, ""+rb.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
