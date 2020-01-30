@@ -77,10 +77,12 @@
                     android:layout_below="@id/txtPanelid"/>
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_weight="0.5"
                 android:layout_width="0sp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:weightSum="2"
+                android:orientation="vertical">
 
                 <Button
                     android:layout_width="match_parent"
@@ -88,10 +90,20 @@
                     android:onClick="Salir"
                     android:text="salir"
                     android:textColor="#EC7063"
-                    android:background="#ffffff"
+                    android:background="@drawable/bordercontainerred"
                     />
 
-            </RelativeLayout>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="Salir"
+                    android:text="Actualizar"
+                    android:textColor="#EC7063"
+                    android:background="@drawable/bordercontainerred"
+                    android:layout_marginTop="5sp"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
 

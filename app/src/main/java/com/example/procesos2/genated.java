@@ -109,10 +109,10 @@ public class genated extends AppCompatActivity {
     mypop = new Dialog(this);
     mypop.setContentView(R.layout.popupcumstom);
     linearPrinc = findViewById(R.id.LinearCheck);
-    btnGuardar = findViewById(R.id.guardar);
+    //btnGuardar = findViewById(R.id.guardar);
     EncabTitulo = findViewById(R.id.EncabTitulo);
     scrollForm = findViewById(R.id.scrollForm);
-    fBtn = findViewById(R.id.fBtn);
+    //fBtn = findViewById(R.id.fBtn);
     contcc = findViewById(R.id.contcc);
     editarEncab = findViewById(R.id.editarEncab);
 

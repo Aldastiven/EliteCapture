@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.procesos2.Conexion.CheckedConexion;
@@ -31,6 +32,7 @@ public class Login extends AppCompatActivity {
 
     EditText txtUser, txtPass;
     LinearLayout linearBox;
+    TextView txtError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class Login extends AppCompatActivity {
             txtUser = findViewById(R.id.txtUser);
             txtPass = findViewById(R.id.txtPass);
             linearBox = findViewById(R.id.linearBox);
+
+            txtError = findViewById(R.id.txtError);
 
             iUsuarios iU = new iUsuarios(path);
             iU.nombre = "Usuarios";
@@ -91,7 +95,9 @@ public class Login extends AppCompatActivity {
             iU.nombre = "Usuarios";
             iU.all();
 
-            UsuariosTab m = iU.login(txt_user, txt_pass);
+            UsuariosTab m = null;
+
+                 m = iU.login(txt_user, txt_pass);
 
                 if (m !=null){
 
@@ -104,11 +110,15 @@ public class Login extends AppCompatActivity {
                     Intent intent = new Intent(this, Index.class);
                     startActivity(intent);
                 }else if(m == null){
-                    Toast.makeText(this,"Identificaficación o contraseña incorrectas !!!",Toast.LENGTH_SHORT).show();
+                    txtUser.setBackgroundResource(R.drawable.bordercontainerred);
+                    txtPass.setBackgroundResource(R.drawable.bordercontainerred);
+                    txtError.setText("Identificaficación o contraseña incorrectas !!!");
                 }
 
-        }catch (Exception ex){
-            Toast.makeText(this,"Se genero un error al ingresar!! \n \n"+ex.toString(),Toast.LENGTH_LONG).show();
+        }catch (NumberFormatException ex){
+            txtUser.setBackgroundResource(R.drawable.bordercontainerred);
+            txtPass.setBackgroundResource(R.drawable.bordercontainerred);
+            txtError.setText("No puedes dejar campos vacios !!!");
         }
     }
 

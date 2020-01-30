@@ -1,6 +1,7 @@
 package com.example.procesos2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,12 +9,14 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
 import android.text.PrecomputedText;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -220,9 +223,9 @@ public class Index extends AppCompatActivity {
                     Button btn = new Button(getApplicationContext());
                     btn.setText(c.nombre);
                     btn.setId(idProceso);
-                    btn.setTextColor(Color.parseColor("#FDFEFE"));
+                    btn.setTextColor(Color.parseColor("#ffffff"));
                     btn.setTextSize(16);
-                    btn.setBackgroundColor(Color.parseColor("#3498db"));
+                    btn.setBackgroundResource(R.drawable.buttongreen);
                     btn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     btn.setHeight(100);
 

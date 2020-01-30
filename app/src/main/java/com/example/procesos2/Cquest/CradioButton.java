@@ -106,6 +106,7 @@ public class CradioButton {
             rb.setId(idd++);
             rb.setText(option.get(i));
             rb.setLayoutParams(llrb);
+            rb.setTextSize(12);
             rg.addView(rb);
 
             if(rb.getText().toString().equals("NO APLICA")){

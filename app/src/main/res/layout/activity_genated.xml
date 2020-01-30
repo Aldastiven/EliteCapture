@@ -22,12 +22,13 @@
             android:id="@+id/EncabTitulo"
             android:layout_width="0sp"
             android:layout_height="match_parent"
-            android:textColor="#2980B9"
+            android:textColor="#ffffff"
             android:textStyle="bold"
             android:textSize="20sp"
             android:textAlignment="center"
             android:paddingTop="5sp"
             android:layout_weight="1.7"
+            android:background="#2196f3"
             />
 
         <TextView
@@ -36,10 +37,11 @@
             android:layout_width="0sp"
             android:layout_height="match_parent"
             android:textSize="35sp"
-            android:textColor="#aab7b8"
+            android:textColor="#ffffff"
             android:text=""
             android:textAlignment="center"
             android:textStyle="bold"
+            android:background="#2196f3"
             />
 
     </LinearLayout>
@@ -49,22 +51,23 @@
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:gravity="right"
-        android:paddingHorizontal="10sp">
+        android:paddingHorizontal="10sp"
+        android:background="@drawable/blueheader"
+        android:paddingBottom="2sp">
 
         <Button
             android:id="@+id/editarEncab"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="#666666"
+            android:textColor="#ffffff"
             android:textStyle="bold"
             android:text="Editar encabezado"
             android:background="@drawable/bordercontaineryellow"
             android:paddingHorizontal="10sp"
             android:onClick="Showpop"
-            android:drawableRight="@drawable/editar"
+            android:layout_margin="2sp"
+            android:paddingVertical="10sp"
             />
-
-
     </LinearLayout>
 
 
@@ -73,7 +76,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:padding="10sp">
+        android:paddingHorizontal="11sp">
 
         <ScrollView
             android:id="@+id/scrollForm"
@@ -84,7 +87,8 @@
                 android:id="@+id/LinearCheck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="5sp">
 
             </LinearLayout>
 
@@ -92,10 +96,11 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="#000000">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -152,6 +157,38 @@
             app:layout_anchorGravity="top|end"
             app:srcCompat="@drawable/strella"
             android:layout_marginRight="10sp"/>
+
+    </LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="1"
+        android:background="@drawable/footer"
+        android:weightSum="2"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4sp"
+        android:paddingTop="5sp">
+
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:background="@drawable/buttongreen"
+            android:layout_margin="2sp"
+            android:text="Enviar"
+            android:textStyle="bold"
+            android:textColor="#ffffff"/>
+
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:background="@drawable/buttonblue"
+            android:layout_margin="2sp"
+            android:text="calificar"
+            android:textStyle="bold"
+            android:textColor="#ffffff"/>
 
     </LinearLayout>
 
