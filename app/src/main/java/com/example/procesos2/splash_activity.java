@@ -1,5 +1,6 @@
 package com.example.procesos2;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -71,17 +72,49 @@ public class splash_activity extends AppCompatActivity {
 
             new Handler().postDelayed(new Runnable() {
                 public void run() {
-                    Intent i = new Intent(splash_activity.this, Login.class);
-                    startActivity(i);
-                    finish();
+                    redirecion();
                 };
             },delayed);
 
         } catch (Exception e) {
             Toast.makeText(this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();;
         }
+    }
+
+    public void redirecion(){
+        try{
+            Intent i;
+            if(getActivity()!=null) {
+                 i = new Intent(splash_activity.this, getActivity());
+            }else{
+                 i = new Intent(splash_activity.this, Login.class);
+            }
+            startActivity(i);
+            finish();
+        }catch (Exception ex){
+            Toast.makeText(this, "Exception al redirecionar a la clase \n \n"+ex.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public Class getActivity(){
+        Class act = Login.class;
+        try {
+            Bundle bundle = getIntent().getExtras();
 
 
+            if (bundle != null) {
+                String code = bundle.getString("class");
+                if (code.equals("Index")) {
+                    act = Index.class;
+                }
+            } else {
+            }
+
+
+        }catch (Exception ex){
+            return act;
+        }
+        return act;
     }
 
     protected class Conexion extends sqlConect {

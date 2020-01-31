@@ -9,27 +9,18 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +37,6 @@ import com.example.procesos2.Cquest.CradioButton;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.iDetalles;
 import com.example.procesos2.Model.iRespuestas;
-import com.example.procesos2.Model.tab.DesplegableTab;
 import com.example.procesos2.Model.tab.DetallesTab;
 import com.example.procesos2.Model.tab.RespuestasTab;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -67,14 +57,10 @@ import static java.lang.String.valueOf;
 public class genated extends AppCompatActivity {
 
   TextView EncabTitulo, contcc;
-  LinearLayout linearHeader;
   LinearLayout linearBodypop;
   LinearLayout linearPrinc;
-  LinearLayout LLprincipal;
-  Button btnGuardar,editarEncab;
+  Button editarEncab;
   ScrollView scrollForm;
-  FloatingActionButton fBtn;
-
   String path = null;
   List<DetallesTab> iP = new ArrayList<>();
 
@@ -85,6 +71,7 @@ public class genated extends AppCompatActivity {
   iDetalles iD = null;
 
   Dialog mypop;
+  Dialog popcalificacion;
 
   public Conexion con = null;
 
@@ -108,6 +95,10 @@ public class genated extends AppCompatActivity {
 
     mypop = new Dialog(this);
     mypop.setContentView(R.layout.popupcumstom);
+
+    popcalificacion = new Dialog(this);
+    popcalificacion.setContentView(R.layout.popupcalificacion);
+
     linearPrinc = findViewById(R.id.LinearCheck);
     //btnGuardar = findViewById(R.id.guardar);
     EncabTitulo = findViewById(R.id.EncabTitulo);
@@ -156,18 +147,18 @@ public class genated extends AppCompatActivity {
       contcc.setText("1");
 
       CrearHeader();
+      mypop.show();
+
       onckickBTNfloating();
       crearJsonRes();
 
       //abre el encabezado
-      mypop.show();
 
     } catch (Exception ex) {
       Log.i("Error onCreate", ex.toString());
     }
 
   }
-
 
   @Override
   protected void onPause() {
@@ -187,7 +178,6 @@ public class genated extends AppCompatActivity {
       edit.apply();
     }
   }
-
 
   @Override
   protected void onDestroy() {
@@ -326,12 +316,7 @@ public class genated extends AppCompatActivity {
       int cod = sp.getInt("cod_proceso", 0);
 
       String tipo1 = "RS"; //BOTON DE CANTIDAD
-      String tipo2 = "SWH"; //BOTON DE SI O NO
-      String tipo3 = "TV"; //TEXTVIEW
-      String tipo4 = "ETN"; //EDITTEXT NUMERICO
-      String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
-      String tipo6 = "CBX"; //SPINNER
-      String tipo7 = "RB"; //RADIO BUTTONS
+      String tipo2 = "RB"; //RADIO BUTTONS
 
 
       if (d.getTipoDetalle().equals(tipo1) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
@@ -344,33 +329,7 @@ public class genated extends AppCompatActivity {
         Cconteos cc = new Cconteos();
         linearPrinc.addView(cc.Cconteo(this,id,pregunta,porce));
 
-      } else if (d.getTipoDetalle().equals(tipo2) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
-        Long idCons = d.getIdConsecutivo();
-        Long id = d.getCodDetalle();
-        String pregunta = d.getQuesDetalle();
-        String modulo = d.getTipoModulo();
-
-      } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
-        Long idCons = d.getIdConsecutivo();
-        Long id = d.getCodDetalle();
-        String pregunta = d.getQuesDetalle();
-        String modulo = d.getTipoModulo();
-
-      } else if (d.getTipoDetalle().equals(tipo5) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
-        Long idCons = d.getIdConsecutivo();
-        Long id = d.getCodDetalle();
-        String pregunta = d.getQuesDetalle();
-        String modulo = d.getTipoModulo();
-
-      } else if (d.getTipoDetalle().equals(tipo6) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
-        Long idCons = d.getIdConsecutivo();
-        Long id = d.getCodDetalle();
-        String pregunta = d.getQuesDetalle();
-        String modulo = d.getTipoModulo();
-        String desplegable = d.getListaDesplegable();
-        Float porcen = d.getPorcentaje();
-
-      } else if(d.getTipoDetalle().equals(tipo7) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")){
+      } else if(d.getTipoDetalle().equals(tipo2) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")){
         Long id = d.getCodDetalle();
         String pregunta = d.getQuesDetalle();
         String desplegable = d.getListaDesplegable();
@@ -561,91 +520,6 @@ public class genated extends AppCompatActivity {
     }
   }
 
-  public void progressBar(String msgCarga, final String msgCompletado, final int tiempoSalteado) {
-    try {
-      progress = new ProgressDialog(this, R.style.MyProgressDialogDespues);
-      progress.setMessage(msgCarga);
-      progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-      progress.setProgress(0);
-      progress.show();
-
-      final int totalProgressTime = 100;
-      final Thread t = new Thread() {
-        @Override
-        public void run() {
-          int jumpTime = 0;
-
-          while (jumpTime < totalProgressTime) {
-            try {
-              jumpTime += tiempoSalteado;
-              progress.setProgress(jumpTime);
-              sleep(200);
-            } catch (InterruptedException e) {
-              Toast.makeText(genated.this, "Progress Bar \n" + e.toString(), Toast.LENGTH_SHORT).show();
-            }
-          }
-
-          runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-              progress.setMessage(msgCompletado);
-              progress.setProgressStyle(R.style.MyProgressDialogDespues);
-              int dur = 2500;
-              new Handler().postDelayed(new Runnable() {
-                public void run() {
-                  progress.dismiss();
-                }
-              }, dur);
-
-            }
-          });
-
-        }
-      };
-      t.start();
-
-    } catch (Exception ex) {
-      Toast.makeText(this, "" + ex.toString(), Toast.LENGTH_SHORT).show();
-    }
-  }
-
-  public void Dialog(String msg) {
-    try {
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-      LinearLayout linearLayout = new LinearLayout(this);
-      linearLayout.setOrientation(LinearLayout.VERTICAL);
-
-      TextView tvv = new TextView(this);
-      tvv.setText(msg);
-      tvv.setTextSize(50);
-      tvv.setTextColor(Color.parseColor("#5DADE2"));
-      tvv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-      linearLayout.addView(tvv);
-
-      builder.setTitle("Calificación");
-      builder.setCancelable(true);
-      builder.setView(linearLayout);
-      //builder.setIcon(R.drawable.ok);
-
-      final AlertDialog dialog = builder.create();
-
-      dialog.show();
-
-      final Timer timer2 = new Timer();
-      timer2.schedule(new TimerTask() {
-        public void run() {
-          dialog.dismiss();
-          timer2.cancel();
-        }
-      }, 5000);
-    } catch (Exception ex) {
-      Toast.makeText(this, "Dialog" + ex, Toast.LENGTH_SHORT).show();
-    }
-
-  }
-
   //elimina los controles dentro del linear del formulario
   public void eliminarHijos() {
     if (linearPrinc.getChildCount() > 0) {
@@ -699,7 +573,7 @@ public class genated extends AppCompatActivity {
 
 
   private void onckickBTNfloating() {
-    fBtn.setOnClickListener(new View.OnClickListener() {
+    /*fBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         try {
@@ -713,7 +587,7 @@ public class genated extends AppCompatActivity {
           Toast.makeText(genated.this, "Exception \n " + ex, Toast.LENGTH_SHORT).show();
         }
       }
-    });
+    });*/
   }
 
   public Double SumarCalificacion() {
@@ -738,7 +612,6 @@ public class genated extends AppCompatActivity {
 
 
   public void onBackPressed() {
-    //Toast.makeText(this, "Oprime el boton de menu en la parte superior de la pantalla", Toast.LENGTH_LONG).show();
     Intent i = new Intent(this, Index.class);
     startActivity(i);
   }
@@ -768,6 +641,14 @@ public class genated extends AppCompatActivity {
     } catch (Exception ex) {
       Toast.makeText(this, "Se genero una exception al traer el estado del formulario \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
     }
+  }
+
+
+
+  //CALIFICACIÓN
+
+  public void  onCalificar(View v){
+    popcalificacion.show();
   }
 
   protected class Conexion extends sqlConect {

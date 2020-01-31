@@ -93,7 +93,6 @@ public class Index extends AppCompatActivity {
             traerDataUser();
             validateProce();
 
-
         }catch (Exception ex){
             Toast.makeText(getApplicationContext(),"Error \n"+ex,Toast.LENGTH_SHORT).show();
         }
@@ -254,6 +253,12 @@ public class Index extends AppCompatActivity {
     public void Salir(View v){
         Intent i = new Intent(Index.this,Login.class);
         startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    }
+
+    public void onActualizar(View v){
+        Intent i = new Intent(Index.this,splash_activity.class);
+        i.putExtra("class","Index");
+        startActivity(i);
     }
 
     public void onBackPressed() {

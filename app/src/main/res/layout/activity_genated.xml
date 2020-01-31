@@ -188,7 +188,8 @@
             android:layout_margin="2sp"
             android:text="calificar"
             android:textStyle="bold"
-            android:textColor="#ffffff"/>
+            android:textColor="#ffffff"
+            android:onClick="onCalificar"/>
 
     </LinearLayout>
 

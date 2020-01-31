@@ -96,10 +96,10 @@
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="Salir"
+                    android:onClick="onActualizar"
                     android:text="Actualizar"
-                    android:textColor="#EC7063"
-                    android:background="@drawable/bordercontainerred"
+                    android:textColor="#2ecc71"
+                    android:background="@drawable/borderconinergreen"
                     android:layout_marginTop="5sp"
                     />
 
