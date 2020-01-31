@@ -1,6 +1,6 @@
 package com.example.procesos2.Model.tab;
 
-public class    RespuestasTab {
+public class  RespuestasTab {
     private Long idreg;
     private String Fecha;
     private Long idProceso;

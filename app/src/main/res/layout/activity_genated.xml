@@ -53,11 +53,28 @@
         android:gravity="right"
         android:paddingHorizontal="10sp"
         android:background="@drawable/blueheader"
-        android:paddingBottom="2sp">
+        android:paddingBottom="2sp"
+        android:weightSum="2"
+        android:orientation="horizontal">
 
         <Button
+            android:layout_weight="1"
+            android:id="@+id/devolverform"
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:text="Volver"
+            android:background="@drawable/bordercontaineryellow"
+            android:paddingHorizontal="10sp"
+            android:onClick="onBackPressedform"
+            android:layout_margin="2sp"
+            android:paddingVertical="10sp" />
+
+        <Button
+            android:layout_weight="1"
             android:id="@+id/editarEncab"
-            android:layout_width="wrap_content"
+            android:layout_width="0sp"
             android:layout_height="match_parent"
             android:textColor="#ffffff"
             android:textStyle="bold"
@@ -66,8 +83,7 @@
             android:paddingHorizontal="10sp"
             android:onClick="Showpop"
             android:layout_margin="2sp"
-            android:paddingVertical="10sp"
-            />
+            android:paddingVertical="10sp" />
     </LinearLayout>
 
 

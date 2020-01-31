@@ -64,7 +64,7 @@ public class genated extends AppCompatActivity {
   iDesplegable id = null;
   iDetalles iD = null;
 
-  String path = null;
+  String path = null, nombreproc = null;
   public Conexion con = null;
 
   int idres = 0, cont = 0, contConsec = 1;
@@ -99,6 +99,7 @@ public class genated extends AppCompatActivity {
 
       //ENCABEZADO ASIGNA EL NOMBRE DEL PROCESO
       String nom = sp.getString("nom_proceso", "");
+      nombreproc = nom;
       EncabTitulo.setText(nom);
 
       contcc.setText("1");
@@ -236,6 +237,8 @@ public class genated extends AppCompatActivity {
         Float porcentaje = d.getPorcentaje();
         Long id = d.getCodDetalle();
 
+        path = getExternalFilesDir(null) + File.separator;;
+
           if (d.getIdProceso() == getcodProceso() && d.getTipoModulo().equals("Q")) {
               switch (campo){
                 case "RS":
@@ -245,7 +248,7 @@ public class genated extends AppCompatActivity {
                 case "RB":
                   CradioButton cb = new CradioButton();
                   cb.Carga(path);
-                  linearPrinc.addView(cb.Tradiobtn(this,id,pregunta,desplegable,porcentaje));
+                  linearPrinc.addView(cb.Tradiobtn(this,id,pregunta,desplegable,porcentaje,path,nombreproc,getcodProceso()));
                   break;
               }
           }
@@ -515,6 +518,11 @@ public class genated extends AppCompatActivity {
 
   //SI OPRIME EL BOTON DE RETROCESO
   public void onBackPressed() {
+    Intent i = new Intent(this, Index.class);
+    startActivity(i);
+  }
+
+  public void onBackPressedform(View v){
     Intent i = new Intent(this, Index.class);
     startActivity(i);
   }

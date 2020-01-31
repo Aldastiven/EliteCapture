@@ -19,10 +19,13 @@ import android.widget.Toast;
 
 import com.example.procesos2.Config.sqlConect;
 import com.example.procesos2.Model.iDesplegable;
+import com.example.procesos2.Model.iTemporal;
 import com.example.procesos2.Model.tab.DesplegableTab;
+import com.example.procesos2.Model.tab.TemporalTab;
 import com.example.procesos2.R;
 
 import java.sql.Connection;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 
 public class CradioButton {
@@ -32,6 +35,9 @@ public class CradioButton {
     iDesplegable iDES;
     Context context;
     ArrayList<String> option = new ArrayList<>();
+    ArrayList<TemporalTab> At = new ArrayList<>();
+
+    iTemporal iT = null;
 
     int idd = 0 , idres = 0;
 
@@ -40,13 +46,14 @@ public class CradioButton {
         try {
             con = new Conexion(path, context);
             iDES = new iDesplegable(con.getConexion(), path);
+            iT = new iTemporal(path);
 
         }catch (Exception ex){
         }
     }
 
     //crea el control del radio button y retorna el view
-    public View Tradiobtn (final Context context, Long id, final String contenido, String desplegable, Float porcentaje){
+    public View Tradiobtn (final Context context, final Long id, final String contenido, String desplegable, final Float porcentaje, final String path, final String nompro, final int idpro){
 
         //ORGANIZA LOS CONTROLES INTEGRADOS
         LinearLayout.LayoutParams llparamsTotal = new
@@ -121,8 +128,33 @@ public class CradioButton {
                 @Override
                 public void onClick(View view) {
                     //Toast.makeText(context, ""+rb.getText().toString(), Toast.LENGTH_SHORT).show();
+
+                    try {
+                        Toast.makeText(context, "" +iT.all(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "" +iT.clear(), Toast.LENGTH_SHORT).show();
+
+                    }catch (Exception ex){
+                        Toast.makeText(context, "Exc al insertar en CradioButton.class \n \n "+ex.toString(), Toast.LENGTH_LONG).show();
+                    }
+
                 }
             });
+
+            try {
+                iT.path = path;
+                iT.nombre = nompro;
+
+                TemporalTab tt = new TemporalTab();
+                tt.setItem(0);
+                tt.setProceso(idpro);
+                tt.setUsuario(id.intValue());
+                tt.setRespuesta("");
+                tt.setPorcentaje((double) 1);
+                iT.insert(tt);
+                iT.local();
+            }catch (Exception ex){
+                Toast.makeText(context, "Exc al insertar en en el json \n \n "+ex.toString(), Toast.LENGTH_LONG).show();
+            }
         }
 
         LLtotal.addView(LLPREGUNTA(context,tvp,tvpor));
