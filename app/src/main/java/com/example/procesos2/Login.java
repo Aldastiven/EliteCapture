@@ -95,9 +95,8 @@ public class Login extends AppCompatActivity {
             iU.nombre = "Usuarios";
             iU.all();
 
-            UsuariosTab m = null;
 
-                 m = iU.login(txt_user, txt_pass);
+            UsuariosTab m = iU.login(txt_user, txt_pass);
 
                 if (m !=null){
 

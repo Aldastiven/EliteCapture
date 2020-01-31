@@ -2,16 +2,13 @@ package com.example.procesos2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -39,7 +36,6 @@ import com.example.procesos2.Model.iDetalles;
 import com.example.procesos2.Model.iRespuestas;
 import com.example.procesos2.Model.tab.DetallesTab;
 import com.example.procesos2.Model.tab.RespuestasTab;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.sql.Connection;
@@ -49,36 +45,31 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static java.lang.String.valueOf;
 
 public class genated extends AppCompatActivity {
 
   TextView EncabTitulo, contcc;
-  LinearLayout linearBodypop;
-  LinearLayout linearPrinc;
+  LinearLayout linearBodypop, linearPrinc;
   Button editarEncab;
   ScrollView scrollForm;
-  String path = null;
+  Dialog mypop, popcalificacion;
+
+
   List<DetallesTab> iP = new ArrayList<>();
 
-  private ProgressDialog progress;
   SharedPreferences sp = null;
   iRespuestas ir = null;
   iDesplegable id = null;
   iDetalles iD = null;
 
-  Dialog mypop;
-  Dialog popcalificacion;
-
+  String path = null;
   public Conexion con = null;
 
   int idres = 0, cont = 0, contConsec = 1;
 
   public boolean Temporal;
-
 
   ArrayList<String> al = new ArrayList<String>(200);
   ArrayList<String> cal = new ArrayList<String>(1000);
@@ -94,27 +85,54 @@ public class genated extends AppCompatActivity {
     getSupportActionBar().hide();
 
     mypop = new Dialog(this);
-    mypop.setContentView(R.layout.popupcumstom);
-
     popcalificacion = new Dialog(this);
-    popcalificacion.setContentView(R.layout.popupcalificacion);
 
+    insView();
+    PC();
+
+    sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
+
+    try {
+      path = getExternalFilesDir(null) + File.separator;
+      con = new Conexion(path, getApplicationContext());
+
+
+      //ENCABEZADO ASIGNA EL NOMBRE DEL PROCESO
+      String nom = sp.getString("nom_proceso", "");
+      EncabTitulo.setText(nom);
+
+      contcc.setText("1");
+
+      CrearHeader();
+      mypop.show();
+
+      onckickBTNfloating();
+      crearJsonRes();
+
+    } catch (Exception ex) {
+      Log.i("Error onCreate", ex.toString());
+    }
+
+  }
+
+
+  //INSTANCIA CONTROLES VIEWS
+  public void insView(){
+    mypop.setContentView(R.layout.popupcumstom);
+    popcalificacion.setContentView(R.layout.popupcalificacion);
     linearPrinc = findViewById(R.id.LinearCheck);
-    //btnGuardar = findViewById(R.id.guardar);
     EncabTitulo = findViewById(R.id.EncabTitulo);
     scrollForm = findViewById(R.id.scrollForm);
-    //fBtn = findViewById(R.id.fBtn);
     contcc = findViewById(R.id.contcc);
     editarEncab = findViewById(R.id.editarEncab);
-
     linearBodypop = mypop.findViewById(R.id.linearbodypop);
 
     Window window = mypop.getWindow();
     window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+  }
 
-
-    sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
-
+  //TRAE Y ENVIA PAHT Y CONEXION PARA LAS FUNCIONES DE LAS ENTIDADES
+  public void PC(){
     try {
 
       path = getExternalFilesDir(null) + File.separator;
@@ -135,70 +153,9 @@ public class genated extends AppCompatActivity {
 
         iP = iD.all();
       }
-
-
-      String nom = sp.getString("nom_proceso", "");
-      EncabTitulo.setText(nom);
-
-      SharedPreferences.Editor edit = sp.edit();
-      edit.putString("dataedittext", "");
-      edit.apply();
-
-      contcc.setText("1");
-
-      CrearHeader();
-      mypop.show();
-
-      onckickBTNfloating();
-      crearJsonRes();
-
-      //abre el encabezado
-
-    } catch (Exception ex) {
-      Log.i("Error onCreate", ex.toString());
+    }catch (Exception ex){
+      Toast.makeText(this, "Exception al traer path y conexion en metodo PC \n"+ex.toString(), Toast.LENGTH_SHORT).show();
     }
-
-  }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-    getState();
-    Log.i("Temporal ", String.valueOf(Temporal));
-
-    if (Temporal) {
-      SharedPreferences.Editor edit = sp.edit();
-      edit.putBoolean("Temporal", Temporal);
-      edit.commit();
-      edit.apply();
-    } else {
-      SharedPreferences.Editor edit = sp.edit();
-      edit.putBoolean("Temporal", Temporal);
-      edit.commit();
-      edit.apply();
-    }
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    //Toast.makeText(this,"onDestroy generated",Toast.LENGTH_SHORT).show();
-    Temporal = false;
-
-    if (Temporal) {
-      SharedPreferences.Editor edit = sp.edit();
-      edit.putBoolean("Temporal", Temporal);
-      edit.commit();
-      edit.apply();
-    } else {
-      SharedPreferences.Editor edit = sp.edit();
-      edit.putBoolean("Temporal", Temporal);
-      edit.commit();
-      edit.apply();
-    }
-
-    al.clear();
-
   }
 
   //CREAR EL JSON SINO EXISTE
@@ -212,11 +169,12 @@ public class genated extends AppCompatActivity {
     }
   }
 
+  //MUESTRA EL POP CON LOS CAMPOS DEL HEADER
   public void Showpop(View v){
     mypop.show();
   }
 
-
+  //CREA LOS CONTROLES DEL HEADER EN EL POP
   public void CrearHeader() {
     try {
 
@@ -225,8 +183,6 @@ public class genated extends AppCompatActivity {
       for (DetallesTab d : iP) {
         int cod = sp.getInt("cod_proceso", 0);
 
-        String tipo1 = "RS"; //BOTON DE CANTIDAD
-        String tipo2 = "SWH"; //BOTON DE SI O NO
         String tipo3 = "TV"; //TEXTVIEW
         String tipo4 = "ETN"; //EDITTEXT NUMERICO
         String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
@@ -308,6 +264,7 @@ public class genated extends AppCompatActivity {
     CrearForm();
   }
 
+  //CREA CONTROLES DEL FORMULARIO
   public void CrearForm() {
 
     scrollForm.fullScroll(View.FOCUS_UP);
@@ -325,7 +282,7 @@ public class genated extends AppCompatActivity {
         String pregunta = d.getQuesDetalle();
         String modulo = d.getTipoModulo();
         Float porce = d.getPorcentaje();
-        //CrearSumRes(modulo, id, pregunta, porce);
+
         Cconteos cc = new Cconteos();
         linearPrinc.addView(cc.Cconteo(this,id,pregunta,porce));
 
@@ -342,34 +299,28 @@ public class genated extends AppCompatActivity {
     }
   }
 
-
   //METODOS PARA OBTENER DATOS
-
   public String getPhoneName() {
     BluetoothAdapter myDevice = BluetoothAdapter.getDefaultAdapter();
     String deviceName = myDevice.getName();
     return deviceName;
   }
-
   public String getFecha() {
     Calendar cal = Calendar.getInstance();
     SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyy HH:mm:ss");
     String fecha = sdf.format(cal.getTime());
     return fecha;
   }
-
   public int getcodProceso() {
     int idProceso = sp.getInt("cod_proceso", 0);
     return idProceso;
   }
 
   //BAJAR TECLADO
-
   public void KeyDown(EditText et) {
     InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
     imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
   }
-
 
   //REGISTRO DE JSON
 
@@ -571,7 +522,6 @@ public class genated extends AppCompatActivity {
     return (intcont*100 / intTot);
   }
 
-
   private void onckickBTNfloating() {
     /*fBtn.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -610,47 +560,18 @@ public class genated extends AppCompatActivity {
     return Double.parseDouble(format.format(suma));
   }
 
-
+  //SI OPRIME EL BOTON DE RETROCESO
   public void onBackPressed() {
     Intent i = new Intent(this, Index.class);
     startActivity(i);
   }
 
-  //guardar estado de la vista
-  public boolean saveState() {
-    try {
-      SharedPreferences.Editor edit = sp.edit();
-      edit.putString("estadoActividad", al.toString());
-      edit.commit();
-      edit.apply();
-
-      return Temporal = true;
-    } catch (Exception ex) {
-      Toast.makeText(this, "se genero una exception al guardar el estado del formulario \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
-    }
-    return false;
-  }
-
-  public void getState() {
-    try {
-      String arreglo = sp.getString("estadoActividad", "");
-      //Toast.makeText(this,""+arreglo,Toast.LENGTH_SHORT).show();
-
-      //Toast.makeText(this,""+Temporal,Toast.LENGTH_SHORT).show();
-
-    } catch (Exception ex) {
-      Toast.makeText(this, "Se genero una exception al traer el estado del formulario \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
-    }
-  }
-
-
-
-  //CALIFICACIÓN
-
+  //CALIFICACIÓN POP
   public void  onCalificar(View v){
     popcalificacion.show();
   }
 
+  //CONTRUCTOR QUE RETORNA FALSE O TRUE A LA CONEXION DE LA BD
   protected class Conexion extends sqlConect {
     Connection cn = getConexion();
     String path = null;

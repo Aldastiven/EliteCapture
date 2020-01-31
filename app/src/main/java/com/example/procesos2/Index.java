@@ -48,6 +48,8 @@ public class Index extends AppCompatActivity {
     public String path = null;
 
     SharedPreferences sp = null;
+
+
     List<IndexTab> iP = new ArrayList<>();
     List<UsuarioProcesoTab> liUP = new ArrayList<>();
 
@@ -80,16 +82,12 @@ public class Index extends AppCompatActivity {
             iUsuarioProceso iUP = new iUsuarioProceso(path);
             iUP.nombre="UsuariosProceso";
 
-            if(Cc.checkedConexionValidate(this)){
-                //index
-                iI.local();
-                iP = iI.all();
                 //usuario_proceso
                 liUP = iUP.all();
-            }else{
+
+                //usuario
                 iP = iI.all();
-                liUP = iUP.all();
-            }
+
             traerDataUser();
             validateProce();
 
@@ -205,6 +203,7 @@ public class Index extends AppCompatActivity {
     public void CargaMenu(int idProceso){
         for(int i=0;  i<iP.size(); i++) {
             if (iP.get(i).getCodProceso() == idProceso) {
+
                 //creando boton dinamico
                 ArrayList<check> lista = new ArrayList<check>();
 
@@ -238,7 +237,7 @@ public class Index extends AppCompatActivity {
                             SharedPreferences.Editor edit = sp.edit();
                             edit.putInt("cod_proceso", view.getId());
                             edit.putString("nom_proceso", nombreTrim);
-                            edit.putString("blanquear", "");
+                            //edit.putString("blanquear", "");
                             edit.apply();
 
                             Intent intent = new Intent(getApplicationContext(), genated.class);

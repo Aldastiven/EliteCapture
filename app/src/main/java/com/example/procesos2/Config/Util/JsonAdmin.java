@@ -53,65 +53,6 @@ public class JsonAdmin {
 
     }
 
-    public String JsonDes(String path, String nombre , int pos)     {
-        JsonParser parser = new JsonParser();
-        String f = path+nombre+".json";
-        try {
-            Object obj = parser.parse(new FileReader(f));
-            JsonArray jsonArray = (JsonArray) obj;
-
-            JsonObject objeto = jsonArray.get(pos).getAsJsonObject();
-            JsonArray datoJson = (JsonArray) objeto.get("respuestasTab");
-
-            for (int i=0; i<datoJson.size(); i++){
-                JsonObject objidRes = datoJson.get(i).getAsJsonObject();
-                String datoidRes = objidRes.get("idPregunta").toString();
-
-                JsonObject objRes = datoJson.get(i).getAsJsonObject();
-                String datoRes = objRes.get("Respuesta").toString();
-                return "ID : "+datoidRes+"\n RES "+datoRes;
-            }
-
-        }catch (Exception ex){
-            return "Exception al deserializar el json "+ex.toString();
-        }
-        return "";
-    }
-
-    public String EliminarLista(String path, String nombre) throws Exception {
-        String msj = "";
-        path = path + nombre + ".json";
-        File file = new File(path);
-        if (file.delete()){
-            msj="se limpio los registros";
-            return msj;
-        }else {
-            msj="hubo un problema";
-            return msj;
-        }
-    }
-
-    public String recorerJSON(String[] args,String path){
-        String msj="";
-        try {
-            JsonParser parser = new JsonParser();
-            JsonArray gsonArr = parser.parse(new FileReader(path+"procesos_2.json")).getAsJsonArray();
-
-
-            for(JsonElement obj: gsonArr) {
-
-                JsonObject gsonObj = obj.getAsJsonObject();
-
-                String name = gsonObj.get("Fecha").getAsString();
-                msj = "nombre \n" + name + "\n" + gsonArr.size();
-                return msj;
-            }
-
-        }catch (Exception ex){
-            msj = "Exception \n"+ex;
-        }
-        return msj;
-    }
 
 
 
