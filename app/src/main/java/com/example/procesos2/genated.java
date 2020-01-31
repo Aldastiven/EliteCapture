@@ -177,85 +177,46 @@ public class genated extends AppCompatActivity {
   //CREA LOS CONTROLES DEL HEADER EN EL POP
   public void CrearHeader() {
     try {
+          for (DetallesTab d : iP) {
+            String campo = d.getTipoDetalle();
+            Long id = d.getCodDetalle();
+            String pregunta = d.getQuesDetalle();
+            String desplegable = d.getListaDesplegable();
 
-      path = getExternalFilesDir(null) + File.separator;
-
-      for (DetallesTab d : iP) {
-        int cod = sp.getInt("cod_proceso", 0);
-
-        String tipo3 = "TV"; //TEXTVIEW
-        String tipo4 = "ETN"; //EDITTEXT NUMERICO
-        String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
-        String tipo6 = "CBX"; //SPINNER
-        String tipo7 = "FIL"; //FLITROS JSON
-        String tipo8 = "SCA"; //SCANNER BAR
-
-        if (d.getTipoDetalle().equals(tipo3) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
-
-          Long id = d.getCodDetalle();
-          String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          //CrearTextViewFecha(modulo, id, pregunta);
-
-          Ctextview ct = new Ctextview();
-          linearBodypop.addView(ct.textview(this, id ,pregunta));
-
-        } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
-          Long id = d.getCodDetalle();
-          String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          //CrearEditTextNumeric(modulo, id, pregunta);
-
-          Cetnum cen = new Cetnum();
-          linearBodypop.addView(cen.tnumerico(genated.this, id, pregunta));
-
-        } else if (d.getTipoDetalle().equals(tipo5) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
-          Long id = d.getCodDetalle();
-          String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          //CrearEditTextAlfanumeric(modulo, id, pregunta);
-
-          Cetalf cal = new Cetalf();
-          linearBodypop.addView(cal.talfanumerico(this, id, pregunta));
-
-        } else if (d.getTipoDetalle().equals(tipo6) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
-          Long id = d.getCodDetalle();
-          String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          String desplegable = d.getListaDesplegable();
-          Float porcentaje = d.getPorcentaje();
-          //CrearSpinner(modulo, id, pregunta, desplegable, porcentaje);
-
-          Cdesplegable cd = new Cdesplegable();
-          cd.Carga(path);
-          linearBodypop.addView(cd.desplegable(this, id, pregunta, desplegable));
-
-        } else if (d.getTipoDetalle().equals(tipo7) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
-
-          Long id = d.getCodDetalle();
-          String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          String desplegable = d.getListaDesplegable();
-          Float porcen = d.getPorcentaje();
-
-          //CrearFiltro(modulo, id, pregunta, desplegable);
-
-          Cfiltro cf = new Cfiltro();
-          cf.Carga(path);
-          linearBodypop.addView(cf.filtro(this, id, pregunta, desplegable));
-
-
-        }else if(d.getTipoDetalle().equals(tipo8) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")){
-
-          Long id = d.getCodDetalle();
-          String pregunta = d.getQuesDetalle();
-
-          Cscanner cs = new Cscanner();
-          linearBodypop.addView(cs.scanner(this,id,pregunta));
-        }
-
-
-      }
+                if (d.getIdProceso() == getcodProceso() && d.getTipoModulo().equals("H")) {
+                    switch (campo){
+                        case "TV":
+                          Ctextview ct = new Ctextview();
+                          linearBodypop.addView(ct.textview(genated.this, id ,pregunta));
+                          break;
+                        case "ETN":
+                          Cetnum cen = new Cetnum();
+                          linearBodypop.addView(cen.tnumerico(genated.this, id, pregunta));
+                          break;
+                        case "ETA":
+                          Cetalf cal = new Cetalf();
+                          linearBodypop.addView(cal.talfanumerico(genated.this, id, pregunta));
+                          break;
+                        case "CBX":
+                          Cdesplegable cd = new Cdesplegable();
+                          cd.Carga(path);
+                          linearBodypop.addView(cd.desplegable(genated.this, id, pregunta, desplegable));
+                          break;
+                        case "FIL":
+                          Cfiltro cf = new Cfiltro();
+                          cf.Carga(path);
+                          linearBodypop.addView(cf.filtro(genated.this, id, pregunta, desplegable));
+                          break;
+                        case "SCA":
+                          Cscanner cs = new Cscanner();
+                          linearBodypop.addView(cs.scanner(genated.this,id,pregunta));
+                          break;
+                        default:
+                          Toast.makeText(this, "ocurrio un error al crear ", Toast.LENGTH_SHORT).show();
+                          break;
+                    }
+                }
+          }
     } catch (Exception exception) {
       Toast.makeText(this, "exception en generated \n \n" + exception.toString(), Toast.LENGTH_SHORT).show();
       Log.i("Excep on create",exception.toString());
@@ -266,37 +227,29 @@ public class genated extends AppCompatActivity {
 
   //CREA CONTROLES DEL FORMULARIO
   public void CrearForm() {
+    scrollForm.fullScroll(View.FOCUS_UP); //funcion que sube el scroll al inicio
+      for (DetallesTab d : iP) {
 
-    scrollForm.fullScroll(View.FOCUS_UP);
-
-    for (DetallesTab d : iP) {
-      int cod = sp.getInt("cod_proceso", 0);
-
-      String tipo1 = "RS"; //BOTON DE CANTIDAD
-      String tipo2 = "RB"; //RADIO BUTTONS
-
-
-      if (d.getTipoDetalle().equals(tipo1) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
-        Long idCons = d.getIdConsecutivo();
-        Long id = d.getCodDetalle();
-        String pregunta = d.getQuesDetalle();
-        String modulo = d.getTipoModulo();
-        Float porce = d.getPorcentaje();
-
-        Cconteos cc = new Cconteos();
-        linearPrinc.addView(cc.Cconteo(this,id,pregunta,porce));
-
-      } else if(d.getTipoDetalle().equals(tipo2) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")){
-        Long id = d.getCodDetalle();
+        String campo = d.getTipoDetalle();
         String pregunta = d.getQuesDetalle();
         String desplegable = d.getListaDesplegable();
         Float porcentaje = d.getPorcentaje();
+        Long id = d.getCodDetalle();
 
-        CradioButton cb = new CradioButton();
-        cb.Carga(path);
-        linearPrinc.addView(cb.Tradiobtn(this,id,pregunta,desplegable,porcentaje));
+          if (d.getIdProceso() == getcodProceso() && d.getTipoModulo().equals("Q")) {
+              switch (campo){
+                case "RS":
+                  Cconteos cc = new Cconteos();
+                  linearPrinc.addView(cc.Cconteo(this,id,pregunta,porcentaje));
+                  break;
+                case "RB":
+                  CradioButton cb = new CradioButton();
+                  cb.Carga(path);
+                  linearPrinc.addView(cb.Tradiobtn(this,id,pregunta,desplegable,porcentaje));
+                  break;
+              }
+          }
       }
-    }
   }
 
   //METODOS PARA OBTENER DATOS
