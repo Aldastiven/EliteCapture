@@ -70,6 +70,11 @@ public class Cscanner {
                 llparamsTXT1.weight = (float) 0.5;
                 llparamsTXT1.setMargins(5, 10, 5, 5);
 
+                TextView tvItem = new TextView(context);
+                tvItem.setText("Item : "+id.intValue());
+                tvItem.setTextColor(Color.parseColor("#58d68d"));
+                tvItem.setTypeface(null,Typeface.BOLD);
+
                 final EditText edt = new EditText(context);
                 edt.setHint("" + cs.contenido);
                 edt.setHintTextColor(Color.parseColor("#626567"));
@@ -97,6 +102,7 @@ public class Cscanner {
                 LLprincipal.addView(edt);
                 LLprincipal.addView(btn);
 
+                LLtotal.addView(tvItem);
                 LLtotal.addView(tv);
                 LLtotal.addView(LLprincipal);
 

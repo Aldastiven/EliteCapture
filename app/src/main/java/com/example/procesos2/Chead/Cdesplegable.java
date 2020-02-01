@@ -42,11 +42,30 @@ public class Cdesplegable {
             ArrayList<consdesp> lista = new ArrayList<>();
             lista.add(new consdesp(context, id, contenido));
 
+            //ORGANIZA LOS CONTROLES INTEGRADOS
+            LinearLayout.LayoutParams llparamsTotal = new
+                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+            llparamsTotal.setMargins(0,0,0,10);
+
+            LinearLayout LLtotal = new LinearLayout(context);
+            LLtotal.setLayoutParams(llparamsTotal);
+            LLtotal.setWeightSum(2);
+            LLtotal.setOrientation(LinearLayout.VERTICAL);
+            LLtotal.setPadding(8,15,8,12);
+            LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
+            LLtotal.setBackgroundResource(R.drawable.bordercontainer);
+
             for(consdesp cd : lista){
                 LinearLayout.LayoutParams llparams = new
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 llparams.weight = 1;
                 llparams.setMargins(5, 10, 5, 20);
+
+                TextView tvItem = new TextView(context);
+                tvItem.setText("Item : "+id.intValue());
+                tvItem.setTextColor(Color.parseColor("#58d68d"));
+                tvItem.setTypeface(null,Typeface.BOLD);
 
                 final TextView tvp = new TextView(context);
                 tvp.setId(id.intValue());
@@ -79,8 +98,10 @@ public class Cdesplegable {
                     spinner.setAdapter(spinnerArray);
                     spinner.setLayoutParams(llparams);
 
-                    ControlView = CrearLinearLayoutHeader(tvp, spinner, context);
 
+                    LLtotal.addView(tvItem);
+                    LLtotal.addView(CrearLinearLayoutHeader(tvp, spinner, context));
+                    ControlView = LLtotal;
                 }catch (Exception ex){ }
 
             }
@@ -101,7 +122,6 @@ public class Cdesplegable {
         LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
         LLprincipal.setPadding(5, 5, 5, 5);
         LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
-        LLprincipal.setBackgroundResource(R.drawable.bordercontainer);
 
         LLprincipal.addView(v1);
         LLprincipal.addView(v2);

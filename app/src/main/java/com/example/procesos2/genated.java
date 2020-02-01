@@ -243,7 +243,7 @@ public class genated extends AppCompatActivity {
               switch (campo){
                 case "RS":
                   Cconteos cc = new Cconteos();
-                  linearPrinc.addView(cc.Cconteo(this,id,pregunta,porcentaje));
+                  linearPrinc.addView(cc.Cconteo(this,id,pregunta,porcentaje,path,nombreproc,getcodProceso()));
                   break;
                 case "RB":
                   CradioButton cb = new CradioButton();

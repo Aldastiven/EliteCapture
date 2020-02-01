@@ -68,6 +68,11 @@ public class Cfiltro {
                 LinearLayout.LayoutParams lltxtres = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
                 lltxtres.setMargins(0,10,0,0);
 
+                TextView tvItem = new TextView(context);
+                tvItem.setText("Item : "+id.intValue());
+                tvItem.setTextColor(Color.parseColor("#58d68d"));
+                tvItem.setTypeface(null,Typeface.BOLD);
+
                 final TextView tv = new TextView(context);
                 tv.setId(id.intValue());
                 tv.setText("Resultados :");
@@ -121,6 +126,7 @@ public class Cfiltro {
                 LLprincipal.addView(edt);
                 LLprincipal.addView(btn);
 
+                LLtotal.addView(tvItem);
                 LLtotal.addView(tv);
                 LLtotal.addView(LLprincipal);
 

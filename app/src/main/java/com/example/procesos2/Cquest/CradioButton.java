@@ -55,6 +55,10 @@ public class CradioButton {
     //crea el control del radio button y retorna el view
     public View Tradiobtn (final Context context, final Long id, final String contenido, String desplegable, final Float porcentaje, final String path, final String nompro, final int idpro){
 
+        iT.path = path;
+        iT.nombre = nompro;
+        final TemporalTab tt = new TemporalTab();
+
         //ORGANIZA LOS CONTROLES INTEGRADOS
         LinearLayout.LayoutParams llparamsTotal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -65,7 +69,7 @@ public class CradioButton {
         LLtotal.setLayoutParams(llparamsTotal);
         LLtotal.setWeightSum(2);
         LLtotal.setOrientation(LinearLayout.VERTICAL);
-        LLtotal.setPadding(10,30,10,10);
+        LLtotal.setPadding(10,30,10,12);
         LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
         LLtotal.setBackgroundResource(R.drawable.bordercontainer);
 
@@ -82,6 +86,11 @@ public class CradioButton {
 
         LinearLayout.LayoutParams llparamsTextpo = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         llparamsText.weight = (float) 0.7;
+
+        TextView tvItem = new TextView(context);
+        tvItem.setText("Item : "+id.intValue());
+        tvItem.setTextColor(Color.parseColor("#58d68d"));
+        tvItem.setTypeface(null,Typeface.BOLD);
 
         final TextView tvp = new TextView(context);
         tvp.setId(id.intValue());
@@ -127,25 +136,18 @@ public class CradioButton {
             rb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //Toast.makeText(context, ""+rb.getText().toString(), Toast.LENGTH_SHORT).show();
-
                     try {
-                        Toast.makeText(context, "" +iT.all(), Toast.LENGTH_SHORT).show();
-                        //Toast.makeText(context, "" +iT.clear(), Toast.LENGTH_SHORT).show();
-
+                        tt.setRespuesta(rb.getText().toString());
+                        //Toast.makeText(context, ""+iT.update(rb.getId(),tt), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, ""+iT.all(), Toast.LENGTH_SHORT).show();
                     }catch (Exception ex){
                         Toast.makeText(context, "Exc al insertar en CradioButton.class \n \n "+ex.toString(), Toast.LENGTH_LONG).show();
                     }
-
                 }
             });
 
             try {
-                iT.path = path;
-                iT.nombre = nompro;
-
-                TemporalTab tt = new TemporalTab();
-                tt.setItem(0);
+                tt.setItem(rb.getId());
                 tt.setProceso(idpro);
                 tt.setUsuario(id.intValue());
                 tt.setRespuesta("");
@@ -157,6 +159,7 @@ public class CradioButton {
             }
         }
 
+        LLtotal.addView(tvItem);
         LLtotal.addView(LLPREGUNTA(context,tvp,tvpor));
         LLtotal.addView(rg);
 

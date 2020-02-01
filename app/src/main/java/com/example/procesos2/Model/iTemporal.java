@@ -72,4 +72,17 @@ public class iTemporal implements temporal {
         local();
         return "ok limpio";
     }
+
+    public String update(int item, TemporalTab o) throws Exception{
+        String msj;
+        try{
+            o.setRespuesta(o.getRespuesta());
+            tt.set(item-1,o);
+            local();
+            msj = "se actualizo correctamente";
+        }catch (Exception ex){
+            msj = "ocurrio un error al actualizar en update() \n"+ex.toString();
+        }
+        return msj;
+    }
 }

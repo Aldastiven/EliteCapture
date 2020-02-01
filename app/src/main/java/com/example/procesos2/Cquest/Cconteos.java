@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.procesos2.Model.iTemporal;
+import com.example.procesos2.Model.tab.TemporalTab;
 import com.example.procesos2.R;
 
 import java.util.ArrayList;
@@ -20,15 +22,37 @@ public class Cconteos {
     View ControlView;
 
     int idres = 0;
+    iTemporal iT = null;
 
     //metodo que crea el control del conteo
-    public View Cconteo(Context context, Long id, String contenido, Float porcentaje){
+    public View Cconteo(Context context, Long id, String contenido, Float porcentaje, final String path, final String nompro, final int idpro ){
+        try {
+            iT = new iTemporal(path);
+        }catch (Exception ex){
+            Toast.makeText(context, "Exc en el paht \n"+ex.toString(), Toast.LENGTH_SHORT).show();
+        }
+            iT.path = path;
+            iT.nombre = nompro;
+            final TemporalTab tt = new TemporalTab();
+
+
         int i;
         for(i = 0; i<=1; i++){
             ArrayList<consconteos> lista = new ArrayList<>();
             lista.add(new consconteos(context,id,contenido));
 
             for(consconteos cc : lista){
+
+                try {
+                    tt.setItem(cc.id.intValue());
+                    tt.setProceso(idpro);
+                    tt.setUsuario(id.intValue());
+                    tt.setRespuesta("");
+                    tt.setPorcentaje((double) 1);
+                    Toast.makeText(context, ""+iT.insert(tt), Toast.LENGTH_SHORT).show();
+                }catch (Exception ex){
+                    Toast.makeText(context, "Exc al insertar en en el json \n \n "+ex.toString(), Toast.LENGTH_LONG).show();
+                }
 
                 //ORGANIZA LOS CONTROLES INTEGRADOS
                 LinearLayout.LayoutParams llparamsTotal = new
@@ -51,6 +75,11 @@ public class Cconteos {
                 LinearLayout.LayoutParams llparamsTextpo = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 llparamsText.weight = (float) 0.7;
 
+                TextView tvItem = new TextView(context);
+                tvItem.setText("Item : "+id.intValue());
+                tvItem.setTextColor(Color.parseColor("#58d68d"));
+                tvItem.setTypeface(null,Typeface.BOLD);
+
                 final TextView tvp = new TextView(context);
                 tvp.setId(id.intValue());
                 tvp.setText(contenido+"\nponderado: "+porcentaje.toString());
@@ -69,10 +98,14 @@ public class Cconteos {
                 tvpor.setTypeface(null, Typeface.BOLD);
                 tvpor.setLayoutParams(llparamsTextpo);
 
+                LLtotal.addView(tvItem);
                 LLtotal.addView(LLPREGUNTA(context,tvp,tvpor));
                 LLtotal.addView(Cbotones(context,id));
 
                 ControlView = LLtotal;
+
+
+
             }
         }
         return ControlView;

@@ -26,12 +26,31 @@ public class Cetnum {
             ArrayList<consCetnum> lista = new ArrayList<>();
             lista.add(new consCetnum(context, id, contenido));
 
+            //ORGANIZA LOS CONTROLES INTEGRADOS
+            LinearLayout.LayoutParams llparamsTotal = new
+                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+            llparamsTotal.setMargins(0,0,0,10);
+
+            LinearLayout LLtotal = new LinearLayout(context);
+            LLtotal.setLayoutParams(llparamsTotal);
+            LLtotal.setWeightSum(2);
+            LLtotal.setOrientation(LinearLayout.VERTICAL);
+            LLtotal.setPadding(8,15,8,12);
+            LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
+            LLtotal.setBackgroundResource(R.drawable.bordercontainer);
+
             for(consCetnum en : lista){
 
                 LinearLayout.LayoutParams llparams = new
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 llparams.weight = 1;
                 llparams.setMargins(5, 10, 5, 10);
+
+                TextView tvItem = new TextView(context);
+                tvItem.setText("Item : "+id.intValue());
+                tvItem.setTextColor(Color.parseColor("#58d68d"));
+                tvItem.setTypeface(null,Typeface.BOLD);
 
                 final TextView tvp = new TextView(context);
                 tvp.setId(id.intValue());
@@ -57,7 +76,10 @@ public class Cetnum {
 
                 //DesabilitarTeclado(etxtN);
 
-                ControlView = CrearLinearLayoutHeader(tvp, etxtN, context);
+                LLtotal.addView(tvItem);
+                LLtotal.addView(CrearLinearLayoutHeader(tvp, etxtN, context));
+
+                ControlView = LLtotal;
 
             }
 
@@ -79,7 +101,6 @@ public class Cetnum {
         LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
         LLprincipal.setPadding(5, 5, 5, 5);
         LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
-        LLprincipal.setBackgroundResource(R.drawable.bordercontainer);
 
         LLprincipal.addView(v1);
         LLprincipal.addView(v2);
