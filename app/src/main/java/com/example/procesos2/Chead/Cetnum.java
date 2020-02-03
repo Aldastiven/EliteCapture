@@ -75,6 +75,7 @@ public class Cetnum {
                 etxtN.setTypeface(null, Typeface.BOLD);
                 etxtN.setLayoutParams(llparams);
                 etxtN.setBackgroundColor(Color.parseColor("#eeeeee"));
+                etxtN.setSingleLine();
 
                 //DesabilitarTeclado(etxtN);
 

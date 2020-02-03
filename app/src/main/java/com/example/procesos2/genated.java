@@ -34,8 +34,10 @@ import com.example.procesos2.Cquest.CradioButton;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.iDetalles;
 import com.example.procesos2.Model.iRespuestas;
+import com.example.procesos2.Model.iTemporal;
 import com.example.procesos2.Model.tab.DetallesTab;
 import com.example.procesos2.Model.tab.RespuestasTab;
+import com.example.procesos2.Model.tab.TemporalTab;
 
 import java.io.File;
 import java.sql.Connection;
@@ -63,6 +65,7 @@ public class genated extends AppCompatActivity {
   iRespuestas ir = null;
   iDesplegable id = null;
   iDetalles iD = null;
+  iTemporal iT = null;
 
   String path = null, nombreproc = null;
   public Conexion con = null;
@@ -108,7 +111,6 @@ public class genated extends AppCompatActivity {
       mypop.show();
 
       onckickBTNfloating();
-      crearJsonRes();
 
     } catch (Exception ex) {
       Log.i("Error onCreate", ex.toString());
@@ -144,6 +146,7 @@ public class genated extends AppCompatActivity {
         iD = new iDetalles(con.getConexion(), path);
         ir = new iRespuestas(con.getConexion(), path);
         id = new iDesplegable(con.getConexion(), path);
+        iT = new iTemporal(path);
 
         iP = iD.all();
       } else {
@@ -151,22 +154,12 @@ public class genated extends AppCompatActivity {
         iD = new iDetalles(null, path);
         ir = new iRespuestas(null, path);
         id = new iDesplegable(null, path);
+        iT = new iTemporal(path);
 
         iP = iD.all();
       }
     }catch (Exception ex){
       Toast.makeText(this, "Exception al traer path y conexion en metodo PC \n"+ex.toString(), Toast.LENGTH_SHORT).show();
-    }
-  }
-
-  //CREAR EL JSON SINO EXISTE
-  private void crearJsonRes() throws Exception {
-    ir.nombre = "Respuestas";
-    try {
-      ir.all();
-      ir.local();
-    } catch (Exception ex) {
-      ir.local();
     }
   }
 
@@ -189,28 +182,34 @@ public class genated extends AppCompatActivity {
                         case "TV":
                           Ctextview ct = new Ctextview();
                           linearBodypop.addView(ct.textview(genated.this, id ,pregunta));
+                          insertTemp(id.intValue(),getcodProceso());
                           break;
                         case "ETN":
                           Cetnum cen = new Cetnum();
                           linearBodypop.addView(cen.tnumerico(genated.this, id, pregunta));
+                          insertTemp(id.intValue(),getcodProceso());
                           break;
                         case "ETA":
                           Cetalf cal = new Cetalf();
                           linearBodypop.addView(cal.talfanumerico(genated.this, id, pregunta));
+                          insertTemp(id.intValue(),getcodProceso());
                           break;
                         case "CBX":
                           Cdesplegable cd = new Cdesplegable();
                           cd.Carga(path);
                           linearBodypop.addView(cd.desplegable(genated.this, id, pregunta, desplegable));
+                          insertTemp(id.intValue(),getcodProceso());
                           break;
                         case "FIL":
                           Cfiltro cf = new Cfiltro();
                           cf.Carga(path);
                           linearBodypop.addView(cf.filtro(genated.this, id, pregunta, desplegable));
+                          insertTemp(id.intValue(),getcodProceso());
                           break;
                         case "SCA":
                           Cscanner cs = new Cscanner();
                           linearBodypop.addView(cs.scanner(genated.this,id,pregunta));
+                          insertTemp(id.intValue(),getcodProceso());
                           break;
                         default:
                           Toast.makeText(this, "ocurrio un error al crear ", Toast.LENGTH_SHORT).show();
@@ -225,6 +224,8 @@ public class genated extends AppCompatActivity {
 
     CrearForm();
   }
+
+
 
   //CREA CONTROLES DEL FORMULARIO
   public void CrearForm() {
@@ -243,16 +244,36 @@ public class genated extends AppCompatActivity {
               switch (campo){
                 case "RS":
                   Cconteos cc = new Cconteos();
-                  linearPrinc.addView(cc.Cconteo(this,id,pregunta,porcentaje,path,nombreproc,getcodProceso()));
+                  linearPrinc.addView(cc.Cconteo(this,id,pregunta,porcentaje,path,nombreproc,getcodProceso(),getcodUsuario()));
+                  insertTemp(id.intValue(),getcodProceso());
                   break;
                 case "RB":
                   CradioButton cb = new CradioButton();
                   cb.Carga(path);
-                  linearPrinc.addView(cb.Tradiobtn(this,id,pregunta,desplegable,porcentaje,path,nombreproc,getcodProceso()));
+                  linearPrinc.addView(cb.Tradiobtn(this,id,pregunta,desplegable,porcentaje,path,nombreproc,getcodProceso(),getcodUsuario()));
+                  insertTemp(id.intValue(),getcodProceso());
                   break;
               }
           }
       }
+  }
+
+  //METODO PARA INSERTAR EN JSON TEMPORAL
+  public void insertTemp(int idItem, int codpro){
+    try {
+      iT.path = path;
+      iT.nombre = "Temp"+nombreproc;
+      TemporalTab tt = new TemporalTab();
+      tt.setItem(idItem);
+      tt.setProceso(codpro);
+      tt.setUsuario(getcodUsuario());
+      tt.setRespuesta(null);
+      tt.setPorcentaje(null);
+      iT.insert(tt);
+      iT.local();
+    }catch (Exception ex){
+      Toast.makeText(this, "Exc al insertar en en el json \n \n "+ex.toString(), Toast.LENGTH_LONG).show();
+    }
   }
 
   //METODOS PARA OBTENER DATOS
@@ -271,18 +292,25 @@ public class genated extends AppCompatActivity {
     int idProceso = sp.getInt("cod_proceso", 0);
     return idProceso;
   }
+  public int getcodUsuario(){
+    int idusuario = sp.getInt("codigo", 0);
+    return idusuario;
+  }
 
   //BAJAR TECLADO
-  public void KeyDown(EditText et) {
-    InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
-    imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+  public void KeyDown(View et) {
+    try {
+      InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+      imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    }catch (Exception ex){
+      Toast.makeText(this, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+    }
   }
 
   //REGISTRO DE JSON
 
   public void registroJson(View v) {
     try {
-
       //realiza el conteo de si encuentra alguno con null en el arreglo
       cont = 0;
       for (String i : al) {

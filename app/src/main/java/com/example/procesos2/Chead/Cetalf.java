@@ -3,12 +3,16 @@ package com.example.procesos2.Chead;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.inputmethodservice.InputMethodService;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.procesos2.R;
 import com.example.procesos2.genated;
@@ -18,11 +22,10 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 public class Cetalf {
 
-    private static final Context INPUT_METHOD_SERVICE = null;
     View ControlView;
 
     //metodo que crea el control edittext alfanumerico
-    public View talfanumerico(Context context, Long id, String contenido){
+    public View talfanumerico(final Context context, Long id, String contenido){
         int i;
         for(i=0; i<=1; i++){
             ArrayList<consCetalf> lista = new ArrayList<>();
@@ -75,6 +78,8 @@ public class Cetalf {
                 etxtA.setTypeface(null, Typeface.BOLD);
                 etxtA.setLayoutParams(llparams);
                 etxtA.setBackgroundColor(Color.parseColor("#eeeeee"));
+                etxtA.setSingleLine();
+
 
                 LLtotal.addView(tvItem);
                 LLtotal.addView(CrearLinearLayoutHeader(tvp, etxtA, context));
@@ -106,6 +111,7 @@ public class Cetalf {
     }
 
 
+
     //constructor
     class consCetalf{
         Context context;
@@ -118,4 +124,5 @@ public class Cetalf {
             this.contenido = contenido;
         }
     }
+
 }

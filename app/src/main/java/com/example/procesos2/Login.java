@@ -134,4 +134,12 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    public void SaveLogin(){
+        try{
+
+        }catch (Exception ex){
+
+        }
+    }
+
 }

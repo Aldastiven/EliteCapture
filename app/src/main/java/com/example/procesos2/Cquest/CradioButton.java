@@ -53,7 +53,7 @@ public class CradioButton {
     }
 
     //crea el control del radio button y retorna el view
-    public View Tradiobtn (final Context context, final Long id, final String contenido, String desplegable, final Float porcentaje, final String path, final String nompro, final int idpro){
+    public View Tradiobtn (final Context context, final Long id, final String contenido, String desplegable, final Float porcentaje, final String path, final String nompro, final int idpro, final int codusu){
 
         iT.path = path;
         iT.nombre = nompro;
@@ -144,26 +144,18 @@ public class CradioButton {
                 @Override
                 public void onClick(View view) {
                     try {
+                        iT.nombre = "Temp"+nompro;
+                        tt.setUsuario(codusu);
+                        tt.setProceso(tt.getProceso());
+                        tt.setItem(id.intValue());
                         tt.setRespuesta(rb.getText().toString());
-                        //Toast.makeText(context, ""+iT.update(rb.getId(),tt), Toast.LENGTH_SHORT).show();
-                        //Toast.makeText(context, ""+iT.all(), Toast.LENGTH_SHORT).show();
+                        tt.setPorcentaje(0.0);
+                        iT.update(id.intValue(),tt);
                     }catch (Exception ex){
                         Toast.makeText(context, "Exc al insertar en CradioButton.class \n \n "+ex.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
             });
-
-            try {
-                tt.setItem(rb.getId());
-                tt.setProceso(idpro);
-                tt.setUsuario(id.intValue());
-                tt.setRespuesta("");
-                tt.setPorcentaje((double) 1);
-                iT.insert(tt);
-                iT.local();
-            }catch (Exception ex){
-                Toast.makeText(context, "Exc al insertar en en el json \n \n "+ex.toString(), Toast.LENGTH_LONG).show();
-            }
         }
 
         LLtotal.addView(LLPREGUNTA(context,tvp,tvpor));

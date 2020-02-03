@@ -111,6 +111,7 @@ public class Cfiltro {
                 edt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
                 edt.setBackgroundColor(Color.parseColor("#eeeeee"));
+                edt.setSingleLine();
 
                 LinearLayout.LayoutParams llparamsBtn = new
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);

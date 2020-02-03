@@ -25,7 +25,7 @@ public class Cconteos {
     iTemporal iT = null;
 
     //metodo que crea el control del conteo
-    public View Cconteo(Context context, Long id, String contenido, Float porcentaje, final String path, final String nompro, final int idpro ){
+    public View Cconteo(Context context, Long id, String contenido, Float porcentaje, final String path, final String nompro, final int idpro, final  int codusu ){
         try {
             iT = new iTemporal(path);
         }catch (Exception ex){
@@ -42,17 +42,6 @@ public class Cconteos {
             lista.add(new consconteos(context,id,contenido));
 
             for(consconteos cc : lista){
-
-                try {
-                    tt.setItem(cc.id.intValue());
-                    tt.setProceso(idpro);
-                    tt.setUsuario(id.intValue());
-                    tt.setRespuesta("");
-                    tt.setPorcentaje((double) 1);
-                    Toast.makeText(context, ""+iT.insert(tt), Toast.LENGTH_SHORT).show();
-                }catch (Exception ex){
-                    Toast.makeText(context, "Exc al insertar en en el json \n \n "+ex.toString(), Toast.LENGTH_LONG).show();
-                }
 
                 //ORGANIZA LOS CONTROLES INTEGRADOS
                 LinearLayout.LayoutParams llparamsTotal = new
@@ -102,19 +91,16 @@ public class Cconteos {
 
                 LLtotal.addView(LLPREGUNTA(context,tvp,tvpor));
                 LLtotal.addView(tvItem);
-                LLtotal.addView(Cbotones(context,id));
+                LLtotal.addView(Cbotones(context,id,nompro,codusu));
 
                 ControlView = LLtotal;
-
-
-
             }
         }
         return ControlView;
     }
 
     //metodo que crea los botones de conteos
-    public View Cbotones(final Context context, Long id){
+    public View Cbotones(final Context context, final Long id, final  String nompro, final int codusu){
         View viewTotal;
 
         LinearLayout llbtn = new LinearLayout(context);
@@ -160,27 +146,44 @@ public class Cconteos {
 
         viewTotal = llbtn;
 
+        final TemporalTab tt = new TemporalTab();
 
-
-        bntsum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int n = Integer.parseInt(tvr.getText().toString());
-                if(n < 9){
-                    tvr.setText(valueOf(n + 1));
+            bntsum.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int n = Integer.parseInt(tvr.getText().toString());
+                    if (n < 9) {
+                        tvr.setText(valueOf(n + 1));
+                        try {
+                            iT.nombre = "Temp"+nompro;
+                            tt.setUsuario(codusu);
+                            tt.setProceso(tt.getProceso());
+                            tt.setItem(id.intValue());
+                            tt.setRespuesta(tvr.getText().toString());
+                            tt.setPorcentaje(0.0);
+                            iT.update(id.intValue(),tt);
+                        }catch (Exception ex){
+                            Toast.makeText(context, "Exc al actualizar \n"+ex.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
-            }
-        });
+            });
 
-        bntres.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int n = Integer.parseInt(tvr.getText().toString());
-                if(n > -1){
-                    tvr.setText(valueOf(n - 1));
+            bntres.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int n = Integer.parseInt(tvr.getText().toString());
+                    if (n > -1) {
+                        tvr.setText(valueOf(n - 1));
+                        try{
+                            tt.setRespuesta(tvr.getText().toString());
+                            Toast.makeText(context, "" + iT.update(id.intValue(), tt), Toast.LENGTH_SHORT).show();
+                        }catch (Exception ex){
+                            Toast.makeText(context, "Exc al actualizar \n"+ex.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
-            }
-        });
+            });
 
         return viewTotal;
     }

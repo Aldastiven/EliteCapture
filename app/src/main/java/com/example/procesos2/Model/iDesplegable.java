@@ -21,6 +21,14 @@ public class iDesplegable implements Desplegable {
 
     public String nombre = "";
 
+    public String order1 = "SELECT \n" +
+                            "      [Filtro]\n" +
+                            "      ,[Codigo]\n" +
+                            "      ,[Opcion]\n" +
+                            "  FROM [dbo].[Desplegables]\n" +
+                            "  WHERE [Filtro]='"+null+"' ORDER BY [Opcion] ASC;";
+
+
 
     public iDesplegable(Connection cn,String path) throws Exception{
         this.cn = cn;
@@ -60,7 +68,8 @@ public class iDesplegable implements Desplegable {
         PreparedStatement ps = cn.prepareStatement("SELECT [Filtro]\n" +
                                                         ",[Codigo]\n" +
                                                         ",[Opcion]\n" +
-                                                        "FROM [dbo].[Desplegables]");
+                                                        "FROM [dbo].[Desplegables] \n" +
+                                                        "ORDER BY Codigo");
         rs = ps.executeQuery();
 
         while (rs.next()){
@@ -96,12 +105,9 @@ public class iDesplegable implements Desplegable {
         DT.clear();
         try {
             ResultSet rs;
-            PreparedStatement ps = cn.prepareStatement("SELECT \n" +
-                                                            "      [Filtro]\n" +
-                                                            "      ,[Codigo]\n" +
-                                                            "      ,[Opcion]\n" +
-                                                            "  FROM [dbo].[Desplegables]\n" +
-                                                            "  WHERE [Filtro]='"+nombreD+"' ORDER BY [Opcion] ASC;");
+            PreparedStatement ps = cn.prepareStatement("SELECT id_Desplegable, Filtro, Codigo, Opcion\n" +
+                                                            "FROM  Desplegables\n" +
+                                                            "WHERE [Filtro]='"+nombreD+"' ORDER BY Codigo");
             rs = ps.executeQuery();
             while (rs.next()) {
                 DT.add(gift(rs));

@@ -76,10 +76,11 @@ public class iTemporal implements temporal {
     public String update(int item, TemporalTab o) throws Exception{
         String msj;
         try{
+            all();
             o.setRespuesta(o.getRespuesta());
             tt.set(item-1,o);
             local();
-            msj = "se actualizo correctamente";
+            msj = "se actualizo correctamente"+item;
         }catch (Exception ex){
             msj = "ocurrio un error al actualizar en update() \n"+ex.toString();
         }
