@@ -31,8 +31,16 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.procesos2.Chead.Cdesplegable;
+import com.example.procesos2.Chead.Cetalf;
+import com.example.procesos2.Chead.Cetnum;
+import com.example.procesos2.Chead.Cfiltro;
+import com.example.procesos2.Chead.Cscanner;
+import com.example.procesos2.Chead.Ctextview;
 import com.example.procesos2.Conexion.CheckedConexion;
 import com.example.procesos2.Config.sqlConect;
+import com.example.procesos2.Cquest.Cconteos;
+import com.example.procesos2.Cquest.CradioButton;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.iDetalles;
 import com.example.procesos2.Model.iRespuestas;
@@ -215,120 +223,82 @@ public class genated extends AppCompatActivity {
   }
 
 
+  //CREA LOS CONTROLES DEL HEADER EN EL POP
   public void CrearHeader() {
     try {
       for (DetallesTab d : iP) {
-        int cod = sp.getInt("cod_proceso", 0);
+        String campo = d.getTipoDetalle();
+        Long id = d.getCodDetalle();
+        String pregunta = d.getQuesDetalle();
+        String desplegable = d.getListaDesplegable();
 
-        String tipo1 = "RS"; //BOTON DE CANTIDAD
-        String tipo2 = "SWH"; //BOTON DE SI O NO
-        String tipo3 = "TV"; //TEXTVIEW
-        String tipo4 = "ETN"; //EDITTEXT NUMERICO
-        String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
-        String tipo6 = "CBX"; //SPINNER
-        String tipo7 = "FIL"; //FLITROS JSON
-
-        if (d.getTipoDetalle().equals(tipo3) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
-
-          Long id = d.getCodDetalle();
-          String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          CrearTextViewFecha(modulo, id, pregunta);
-
-          //ElTextView tvv = new ElTextView(getApplicationContext(), pregunta);
-
-
-        } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
-          Long id = d.getCodDetalle();
-          String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          CrearEditTextNumeric(modulo, id, pregunta);
-
-
-        } else if (d.getTipoDetalle().equals(tipo5) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
-          Long id = d.getCodDetalle();
-          String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          CrearEditTextAlfanumeric(modulo, id, pregunta);
-
-        } else if (d.getTipoDetalle().equals(tipo6) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
-          Long id = d.getCodDetalle();
-          String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          String desplegable = d.getListaDesplegable();
-          Float porcentaje = d.getPorcentaje();
-          CrearSpinner(modulo, id, pregunta, desplegable, porcentaje);
-
-        } else if (d.getTipoDetalle().equals(tipo7) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
-
-          Long id = d.getCodDetalle();
-          String pregunta = d.getQuesDetalle();
-          String modulo = d.getTipoModulo();
-          String desplegable = d.getListaDesplegable();
-          Float porcen = d.getPorcentaje();
-
-          CrearFiltro(modulo, id, pregunta, desplegable);
+        if (d.getIdProceso() == getcodProceso() && d.getTipoModulo().equals("H")) {
+          switch (campo){
+            case "TV":
+              Ctextview ct = new Ctextview();
+              linearHeader.addView(ct.textview(genated.this, id ,pregunta));
+              break;
+            case "ETN":
+              Cetnum cen = new Cetnum();
+              linearHeader.addView(cen.tnumerico(genated.this, id, pregunta));
+              break;
+            case "ETA":
+              Cetalf cal = new Cetalf();
+              linearHeader.addView(cal.talfanumerico(genated.this, id, pregunta));
+              break;
+            case "CBX":
+              Cdesplegable cd = new Cdesplegable();
+              cd.Carga(path);
+              linearHeader.addView(cd.desplegable(genated.this, id, pregunta, desplegable));
+              break;
+            case "FIL":
+              Cfiltro cf = new Cfiltro();
+              cf.Carga(path);
+              linearHeader.addView(cf.filtro(genated.this, id, pregunta, desplegable));
+              break;
+            case "SCA":
+              Cscanner cs = new Cscanner();
+              linearHeader.addView(cs.scanner(genated.this,id,pregunta));
+              break;
+            default:
+              Toast.makeText(this, "ocurrio un error al crear ", Toast.LENGTH_SHORT).show();
+              break;
+          }
         }
       }
     } catch (Exception exception) {
       Toast.makeText(this, "exception en generated \n \n" + exception.toString(), Toast.LENGTH_SHORT).show();
+      Log.i("Excep on create",exception.toString());
     }
 
     CrearForm();
   }
 
+  //CREA CONTROLES DEL FORMULARIO
   public void CrearForm() {
-
-    scrollForm.fullScroll(View.FOCUS_UP);
-
+    scrollForm.fullScroll(View.FOCUS_UP); //funcion que sube el scroll al inicio
     for (DetallesTab d : iP) {
-      int cod = sp.getInt("cod_proceso", 0);
 
-      String tipo1 = "RS"; //BOTON DE CANTIDAD
-      String tipo2 = "SWH"; //BOTON DE SI O NO
-      String tipo3 = "TV"; //TEXTVIEW
-      String tipo4 = "ETN"; //EDITTEXT NUMERICO
-      String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
-      String tipo6 = "CBX"; //SPINNER
+      String campo = d.getTipoDetalle();
+      String pregunta = d.getQuesDetalle();
+      String desplegable = d.getListaDesplegable();
+      Float porcentaje = d.getPorcentaje();
+      Long id = d.getCodDetalle();
 
+      path = getExternalFilesDir(null) + File.separator;;
 
-      if (d.getTipoDetalle().equals(tipo1) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
-        Long idCons = d.getIdConsecutivo();
-        Long id = d.getCodDetalle();
-        String pregunta = d.getQuesDetalle();
-        String modulo = d.getTipoModulo();
-        Float porce = d.getPorcentaje();
-        CrearSumRes(modulo, id, pregunta, porce);
-
-      } else if (d.getTipoDetalle().equals(tipo2) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
-        Long idCons = d.getIdConsecutivo();
-        Long id = d.getCodDetalle();
-        String pregunta = d.getQuesDetalle();
-        String modulo = d.getTipoModulo();
-        CrearSwicht(modulo, id, pregunta);
-
-      } else if (d.getTipoDetalle().equals(tipo4) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
-        Long idCons = d.getIdConsecutivo();
-        Long id = d.getCodDetalle();
-        String pregunta = d.getQuesDetalle();
-        String modulo = d.getTipoModulo();
-        CrearEditTextNumericQ(modulo, id, pregunta);
-
-      } else if (d.getTipoDetalle().equals(tipo5) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
-        Long idCons = d.getIdConsecutivo();
-        Long id = d.getCodDetalle();
-        String pregunta = d.getQuesDetalle();
-        String modulo = d.getTipoModulo();
-        CrearEditTextAlfaQ(modulo, id, pregunta);
-
-      } else if (d.getTipoDetalle().equals(tipo6) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
-        Long idCons = d.getIdConsecutivo();
-        Long id = d.getCodDetalle();
-        String pregunta = d.getQuesDetalle();
-        String modulo = d.getTipoModulo();
-        String desplegable = d.getListaDesplegable();
-        Float porcen = d.getPorcentaje();
-        CrearEditTextSpinnerQ(modulo, id, pregunta, desplegable, porcen);
+      if (d.getIdProceso() == getcodProceso() && d.getTipoModulo().equals("Q")) {
+        switch (campo){
+          case "RS":
+            Cconteos cc = new Cconteos();
+            linearPrinc.addView(cc.Cconteo(this,id,pregunta,porcentaje,path,nombreproc,getcodProceso()));
+            break;
+          case "RB":
+            CradioButton cb = new CradioButton();
+            cb.Carga(path);
+            linearPrinc.addView(cb.Tradiobtn(this,id,pregunta,desplegable,porcentaje,path,nombreproc,getcodProceso()));
+            break;
+        }
       }
     }
   }
