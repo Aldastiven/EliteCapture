@@ -48,8 +48,10 @@ public class Cetnum {
                 llparams.setMargins(5, 10, 5, 10);
 
                 TextView tvItem = new TextView(context);
-                tvItem.setText("Item : "+id.intValue());
+                tvItem.setText(""+id.intValue());
                 tvItem.setTextColor(Color.parseColor("#58d68d"));
+                tvItem.setVisibility(View.INVISIBLE);
+                tvItem.setTextSize(5);
                 tvItem.setTypeface(null,Typeface.BOLD);
 
                 final TextView tvp = new TextView(context);

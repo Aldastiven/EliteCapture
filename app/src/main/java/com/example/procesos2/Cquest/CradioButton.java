@@ -87,10 +87,15 @@ public class CradioButton {
         LinearLayout.LayoutParams llparamsTextpo = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         llparamsText.weight = (float) 0.7;
 
+        LinearLayout.LayoutParams llparamsTextitem = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         TextView tvItem = new TextView(context);
-        tvItem.setText("Item : "+id.intValue());
+        tvItem.setText(""+id.intValue());
         tvItem.setTextColor(Color.parseColor("#58d68d"));
         tvItem.setTypeface(null,Typeface.BOLD);
+        tvItem.setVisibility(View.INVISIBLE);
+        tvItem.setTextSize(5);
+        tvItem.setLayoutParams(llparamsTextitem);
 
         final TextView tvp = new TextView(context);
         tvp.setId(id.intValue());
@@ -123,12 +128,14 @@ public class CradioButton {
             rb.setText(option.get(i));
             rb.setLayoutParams(llrb);
             rb.setTextSize(12);
+            rb.setScaleX((float) 1.10);
+            rb.setScaleY((float) 1.10);
             rg.addView(rb);
 
             if(rb.getText().toString().equals("NO APLICA")){
-                rb.setButtonTintList(ColorSelected( 231, 76, 60 ));
-            }else if(rb.getText().toString().equals("NO CUMPLE")){
                 rb.setButtonTintList(ColorSelected( 153, 163, 164 ));
+            }else if(rb.getText().toString().equals("NO CUMPLE")){
+                rb.setButtonTintList(ColorSelected( 231, 76, 60 ));
             }else if(rb.getText().toString().equals("SI CUMPLE")){
                 rb.setButtonTintList(ColorSelected(34, 153, 84 ));
             }
@@ -139,7 +146,7 @@ public class CradioButton {
                     try {
                         tt.setRespuesta(rb.getText().toString());
                         //Toast.makeText(context, ""+iT.update(rb.getId(),tt), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(context, ""+iT.all(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, ""+iT.all(), Toast.LENGTH_SHORT).show();
                     }catch (Exception ex){
                         Toast.makeText(context, "Exc al insertar en CradioButton.class \n \n "+ex.toString(), Toast.LENGTH_LONG).show();
                     }
@@ -159,8 +166,8 @@ public class CradioButton {
             }
         }
 
-        LLtotal.addView(tvItem);
         LLtotal.addView(LLPREGUNTA(context,tvp,tvpor));
+        LLtotal.addView(tvItem);
         LLtotal.addView(rg);
 
         ll.addView(LLtotal);
@@ -184,6 +191,7 @@ public class CradioButton {
 
         return llpregunta;
     }
+
 
     //añade el color al radio segun el texto del control
     public ColorStateList ColorSelected(int red, int green, int blue){

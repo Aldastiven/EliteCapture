@@ -76,8 +76,10 @@ public class Cconteos {
                 llparamsText.weight = (float) 0.7;
 
                 TextView tvItem = new TextView(context);
-                tvItem.setText("Item : "+id.intValue());
+                tvItem.setText(""+id.intValue());
                 tvItem.setTextColor(Color.parseColor("#58d68d"));
+                tvItem.setVisibility(View.INVISIBLE);
+                tvItem.setTextSize(5);
                 tvItem.setTypeface(null,Typeface.BOLD);
 
                 final TextView tvp = new TextView(context);
@@ -98,8 +100,8 @@ public class Cconteos {
                 tvpor.setTypeface(null, Typeface.BOLD);
                 tvpor.setLayoutParams(llparamsTextpo);
 
-                LLtotal.addView(tvItem);
                 LLtotal.addView(LLPREGUNTA(context,tvp,tvpor));
+                LLtotal.addView(tvItem);
                 LLtotal.addView(Cbotones(context,id));
 
                 ControlView = LLtotal;

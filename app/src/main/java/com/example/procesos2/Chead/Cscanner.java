@@ -71,8 +71,10 @@ public class Cscanner {
                 llparamsTXT1.setMargins(5, 10, 5, 5);
 
                 TextView tvItem = new TextView(context);
-                tvItem.setText("Item : "+id.intValue());
+                tvItem.setText(""+id.intValue());
                 tvItem.setTextColor(Color.parseColor("#58d68d"));
+                tvItem.setTextSize(5);
+                tvItem.setVisibility(View.INVISIBLE);
                 tvItem.setTypeface(null,Typeface.BOLD);
 
                 final EditText edt = new EditText(context);

@@ -69,8 +69,10 @@ public class Cfiltro {
                 lltxtres.setMargins(0,10,0,0);
 
                 TextView tvItem = new TextView(context);
-                tvItem.setText("Item : "+id.intValue());
+                tvItem.setText(""+id.intValue());
                 tvItem.setTextColor(Color.parseColor("#58d68d"));
+                tvItem.setVisibility(View.INVISIBLE);
+                tvItem.setTextSize(5);
                 tvItem.setTypeface(null,Typeface.BOLD);
 
                 final TextView tv = new TextView(context);
