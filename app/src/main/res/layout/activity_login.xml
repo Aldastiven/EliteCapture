@@ -83,7 +83,7 @@
             android:id="@+id/guardarUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guardar mi usuario"/>
+            android:text="Recordar mi usuario"/>
 
             <Button
                 android:layout_gravity="bottom"

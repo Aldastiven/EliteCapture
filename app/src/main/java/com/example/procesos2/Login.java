@@ -184,7 +184,6 @@ public class Login extends AppCompatActivity {
     public void PintarCheck(){
         try{
             final SharedPreferences.Editor edit = sp.edit();
-            final int data = Integer.parseInt(txtUser.getText().toString());
 
             if (sp != null) {
                 Boolean datacheck = sp.getBoolean("check", false);
@@ -200,27 +199,21 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                    if(data > 0){
-                        checkusu.setEnabled(true);
-                        if (isChecked ) {
-                            edit.putBoolean("check", true);
-                            edit.commit();
-                            edit.apply();
+                    if (isChecked && txtUser != null) {
 
-                            guardarUsuario();
-                            Toast.makeText(getApplicationContext(), "Se guardo exitosamente tu usuario", Toast.LENGTH_SHORT).show();
-                        } else {
-                            SharedPreferences.Editor edit = sp.edit();
-                            edit.clear().commit();
-                            edit.apply();
-                            Toast.makeText(getApplicationContext(), "Haz deselccionado la casilla", Toast.LENGTH_SHORT).show();
-                        }
-                    }else {
-                        checkusu.setEnabled(false);
-                        Toast.makeText(getApplicationContext(), "No se puedes guardar un usuario en blanco", Toast.LENGTH_SHORT).show();
+
+                        edit.putBoolean("check", true);
+                        edit.commit();
+                        edit.apply();
+
+                        guardarUsuario();
+                        Toast.makeText(getApplicationContext(), "Se guardo exitosamente tu usuario", Toast.LENGTH_SHORT).show();
+                    } else {
+                        SharedPreferences.Editor edit = sp.edit();
+                        edit.clear().commit();
+                        edit.apply();
+                        Toast.makeText(getApplicationContext(), "Haz deselccionado la casilla", Toast.LENGTH_SHORT).show();
                     }
-
-
                 }
             });
         }catch (Exception ex){}
