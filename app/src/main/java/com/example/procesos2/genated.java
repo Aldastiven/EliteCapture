@@ -1,16 +1,20 @@
 package com.example.procesos2;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -24,6 +28,7 @@ import android.widget.Toast;
 import com.example.procesos2.Chead.Cdesplegable;
 import com.example.procesos2.Chead.Cetalf;
 import com.example.procesos2.Chead.Cetnum;
+import com.example.procesos2.Chead.CfilAuto;
 import com.example.procesos2.Chead.Cfiltro;
 import com.example.procesos2.Chead.Cscanner;
 import com.example.procesos2.Chead.Ctextview;
@@ -52,7 +57,7 @@ import static java.lang.String.valueOf;
 
 public class genated extends AppCompatActivity {
 
-  TextView EncabTitulo, contcc;
+  TextView EncabTitulo, contcc, scrollcomplete;
   LinearLayout linearBodypop, linearPrinc;
   Button editarEncab;
   ScrollView scrollForm;
@@ -81,6 +86,8 @@ public class genated extends AppCompatActivity {
 
   CheckedConexion Cc = new CheckedConexion();
 
+  @SuppressLint("ClickableViewAccessibility")
+  @RequiresApi(api = Build.VERSION_CODES.M)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -112,6 +119,8 @@ public class genated extends AppCompatActivity {
 
       onckickBTNfloating();
 
+
+
     } catch (Exception ex) {
       Log.i("Error onCreate", ex.toString());
     }
@@ -129,6 +138,7 @@ public class genated extends AppCompatActivity {
     contcc = findViewById(R.id.contcc);
     editarEncab = findViewById(R.id.editarEncab);
     linearBodypop = mypop.findViewById(R.id.linearbodypop);
+    scrollcomplete = findViewById(R.id.complete);
 
     Window window = mypop.getWindow();
     window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -163,12 +173,17 @@ public class genated extends AppCompatActivity {
     }
   }
 
-  //MUESTRA EL POP CON LOS CAMPOS DEL HEADER
+  //MUESTRA O OCULTA EL POP CON LOS CAMPOS DEL HEADER
   public void Showpop(View v){
     mypop.show();
   }
 
+  public void ocultarPop(View v){
+    mypop.dismiss();
+  }
+
   //CREA LOS CONTROLES DEL HEADER EN EL POP
+  @RequiresApi(api = Build.VERSION_CODES.M)
   public void CrearHeader() {
     try {
           for (DetallesTab d : iP) {
@@ -211,6 +226,12 @@ public class genated extends AppCompatActivity {
                           linearBodypop.addView(cs.scanner(genated.this,id,pregunta));
                           insertTemp(id.intValue(),getcodProceso());
                           break;
+                        case "AUT":
+                          CfilAuto ca = new CfilAuto();
+                          ca.Carga(path);
+                          linearBodypop.addView(ca.autocompletado(genated.this,id,pregunta,desplegable));
+                          insertTemp(id.intValue(),getcodProceso());
+                          break;
                         default:
                           Toast.makeText(this, "ocurrio un error al crear ", Toast.LENGTH_SHORT).show();
                           break;
@@ -219,13 +240,11 @@ public class genated extends AppCompatActivity {
           }
     } catch (Exception exception) {
       Toast.makeText(this, "exception en generated \n \n" + exception.toString(), Toast.LENGTH_SHORT).show();
-      Log.i("Excep on create",exception.toString());
+      Log.i("Excepcreate",exception.toString());
     }
 
     CrearForm();
   }
-
-
 
   //CREA CONTROLES DEL FORMULARIO
   public void CrearForm() {
@@ -257,6 +276,7 @@ public class genated extends AppCompatActivity {
           }
       }
   }
+
 
   //METODO PARA INSERTAR EN JSON TEMPORAL
   public void insertTemp(int idItem, int codpro){

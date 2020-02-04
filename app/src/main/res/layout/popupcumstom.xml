@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="10"
-    android:background="#96000000">
+    android:background="#96000000"
+    android:fitsSystemWindows="true">
 
 
     <LinearLayout
@@ -13,61 +14,74 @@
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
         android:background="@drawable/borderpop"
-        android:layout_weight="10">
+        android:layout_weight="10"
+        android:weightSum="10">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal">
+            android:layout_height="0sp"
+            android:weightSum="2"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
 
             <LinearLayout
+                android:layout_weight="1.5"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:paddingVertical="5sp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="ENCABEZADO"
                     android:textAlignment="center"
-                    android:text="PREGUNTAS INICIALES "
                     android:textColor="#66bb6a"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:paddingVertical="10sp"
-                    android:paddingHorizontal="5sp"/>
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:text="rellena todos los campos"
-                    android:textColor="#757575"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="20sp"
-                    android:paddingVertical="10sp"
-                    android:paddingHorizontal="5sp"/>
+                    android:text="Completa todos los campos"
+                    android:textAlignment="center"/>
 
             </LinearLayout>
 
+            <Button
+                android:layout_weight="0.5"
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:padding="50sp"
+                android:background="@drawable/ok"
+                android:onClick="ocultarPop"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="9"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal">
+
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:paddingHorizontal="5sp">
 
                 <LinearLayout
                     android:id="@+id/linearbodypop"
                     android:layout_width="fill_parent"
-                    android:layout_height="200sp"
+                    android:layout_height="0sp"
                     android:orientation="vertical">
                 </LinearLayout>
 
             </ScrollView>
         </LinearLayout>
-
-
-
 
     </LinearLayout>
 

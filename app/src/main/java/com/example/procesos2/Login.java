@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +35,8 @@ public class Login extends AppCompatActivity {
     EditText txtUser, txtPass;
     LinearLayout linearBox;
     TextView txtError;
+    CheckBox checkusu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,7 @@ public class Login extends AppCompatActivity {
             linearBox = findViewById(R.id.linearBox);
 
             txtError = findViewById(R.id.txtError);
+            checkusu = findViewById(R.id.guardarUsuario);
 
             iUsuarios iU = new iUsuarios(path);
             iU.nombre = "Usuarios";
@@ -77,8 +82,14 @@ public class Login extends AppCompatActivity {
 
                 UP = iU.all();
                 UPP = iUP.all();
-
             }
+
+            checkusu.setSelected(true);
+
+            recibirUsuario();
+            PintarCheck();
+
+
 
         }catch (Exception ex){
             Toast.makeText(this,"Se genero un Error al traer los datos de usuarios \n \n"+ex.toString(),Toast.LENGTH_LONG).show();
@@ -95,7 +106,6 @@ public class Login extends AppCompatActivity {
             iU.nombre = "Usuarios";
             iU.all();
 
-
             UsuariosTab m = iU.login(txt_user, txt_pass);
 
                 if (m !=null){
@@ -103,11 +113,13 @@ public class Login extends AppCompatActivity {
                     SharedPreferences.Editor edit = sp.edit();
                     edit.putInt("codigo", m.getIdUsuario());
                     edit.putString("nombre", m.getNombreUsuario());
+                    edit.putInt("password", m.getPassUsuario());
                     edit.commit();
                     edit.apply();
 
                     Intent intent = new Intent(this, Index.class);
                     startActivity(intent);
+
                 }else if(m == null){
                     txtUser.setBackgroundResource(R.drawable.bordercontainerred);
                     txtPass.setBackgroundResource(R.drawable.bordercontainerred);
@@ -134,12 +146,84 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    public void SaveLogin(){
-        try{
+    public void guardarUsuario() {
+        try {
 
-        }catch (Exception ex){
+            int id = Integer.parseInt(txtUser.getText().toString());
+            int pass = Integer.parseInt(txtPass.getText().toString());
 
+            SharedPreferences.Editor edit = sp.edit();
+            edit.putInt("codigoLogin", id);
+            edit.putInt("passwordLogin", pass);
+            edit.commit();
+            edit.apply();
+        } catch (Exception e) {
+            Toast.makeText(this, "Error \n" + e.toString(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void recibirUsuario() {
+        try {
+            if (sp != null) {
+                int id = sp.getInt("codigoLogin",0);
+                int pass = sp.getInt("passwordLogin", 0);
+
+                if(id == 0 || pass == 0){
+                    txtUser.setText("");
+                    txtPass.setText("");
+                }else {
+                    txtUser.setText("" + id);
+                    txtPass.setText("" + pass);
+                }
+            }else{}
+        } catch (Exception e) {
+            Toast.makeText(this, "Error \n" + e.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void PintarCheck(){
+        try{
+            final SharedPreferences.Editor edit = sp.edit();
+            final int data = Integer.parseInt(txtUser.getText().toString());
+
+            if (sp != null) {
+                Boolean datacheck = sp.getBoolean("check", false);
+
+                if(datacheck){
+                    checkusu.setChecked(true);
+                }else{
+                    checkusu.setChecked(false);
+                }
+            }
+
+            checkusu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                    if(data > 0){
+                        checkusu.setEnabled(true);
+                        if (isChecked ) {
+                            edit.putBoolean("check", true);
+                            edit.commit();
+                            edit.apply();
+
+                            guardarUsuario();
+                            Toast.makeText(getApplicationContext(), "Se guardo exitosamente tu usuario", Toast.LENGTH_SHORT).show();
+                        } else {
+                            SharedPreferences.Editor edit = sp.edit();
+                            edit.clear().commit();
+                            edit.apply();
+                            Toast.makeText(getApplicationContext(), "Haz deselccionado la casilla", Toast.LENGTH_SHORT).show();
+                        }
+                    }else {
+                        checkusu.setEnabled(false);
+                        Toast.makeText(getApplicationContext(), "No se puedes guardar un usuario en blanco", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+            });
+        }catch (Exception ex){}
     }
 
 }

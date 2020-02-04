@@ -120,13 +120,6 @@ public class Index extends AppCompatActivity {
         //Toast.makeText(this,"Restart",Toast.LENGTH_SHORT).show();
     }
 
-    @Override protected void onDestroy() {
-        super.onDestroy();
-        //Toast.makeText(this,"onDestroy index",Toast.LENGTH_SHORT).show();
-
-        sp.edit().clear().apply();
-    }
-
     public void traerDataUser(){
         try {
             int id = sp.getInt("codigo",0);

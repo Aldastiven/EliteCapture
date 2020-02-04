@@ -79,6 +79,12 @@
                 android:textStyle="bold"
                 android:paddingStart="5sp"/>
 
+        <CheckBox
+            android:id="@+id/guardarUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Guardar mi usuario"/>
+
             <Button
                 android:layout_gravity="bottom"
                 android:layout_marginTop="20sp"
