@@ -10,27 +10,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0sp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/borderpop"
-        android:layout_weight="10"
-        android:weightSum="10">
+        android:background="@drawable/borderpoptop">
 
         <LinearLayout
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="0sp"
+            android:layout_height="wrap_content"
             android:weightSum="2"
             android:orientation="horizontal"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:gravity="center_vertical">
 
             <LinearLayout
                 android:layout_weight="1.5"
                 android:layout_width="0sp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingVertical="5sp">
+                android:paddingVertical="5sp"
+                android:gravity="center_vertical">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -50,39 +49,47 @@
 
             </LinearLayout>
 
-            <Button
-                android:layout_weight="0.5"
+            <ImageButton
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:padding="50sp"
-                android:background="@drawable/ok"
-                android:onClick="ocultarPop"/>
+                android:layout_height="70sp"
+                android:layout_weight="0.5"
+                android:background="@android:color/transparent"
+                android:onClick="ocultarPop"
+                android:src="@drawable/ok"/>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_weight="9"
-            android:orientation="vertical"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="0sp"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal">
+            android:layout_height="2dp"
+            android:background="#66bb6a"/>
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="5sp">
+    </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/linearbodypop"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0sp"
-                    android:orientation="vertical">
-                </LinearLayout>
+    <LinearLayout
+        android:layout_weight="10"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:background="@drawable/borderpopbotom"
+        android:paddingTop="10sp">
 
-            </ScrollView>
-        </LinearLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="5sp">
 
+            <LinearLayout
+                android:id="@+id/linearbodypop"
+                android:layout_width="fill_parent"
+                android:layout_height="0sp"
+                android:orientation="vertical">
+            </LinearLayout>
+
+        </ScrollView>
     </LinearLayout>
 
 

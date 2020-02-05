@@ -12,7 +12,7 @@
         android:layout_height="0sp"
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/borderpop"
+        android:background="@drawable/borderpoptop"
         android:layout_weight="10">
 
         <LinearLayout
