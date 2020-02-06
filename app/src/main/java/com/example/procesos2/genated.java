@@ -40,6 +40,7 @@ import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Model.iDetalles;
 import com.example.procesos2.Model.iRespuestas;
 import com.example.procesos2.Model.iTemporal;
+import com.example.procesos2.Model.tab.DesplegableTab;
 import com.example.procesos2.Model.tab.DetallesTab;
 import com.example.procesos2.Model.tab.RespuestasTab;
 import com.example.procesos2.Model.tab.TemporalTab;
@@ -83,6 +84,7 @@ public class genated extends AppCompatActivity {
   ArrayList<String> cal = new ArrayList<String>(1000);
   ArrayList<Integer> arraypuntos = new ArrayList<>(10000);
   ArrayList<Integer> sumporespuesta = new ArrayList<>(10000);
+  ArrayList<String> OptionArray = new ArrayList<>(200);
 
   CheckedConexion Cc = new CheckedConexion();
 
@@ -186,58 +188,57 @@ public class genated extends AppCompatActivity {
   @RequiresApi(api = Build.VERSION_CODES.M)
   public void CrearHeader() {
     try {
-          for (DetallesTab d : iP) {
+        for (DetallesTab d : iP) {
             String campo = d.getTipoDetalle();
             Long id = d.getCodDetalle();
             String pregunta = d.getQuesDetalle();
             String desplegable = d.getListaDesplegable();
 
-                if (d.getIdProceso() == getcodProceso() && d.getTipoModulo().equals("H")) {
-                    switch (campo){
-                        case "TV":
-                          Ctextview ct = new Ctextview();
-                          linearBodypop.addView(ct.textview(genated.this, id ,pregunta));
-                          insertTemp(id.intValue(),getcodProceso());
-                          break;
-                        case "ETN":
-                          Cetnum cen = new Cetnum();
-                          linearBodypop.addView(cen.tnumerico(genated.this, id, pregunta));
-                          insertTemp(id.intValue(),getcodProceso());
-                          break;
-                        case "ETA":
-                          Cetalf cal = new Cetalf();
-                          linearBodypop.addView(cal.talfanumerico(genated.this, id, pregunta));
-                          insertTemp(id.intValue(),getcodProceso());
-                          break;
-                        case "CBX":
-                          Cdesplegable cd = new Cdesplegable();
-                          cd.Carga(path);
-                          linearBodypop.addView(cd.desplegable(genated.this, id, pregunta, desplegable));
-                          insertTemp(id.intValue(),getcodProceso());
-                          break;
-                        case "FIL":
-                          Cfiltro cf = new Cfiltro();
-                          cf.Carga(path);
-                          linearBodypop.addView(cf.filtro(genated.this, id, pregunta, desplegable));
-                          insertTemp(id.intValue(),getcodProceso());
-                          break;
-                        case "SCA":
-                          Cscanner cs = new Cscanner();
-                          linearBodypop.addView(cs.scanner(genated.this,id,pregunta));
-                          insertTemp(id.intValue(),getcodProceso());
-                          break;
-                        case "AUT":
-                          CfilAuto ca = new CfilAuto();
-                          ca.Carga(path);
-                          linearBodypop.addView(ca.autocompletado(genated.this,id,pregunta,desplegable));
-                          insertTemp(id.intValue(),getcodProceso());
-                          break;
-                        default:
-                          Toast.makeText(this, "ocurrio un error al crear ", Toast.LENGTH_SHORT).show();
-                          break;
-                    }
+            if (d.getIdProceso() == getcodProceso() && d.getTipoModulo().equals("H")) {
+                switch (campo){
+                    case "TV":
+                      Ctextview ct = new Ctextview();
+                      linearBodypop.addView(ct.textview(genated.this, id ,pregunta));
+                      insertTemp(id.intValue(),getcodProceso());
+                      break;
+                    case "ETN":
+                      Cetnum cen = new Cetnum();
+                      linearBodypop.addView(cen.tnumerico(genated.this, id, pregunta));
+                      insertTemp(id.intValue(),getcodProceso());
+                      break;
+                    case "ETA":
+                      Cetalf cal = new Cetalf();
+                      linearBodypop.addView(cal.talfanumerico(genated.this, id, pregunta));
+                      insertTemp(id.intValue(),getcodProceso());
+                      break;
+                    case "CBX":
+                      Cdesplegable cd = new Cdesplegable(genated.this,id,pregunta,opciones(desplegable));
+                      linearBodypop.addView(cd.desplegable());
+                      insertTemp(id.intValue(),getcodProceso());
+                      break;
+                    case "FIL":
+                      Cfiltro cf = new Cfiltro(genated.this, id, pregunta, desplegable);
+                      cf.Carga(path);
+                      linearBodypop.addView(cf.filtro());
+                      insertTemp(id.intValue(),getcodProceso());
+                      break;
+                    case "SCA":
+                      Cscanner cs = new Cscanner(genated.this, id, pregunta);
+                      linearBodypop.addView(cs.scanner());
+                      insertTemp(id.intValue(),getcodProceso());
+                      break;
+                    case "AUT":
+                      CfilAuto ca = new CfilAuto();
+                      ca.Carga(path);
+                      linearBodypop.addView(ca.autocompletado(genated.this,id,pregunta,desplegable));
+                      insertTemp(id.intValue(),getcodProceso());
+                      break;
+                    default:
+                      Toast.makeText(this, "ocurrio un error al crear ", Toast.LENGTH_SHORT).show();
+                      break;
                 }
-          }
+            }
+        }
     } catch (Exception exception) {
       Toast.makeText(this, "exception en generated \n \n" + exception.toString(), Toast.LENGTH_SHORT).show();
       Log.i("Excepcreate",exception.toString());
@@ -275,6 +276,27 @@ public class genated extends AppCompatActivity {
               }
           }
       }
+  }
+
+  //CONSULTA LOS DATOS DEL SPINNER
+  public ArrayList opciones(String desplegable)throws Exception{
+
+    OptionArray.clear();
+
+    id = new iDesplegable(null, path);
+    id.nombre = desplegable;
+    id.all();
+
+    OptionArray.add("selecciona");
+
+    for (DesplegableTab ds : id.all()) {
+      if (ds.getFiltro().equals(desplegable)) {
+        OptionArray.add(ds.getOptions());
+      } else {
+      }
+    }
+
+    return OptionArray;
   }
 
 
@@ -317,18 +339,8 @@ public class genated extends AppCompatActivity {
     return idusuario;
   }
 
-  //BAJAR TECLADO
-  public void KeyDown(View et) {
-    try {
-      InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
-      imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
-    }catch (Exception ex){
-      Toast.makeText(this, ""+ex.toString(), Toast.LENGTH_SHORT).show();
-    }
-  }
 
   //REGISTRO DE JSON
-
   public void registroJson(View v) {
     try {
       //realiza el conteo de si encuentra alguno con null en el arreglo

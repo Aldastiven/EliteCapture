@@ -21,14 +21,6 @@ public class iDesplegable implements Desplegable {
 
     public String nombre = "";
 
-    public String order1 = "SELECT \n" +
-                            "      [Filtro]\n" +
-                            "      ,[Codigo]\n" +
-                            "      ,[Opcion]\n" +
-                            "  FROM [dbo].[Desplegables]\n" +
-                            "  WHERE [Filtro]='"+null+"' ORDER BY [Opcion] ASC;";
-
-
 
     public iDesplegable(Connection cn,String path) throws Exception{
         this.cn = cn;
