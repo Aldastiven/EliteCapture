@@ -202,13 +202,13 @@ public class genated extends AppCompatActivity {
                       insertTemp(id.intValue(),getcodProceso());
                       break;
                     case "ETN":
-                      Cetnum cen = new Cetnum();
-                      linearBodypop.addView(cen.tnumerico(genated.this, id, pregunta));
+                      Cetnum cen = new Cetnum(genated.this, id, pregunta);
+                      linearBodypop.addView(cen.tnumerico());
                       insertTemp(id.intValue(),getcodProceso());
                       break;
                     case "ETA":
-                      Cetalf cal = new Cetalf();
-                      linearBodypop.addView(cal.talfanumerico(genated.this, id, pregunta));
+                      Cetalf cal = new Cetalf(genated.this, id, pregunta);
+                      linearBodypop.addView(cal.talfanumerico());
                       insertTemp(id.intValue(),getcodProceso());
                       break;
                     case "CBX":
@@ -228,9 +228,9 @@ public class genated extends AppCompatActivity {
                       insertTemp(id.intValue(),getcodProceso());
                       break;
                     case "AUT":
-                      CfilAuto ca = new CfilAuto();
+                      CfilAuto ca = new CfilAuto(genated.this,id,pregunta,desplegable);
                       ca.Carga(path);
-                      linearBodypop.addView(ca.autocompletado(genated.this,id,pregunta,desplegable));
+                      linearBodypop.addView(ca.autocompletado());
                       insertTemp(id.intValue(),getcodProceso());
                       break;
                     default:
@@ -263,8 +263,8 @@ public class genated extends AppCompatActivity {
           if (d.getIdProceso() == getcodProceso() && d.getTipoModulo().equals("Q")) {
               switch (campo){
                 case "RS":
-                  Cconteos cc = new Cconteos();
-                  linearPrinc.addView(cc.Cconteo(this,id,pregunta,porcentaje,path,nombreproc,getcodProceso(),getcodUsuario()));
+                  Cconteos cc = new Cconteos(genated.this,id,pregunta,porcentaje);
+                  linearPrinc.addView(cc.Cconteo());
                   insertTemp(id.intValue(),getcodProceso());
                   break;
                 case "RB":

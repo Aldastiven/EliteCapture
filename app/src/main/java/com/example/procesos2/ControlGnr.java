@@ -26,7 +26,7 @@ public class ControlGnr {
         this.tiporescont = tiporescont;
     }
 
-    //ORGANIZA LOS CONTROLES INTEGRADOS
+    /*ORGANIZA LOS CONTROLES INTEGRADOS*/
     public View Contenedor(){
 
         LinearLayout.LayoutParams llparamsTotal = new
@@ -75,6 +75,9 @@ public class ControlGnr {
         return tvItem;
     }
 
+
+
+    //layout organizativo horizontal 2 elementos
     public LinearLayout hx2(View v1, View v2) {
         LinearLayout.LayoutParams llparamsPrincipal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -94,6 +97,7 @@ public class ControlGnr {
         return LLprincipal;
     }
 
+    //layout organizativo horizontal 2 elementos
     public LinearLayout vx2(View v1, View v2) {
         LinearLayout.LayoutParams llparamsPrincipal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -113,6 +117,7 @@ public class ControlGnr {
         return LLprincipal;
     }
 
+    //layout organizativo horizontal 2 elementos (view + boton hacia la izquierda)
     public LinearLayout hxbtn_izq(View v1, View v2){
         LinearLayout.LayoutParams llparamsPrincipal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -130,6 +135,7 @@ public class ControlGnr {
         return LLprincipal;
     }
 
+    //layout organizativo horizontal 2 elementos (view + boton hacia la derecha)
     public LinearLayout hxbtn_der(View v1, View v2){
         LinearLayout.LayoutParams llparamsPrincipal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -152,15 +158,14 @@ public class ControlGnr {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
 
+    //trae el view de la pregunta me sirve para administrar los campos nulos antes del registro de datos
     public View getViewtt() {
         return Viewtt;
     }
-
     public void setViewtt(View viewtt) {
         Viewtt = viewtt;
     }

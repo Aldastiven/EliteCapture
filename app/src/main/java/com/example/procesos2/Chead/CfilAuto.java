@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.procesos2.ControlGnr;
 import com.example.procesos2.Model.iDesplegable;
 import com.example.procesos2.Config.sqlConect;
 import com.example.procesos2.Model.tab.DesplegableTab;
@@ -28,136 +31,116 @@ import com.example.procesos2.R;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CfilAuto {
-    public Conexion con = null;
-    iDesplegable iDES;
-    Context context;
+
+    ControlGnr Cgnr;
+
+    private Context context;
+    private Long id;
+    private String contenido;
+    private String desplegable;
+
     View ControlView;
-    TextView complete;
+    iDesplegable iDES;
+
+    public CfilAuto(Context context, Long id, String contenido, String desplegable) {
+        this.context = context;
+        this.id = id;
+        this.contenido = contenido;
+        this.desplegable = desplegable;
+    }
 
     public void Carga(String path){
         try{
-            con = new Conexion(path,context);
-            iDES = new iDesplegable(con.getConexion(),path);
+            iDES = new iDesplegable(null,path);
         }catch (Exception ex){
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public View autocompletado(final Context context, Long id, String contenido, String desplegable){
-        int i;
-        for(i = 0; i<=1; i++){
-            ArrayList<consCfilAuto> lista = new ArrayList<>();
-            lista.add(new consCfilAuto(context,id.intValue(),contenido));
-
-            //ORGANIZA LOS CONTROLES INTEGRADOS
-            LinearLayout.LayoutParams llparamsTotal = new
-                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-            llparamsTotal.setMargins(0,0,0,10);
-
-            LinearLayout LLtotal = new LinearLayout(context);
-            LLtotal.setLayoutParams(llparamsTotal);
-            LLtotal.setWeightSum(2);
-            LLtotal.setOrientation(LinearLayout.VERTICAL);
-            LLtotal.setPadding(8,15,8,12);
-            LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
-            LLtotal.setBackgroundResource(R.drawable.bordercontainer);
-
-            for(consCfilAuto au : lista){
-
-                LinearLayout.LayoutParams llparams = new
-                        LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                llparams.weight = 1;
-                llparams.setMargins(5, 10, 5, 20);
-
-                TextView tvItem = new TextView(context);
-                tvItem.setText(""+id.intValue());
-                tvItem.setTextColor(Color.parseColor("#58d68d"));
-                tvItem.setVisibility(View.INVISIBLE);
-                tvItem.setTextSize(5);
-                tvItem.setTypeface(null,Typeface.BOLD);
-
+    public View autocompletado() throws Exception{
 
                 final TextView tvp = new TextView(context);
                 tvp.setId(id.intValue());
-                tvp.setText(au.contenido);
-                tvp.setTextSize(20);
-                tvp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                tvp.setText("Resultados :");
+                tvp.setTextSize(15);
                 tvp.setTextColor(Color.parseColor("#979A9A"));
                 tvp.setTypeface(null, Typeface.BOLD);
-                tvp.setLayoutParams(llparams);
+                tvp.setLayoutParams(medidas(1));
 
-                iDES.nombre = desplegable;
+                AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(context);
+                ArrayAdapter<String> autoArray = new ArrayAdapter<>(context,R.layout.auto_complete_personal,traerdesp());
+                autoCompleteTextView.setAdapter(autoArray);
+                autoCompleteTextView.setHint(contenido);
+                autoCompleteTextView.setTextSize(15);
+                autoCompleteTextView.setLayoutParams(medidas(1));
+                autoCompleteTextView.setBackgroundColor(Color.parseColor("#E5E7E9"));
+                autoCompleteTextView.setSingleLine(true);
+                autoCompleteTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                autoCompleteTextView.setTextColor(Color.parseColor("#515A5A"));
+                autoCompleteTextView.setTypeface(null, Typeface.BOLD);
 
-                try{
-                    iDES.all();
-                    ArrayList<String> OptionArray = new ArrayList<>();
+                Cgnr = new ControlGnr(context,id,tvp,autoCompleteTextView,null,"vx2");
+                ControlView = Cgnr.Contenedor();
 
-                    for(DesplegableTab ds : iDES.all()){
-                        if(ds.getFiltro().equals(desplegable)){
-                            OptionArray.add(ds.getOptions());
-                        }else {}
-                    }
-
-                    AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(context);
-                    ArrayAdapter<String> autoArray = new ArrayAdapter<>(context,R.layout.auto_complete_personal,OptionArray);
-                    autoCompleteTextView.setAdapter(autoArray);
-                    autoCompleteTextView.setLayoutParams(llparams);
-                    autoCompleteTextView.setBackgroundColor(Color.parseColor("#E5E7E9"));
-                    autoCompleteTextView.setSingleLine(true);
-
-                    LLtotal.addView(tvItem);
-                    LLtotal.addView(tvp);
-                    LLtotal.addView(autoCompleteTextView);
-                    ControlView = LLtotal;
-
-
-                }catch (Exception ex) {
-                    Toast.makeText(context, "Exc al traer los datos del desplegable\n"+ex.toString(), Toast.LENGTH_SHORT).show();
-                    Log.i("Exc","Exc al traer los datos del desplegable\n"+ex.toString());
-                }
-            }
-        }
+                FunAuto(autoCompleteTextView, tvp);
 
         return ControlView;
     }
 
+    //funcionalidad del auto completado
+    public void FunAuto(final AutoCompleteTextView etdauto, final TextView tdp){
 
+        etdauto.addTextChangedListener(new TextWatcher()  {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-    class consCfilAuto{
-        private Context context;
-        private int id;
-        private String contenido;
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
-        public consCfilAuto(Context context, int id, String contenido) {
-            this.context = context;
-            this.id = id;
-            this.contenido = contenido;
-        }
-    }
-
-    //sql & path
-    protected class Conexion extends sqlConect {
-        Connection cn = getConexion();
-        String path = null;
-        Context context;
-
-        public Conexion(String path, Context context) {
-            this.path = path;
-            this.context = context;
-            getPath(path);
-        }
-
-        public boolean getPath(String path) {
-            this.path = path;
-            if (cn != null) {
-                return true;
-            } else {
-                return false;
+            @Override
+            public void afterTextChanged(Editable s){
+                try {
+                    for (DesplegableTab ds : iDES.all()) {
+                        if (etdauto.getText().toString().equals(ds.getOptions())) {
+                            tdp.setText("Resultados :   "+ds.getCod());
+                            tdp.setTextColor(Color.parseColor("#58d68d"));
+                        }else {}
+                    }
+                }catch (Exception ex){
+                }
             }
-        }
+        });
+
     }
 
+    //metodo que trae los datos del desplegable correspondiente
+    public List traerdesp()throws Exception{
+
+        iDES.nombre = desplegable;
+
+        iDES.all();
+        ArrayList<String> OptionArray = new ArrayList<>();
+
+        for(DesplegableTab ds : iDES.all()){
+            if(ds.getFiltro().equals(desplegable)){
+                OptionArray.add(ds.getOptions());
+            }else {}
+        }
+
+        return OptionArray;
+    }
+
+    public LinearLayout.LayoutParams medidas(double med){
+
+        LinearLayout.LayoutParams llparams = new
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+        llparams.weight = (float) med;
+        llparams.setMargins(5, 10, 5, 20);
+
+        return llparams;
+    }
 }

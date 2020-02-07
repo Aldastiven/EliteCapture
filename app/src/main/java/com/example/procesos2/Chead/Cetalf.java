@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.inputmethodservice.InputMethodService;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.procesos2.ControlGnr;
 import com.example.procesos2.R;
 import com.example.procesos2.genated;
 
@@ -22,107 +25,73 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 public class Cetalf {
 
+    private Context context;
+    private Long id;
+    private String contenido;
+
+    ControlGnr Cgnr;
+
     View ControlView;
 
+    public Cetalf(Context context, Long id, String contenido) {
+        this.context = context;
+        this.id = id;
+        this.contenido = contenido;
+    }
+
     //metodo que crea el control edittext alfanumerico
-    public View talfanumerico(final Context context, Long id, String contenido){
-        int i;
-        for(i=0; i<=1; i++){
-            ArrayList<consCetalf> lista = new ArrayList<>();
-            lista.add(new consCetalf(context, id, contenido));
+    public View talfanumerico(){
 
-            //ORGANIZA LOS CONTROLES INTEGRADOS
-            LinearLayout.LayoutParams llparamsTotal = new
-                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams llparams = new
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        llparams.weight = 1;
+        llparams.setMargins(5, 10, 5, 10);
 
-            llparamsTotal.setMargins(0,0,0,10);
+        final TextView tvp = new TextView(context);
+        tvp.setId(id.intValue());
+        tvp.setText(contenido);
+        tvp.setTextSize(20);
+        tvp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        tvp.setTextColor(Color.parseColor("#979A9A"));
+        tvp.setTypeface(null, Typeface.BOLD);
+        tvp.setLayoutParams(llparams);
 
-            LinearLayout LLtotal = new LinearLayout(context);
-            LLtotal.setLayoutParams(llparamsTotal);
-            LLtotal.setWeightSum(2);
-            LLtotal.setOrientation(LinearLayout.VERTICAL);
-            LLtotal.setPadding(8,15,8,12);
-            LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
-            LLtotal.setBackgroundResource(R.drawable.bordercontainer);
+        EditText etxtA = new EditText(context);
+        etxtA.setId(id.intValue());
+        etxtA.setTextSize(20);
+        etxtA.setHint("NULL");
+        etxtA.setHintTextColor(Color.TRANSPARENT);
+        etxtA.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        etxtA.setTextColor(Color.parseColor("#515A5A"));
+        etxtA.setBackgroundColor(Color.parseColor("#E5E7E9"));
+        etxtA.setTypeface(null, Typeface.BOLD);
+        etxtA.setLayoutParams(llparams);
+        etxtA.setBackgroundColor(Color.parseColor("#eeeeee"));
+        etxtA.setSingleLine();
 
-            for(consCetalf ea : lista){
-                LinearLayout.LayoutParams llparams = new
-                        LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                llparams.weight = 1;
-                llparams.setMargins(5, 10, 5, 10);
+        Cgnr = new ControlGnr(context,id,tvp,etxtA,null,"hx2");
+        ControlView = Cgnr.Contenedor();
 
-                TextView tvItem = new TextView(context);
-                tvItem.setText(""+id.intValue());
-                tvItem.setTextColor(Color.parseColor("#58d68d"));
-                tvItem.setTextSize(5);
-                tvItem.setVisibility(View.INVISIBLE);
-                tvItem.setTypeface(null,Typeface.BOLD);
+        Funeta(etxtA);
 
-                final TextView tvp = new TextView(context);
-                tvp.setId(id.intValue());
-                tvp.setText(ea.contenido);
-                tvp.setTextSize(20);
-                tvp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                tvp.setTextColor(Color.parseColor("#979A9A"));
-                tvp.setTypeface(null, Typeface.BOLD);
-                tvp.setLayoutParams(llparams);
-
-                EditText etxtA = new EditText(context);
-                etxtA.setId(id.intValue());
-                etxtA.setTextSize(20);
-                etxtA.setHint("NULL");
-                etxtA.setHintTextColor(Color.TRANSPARENT);
-                etxtA.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                etxtA.setTextColor(Color.parseColor("#515A5A"));
-                etxtA.setBackgroundColor(Color.parseColor("#E5E7E9"));
-                etxtA.setTypeface(null, Typeface.BOLD);
-                etxtA.setLayoutParams(llparams);
-                etxtA.setBackgroundColor(Color.parseColor("#eeeeee"));
-                etxtA.setSingleLine();
-
-
-                LLtotal.addView(tvItem);
-                LLtotal.addView(CrearLinearLayoutHeader(tvp, etxtA, context));
-
-                ControlView = LLtotal;
-            }
-
-        }
         return ControlView;
     }
 
-    public LinearLayout CrearLinearLayoutHeader(View v1, View v2, Context context) {
-        LinearLayout.LayoutParams llparamsPrincipal = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        llparamsPrincipal.setMargins(2,5,2,5);
+    //funcion del control
+    public void Funeta(final EditText eta){
+        eta.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-        LinearLayout LLprincipal = new LinearLayout(context);
-        LLprincipal.setLayoutParams(llparamsPrincipal);
-        LLprincipal.setBackgroundColor(Color.parseColor("#ffffff"));
-        LLprincipal.setWeightSum(2);
-        LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
-        LLprincipal.setPadding(5, 5, 5, 5);
-        LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
-        LLprincipal.addView(v1);
-        LLprincipal.addView(v2);
-
-        return LLprincipal;
-    }
-
-
-
-    //constructor
-    class consCetalf{
-        Context context;
-        Long id;
-        String contenido;
-
-        public consCetalf(Context context, Long id, String contenido) {
-            this.context = context;
-            this.id = id;
-            this.contenido = contenido;
-        }
+            @Override
+            public void afterTextChanged(Editable s) {
+                //Toast.makeText(context, ""+Cgnr.getId(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, ""+eta.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

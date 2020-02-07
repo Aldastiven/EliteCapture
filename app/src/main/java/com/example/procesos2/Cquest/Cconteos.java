@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.procesos2.ControlGnr;
 import com.example.procesos2.Model.iTemporal;
 import com.example.procesos2.Model.tab.TemporalTab;
 import com.example.procesos2.R;
@@ -20,43 +21,24 @@ import static java.lang.String.valueOf;
 
 public class Cconteos {
     View ControlView;
-
     int idres = 0;
-    iTemporal iT = null;
+
+    private Context context;
+    private Long id;
+    private String contenido;
+    private Float porcentaje;
+
+    ControlGnr Cgnr;
+
+    public Cconteos(Context context, Long id, String contenido, Float porcentaje) {
+        this.context = context;
+        this.id = id;
+        this.contenido = contenido;
+        this.porcentaje = porcentaje;
+    }
 
     //metodo que crea el control del conteo
-    public View Cconteo(Context context, Long id, String contenido, Float porcentaje, final String path, final String nompro, final int idpro, final  int codusu ){
-        try {
-            iT = new iTemporal(path);
-        }catch (Exception ex){
-            Toast.makeText(context, "Exc en el paht \n"+ex.toString(), Toast.LENGTH_SHORT).show();
-        }
-            iT.path = path;
-            iT.nombre = nompro;
-            final TemporalTab tt = new TemporalTab();
-
-
-        int i;
-        for(i = 0; i<=1; i++){
-            ArrayList<consconteos> lista = new ArrayList<>();
-            lista.add(new consconteos(context,id,contenido));
-
-            for(consconteos cc : lista){
-
-                //ORGANIZA LOS CONTROLES INTEGRADOS
-                LinearLayout.LayoutParams llparamsTotal = new
-                        LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-                llparamsTotal.setMargins(0,0,0,10);
-
-                LinearLayout LLtotal = new LinearLayout(context);
-                LLtotal.setLayoutParams(llparamsTotal);
-                LLtotal.setWeightSum(2);
-                LLtotal.setOrientation(LinearLayout.VERTICAL);
-                LLtotal.setPadding(10,30,10,10);
-                LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
-                LLtotal.setBackgroundResource(R.drawable.bordercontainer);
-
+    public View Cconteo(){
 
                 LinearLayout.LayoutParams llparamsText = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 llparamsText.weight = (float) 2.3;
@@ -64,12 +46,6 @@ public class Cconteos {
                 LinearLayout.LayoutParams llparamsTextpo = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 llparamsText.weight = (float) 0.7;
 
-                TextView tvItem = new TextView(context);
-                tvItem.setText(""+id.intValue());
-                tvItem.setTextColor(Color.parseColor("#58d68d"));
-                tvItem.setVisibility(View.INVISIBLE);
-                tvItem.setTextSize(5);
-                tvItem.setTypeface(null,Typeface.BOLD);
 
                 final TextView tvp = new TextView(context);
                 tvp.setId(id.intValue());
@@ -89,18 +65,26 @@ public class Cconteos {
                 tvpor.setTypeface(null, Typeface.BOLD);
                 tvpor.setLayoutParams(llparamsTextpo);
 
-                LLtotal.addView(LLPREGUNTA(context,tvp,tvpor));
-                LLtotal.addView(tvItem);
-                LLtotal.addView(Cbotones(context,id,nompro,codusu));
+                Cgnr = new ControlGnr(context,id,pp(tvp,tvpor),Cbotones(),null,"vx2");
+                ControlView = Cgnr.Contenedor();
 
-                ControlView = LLtotal;
-            }
-        }
         return ControlView;
     }
 
+    //medidas para el boton y el campo de busqueda
+    public LinearLayout.LayoutParams medidas(double med, String data){
+
+        LinearLayout.LayoutParams llparams = new
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+        llparams.weight = (float) med;
+        llparams.setMargins(5, 10, 5, 5);
+
+        return llparams;
+    }
+
     //metodo que crea los botones de conteos
-    public View Cbotones(final Context context, final Long id, final  String nompro, final int codusu){
+    public View Cbotones(){
         View viewTotal;
 
         LinearLayout llbtn = new LinearLayout(context);
@@ -146,7 +130,6 @@ public class Cconteos {
 
         viewTotal = llbtn;
 
-        final TemporalTab tt = new TemporalTab();
 
             bntsum.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -154,17 +137,6 @@ public class Cconteos {
                     int n = Integer.parseInt(tvr.getText().toString());
                     if (n < 9) {
                         tvr.setText(valueOf(n + 1));
-                        try {
-                            iT.nombre = "Temp"+nompro;
-                            tt.setUsuario(codusu);
-                            tt.setProceso(tt.getProceso());
-                            tt.setItem(id.intValue());
-                            tt.setRespuesta(tvr.getText().toString());
-                            tt.setPorcentaje(0.0);
-                            iT.update(id.intValue(),tt);
-                        }catch (Exception ex){
-                            Toast.makeText(context, "Exc al actualizar \n"+ex.toString(), Toast.LENGTH_SHORT).show();
-                        }
                     }
                 }
             });
@@ -175,12 +147,6 @@ public class Cconteos {
                     int n = Integer.parseInt(tvr.getText().toString());
                     if (n > -1) {
                         tvr.setText(valueOf(n - 1));
-                        try{
-                            tt.setRespuesta(tvr.getText().toString());
-                            Toast.makeText(context, "" + iT.update(id.intValue(), tt), Toast.LENGTH_SHORT).show();
-                        }catch (Exception ex){
-                            Toast.makeText(context, "Exc al actualizar \n"+ex.toString(), Toast.LENGTH_SHORT).show();
-                        }
                     }
                 }
             });
@@ -188,13 +154,12 @@ public class Cconteos {
         return viewTotal;
     }
 
-    //retorna view de pregunta y porcentaje
-    public View LLPREGUNTA(Context c,View v1, View v2){
-
+    //retorna el layout del encabezado pregunta porcentaje
+    public LinearLayout pp(View v1, View v2){
         LinearLayout.LayoutParams llparamspregunta = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        LinearLayout llpregunta = new LinearLayout(c);
+        LinearLayout llpregunta = new LinearLayout(context);
         llpregunta.setLayoutParams(llparamspregunta);
         llpregunta.setWeightSum(3);
         llpregunta.setOrientation(LinearLayout.HORIZONTAL);
@@ -205,16 +170,4 @@ public class Cconteos {
         return llpregunta;
     }
 
-    //constructor
-    class consconteos{
-        Context context;
-        Long id;
-        String contenido;
-
-        public consconteos(Context context, Long id, String contenido) {
-            this.context = context;
-            this.id = id;
-            this.contenido = contenido;
-        }
-    }
 }
