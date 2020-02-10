@@ -121,7 +121,7 @@ public class CradioButton {
             lista.add(new consradio(context, id, contenido));
 
             LinearLayout.LayoutParams llrb = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-            llrb.setMargins(0,5,10,0);
+            llrb.setMargins(100,5,10,0);
 
             final RadioButton rb = new RadioButton(context);
             rb.setId(idd++);
@@ -131,6 +131,7 @@ public class CradioButton {
             rb.setScaleX((float) 1.10);
             rb.setScaleY((float) 1.10);
             rg.addView(rb);
+            rg.setPadding(10,0,10,0);
 
             if(rb.getText().toString().equals("NO APLICA")){
                 rb.setButtonTintList(ColorSelected( 153, 163, 164 ));
