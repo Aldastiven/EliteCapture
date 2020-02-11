@@ -1,120 +1,61 @@
 package com.example.procesos2.Model.tab;
 
 public class  RespuestasTab {
-    private Long idreg;
-    private String Fecha;
-    private Long idProceso;
-    private Long idPregunta;
-    private String Respuesta;
-    private String Terminal;
-    private Double Porcentaje;
-    private int idUsuario;
-    private int Consecutivo;
+    private Long id;
+    private int idProceso;
+    private int idPregunta;
+    private float ponderado;
+    private String respuesta;
 
     //CONSTRUCTOR VACIO
     public RespuestasTab() {
     }
 
-    //CONSTRUCTOR
-
-    public RespuestasTab(Long idreg, String fecha, Long idProceso, Long idPregunta, String respuesta, String terminal, Double porcentaje, int idUsuario, int consecutivo) {
-        this.idreg = idreg;
-        Fecha = fecha;
+    public RespuestasTab(Long id, int idProceso, int idPregunta, float ponderado, String respuesta) {
+        this.id = id;
         this.idProceso = idProceso;
         this.idPregunta = idPregunta;
-        Respuesta = respuesta;
-        Terminal = terminal;
-        Porcentaje = porcentaje;
-        this.idUsuario = idUsuario;
-        Consecutivo = consecutivo;
+        this.ponderado = ponderado;
+        this.respuesta = respuesta;
     }
 
-
-    //S&G
-    public Long getIdreg() {
-        return idreg;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdreg(Long idreg) {
-        this.idreg = idreg;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getFecha() {
-        return Fecha;
-    }
-
-    public void setFecha(String fecha) {
-        Fecha = fecha;
-    }
-
-    public Long getIdProceso() {
+    public int getIdProceso() {
         return idProceso;
     }
 
-    public void setIdProceso(Long idProceso) {
+    public void setIdProceso(int idProceso) {
         this.idProceso = idProceso;
     }
 
-    public Long getIdPregunta() {
+    public int getIdPregunta() {
         return idPregunta;
     }
 
-    public void setIdPregunta(Long idPregunta) {
+    public void setIdPregunta(int idPregunta) {
         this.idPregunta = idPregunta;
     }
 
+    public float getPonderado() {
+        return ponderado;
+    }
+
+    public void setPonderado(float ponderado) {
+        this.ponderado = ponderado;
+    }
+
     public String getRespuesta() {
-        return Respuesta;
+        return respuesta;
     }
 
     public void setRespuesta(String respuesta) {
-        Respuesta = respuesta;
-    }
-
-    public String getTerminal() {
-        return Terminal;
-    }
-
-    public void setTerminal(String terminal) {
-        Terminal = terminal;
-    }
-
-    public Double getPorcentaje() {
-        return Porcentaje;
-    }
-
-    public void setPorcentaje(Double porcentaje) {
-        Porcentaje = porcentaje;
-    }
-
-    public int getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
-    public int getConsecutivo() {
-        return Consecutivo;
-    }
-
-    public void setConsecutivo(int consecutivo) {
-        Consecutivo = consecutivo;
-    }
-
-    @Override
-    public String toString(){
-        return " {" +
-                "\"idreg\" :" + idreg + ",\n" +
-                "\"Fecha\" : \""+ Fecha +"\",\n"+
-                "\"idProceso\" :" + idProceso + ",\n" +
-                "\"idPregunta\" :" + idPregunta + ",\n" +
-                "\"Respuesta\" : \"" + Respuesta + "\",\n" +
-                "\"Porcentaje\" :" + Porcentaje + " ,\n" +
-                "\"Terminal\" : \"" + Terminal + "\" ,\n" +
-                "\"idUsuario\" :" + idUsuario + ",\n" +
-                "\"Consecutivo\":" + Consecutivo + "\n"+
-                "} \n";
+        this.respuesta = respuesta;
     }
 }
