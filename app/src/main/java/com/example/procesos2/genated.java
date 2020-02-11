@@ -121,8 +121,6 @@ public class genated extends AppCompatActivity {
 
       onckickBTNfloating();
 
-
-
     } catch (Exception ex) {
       Log.i("Error onCreate", ex.toString());
     }
