@@ -207,6 +207,7 @@ public class Index extends AppCompatActivity {
                 ArrayList<check> lista = new ArrayList<check>();
 
                 final String nombreTrim = iP.get(i).getNomProceso().trim();
+                final String logica = iP.get(i).getPersonalizado3();
 
                 lista.add(new check(iP.get(i).getCodProceso().intValue(), nombreTrim));
 
@@ -236,6 +237,7 @@ public class Index extends AppCompatActivity {
                             SharedPreferences.Editor edit = sp.edit();
                             edit.putInt("cod_proceso", view.getId());
                             edit.putString("nom_proceso", nombreTrim);
+                            edit.putString("logica",logica);
                             edit.putString("blanquear", "");
                             edit.apply();
 

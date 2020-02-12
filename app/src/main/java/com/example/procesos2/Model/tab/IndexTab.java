@@ -5,22 +5,24 @@ import android.util.Log;
 public class IndexTab {
     private Long codProceso;
     private  String nomProceso;
+    private String personalizado3;
 
     //CONTRUCTOR VACIO
     public IndexTab() {
     }
 
-    //CONSTRUCTOR CON PARAMETROS A USAR
-    public IndexTab(Long codProceso, String nomProceso) {
+    public IndexTab(Long codProceso, String nomProceso, String personalizado3) {
         this.codProceso = codProceso;
         this.nomProceso = nomProceso;
+        this.personalizado3 = personalizado3;
     }
 
     //JSON
     public String toString(){
         String json = "{"+
                 "\"codProceso\":"+codProceso+",\n"+
-                "\"nomProceso\": \"" + nomProceso + "\"\n" +
+                "\"nomProceso\": \"" + nomProceso + "\",\n" +
+                "\"personalizado3\": \"" + personalizado3 + "\"\n" +
                 "}";
 
         return json;
@@ -46,6 +48,13 @@ public class IndexTab {
         this.nomProceso = nomProceso;
     }
 
+    public String getPersonalizado3() {
+        return personalizado3;
+    }
+
+    public void setPersonalizado3(String personalizado3) {
+        this.personalizado3 = personalizado3;
+    }
 }
 
 

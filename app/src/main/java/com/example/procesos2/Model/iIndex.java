@@ -28,7 +28,7 @@ public class iIndex implements index {
                         "  FROM [dbo].[Procesos]\n" +
                         "  WHERE  [id_proceso] = ?;";
 
-    final String all = "SELECT [codigo_proceso] , [Nombre_Proceso]\n" +
+    final String all = "SELECT [codigo_proceso] , [Nombre_Proceso], [Personalizado3]\n" +
                         "  FROM [dbo].[Procesos] order by [Nombre_Proceso] ASC;";
 
 
@@ -104,6 +104,7 @@ public class iIndex implements index {
         IndexTab i = new IndexTab();
         i.setCodProceso(sr.getLong("codigo_proceso"));
         i.setNomProceso(sr.getString("Nombre_Proceso").trim());
+        i.setPersonalizado3(sr.getString("Personalizado3").trim());
         return i;
     }
 

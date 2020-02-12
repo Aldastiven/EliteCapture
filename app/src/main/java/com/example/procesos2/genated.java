@@ -94,6 +94,8 @@ public class genated extends AppCompatActivity {
 
   CheckedConexion Cc = new CheckedConexion();
 
+  String logica;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -136,6 +138,7 @@ public class genated extends AppCompatActivity {
 
       String nom = sp.getString("nom_proceso", "");
       EncabTitulo.setText(nom);
+      logica = sp.getString("logica","");
 
       SharedPreferences.Editor edit = sp.edit();
       edit.putString("dataedittext", "");
@@ -156,53 +159,8 @@ public class genated extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
   }
+  
 
-  @Override
-  protected void onPause() {
-    super.onPause();
-    getState();
-    Log.i("Temporal ", String.valueOf(Temporal));
-
-    if (Temporal) {
-      SharedPreferences.Editor edit = sp.edit();
-      edit.putBoolean("Temporal", Temporal);
-      edit.commit();
-      edit.apply();
-    } else {
-      SharedPreferences.Editor edit = sp.edit();
-      edit.putBoolean("Temporal", Temporal);
-      edit.commit();
-      edit.apply();
-    }
-  }
-
-  @Override
-  protected void onRestart() {
-    super.onRestart();
-    //Toast.makeText(this,"Restart",Toast.LENGTH_SHORT).show();
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    //Toast.makeText(this,"onDestroy generated",Toast.LENGTH_SHORT).show();
-    Temporal = false;
-
-    if (Temporal) {
-      SharedPreferences.Editor edit = sp.edit();
-      edit.putBoolean("Temporal", Temporal);
-      edit.commit();
-      edit.apply();
-    } else {
-      SharedPreferences.Editor edit = sp.edit();
-      edit.putBoolean("Temporal", Temporal);
-      edit.commit();
-      edit.apply();
-    }
-
-    al.clear();
-
-  }
 
   //CREAR EL JSON SINO EXISTE
   private void crearJsonRes() throws Exception {
@@ -466,7 +424,7 @@ public class genated extends AppCompatActivity {
             edit.putString("data", charSequence.toString());
             edit.apply();
 
-            saveState();
+            ;
 
             if (charSequence.equals("")) {
               //desabilitarBTN();
@@ -536,7 +494,7 @@ public class genated extends AppCompatActivity {
             String alData = modulo + "--" + quest + "--" + charSequence + "--0";
 
             al.set((tvp.getId()) - 1, alData);
-            saveState();
+
           }
 
           @Override
@@ -610,7 +568,7 @@ public class genated extends AppCompatActivity {
                           String quest = String.valueOf(spinner.getId());
                           al.set(idd, modulo + "--" + spinner.getId() + "--" + seleccionado + "--0");
 
-                          saveState();
+                          ;
                         } else {
                           int idd = (spinner.getId()) - 1;
                           String quest = String.valueOf(spinner.getId());
@@ -747,7 +705,7 @@ public class genated extends AppCompatActivity {
                       String alData = modulo + "--" + quest + "--" + dato[1].trim();
                       al.set((tv.getId()) - 1, alData + "--0");
 
-                      saveState();
+                      ;
 
                     } else {
                       //Toast.makeText(genated.this, "no se encontraron resultados", Toast.LENGTH_SHORT).show();
@@ -832,7 +790,7 @@ public class genated extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
               String alData = modulo + "--" + quest + "--" + charSequence;
               al.set((tvp.getId()) - 1, alData);
-              saveState();
+              ;
             }
 
             @Override
@@ -899,7 +857,7 @@ public class genated extends AppCompatActivity {
               String alData = modulo + "--" + quest + "--" + charSequence;
 
               al.set((tvp.getId()) - 1, alData);
-              saveState();
+              ;
             }
 
             @Override
@@ -914,8 +872,10 @@ public class genated extends AppCompatActivity {
     }
   }
 
-  private void CrearEditTextSpinnerQ(final String modulo, Long id, String pregunta, String desplegable, Float porcen) {
+  private void CrearEditTextSpinnerQ(final String modulo, Long id, String pregunta, String desplegable, final Float porcen) {
     try {
+
+      Spinner spinner = null;
       for (int i = 0; i < 1; i++) {
         ArrayList<SPINNER> list = new ArrayList<>();
 
@@ -981,9 +941,8 @@ public class genated extends AppCompatActivity {
             }
           }
 
-          int idspn = 0;
 
-          final Spinner spinner = new Spinner(getApplicationContext());
+          spinner = new Spinner(getApplicationContext());
           spinner.setId(id.intValue());
           spinner.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
@@ -996,46 +955,71 @@ public class genated extends AppCompatActivity {
           linearPrinc.addView(llpregunta);
           linearPrinc.addView(spinner);
 
-          if (spinner.getSelectedItem().toString().equals("selecciona")) {
-            tvpor.setText("resultado: \n");
-          }
 
+          final Spinner finalSpinner = spinner;
           spinner.setOnItemSelectedListener(
                   new AdapterView.OnItemSelectedListener() {
                     public void onItemSelected(AdapterView<?> spn, android.view.View v, int posicion, long id) {
+
+                      Toast.makeText(genated.this, ""+tvpor.getId(), Toast.LENGTH_SHORT).show();
+
                       try {
                         String Afirmacion = spn.getItemAtPosition(posicion).toString();
 
                         int valor = 0;
                         String texPantalla = "";
 
-                        int idd = (spinner.getId()) - 1;
-                        String quest = String.valueOf(spinner.getId());
+                        int idd = (finalSpinner.getId()) - 1;
+                        String quest = String.valueOf(finalSpinner.getId());
                         Log.i("id ", "id mostrar" + tvpor.getId());
-                        switch (Afirmacion) {
 
+                        String[] ddd = tvpor.getText().toString().split(":");
+
+                        switch (Afirmacion) {
                           case "SI CUMPLE":
-                            valor = spi.porcentaje.intValue();
-                            texPantalla = "resultado: \n" + valor + "";
-                            al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
-                            sumporespuesta.set(tvpor.getId(), valor);
+                            if(logica.equals("Postcosecha")){
+                              valor = spi.porcentaje.intValue();
+                              texPantalla = "resultado: \n" + valor + "";
+                              al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
+                              sumporespuesta.set(tvpor.getId(), valor);
+                            }else if(logica.equals("Cultivo")){
+                              String resultado = "0";
+                              texPantalla = "resultado: \n" + OperacionPorcentaje(spi.porcentaje, Integer.parseInt(resultado));
+                              cal.set(tvpor.getId(),String.valueOf(OperacionPorcentaje(spi.porcentaje, Integer.parseInt(resultado))));
+                            }
                             break;
                           case "NO CUMPLE":
-                            texPantalla = "resultado: \n" + valor + "";
-                            al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
-                            sumporespuesta.set(tvpor.getId(), valor);
+                            if(logica.equals("Postcosecha")){
+                              valor = 0;
+                              texPantalla = "resultado: \n" + valor + "";
+                              al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
+                              sumporespuesta.set(tvpor.getId(), valor);
+                            }else if(logica.equals("Cultivo")){
+                              String resultado = "9";
+                              texPantalla = "resultado: \n" + OperacionPorcentaje(spi.porcentaje, Integer.parseInt(resultado));
+                              cal.set(tvpor.getId(),String.valueOf(OperacionPorcentaje(spi.porcentaje, Integer.parseInt(resultado))));
+                            }
                             break;
                           case "NO APLICA":
-                            valor = -1;
-                            texPantalla = "resultado: \nN/A";
-                            al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
-                            sumporespuesta.set(tvpor.getId(), valor);
+                            if(logica.equals("Postcosecha")){
+                              valor = -1;
+                              texPantalla = "resultado: \n" + valor + "";
+                              al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
+                              sumporespuesta.set(tvpor.getId(), valor);
+                            }else if(logica.equals("Cultivo")){
+                              texPantalla = "resultado: \n";
+                              cal.set(tvpor.getId(),"");
+                            }
                             break;
                           case "selecciona":
-                            valor = 0;
-                            texPantalla = "resultado:";
-                            al.set(idd, modulo + "--" + quest + "--NULL--" + valor);
-                            sumporespuesta.set(tvpor.getId(), valor);
+                            if(logica.equals("Postcosecha")){
+                              texPantalla = "resultado: \n" + "";
+                              al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
+                              sumporespuesta.set(tvpor.getId(), valor);
+                            }else if(logica.equals("Cultivo")){
+                              texPantalla = "resultado: \n";
+                              cal.set(tvpor.getId(),"");
+                            }
                             break;
                           default:
                             texPantalla = "resultado: ups";
@@ -1043,11 +1027,11 @@ public class genated extends AppCompatActivity {
                             break;
                         }
 
-                        // saveState();
-                        Log.i("prueba de ID spinner", "" + tvpor.getId());
-                        //sumporespuesta.set(idd,valor);
+                        if (finalSpinner.getSelectedItem().toString().equals("selecciona")) {
+                          tvpor.setText("resultado: \n");
+                        }
+
                         tvpor.setText(texPantalla);
-                        Log.i("prueba cambio control", sumporespuesta.toString());
 
                       } catch (Exception ex) {
                         Toast.makeText(genated.this, "Error SPINNER ON CLICK" + ex.toString(), Toast.LENGTH_SHORT).show();
@@ -1057,15 +1041,21 @@ public class genated extends AppCompatActivity {
 
                     public void onNothingSelected(AdapterView<?> spn) {
                     }
+
                   });
+
+
+        }
 
           String quest = String.valueOf(spinner.getId());
           al.add(modulo + "--" + quest + "--" + "NULL" + "--0");
-          Log.i("prueba arreglo", "" + al.toString());
           sumporespuesta.add(0);
-
           arraypuntos.add(porcen.intValue());
-        }
+
+          cal.add("QS");
+
+
+        Log.i("contador",String.valueOf(idres));
       }
     } catch (Exception ex) {
       Toast.makeText(this, "Se genero un exception \n " +
@@ -1189,69 +1179,17 @@ public class genated extends AppCompatActivity {
           linearPrinc.addView(llpregunta);
           linearPrinc.addView(LLprincipal);
 
+
           btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              Toast.makeText(genated.this, ""+tvpor.getId(), Toast.LENGTH_SHORT).show();
               int n = Integer.parseInt(tvr.getText().toString());
 
-              if (n > -1) {
-
-                Long id = (long) tvp.getId();
-                tvr.setText(valueOf(n - 1));
-                String resultado = tvr.getText().toString();
-
-                tvpor.setText("resultado: \n" + OperacionPorcentaje(btnsr.porcen, Integer.parseInt(resultado)));
-
-                if (tvr.getText().equals("-1")) {
-                  tvpor.setText("resultado: \n");
-
-                  String porcen = tvpor.getText().toString();
-                  String[] ddd = porcen.split(":");
-                  String alData = modulo + "--" + id + "--" + resultado + "--" + ddd[1].trim();
-
-                  al.set((tvp.getId()) - 1, alData);
-                  cal.set(tvpor.getId(), ddd[1].trim());
-
-                  saveState();
-
-                }
-
-                String porcen = tvpor.getText().toString();
-                String[] ddd = porcen.split(":");
-                String alData = modulo + "--" + id + "--" + resultado + "--" + ddd[1].trim();
-
-                al.set((tvp.getId()) - 1, alData);
-                cal.set(tvpor.getId(), ddd[1].trim());
-
-                saveState();
-              } else if (n == -1) {
-                Long id = (long) tvp.getId();
-                String porcen = tvpor.getText().toString();
-                String[] ddd = porcen.split(":");
-                String alData = modulo + "--" + id + "--" + "NULL" + "--" + ddd[1].trim();
-
-                al.set((tvp.getId()) - 1, alData);
-                cal.set(tvpor.getId(), ddd[1].trim());
-              } else {
-                Long id = (long) tvp.getId();
-                String porcen = tvpor.getText().toString();
-                String[] ddd = porcen.split(":");
-                String alData = modulo + "--" + id + "--" + "NULL" + "--" + ddd[1].trim();
-
-                al.set((tvp.getId()) - 1, alData);
-                cal.set(tvpor.getId(), ddd[1].trim());
-              }
-            }
-          });
-
-          btn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              int n = Integer.parseInt(tvr.getText().toString());
               try {
-                if (n < 9) {
+                if (n > -1) {
                   Long id = (long) tvp.getId();
-                  tvr.setText(valueOf(n + 1));
+                  tvr.setText(valueOf(n - 1));
                   String resultado = tvr.getText().toString();
 
 
@@ -1262,9 +1200,9 @@ public class genated extends AppCompatActivity {
 
                   String alData = modulo + "--" + id + "--" + resultado + "--" + ddd[1].trim();
                   al.set((tvp.getId()) - 1, alData);
-                  cal.set(tvpor.getId(), ddd[1].trim());
-
-                  saveState();
+                  if(logica.equals("Cultivo")) {
+                    cal.set(tvpor.getId(), ddd[1].trim());
+                  }
                 }
               } catch (Exception ex) {
                 Toast.makeText(getApplicationContext(), ex.toString(), Toast.LENGTH_SHORT).show();
@@ -1272,12 +1210,48 @@ public class genated extends AppCompatActivity {
 
             }
           });
+
+          btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              Toast.makeText(genated.this, ""+tvpor.getId(), Toast.LENGTH_SHORT).show();
+              int n = Integer.parseInt(tvr.getText().toString());
+              try {
+                if (n < 9) {
+                  Long id = (long) tvp.getId();
+                  tvr.setText(valueOf(n + 1));
+                  String resultado = tvr.getText().toString();
+
+                  tvpor.setText("resultado: \n" + OperacionPorcentaje(btnsr.porcen, Integer.parseInt(resultado)));
+
+                  String porcen = tvpor.getText().toString();
+                  String[] ddd = porcen.split(":");
+
+                  String alData = modulo + "--" + id + "--" + resultado + "--" + ddd[1].trim();
+                  al.set((tvp.getId()) - 1, alData);
+                  if(logica.equals("Cultivo")) {
+                    cal.set(tvpor.getId(), ddd[1].trim());
+                  }
+                }
+
+              } catch (Exception ex) {
+                Toast.makeText(getApplicationContext(), ex.toString(), Toast.LENGTH_SHORT).show();
+              }
+
+            }
+          });
+
+
+
           String porce = tvpor.getText().toString();
           String[] ddd = porce.split(":");
           String quest = String.valueOf(tvp.getId());
           al.add(modulo + "--" + quest + "--NULL--0");
-          cal.add(ddd[1]);
+          cal.add("QB");
+
+          Log.i("contador",String.valueOf(idres));
         }
+
 
       }
     } catch (Exception ex) {
@@ -1365,7 +1339,7 @@ public class genated extends AppCompatActivity {
 
               al.set((tvp.getId()) - 1, alData);
 
-              saveState();
+              ;
             }
           });
 
@@ -1532,54 +1506,6 @@ public class genated extends AppCompatActivity {
     }
   }
 
-  public void progressBar(String msgCarga, final String msgCompletado, final int tiempoSalteado) {
-    try {
-      progress = new ProgressDialog(this, R.style.MyProgressDialogDespues);
-      progress.setMessage(msgCarga);
-      progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-      progress.setProgress(0);
-      progress.show();
-
-      final int totalProgressTime = 100;
-      final Thread t = new Thread() {
-        @Override
-        public void run() {
-          int jumpTime = 0;
-
-          while (jumpTime < totalProgressTime) {
-            try {
-              jumpTime += tiempoSalteado;
-              progress.setProgress(jumpTime);
-              sleep(200);
-            } catch (InterruptedException e) {
-              Toast.makeText(genated.this, "Progress Bar \n" + e.toString(), Toast.LENGTH_SHORT).show();
-            }
-          }
-
-          runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-              progress.setMessage(msgCompletado);
-              progress.setProgressStyle(R.style.MyProgressDialogDespues);
-              int dur = 2500;
-              new Handler().postDelayed(new Runnable() {
-                public void run() {
-                  progress.dismiss();
-                }
-              }, dur);
-
-            }
-          });
-
-        }
-      };
-      t.start();
-
-    } catch (Exception ex) {
-      Toast.makeText(this, "" + ex.toString(), Toast.LENGTH_SHORT).show();
-    }
-  }
-
   public void Dialog(String msg) {
     try {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1651,8 +1577,7 @@ public class genated extends AppCompatActivity {
 
     return Float.valueOf(format.format(operacion));
   }
-
-
+  
   //cuenta las respuestas dadas
   public int contarporcenescogido() {
 
@@ -1674,12 +1599,17 @@ public class genated extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         try {
-          int dato = contarporcenescogido();
 
-          Dialog(dato + " %");
-          //Log.i("prueba onClick", "" + contarporcenescogido());
-          Log.i("prueba onClick", "" + al.toString());
-          //Log.i("prueba null",""+cont);
+          if(logica.equals("Cultivo")){
+            Dialog(SumarCalificacion()+"");
+          }else if(logica.equals("Postcosecha")){
+            int dato = contarporcenescogido();
+            Dialog(dato + " %");
+          }
+
+          Log.i("prueba onClick al", "" + al.toString());
+          Log.i("prueba onClick cal", "" + cal.toString());
+
         } catch (Exception ex) {
           Toast.makeText(genated.this, "Exception \n " + ex, Toast.LENGTH_SHORT).show();
         }
@@ -1714,32 +1644,6 @@ public class genated extends AppCompatActivity {
     startActivity(i);
   }
 
-  //guardar estado de la vista
-  public boolean saveState() {
-    try {
-      SharedPreferences.Editor edit = sp.edit();
-      edit.putString("estadoActividad", al.toString());
-      edit.commit();
-      edit.apply();
-
-      return Temporal = true;
-    } catch (Exception ex) {
-      Toast.makeText(this, "se genero una exception al guardar el estado del formulario \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
-    }
-    return false;
-  }
-
-  public void getState() {
-    try {
-      String arreglo = sp.getString("estadoActividad", "");
-      //Toast.makeText(this,""+arreglo,Toast.LENGTH_SHORT).show();
-
-      //Toast.makeText(this,""+Temporal,Toast.LENGTH_SHORT).show();
-
-    } catch (Exception ex) {
-      Toast.makeText(this, "Se genero una exception al traer el estado del formulario \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
-    }
-  }
 
   protected class Conexion extends sqlConect {
     Connection cn = getConexion();
@@ -1762,7 +1666,6 @@ public class genated extends AppCompatActivity {
     }
   }
 
-
   class buttonsSumRes {
     private Long codDetalle;
     private String pregunta;
@@ -1778,7 +1681,6 @@ public class genated extends AppCompatActivity {
 
 
   }
-
   class SwichtQ {
     private int codDetalle;
     private String pregunta;
@@ -1790,7 +1692,6 @@ public class genated extends AppCompatActivity {
       this.tipoRespuesta = tipoRespuesta;
     }
   }
-
   class TVF {
     private int codDetalle;
     private String pregunta;
@@ -1802,7 +1703,6 @@ public class genated extends AppCompatActivity {
       this.tipoRespuesta = tipoRespuesta;
     }
   }
-
   class ET {
     private int codDetalle;
     private String pregunta;
@@ -1814,7 +1714,6 @@ public class genated extends AppCompatActivity {
       this.tipoRespuesta = tipoRespuesta;
     }
   }
-
   class SPINNER {
     private int codDetalle;
     private String pregunta;
@@ -1830,7 +1729,6 @@ public class genated extends AppCompatActivity {
       this.porcentaje = porcentaje;
     }
   }
-
   class FILTRO {
     private int codDetalle;
     private String pregunta;
