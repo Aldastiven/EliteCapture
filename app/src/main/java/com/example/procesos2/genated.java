@@ -1203,6 +1203,11 @@ public class genated extends AppCompatActivity {
                   if(logica.equals("Cultivo")) {
                     cal.set(tvpor.getId(), ddd[1].trim());
                   }
+
+                  if(resultado.equals("-1")){
+                    tvpor.setText("resultado: \n");
+                    cal.set(tvpor.getId(),"");
+                  }
                 }
               } catch (Exception ex) {
                 Toast.makeText(getApplicationContext(), ex.toString(), Toast.LENGTH_SHORT).show();
