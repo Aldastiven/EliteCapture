@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.procesos2">
+    package="com.example.eliteCapture">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -16,21 +16,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".Camera"></activity>
+        <activity android:name="com.example.eliteCapture.Camera"></activity>
         <activity
-            android:name=".Login"
+            android:name="com.example.eliteCapture.Login"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".genated"
+            android:name="com.example.eliteCapture.genated"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
-            android:name=".Index"
+            android:name="com.example.eliteCapture.Index"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".splash_activity"
+            android:name="com.example.eliteCapture.splash_activity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
