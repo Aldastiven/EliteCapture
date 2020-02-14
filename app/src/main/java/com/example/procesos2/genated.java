@@ -961,7 +961,6 @@ public class genated extends AppCompatActivity {
                   new AdapterView.OnItemSelectedListener() {
                     public void onItemSelected(AdapterView<?> spn, android.view.View v, int posicion, long id) {
 
-                      Toast.makeText(genated.this, ""+tvpor.getId(), Toast.LENGTH_SHORT).show();
 
                       try {
                         String Afirmacion = spn.getItemAtPosition(posicion).toString();
@@ -1183,7 +1182,6 @@ public class genated extends AppCompatActivity {
           btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              Toast.makeText(genated.this, ""+tvpor.getId(), Toast.LENGTH_SHORT).show();
               int n = Integer.parseInt(tvr.getText().toString());
 
               try {
@@ -1219,7 +1217,6 @@ public class genated extends AppCompatActivity {
           btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              Toast.makeText(genated.this, ""+tvpor.getId(), Toast.LENGTH_SHORT).show();
               int n = Integer.parseInt(tvr.getText().toString());
               try {
                 if (n < 9) {
