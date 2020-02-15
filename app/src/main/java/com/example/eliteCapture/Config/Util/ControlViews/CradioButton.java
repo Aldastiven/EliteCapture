@@ -39,10 +39,7 @@ public class CradioButton {
     }
 
     //crea el control del radio button y retorna el view
-
-   /*
     public View Tradiobtn() {
-
 
         //ORGANIZA LOS CONTROLES INTEGRADOS
         LinearLayout.LayoutParams llparamsTotal = new
@@ -83,7 +80,7 @@ public class CradioButton {
 
         final TextView tvp = new TextView(context);
         tvp.setId(id.intValue());
-        tvp.setText(contenido + "\nponderado: " + ponderado.toString());
+        tvp.setText(pregunta + "\nponderado: " + ponderado);
         tvp.setTextColor(Color.parseColor("#979A9A"));
         tvp.setPadding(5, 5, 5, 5);
         tvp.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -91,7 +88,6 @@ public class CradioButton {
         tvp.setLayoutParams(llparamsText);
 
         final TextView tvpor = new TextView(context);
-        tvpor.setId(idres++);
         tvpor.setText("resultado: ");
         tvpor.setTextColor(Color.parseColor("#979A9A"));
         tvpor.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -100,16 +96,13 @@ public class CradioButton {
         tvpor.setLayoutParams(llparamsTextpo);
 
 
-        for (i = 0; i <= option.size() - 1; i++) {
-            ArrayList<consradio> lista = new ArrayList<>();
-            lista.add(new consradio(context, id, contenido));
+        for (i = 0; i <= desplegable.size() - 1; i++) {
 
             LinearLayout.LayoutParams llrb = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            llrb.setMargins(100, 5, 10, 0);
+            llrb.setMargins(10, 5, 10, 0);
 
             final RadioButton rb = new RadioButton(context);
-            rb.setId(idd++);
-            rb.setText(option.get(i));
+            rb.setText(desplegable.get(i).getOpcion());
             rb.setLayoutParams(llrb);
             rb.setTextSize(12);
             rb.setScaleX((float) 1.10);
@@ -180,5 +173,4 @@ public class CradioButton {
         return colorStateList;
     }
 
-*/
 }

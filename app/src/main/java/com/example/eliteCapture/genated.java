@@ -131,15 +131,11 @@ public class genated extends AppCompatActivity {
                         linearBodypop.addView(cf.filtro());
                         break;
                     case "SCA":
-                        Cfiltro sf = new Cfiltro(genated.this, r.getId(), r.getPregunta(), r.getDesplegable());
-                        linearBodypop.addView(sf.filtro());
-
-                        //Cscanner cs = new Cscanner(genated.this, r.getId(), r.getPregunta());
-                        //linearBodypop.addView(cs.scanner());
+                        Cscanner cs = new Cscanner(genated.this, r.getId(), r.getPregunta());
+                        linearBodypop.addView(cs.scanner());
                         break;
                     case "AUT":
                         CfilAuto ca = new CfilAuto(genated.this, r.getId(), r.getPregunta(), r.getDesplegable());
-
                         linearBodypop.addView(ca.autocompletado());
                         break;
                     default:
@@ -169,8 +165,8 @@ public class genated extends AppCompatActivity {
                     linearPrinc.addView(cc.Cconteo());
                     break;
                 case "RB":
-                    CradioButton cb = new CradioButton(this, r.getId(), r.getPregunta(), r.getPonderado(), r.getDesplegable());
-                    linearPrinc.addView(null);
+                    CradioButton cb = new CradioButton(genated.this, r.getId(), r.getPregunta(), r.getPonderado(),r.getDesplegable());
+                    linearPrinc.addView(cb.Tradiobtn());
                     break;
             }
         }
@@ -203,7 +199,7 @@ public class genated extends AppCompatActivity {
         EncabTitulo = findViewById(R.id.EncabTitulo);
         scrollForm = findViewById(R.id.scrollForm);
         contcc = findViewById(R.id.contcc);
-        editarEncab = findViewById(R.id.editarEncab);
+        ///editarEncab = findViewById(R.id.);
         linearBodypop = mypop.findViewById(R.id.linearbodypop);
         scrollcomplete = findViewById(R.id.complete);
 

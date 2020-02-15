@@ -82,7 +82,7 @@ public class Cdesplegable {
         spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(context, "" + Cgnr.getId(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "" + Cgnr.getId(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

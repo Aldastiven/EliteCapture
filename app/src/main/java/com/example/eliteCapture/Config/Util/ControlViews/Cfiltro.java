@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -68,40 +69,30 @@ public class Cfiltro {
         Cgnr = new ControlGnr(context, id, tv, edt, btn, "hxbtn_izq");
         ControlView = Cgnr.Contenedor();
 
-        Funfiltro(btn, edt, tv, soloOpciones(desplegable));
+        Funfiltro(btn, edt, tv, desplegable);
 
         return ControlView;
     }
 
-
-    public ArrayList soloOpciones(List<DesplegableTab> opcion) {
-        ArrayList<String> opc = new ArrayList<>();
-
-        for (DesplegableTab des : opcion) {
-            opc.add(des.getOpcion());
-        }
-        return opc;
-    }
 
     //funcion del boton
     public void Funfiltro(Button btn, final EditText edt, final TextView tv, final List<DesplegableTab> desplegable) {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String resultado = Buscar(edt.getText().toString(), desplegable);
+                Log.i("FIL","FIL "+resultado);
 
                 if (!resultado.isEmpty()) {
-                    tv.setText(resultado);
+                    tv.setText("Resultado : "+resultado);
                     tv.setTextColor(Color.parseColor("#58d68d"));
                     Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
-                    Toast.makeText(context, "" + Cgnr.getId(), Toast.LENGTH_SHORT).show();
                 } else {
                     tv.setText("No se encontraron resultados");
                     tv.setTextColor(Color.parseColor("#f1948a"));
                     Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainerred);
-                    Toast.makeText(context, "" + Cgnr.getId(), Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
     }
@@ -119,15 +110,14 @@ public class Cfiltro {
 
     //funcion de la busqueda
     public String Buscar(String data, List<DesplegableTab> desplegable) {
-
-
+        String datareturn="";
         for (DesplegableTab desp : desplegable) {
-            if (desp.getCodigo().equalsIgnoreCase(data)) {
-                return desp.getOpcion();
+            if (desp.getCodigo().equals(data)) {
+                datareturn = desp.getOpcion();
             }
+            return datareturn;
         }
-
-        return "";
+        return datareturn;
     }
 
 }

@@ -12,17 +12,16 @@ import java.sql.ResultSet;
 public abstract class sqlConect {
 
     Context context;
-
+    /*
     String url = "jdbc:jtds:sqlserver://10.50.1.123;instance=Mercedes;databaseName=Formularios";
     String user = "Inventarios";
     String pass = "Inventarios2016*";
+    */
 
-
-    /*
-    String url = "jdbc:jtds:sqlserver://10.50.1.120;databaseName=Formularios";
+        String url = "jdbc:jtds:sqlserver://10.50.1.120;databaseName=Formularios";
     String pass = "4dm1nPr0c";
     String user = "sa";
-    */
+
 
 
     public Connection getConexion() {

@@ -12,14 +12,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
-import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
-import com.example.eliteCapture.Model.Data.iDesplegable;
-import com.example.eliteCapture.Model.Data.iDetalle;
-import com.example.eliteCapture.Model.Data.iProceso;
-import com.example.eliteCapture.Model.Data.iUsuario;
 
 import java.io.File;
 import java.sql.Connection;
@@ -96,7 +90,6 @@ public class splash_activity extends AppCompatActivity {
         Class act = Login.class;
         try {
             Bundle bundle = getIntent().getExtras();
-
 
             if (bundle != null) {
                 String code = bundle.getString("class");

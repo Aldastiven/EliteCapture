@@ -87,7 +87,6 @@ public class Cscanner {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, ""+Cgnr.getId(), Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(context, Camera.class);
                     i.putExtra("id",Cgnr.getId());
                     context.startActivity(i);
