@@ -1,5 +1,7 @@
 package com.example.procesos2.Model.tab;
 
+import com.google.gson.Gson;
+
 public class UsuariosTab {
 
     private int idUsuario;
@@ -52,5 +54,6 @@ public class UsuariosTab {
                 "\"passUsuario\":"+passUsuario+"\n"+
                 "}\n";
     }
+
 
 }

@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -186,6 +187,7 @@ public class genated extends AppCompatActivity {
         String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
         String tipo6 = "CBX"; //SPINNER
         String tipo7 = "FIL"; //FLITROS JSON
+        String tipo8 = "AUT"; //AUTOCOMPLETABLE
 
         if (d.getTipoDetalle().equals(tipo3) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
 
@@ -227,7 +229,15 @@ public class genated extends AppCompatActivity {
           Float porcen = d.getPorcentaje();
 
           CrearFiltro(modulo, id, pregunta, desplegable);
+
+        }else if (d.getTipoDetalle().equals(tipo8) && d.getIdProceso() == cod && d.getTipoModulo().equals("H")) {
+          Long id = d.getCodDetalle();
+          String pregunta = d.getQuesDetalle();
+          String modulo = d.getTipoModulo();
+          String desplegable = d.getListaDesplegable();
+          CrearAutoFil(modulo, id, pregunta, desplegable);
         }
+
       }
     } catch (Exception exception) {
       Toast.makeText(this, "exception en generated \n \n" + exception.toString(), Toast.LENGTH_SHORT).show();
@@ -249,6 +259,7 @@ public class genated extends AppCompatActivity {
       String tipo4 = "ETN"; //EDITTEXT NUMERICO
       String tipo5 = "ETA"; //EDITTEXT ALFANUMERICO
       String tipo6 = "CBX"; //SPINNER
+
 
 
       if (d.getTipoDetalle().equals(tipo1) && d.getIdProceso() == cod && d.getTipoModulo().equals("Q")) {
@@ -594,6 +605,96 @@ public class genated extends AppCompatActivity {
                     "al crear el tipo de respuesta \n" +
                     "en el metodo SPINNER \n \n"+ex.toString(),Toast.LENGTH_LONG).show();*/
     }
+  }
+
+  public void CrearAutoFil(final String modulo, Long id, String pregunta, String desplegable){
+    try{
+
+      final TextView tvp = new TextView(getApplicationContext());
+      tvp.setId(id.intValue());
+      tvp.setText("Resultados :");
+      tvp.setTextSize(15);
+      tvp.setTextColor(Color.parseColor("#979A9A"));
+      tvp.setTypeface(null, Typeface.BOLD);
+      tvp.setLayoutParams(medidas(1));
+
+      final AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(getApplicationContext());
+      ArrayAdapter<String> autoArray = new ArrayAdapter<>(getApplication(),R.layout.auto_complete_personal,traerdesp(desplegable));
+      autoCompleteTextView.setAdapter(autoArray);
+      autoCompleteTextView.setHint(pregunta);
+      autoCompleteTextView.setTextSize(15);
+      autoCompleteTextView.setLayoutParams(medidas(1));
+      autoCompleteTextView.setBackgroundColor(Color.parseColor("#E5E7E9"));
+      autoCompleteTextView.setSingleLine(true);
+      autoCompleteTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+      autoCompleteTextView.setTextColor(Color.parseColor("#515A5A"));
+      autoCompleteTextView.setTypeface(null, Typeface.BOLD);
+
+      linearHeader.addView(tvp);
+      linearHeader.addView(autoCompleteTextView);
+
+      FunAuto(autoCompleteTextView,tvp,tvp.getId(),modulo);
+
+      al.add(modulo + "--" + tvp.getId() + "--NULL--0");
+
+    }catch (Exception ex){
+      Toast.makeText(this, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  public LinearLayout.LayoutParams medidas(double med){
+
+    LinearLayout.LayoutParams llparams = new
+            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+    llparams.weight = (float) med;
+    llparams.setMargins(5, 10, 5, 20);
+
+    return llparams;
+  }
+
+  //funcionalidad del auto completado
+  public void FunAuto(final AutoCompleteTextView etdauto, final TextView tdp, final int idd, final String modulo){
+
+    etdauto.addTextChangedListener(new TextWatcher()  {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+      @Override
+      public void afterTextChanged(Editable s){
+        try {
+          for (DesplegableTab dss : id.all()) {
+            if (etdauto.getText().toString().equals(dss.getOptions())) {
+              tdp.setText("Resultados :   "+dss.getCod());
+              tdp.setTextColor(Color.parseColor("#58d68d"));
+              al.set(idd-1, modulo + "--" + idd + "--"+dss.getCod()+"--0");
+            }else {}
+          }
+        }catch (Exception ex){
+        }
+      }
+    });
+
+  }
+
+  //metodo que trae los datos del desplegable correspondiente
+  public List traerdesp(String desplegable)throws Exception{
+
+    id.nombre = desplegable;
+
+    id.all();
+    ArrayList<String> OptionArray = new ArrayList<>();
+
+    for(DesplegableTab ds : id.all()){
+      if(ds.getFiltro().equals(desplegable)){
+        OptionArray.add(ds.getOptions());
+      }else {}
+    }
+
+    return OptionArray;
   }
 
   public LinearLayout CrearLinearLayoutHeader(View v1, View v2) {
@@ -985,6 +1086,7 @@ public class genated extends AppCompatActivity {
                               String resultado = "0";
                               texPantalla = "resultado: \n" + OperacionPorcentaje(spi.porcentaje, Integer.parseInt(resultado));
                               cal.set(tvpor.getId(),String.valueOf(OperacionPorcentaje(spi.porcentaje, Integer.parseInt(resultado))));
+                              al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
                             }
                             break;
                           case "NO CUMPLE":
@@ -997,6 +1099,7 @@ public class genated extends AppCompatActivity {
                               String resultado = "9";
                               texPantalla = "resultado: \n" + OperacionPorcentaje(spi.porcentaje, Integer.parseInt(resultado));
                               cal.set(tvpor.getId(),String.valueOf(OperacionPorcentaje(spi.porcentaje, Integer.parseInt(resultado))));
+                              al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
                             }
                             break;
                           case "NO APLICA":
@@ -1008,6 +1111,7 @@ public class genated extends AppCompatActivity {
                             }else if(logica.equals("Cultivo")){
                               texPantalla = "resultado: \n";
                               cal.set(tvpor.getId(),"");
+                              al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
                             }
                             break;
                           case "selecciona":
@@ -1018,6 +1122,7 @@ public class genated extends AppCompatActivity {
                             }else if(logica.equals("Cultivo")){
                               texPantalla = "resultado: \n";
                               cal.set(tvpor.getId(),"");
+                              al.set(idd, modulo + "--" + quest + "--" + Afirmacion + "--" + valor);
                             }
                             break;
                           default:
