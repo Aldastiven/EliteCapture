@@ -22,7 +22,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Version 0.3.c"
+        android:text="Version 0.3.1.c"
         android:layout_gravity="center"/>
 
     <LinearLayout

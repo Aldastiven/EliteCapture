@@ -1353,7 +1353,7 @@ public class genated extends AppCompatActivity {
           String porce = tvpor.getText().toString();
           String[] ddd = porce.split(":");
           String quest = String.valueOf(tvp.getId());
-          al.add(modulo + "--" + quest + "--NULL--0");
+          al.add(modulo + "--" + quest + "---1--0");
           cal.add("QB");
 
           Log.i("contador",String.valueOf(idres));
