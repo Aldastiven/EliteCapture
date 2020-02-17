@@ -4,88 +4,119 @@ import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 
 import java.util.List;
 
-public class  RespuestasTab {
-    private Long id;
-    private int idProceso;
-    private Long idPregunta;
-    String tipo;
-    String Pregunta;
-    private float ponderado;
-    private String respuesta;
-    List <DesplegableTab> desplegable;
+public class RespuestasTab {
+	private Long id;
+	private int idProceso;
+	private Long idPregunta;
+	private String tipo;
+	private String pregunta;
+	private float ponderado;
+	private String respuesta;
+	private String valor;
+	private List<DesplegableTab> desplegable;
+	private int reglas;
+	private String tip;
 
-    public RespuestasTab(Long id, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, List <DesplegableTab> desplegable) {
-        this.id = id;
-        this.idProceso = idProceso;
-        this.idPregunta = idPregunta;
-        this.tipo = tipo;
-        Pregunta = pregunta;
-        this.ponderado = ponderado;
-        this.respuesta = respuesta;
-        this.desplegable = desplegable;
-    }
+	public RespuestasTab(Long id, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, String valor, List<DesplegableTab> desplegable, int reglas, String tip) {
+		this.setId(id);
+		this.setIdProceso(idProceso);
+		this.setIdPregunta(idPregunta);
+		this.setTipo(tipo);
+		this.setPregunta(pregunta);
+		this.setPonderado(ponderado);
+		this.setRespuesta(respuesta);
+		this.setValor(valor);
+		this.setDesplegable(desplegable);
+		this.setReglas(reglas);
+		this.setTip(tip);
+	}
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public int getIdProceso() {
-        return idProceso;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setIdProceso(int idProceso) {
-        this.idProceso = idProceso;
-    }
+	public int getIdProceso() {
+		return idProceso;
+	}
 
-    public Long getIdPregunta() {
-        return idPregunta;
-    }
+	public void setIdProceso(int idProceso) {
+		this.idProceso = idProceso;
+	}
 
-    public void setIdPregunta(Long idPregunta) {
-        this.idPregunta = idPregunta;
-    }
+	public Long getIdPregunta() {
+		return idPregunta;
+	}
 
-    public String getTipo() {
-        return tipo;
-    }
+	public void setIdPregunta(Long idPregunta) {
+		this.idPregunta = idPregunta;
+	}
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+	public String getTipo() {
+		return tipo;
+	}
 
-    public String getPregunta() {
-        return Pregunta;
-    }
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
 
-    public void setPregunta(String pregunta) {
-        Pregunta = pregunta;
-    }
+	public String getPregunta() {
+		return pregunta;
+	}
 
-    public float getPonderado() {
-        return ponderado;
-    }
+	public void setPregunta(String pregunta) {
+		this.pregunta = pregunta;
+	}
 
-    public void setPonderado(float ponderado) {
-        this.ponderado = ponderado;
-    }
+	public String getValor() {
+		return valor;
+	}
 
-    public String getRespuesta() {
-        return respuesta;
-    }
+	public void setValor(String valor) {
+		this.valor = valor;
+	}
 
-    public void setRespuesta(String respuesta) {
-        this.respuesta = respuesta;
-    }
+	public float getPonderado() {
+		return ponderado;
+	}
 
-    public List<DesplegableTab> getDesplegable() {
-        return desplegable;
-    }
+	public void setPonderado(float ponderado) {
+		this.ponderado = ponderado;
+	}
 
-    public void setDesplegable(List<DesplegableTab> desplegable) {
-        this.desplegable = desplegable;
-    }
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
+	}
+
+	public List<DesplegableTab> getDesplegable() {
+		return desplegable;
+	}
+
+	public void setDesplegable(List<DesplegableTab> desplegable) {
+		this.desplegable = desplegable;
+	}
+
+	public int getReglas() {
+		return reglas;
+	}
+
+	public void setReglas(int reglas) {
+		this.reglas = reglas;
+	}
+
+	public String getTip() {
+		return tip;
+	}
+
+	public void setTip(String tip) {
+		this.tip = tip;
+	}
 }

@@ -18,10 +18,9 @@ public abstract class sqlConect {
     String pass = "Inventarios2016*";
     */
 
-        String url = "jdbc:jtds:sqlserver://10.50.1.120;databaseName=Formularios";
+    String url = "jdbc:jtds:sqlserver://10.50.1.120;databaseName=Formularios";
     String pass = "4dm1nPr0c";
     String user = "sa";
-
 
 
     public Connection getConexion() {

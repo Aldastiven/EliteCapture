@@ -5,7 +5,7 @@ import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 
 import java.util.List;
 
-public interface respuestas extends DAO <Long, RespuestasTab, String>{
+public interface Respuestas extends DAO <Long, RespuestasTab, String>{
     List<RespuestasTab> forProceso(long id, String respuesta) throws Exception;
     boolean local(Long id) throws Exception;
 }
