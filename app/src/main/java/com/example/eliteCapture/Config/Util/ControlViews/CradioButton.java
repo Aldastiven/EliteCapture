@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
+import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
+import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
 import java.sql.Connection;
@@ -31,8 +34,9 @@ public class CradioButton {
 	String pregunta;
 	float ponderado;
 	List<DesplegableTab> desplegable;
+	RespuestasTab rt;
 
-	public CradioButton(Context context, String path, String ubicacion, Long id, String pregunta, float ponderado, List<DesplegableTab> desplegable) {
+	public CradioButton(Context context, String path, String ubicacion, Long id, String pregunta, float ponderado, List<DesplegableTab> desplegable, RespuestasTab rt) {
 		this.context = context;
 		this.path = path;
 		this.ubicacion = ubicacion;
@@ -40,6 +44,7 @@ public class CradioButton {
 		this.pregunta = pregunta;
 		this.ponderado = ponderado;
 		this.desplegable = desplegable;
+		this.rt = rt;
 	}
 
 	//crea el control del radio button y retorna el view
@@ -92,7 +97,7 @@ public class CradioButton {
 		tvp.setLayoutParams(llparamsText);
 
 		final TextView tvpor = new TextView(context);
-		tvpor.setText("resultado: ");
+		tvpor.setText((rt.getValor() != null) ? "Resultado: \n " + rt.getValor() : "Resultado: \n ");
 		tvpor.setTextColor(Color.parseColor("#979A9A"));
 		tvpor.setBackgroundColor(Color.parseColor("#ffffff"));
 		tvpor.setPadding(10, 10, 10, 10);
@@ -107,30 +112,26 @@ public class CradioButton {
 
 			final RadioButton rb = new RadioButton(context);
 			rb.setText(desplegable.get(i).getOpcion());
+			rb.setId(Integer.parseInt(desplegable.get(i).getCodigo()));
 			rb.setLayoutParams(llrb);
 			rb.setTextSize(12);
 			rb.setScaleX((float) 1.10);
 			rb.setScaleY((float) 1.10);
+			rb.setChecked( (desplegable.get(i).getOpcion().equals(rt.getRespuesta())) );
 			rg.addView(rb);
 			rg.setPadding(10, 0, 10, 0);
 
-			if (rb.getText().toString().equals("NO APLICA")) {
+			int id =rb.getId();
+
+			if (id == 1) {//no aplica
 				rb.setButtonTintList(ColorSelected(153, 163, 164));
-			} else if (rb.getText().toString().equals("NO CUMPLE")) {
+			} else if (id == 0) {//no cumple
 				rb.setButtonTintList(ColorSelected(231, 76, 60));
-			} else if (rb.getText().toString().equals("SI CUMPLE")) {
+			} else if (id == 2) {//si cumple
 				rb.setButtonTintList(ColorSelected(34, 153, 84));
 			}
 
-			rb.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					try {
-					} catch (Exception ex) {
-						Toast.makeText(context, "Exc al insertar en CradioButton.class \n \n " + ex.toString(), Toast.LENGTH_LONG).show();
-					}
-				}
-			});
+			funRB(rb,tvpor);
 		}
 
 		LLtotal.addView(LLPREGUNTA(context, tvp, tvpor));
@@ -159,6 +160,41 @@ public class CradioButton {
 		return llpregunta;
 	}
 
+	//funcion del radio group
+	public void funRB(final RadioButton rb, final TextView tvpor){
+		rb.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				try {
+					String rta;
+					String vlr;
+					switch (rb.getId()){
+						case 2:
+							rta = rb.getText().toString();
+							vlr = String.valueOf(rt.getPonderado());
+							tvpor.setText("resultado: \n" + vlr);
+							registro(rta,vlr);
+							break;
+						case 0:
+							rta = rb.getText().toString();
+							vlr = String.valueOf(0);
+							tvpor.setText("resultado: \n" + vlr);
+							registro(rta,vlr);
+							break;
+						case 1:
+							rta = rb.getText().toString();
+							vlr = String.valueOf(-1);
+							tvpor.setText("resultado: \n "+ vlr);
+							registro(rta,vlr);
+							break;
+					}
+
+				} catch (Exception ex) {
+					Toast.makeText(context, "Exc al insertar en CradioButton.class \n \n " + ex.toString(), Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+	}
 
 	//añade el color al radio segun el texto del control
 	public ColorStateList ColorSelected(int red, int green, int blue) {
@@ -175,6 +211,11 @@ public class CradioButton {
 		);
 
 		return colorStateList;
+	}
+
+	public void registro(String rta, String valor) throws Exception {
+		iContenedor conTemp = new iContenedor(path);
+		conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor);
 	}
 
 }

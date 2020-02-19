@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
+import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
+import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
 import java.util.ArrayList;
@@ -19,20 +21,27 @@ import java.util.List;
 
 public class Cdesplegable {
     private Context context;
+    private String path;
     private Long id;
     private String contenido;
     private List<DesplegableTab> opciones;
-
+    private String ubicacion;
+    private RespuestasTab r;
     View ControlView;
 
     ControlGnr Cgnr = null;
 
     //contructor
-    public Cdesplegable(Context context, Long id, String contenido, List<DesplegableTab> opciones) {
+
+
+    public Cdesplegable(Context context, String path, Long id, String contenido, List<DesplegableTab> opciones, String ubicacion, RespuestasTab r) {
         this.context = context;
+        this.path = path;
         this.id = id;
         this.contenido = contenido;
         this.opciones = opciones;
+        this.ubicacion = ubicacion;
+        this.r = r;
     }
 
     //metodo que crea el control desplegable y retorna view
@@ -58,6 +67,7 @@ public class Cdesplegable {
         final Spinner spinner = new Spinner(context);
         spinner.setId(id.intValue());
         spinner.setAdapter(spinnerArray);
+        spinner.setSelection((r.getRespuesta()!=null ? soloOpciones(opciones).indexOf(r.getRespuesta()): 0));
         spinner.setLayoutParams(llparams);
 
         Cgnr = new ControlGnr(context, id, tvp, spinner, null, "hx2");
@@ -78,17 +88,26 @@ public class Cdesplegable {
     }
 
     //funcion del spinner
-    public void Funspinner(Spinner spn) {
+    public void Funspinner(final Spinner spn) {
         spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(context, "" + Cgnr.getId(), Toast.LENGTH_SHORT).show();
+                try {
+                    String rta = spn.getItemAtPosition(position).toString();
+                    registro(rta, "");
+                }catch (Exception ex){}
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+    }
+
+    //funcion de registro en el tempóral
+    public void registro(String rta, String valor) throws Exception {
+        iContenedor conTemp = new iContenedor(path);
+        conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
     }
 
 }

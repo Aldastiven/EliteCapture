@@ -189,7 +189,6 @@ public class iContenedor implements Contenedor {
 
 		Log.i("Error_onCreate", "generando opciones " + desplegable);
 		desp.nombre = desplegable;
-		desp.all();
 
 		return desp.all();
 	}

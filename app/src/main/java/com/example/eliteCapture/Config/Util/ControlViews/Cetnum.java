@@ -11,19 +11,31 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
+import com.example.eliteCapture.Model.View.iContenedor;
+
+import java.sql.SQLTransactionRollbackException;
+import java.util.ArrayList;
+
 public class Cetnum {
     private Context context;
+    private String path;
     private Long id;
     private String contenido;
+    private String ubicacion;
+    private RespuestasTab r;
 
     View ControlView;
 
     ControlGnr Cgnr;
 
-    public Cetnum(Context context, Long id, String contenido) {
+    public Cetnum(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r) {
         this.context = context;
+        this.path = path;
         this.id = id;
         this.contenido = contenido;
+        this.ubicacion = ubicacion;
+        this.r = r;
     }
 
     //metodo que va crear el control de edittext numerico
@@ -45,6 +57,7 @@ public class Cetnum {
 
         final EditText etxtN = new EditText(context);
         etxtN.setId(id.intValue());
+        etxtN.setText((r.getRespuesta()!=null ? r.getRespuesta() : ""));
         etxtN.setTextSize(20);
         etxtN.setHint("NULL");
         etxtN.setHintTextColor(Color.TRANSPARENT);
@@ -77,9 +90,18 @@ public class Cetnum {
             @Override
             public void afterTextChanged(Editable s) {
                 //Toast.makeText(context, ""+Cgnr.getId(), Toast.LENGTH_SHORT).show();
-                //Toast.makeText(context, ""+etn.getText().toString(), Toast.LENGTH_SHORT).show();
+                try {
+                    String rta = etn.getText().toString();
+                    registro(rta, null);
+                }catch (Exception ex){ }
             }
         });
+    }
+
+    //funcion de registro en el tempóral
+    public void registro(String rta, String valor) throws Exception {
+        iContenedor conTemp = new iContenedor(path);
+        conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
     }
 
 }
