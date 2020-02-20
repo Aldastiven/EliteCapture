@@ -33,10 +33,10 @@ public class CradioButton {
 	Long id;
 	String pregunta;
 	float ponderado;
-	List<DesplegableTab> desplegable;
+	String desplegable;
 	RespuestasTab rt;
 
-	public CradioButton(Context context, String path, String ubicacion, Long id, String pregunta, float ponderado, List<DesplegableTab> desplegable, RespuestasTab rt) {
+	public CradioButton( Context context, String path, String ubicacion, Long id, String pregunta, float ponderado, String desplegable, RespuestasTab rt) {
 		this.context = context;
 		this.path = path;
 		this.ubicacion = ubicacion;
@@ -104,34 +104,42 @@ public class CradioButton {
 		tvpor.setTypeface(null, Typeface.BOLD);
 		tvpor.setLayoutParams(llparamsTextpo);
 
+		try {
+			iDesplegable iDesp = new iDesplegable(null, path);
+			iDesp.nombre = desplegable;
 
-		for (i = 0; i <= desplegable.size() - 1; i++) {
+			List<DesplegableTab> DT = iDesp.all();
 
-			LinearLayout.LayoutParams llrb = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-			llrb.setMargins(10, 5, 10, 0);
+			for (i = 0; i <= DT.size() - 1; i++) {
 
-			final RadioButton rb = new RadioButton(context);
-			rb.setText(desplegable.get(i).getOpcion());
-			rb.setId(Integer.parseInt(desplegable.get(i).getCodigo()));
-			rb.setLayoutParams(llrb);
-			rb.setTextSize(12);
-			rb.setScaleX((float) 1.10);
-			rb.setScaleY((float) 1.10);
-			rb.setChecked( (desplegable.get(i).getOpcion().equals(rt.getRespuesta())) );
-			rg.addView(rb);
-			rg.setPadding(10, 0, 10, 0);
+				LinearLayout.LayoutParams llrb = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				llrb.setMargins(10, 5, 10, 0);
 
-			int id =rb.getId();
+				final RadioButton rb = new RadioButton(context);
+				rb.setText(DT.get(i).getOpcion());
+				rb.setId(Integer.parseInt(DT.get(i).getCodigo()));
+				rb.setLayoutParams(llrb);
+				rb.setTextSize(12);
+				rb.setScaleX((float) 1.10);
+				rb.setScaleY((float) 1.10);
+				rb.setChecked((DT.get(i).getOpcion().equals(rt.getRespuesta())));
+				rg.addView(rb);
+				rg.setPadding(10, 0, 10, 0);
 
-			if (id == 1) {//no aplica
-				rb.setButtonTintList(ColorSelected(153, 163, 164));
-			} else if (id == 0) {//no cumple
-				rb.setButtonTintList(ColorSelected(231, 76, 60));
-			} else if (id == 2) {//si cumple
-				rb.setButtonTintList(ColorSelected(34, 153, 84));
+				int id = rb.getId();
+
+				if (id == 1) {//no aplica
+					rb.setButtonTintList(ColorSelected(153, 163, 164));
+				} else if (id == 0) {//no cumple
+					rb.setButtonTintList(ColorSelected(231, 76, 60));
+				} else if (id == 2) {//si cumple
+					rb.setButtonTintList(ColorSelected(34, 153, 84));
+				}
+
+				funRB(rb, tvpor);
 			}
-
-			funRB(rb,tvpor);
+		}catch (Exception ex){
+			Toast.makeText(context, ""+ex.toString(), Toast.LENGTH_SHORT).show();
 		}
 
 		LLtotal.addView(LLPREGUNTA(context, tvp, tvpor));

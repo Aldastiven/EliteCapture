@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -28,8 +29,12 @@ import com.example.eliteCapture.Config.Util.ControlViews.Cscanner;
 import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
 import com.example.eliteCapture.Config.Util.ControlViews.Cconteos;
 import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
+import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
+import com.example.eliteCapture.Model.Data.Tab.envioTab;
+import com.example.eliteCapture.Model.Data.iEnvio;
+import com.example.eliteCapture.Model.View.Interfaz.Contenedor;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
@@ -39,6 +44,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.sql.Connection;
 import java.util.List;
 
 import static java.lang.String.valueOf;
@@ -61,6 +67,7 @@ public class genated extends AppCompatActivity {
 
     int contConsec = 1;
     ProcesoTab pro = null;
+
 
     public boolean ok, temporal; //retorna la respuesta de un formulario pendiente
 
@@ -216,12 +223,12 @@ public class genated extends AppCompatActivity {
                         linearBodypop.addView(cf.filtro());
                         break;
                     case "SCA":
-                        Log.i("vcampo","data "+r.getRespuesta());
+                        Log.i("vcampo", "data " + r.getRespuesta());
                         Cscanner cs = new Cscanner(genated.this, path, r.getId(), r.getPregunta(), "H", r, (dataCamera != null ? dataCamera : ""));
                         linearBodypop.addView(cs.scanner());
                         break;
                     case "AUT":
-                        CfilAuto ca = new CfilAuto(genated.this, path , r.getId(), r.getPregunta(),"H", r.getDesplegable(), r);
+                        CfilAuto ca = new CfilAuto(genated.this, path, r.getId(), r.getPregunta(), "H", r.getDesplegable(), r);
                         linearBodypop.addView(ca.autocompletado());
                         break;
                     default:
@@ -258,7 +265,6 @@ public class genated extends AppCompatActivity {
         }
     }
 
-
     //CALIFICACIÓN POP
     public void onCalificar(View v) {
         try {
@@ -289,7 +295,6 @@ public class genated extends AppCompatActivity {
         return deviceName;
     }
 
-
     //MUESTRA EL POP CON LOS CAMPOS DEL HEADER
     public void Showpop(View v) {
         mypop.show();
@@ -319,38 +324,48 @@ public class genated extends AppCompatActivity {
     }
 
 
-    //trastear estos datos------------------------------------------------------------------------------
-    //trastear estos datos------------------------------------------------------------------------------
-    //trastear estos datos------------------------------------------------------------------------------
-    //trastear estos datos------------------------------------------------------------------------------
-    public void contador1_5() {
-        if (Integer.parseInt(contcc.getText().toString()) < 6) {
-            contConsec++;
-            contcc.setText(valueOf(contConsec));
-            contcc.setTextColor(Color.parseColor("#aab7b8"));
-        }
-        if (Integer.parseInt(contcc.getText().toString()) == 6) {
-            contConsec = 1;
-            contcc.setText(valueOf(contConsec));
-        }
-        if (Integer.parseInt(contcc.getText().toString()) == 5) {
-            contcc.setTextColor(Color.parseColor("#ec7063"));
+    //SUBIR DATOS DEL FORMULARIO
+    public void UpData(View v) {
+        try {
+            ContenedorTab cc = iCon.optenerTemporal();
+            iEnvio iE = new iEnvio(path, new CargaDeDatos().CargaDeDatos());
+            envioTab eT = new envioTab();
+
+            for (RespuestasTab rr : cc.getHeader()) {
+                Toast.makeText(this, ""+cc.getFecha(), Toast.LENGTH_SHORT).show();
+                eT.setFecha(cc.getFecha());
+                eT.setIdProceso((long) cc.getIdProceso());
+                eT.setIdDetalle(rr.getId());
+                eT.setRespuesta(rr.getRespuesta());
+                eT.setPorcentaje(rr.getPonderado());
+                eT.setTerminal(getPhoneName());
+                eT.setIdUsuario(getcodUsuario());
+                eT.setConsecutivoJson(rr.getIdPregunta().intValue());
+                Toast.makeText(this, ""+iE.Record(eT), Toast.LENGTH_SHORT).show();
+            }
+
+            for (RespuestasTab rr : cc.getQuestions()) {
+                Toast.makeText(this, ""+cc.getFecha(), Toast.LENGTH_SHORT).show();
+                eT.setFecha(cc.getFecha());
+                eT.setIdProceso((long) cc.getIdProceso());
+                eT.setIdDetalle(rr.getId());
+                eT.setRespuesta(rr.getRespuesta());
+                eT.setPorcentaje(rr.getPonderado());
+                eT.setTerminal(getPhoneName());
+                eT.setIdUsuario(getcodUsuario());
+                eT.setConsecutivoJson(rr.getIdPregunta().intValue());
+                Toast.makeText(this, ""+iE.Record(eT), Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (Exception ex) {
+            Toast.makeText(this, "" + ex.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void DesabilitarTeclado(View v) {
-
-        v.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    return true;
-                }
-                return false;
-            }
-        });
-
+    protected class CargaDeDatos extends sqlConect {
+        public Connection CargaDeDatos() {
+            Connection cn = getConexion();
+            return cn;
+        }
     }
 }

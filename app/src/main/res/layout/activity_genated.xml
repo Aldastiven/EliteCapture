@@ -194,7 +194,8 @@
             android:layout_margin="2sp"
             android:text="Enviar"
             android:textStyle="bold"
-            android:textColor="#ffffff"/>
+            android:textColor="#ffffff"
+            android:onClick="UpData"/>
 
         <Button
             android:layout_weight="1"

@@ -33,12 +33,12 @@ public class CfilAuto {
     private Long id;
     private String contenido;
     private String ubicacion;
-    private List<DesplegableTab> desplegable;
+    private String desplegable;
     private RespuestasTab r;
 
     View ControlView;
 
-    public CfilAuto(Context context, String path, Long id, String contenido, String ubicacion, List<DesplegableTab> desplegable, RespuestasTab r) {
+    public CfilAuto(Context context, String path, Long id, String contenido, String ubicacion, String desplegable, RespuestasTab r) {
         this.context = context;
         this.path = path;
         this.id = id;
@@ -88,13 +88,21 @@ public class CfilAuto {
         return ControlView;
     }
 
-    public ArrayList soloOpciones(List<DesplegableTab> opcion) {
-        ArrayList<String> opc = new ArrayList<>();
+    public ArrayList soloOpciones(String opcion) {
+        try {
+            ArrayList<String> opc = new ArrayList<>();
 
-        for (DesplegableTab des : opcion) {
-            opc.add(des.getOpcion());
+            iDesplegable iDesp = new iDesplegable(null, path);
+            iDesp.nombre = opcion;
+
+            for (DesplegableTab des : iDesp.all()) {
+                opc.add(des.getOpcion());
+            }
+            return opc;
+        }catch (Exception ex){
+            Toast.makeText(context, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+            return null;
         }
-        return opc;
     }
 
     //funcionalidad del auto completado
@@ -147,12 +155,21 @@ public class CfilAuto {
     }
 
     //funcion de la busqueda
-    public String Buscar(String data, List<DesplegableTab> desplegable) {
-        for (DesplegableTab desp : desplegable) {
-            if (desp.getOpcion().equals(data)) {
-                return desp.getCodigo();
+    public String Buscar(String data, String desplegable) {
+        try {
+
+            iDesplegable iDesp = new iDesplegable(null, path);
+            iDesp.nombre = desplegable;
+
+            for (DesplegableTab desp : iDesp.all()) {
+                if (desp.getOpcion().equals(data)) {
+                    return desp.getCodigo();
+                }
             }
+            return "";
+        }catch (Exception ex){
+            Toast.makeText(context, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+            return "";
         }
-        return "";
     }
 }

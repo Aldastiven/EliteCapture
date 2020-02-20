@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
+import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
@@ -24,7 +25,7 @@ public class Cdesplegable {
     private String path;
     private Long id;
     private String contenido;
-    private List<DesplegableTab> opciones;
+    private String opciones;
     private String ubicacion;
     private RespuestasTab r;
     View ControlView;
@@ -34,7 +35,7 @@ public class Cdesplegable {
     //contructor
 
 
-    public Cdesplegable(Context context, String path, Long id, String contenido, List<DesplegableTab> opciones, String ubicacion, RespuestasTab r) {
+    public Cdesplegable(Context context, String path, Long id, String contenido, String opciones, String ubicacion, RespuestasTab r) {
         this.context = context;
         this.path = path;
         this.id = id;
@@ -67,7 +68,7 @@ public class Cdesplegable {
         final Spinner spinner = new Spinner(context);
         spinner.setId(id.intValue());
         spinner.setAdapter(spinnerArray);
-        spinner.setSelection((r.getRespuesta()!=null ? soloOpciones(opciones).indexOf(r.getRespuesta()): 0));
+        spinner.setSelection((r.getRespuesta() != null ? soloOpciones(opciones).indexOf(r.getRespuesta()) : 0));
         spinner.setLayoutParams(llparams);
 
         Cgnr = new ControlGnr(context, id, tvp, spinner, null, "hx2");
@@ -78,13 +79,21 @@ public class Cdesplegable {
         return ControlView;
     }
 
-    public ArrayList soloOpciones(List<DesplegableTab> opcion) {
-        ArrayList<String> opc = new ArrayList<>();
+    public ArrayList soloOpciones(String opcion) {
+        try {
+            ArrayList<String> opc = new ArrayList<>();
 
-        for (DesplegableTab des : opcion) {
-            opc.add(des.getOpcion());
+            iDesplegable iDesp = new iDesplegable(null, path);
+            iDesp.nombre = opcion;
+
+            for (DesplegableTab des : iDesp.all()) {
+                opc.add(des.getOpcion());
+            }
+            return opc;
+        } catch (Exception ex) {
+            Toast.makeText(context, "" + ex, Toast.LENGTH_SHORT).show();
+            return null;
         }
-        return opc;
     }
 
     //funcion del spinner
@@ -95,7 +104,8 @@ public class Cdesplegable {
                 try {
                     String rta = spn.getItemAtPosition(position).toString();
                     registro(rta, "");
-                }catch (Exception ex){}
+                } catch (Exception ex) {
+                }
             }
 
             @Override

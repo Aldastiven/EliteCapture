@@ -86,6 +86,7 @@ public class Login extends AppCompatActivity {
                 SharedPreferences.Editor edit = sp.edit();
                 Log.i("Session:", admin.getUsuario().json(m));
                 edit.putString("usuario", admin.getUsuario().json(m));
+                edit.putInt("codigo",m.getPassword());
                 edit.commit();
                 edit.apply();
 

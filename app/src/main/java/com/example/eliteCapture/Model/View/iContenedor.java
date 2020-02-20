@@ -187,7 +187,7 @@ public class iContenedor implements Contenedor {
 				detalle.getPorcentaje(),
 				null,
 				null,
-				(detalle.getLista_desp() != null && !detalle.getLista_desp().isEmpty()) ? opciones(detalle.getLista_desp()) : null,
+				detalle.getLista_desp(),
 				detalle.getReglas(),
 				detalle.getTip()
 		);

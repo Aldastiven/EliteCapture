@@ -1,8 +1,5 @@
 package com.example.eliteCapture.Model.View.Tab;
 
-import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
-
-import java.util.List;
 
 public class RespuestasTab {
 	private Long id;
@@ -13,24 +10,23 @@ public class RespuestasTab {
 	private float ponderado;
 	private String respuesta;
 	private String valor;
-	private List<DesplegableTab> desplegable;
+	private String desplegable;
 	private int reglas;
 	private String tip;
 
-	public RespuestasTab(Long id, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, String valor, List<DesplegableTab> desplegable, int reglas, String tip) {
-		this.setId(id);
-		this.setIdProceso(idProceso);
-		this.setIdPregunta(idPregunta);
-		this.setTipo(tipo);
-		this.setPregunta(pregunta);
-		this.setPonderado(ponderado);
-		this.setRespuesta(respuesta);
-		this.setValor(valor);
-		this.setDesplegable(desplegable);
-		this.setReglas(reglas);
-		this.setTip(tip);
+	public RespuestasTab(Long id, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, String valor, String desplegable, int reglas, String tip) {
+		this.id = id;
+		this.idProceso = idProceso;
+		this.idPregunta = idPregunta;
+		this.tipo = tipo;
+		this.pregunta = pregunta;
+		this.ponderado = ponderado;
+		this.respuesta = respuesta;
+		this.valor = valor;
+		this.desplegable = desplegable;
+		this.reglas = reglas;
+		this.tip = tip;
 	}
-
 
 	public Long getId() {
 		return id;
@@ -72,14 +68,6 @@ public class RespuestasTab {
 		this.pregunta = pregunta;
 	}
 
-	public String getValor() {
-		return valor;
-	}
-
-	public void setValor(String valor) {
-		this.valor = valor;
-	}
-
 	public float getPonderado() {
 		return ponderado;
 	}
@@ -96,11 +84,19 @@ public class RespuestasTab {
 		this.respuesta = respuesta;
 	}
 
-	public List<DesplegableTab> getDesplegable() {
+	public String getValor() {
+		return valor;
+	}
+
+	public void setValor(String valor) {
+		this.valor = valor;
+	}
+
+	public String getDesplegable() {
 		return desplegable;
 	}
 
-	public void setDesplegable(List<DesplegableTab> desplegable) {
+	public void setDesplegable(String desplegable) {
 		this.desplegable = desplegable;
 	}
 

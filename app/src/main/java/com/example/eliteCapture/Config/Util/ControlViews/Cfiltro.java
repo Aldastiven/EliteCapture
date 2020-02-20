@@ -31,11 +31,11 @@ public class Cfiltro {
     private String path;
     private Long id;
     private String contenido;
-    private List<DesplegableTab> desplegable;
+    private String desplegable;
     private String ubicacion;
     private RespuestasTab r;
 
-    public Cfiltro(Context context, String path, Long id, String contenido, List<DesplegableTab> desplegable, String ubicacion, RespuestasTab r) {
+    public Cfiltro(Context context, String path, Long id, String contenido, String desplegable, String ubicacion, RespuestasTab r) {
         this.context = context;
         this.path = path;
         this.id = id;
@@ -96,7 +96,7 @@ public class Cfiltro {
 
 
     //funcion del boton
-    public void Funfiltro(Button btn, final EditText edt, final TextView tv, final List<DesplegableTab> desplegable) {
+    public void Funfiltro(Button btn, final EditText edt, final TextView tv, final String desplegable) {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,13 +134,20 @@ public class Cfiltro {
     }
 
     //funcion de la busqueda
-    public String Buscar(String data, List<DesplegableTab> desplegable) {
-        for (DesplegableTab desp : desplegable) {
-            if (desp.getCodigo().equals(data)) {
-                return desp.getOpcion();
+    public String Buscar(String data, String desplegable) {
+        try {
+            iDesplegable iDesp = new iDesplegable(null, path);
+            iDesp.nombre = desplegable;
+
+            for (DesplegableTab desp : iDesp.all()) {
+                if (desp.getCodigo().equals(data)) {
+                    return desp.getOpcion();
+                }
             }
+            return "";
+        }catch (Exception ex){
+            return "";
         }
-        return "";
     }
 
     //funcion de registro en el tempóral
