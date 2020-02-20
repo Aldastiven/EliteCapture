@@ -29,7 +29,7 @@ import java.sql.Connection;
 
 public class Index extends AppCompatActivity {
   LinearLayout linearCheck, titulodata;
-  TextView txtPanelid, txtPaneluser, txtELige, txtEstadoActivity;
+  TextView  txtPaneluser, txtELige;
   RelativeLayout contenUser;
 
   int sizeprocesos = 0;
@@ -53,10 +53,8 @@ public class Index extends AppCompatActivity {
     linearCheck = findViewById(R.id.LinearCheck);
     titulodata = findViewById(R.id.titulodata);
     contenUser = findViewById(R.id.contenUser);
-    txtPanelid = findViewById(R.id.txtPanelid);
     txtPaneluser = findViewById(R.id.txtPaneluser);
     txtELige = findViewById(R.id.txtELige);
-    txtEstadoActivity = findViewById(R.id.txtEstadoActivity);
 
     path = getExternalFilesDir(null) + File.separator;
     sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
@@ -65,7 +63,6 @@ public class Index extends AppCompatActivity {
 
 
       admin = new Admin(null, path);
-      txtEstadoActivity.setVisibility(View.INVISIBLE);
 
 
       traerDataUser();
@@ -98,8 +95,7 @@ public class Index extends AppCompatActivity {
       usu = new Gson().fromJson(sp.getString("usuario", ""), new TypeToken<UsuarioTab>() {
       }.getType());
 
-      txtPaneluser.setText("Empleado: " + usu.getNombre_usuario());
-      txtPanelid.setText("Te vamos a quitar :D");
+      txtPaneluser.setText("Usuario : " + usu.getNombre_usuario());
 
     } catch (Exception ex) {
       Toast.makeText(this, "Se genero un error al traer los datos del usuario \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
@@ -110,7 +106,6 @@ public class Index extends AppCompatActivity {
   public void Messagenull(int size) {
     try {
       titulodata.removeView(txtELige);
-      contenUser.removeView(txtEstadoActivity);
 
       for (int i = 0; i < size; i++) {
 
@@ -156,7 +151,7 @@ public class Index extends AppCompatActivity {
         btn.setId(c.getCodigo_proceso());
         btn.setTextColor(Color.parseColor("#ffffff"));
         btn.setTextSize(16);
-        btn.setBackgroundResource(R.drawable.buttongreen);
+        btn.setBackgroundColor(Color.parseColor("#27ae60"));
         btn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         btn.setHeight(100);
 

@@ -14,6 +14,8 @@ import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,22 +68,30 @@ public class iContenedor implements Contenedor {
 		float calificacion = 0;
 
 		for (RespuestasTab respuesta : c.getQuestions()) {
-			if (respuesta.getRespuesta() != null && !respuesta.getRespuesta().equals("-1")) {
+			if (respuesta.getValor() != null && !respuesta.getValor().equals("-1")) {
 				ponderado += respuesta.getPonderado();
-				calificacion += Float.parseFloat(respuesta.getRespuesta());
+				calificacion += Float.parseFloat(respuesta.getValor());
+				Log.i("calificar",""+calificacion);
+				Log.i("calificar",""+respuesta.getValor());
 			}
 		}
 
 		if (c.getFooter().size() > 0) {
 			for (RespuestasTab respuesta : c.getFooter()) {
-				if (!respuesta.getRespuesta().equals("-1")) {
+				if (!respuesta.getValor().equals("-1")) {
 					ponderado += respuesta.getPonderado();
-					calificacion += Float.parseFloat(respuesta.getRespuesta());
+					calificacion += Float.parseFloat(respuesta.getValor());
 				}
 			}
 		}
 
-		return calificacion / ponderado;
+		Log.i("calificar",""+calificacion +" / "+ponderado+" = "+calificacion / ponderado * 100);
+
+		DecimalFormatSymbols separador = new DecimalFormatSymbols();
+		separador.setDecimalSeparator('.');
+		DecimalFormat format = new DecimalFormat("#.##", separador);
+
+		return Float.parseFloat(format.format(calificacion / ponderado * 100));
 	}
 
 	public ContenedorTab generarContenedor(int usuario, List<DetalleTab> formulario) throws Exception {
@@ -156,7 +166,7 @@ public class iContenedor implements Contenedor {
 				conTemp.setFooter(editar(conTemp.getFooter(), idPregunta, respuesta, valor));
 				break;
 		}
-		crearTemporal(conTemp);
+		Log.i("vcampo",""+crearTemporal(conTemp));
 	}
 
 	public List<RespuestasTab> editar(List<RespuestasTab> editar, int idPregunta, String respuesta, String valor) {

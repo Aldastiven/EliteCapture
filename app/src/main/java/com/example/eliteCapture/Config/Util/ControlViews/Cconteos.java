@@ -163,7 +163,7 @@ public class Cconteos {
                     int rta = n - 1;
                     tvr.setText(valueOf(rta));
                     String vlr = valor(rta);
-                    tvpor.setText((rta < 0) ? "resultado: \n NA" : "resultado: \n" + vlr);
+                    tvpor.setText((rta < 0) ? "resultado: \n -1" : "resultado: \n" + vlr);
                     try {
                         registro(String.valueOf(rta), vlr);
                     } catch (Exception e) {

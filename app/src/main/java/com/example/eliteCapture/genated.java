@@ -1,6 +1,5 @@
 package com.example.eliteCapture;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
@@ -8,7 +7,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -30,14 +28,13 @@ import com.example.eliteCapture.Config.Util.ControlViews.Cscanner;
 import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
 import com.example.eliteCapture.Config.Util.ControlViews.Cconteos;
 import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
-import com.example.eliteCapture.Config.Util.Dialogo;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
-import com.example.eliteCapture.Model.View.Interfaz.Respuestas;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.Model.View.iRespuestas;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -48,9 +45,9 @@ import static java.lang.String.valueOf;
 
 public class genated extends AppCompatActivity {
 
-    TextView EncabTitulo, contcc, scrollcomplete;
+    TextView EncabTitulo, contcc, scrollcomplete, txtCalificacion;
     LinearLayout linearBodypop, linearPrinc;
-    ScrollView scrollForm;
+    ScrollView scrollForm, scrollCalificacion;
     Dialog mypop, popcalificacion, popvalidar;
     Admin adm = null;
     iContenedor iCon = null;
@@ -59,6 +56,8 @@ public class genated extends AppCompatActivity {
     Button popSi, popNo;
 
     String path = null;
+    boolean camera;
+    String dataCamera;
 
     int contConsec = 1;
     ProcesoTab pro = null;
@@ -88,20 +87,26 @@ public class genated extends AppCompatActivity {
             iCon = new iContenedor(path);//intancia funcionalidad de la entidad contenedort
             contenedor = validarTemporal();//valida si hay datos temporales de los formularios
 
-
-            if (temporal) {
-                popvalidar.show();
-            } else {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                camera = bundle.getBoolean("camera");
+                dataCamera = bundle.getString("codigo");
+                ok = true;
                 crearform();
+            } else {
+                if (temporal) {
+                    popvalidar.show();
+                } else {
+                    crearform();
+                }
             }
+
 
             iCon.crearTemporal(contenedor);//crea el json temporal con los datos correspondientes
 
             EncabTitulo.setText(pro.getNombre_proceso());//asigna el nombre del encabezado
 
             contcc.setText("1");//inicializa el conteo de formularios guardados o enviados
-
-
         } catch (Exception ex) {
             Log.i("Error_onCreate", ex.toString());
         }
@@ -129,9 +134,10 @@ public class genated extends AppCompatActivity {
         EncabTitulo = findViewById(R.id.EncabTitulo);
         scrollForm = findViewById(R.id.scrollForm);
         contcc = findViewById(R.id.contcc);
-        ///editarEncab = findViewById(R.id.);
+        scrollCalificacion = findViewById(R.id.scrollCalificacion);
         linearBodypop = mypop.findViewById(R.id.linearbodypop);
         scrollcomplete = findViewById(R.id.complete);
+        txtCalificacion = popcalificacion.findViewById(R.id.txtCalificacion);
 
         Window window = mypop.getWindow();
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -179,7 +185,6 @@ public class genated extends AppCompatActivity {
             contenedor = conTemp;
             crearform();
         } catch (Exception ex) {
-
         }
         popvalidar.dismiss();
     }
@@ -195,27 +200,28 @@ public class genated extends AppCompatActivity {
                         linearBodypop.addView(ct.textview(genated.this, r.getId(), r.getPregunta()));
                         break;
                     case "ETN":
-                        Cetnum cen = new Cetnum(genated.this ,path ,r.getId() , r.getPregunta(),"H", r);
+                        Cetnum cen = new Cetnum(genated.this, path, r.getId(), r.getPregunta(), "H", r);
                         linearBodypop.addView(cen.tnumerico());
                         break;
                     case "ETA":
-                        Cetalf cal = new Cetalf(genated.this ,path ,r.getId() , r.getPregunta(),"H", r);
+                        Cetalf cal = new Cetalf(genated.this, path, r.getId(), r.getPregunta(), "H", r);
                         linearBodypop.addView(cal.talfanumerico());
                         break;
                     case "CBX":
-                        Cdesplegable cd = new Cdesplegable(genated.this,path , r.getId(), r.getPregunta(), r.getDesplegable(),"H", r);
+                        Cdesplegable cd = new Cdesplegable(genated.this, path, r.getId(), r.getPregunta(), r.getDesplegable(), "H", r);
                         linearBodypop.addView(cd.desplegable());
                         break;
                     case "FIL":
-                        Cfiltro cf = new Cfiltro(genated.this,path , r.getId(), r.getPregunta(), r.getDesplegable(),"H", r);
+                        Cfiltro cf = new Cfiltro(genated.this, path, r.getId(), r.getPregunta(), r.getDesplegable(), "H", r);
                         linearBodypop.addView(cf.filtro());
                         break;
                     case "SCA":
-                        Cscanner cs = new Cscanner(genated.this, r.getId(), r.getPregunta());
+                        Log.i("vcampo","data "+r.getRespuesta());
+                        Cscanner cs = new Cscanner(genated.this, path, r.getId(), r.getPregunta(), "H", r, (dataCamera != null ? dataCamera : ""));
                         linearBodypop.addView(cs.scanner());
                         break;
                     case "AUT":
-                        CfilAuto ca = new CfilAuto(genated.this, r.getId(), r.getPregunta(), r.getDesplegable());
+                        CfilAuto ca = new CfilAuto(genated.this, path , r.getId(), r.getPregunta(),"H", r.getDesplegable(), r);
                         linearBodypop.addView(ca.autocompletado());
                         break;
                     default:
@@ -239,7 +245,6 @@ public class genated extends AppCompatActivity {
 
             Log.i("Error_Crs", "" + new iRespuestas().json(r));
 
-
             switch (r.getTipo()) {
                 case "RS":
                     Cconteos cc = new Cconteos(genated.this, path, "Q", r);
@@ -256,7 +261,12 @@ public class genated extends AppCompatActivity {
 
     //CALIFICACIÓN POP
     public void onCalificar(View v) {
-        popcalificacion.show();
+        try {
+            txtCalificacion.setText("" + iCon.calcular(iCon.optenerTemporal()) + "%");
+            popcalificacion.show();
+        } catch (Exception ex) {
+            Log.i("onCalificar", "" + ex.toString());
+        }
     }
 
     // metodo para extraer del SharedPreferences el id del proceso
@@ -302,6 +312,13 @@ public class genated extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void eliminarHijos() {
+        if (linearPrinc.getChildCount() > 0) {
+            linearPrinc.removeAllViews();
+        }
+    }
+
+
     //trastear estos datos------------------------------------------------------------------------------
     //trastear estos datos------------------------------------------------------------------------------
     //trastear estos datos------------------------------------------------------------------------------
@@ -318,12 +335,6 @@ public class genated extends AppCompatActivity {
         }
         if (Integer.parseInt(contcc.getText().toString()) == 5) {
             contcc.setTextColor(Color.parseColor("#ec7063"));
-        }
-    }
-
-    public void eliminarHijos() {
-        if (linearPrinc.getChildCount() > 0) {
-            linearPrinc.removeAllViews();
         }
     }
 

@@ -11,11 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
+import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
+import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
 import java.util.ArrayList;
@@ -26,17 +29,23 @@ public class CfilAuto {
     ControlGnr Cgnr;
 
     private Context context;
+    private String path;
     private Long id;
     private String contenido;
+    private String ubicacion;
     private List<DesplegableTab> desplegable;
+    private RespuestasTab r;
 
     View ControlView;
 
-    public CfilAuto(Context context, Long id, String contenido, List<DesplegableTab> desplegable) {
+    public CfilAuto(Context context, String path, Long id, String contenido, String ubicacion, List<DesplegableTab> desplegable, RespuestasTab r) {
         this.context = context;
+        this.path = path;
         this.id = id;
         this.contenido = contenido;
+        this.ubicacion = ubicacion;
         this.desplegable = desplegable;
+        this.r = r;
     }
 
     public View autocompletado() throws Exception {
@@ -49,10 +58,12 @@ public class CfilAuto {
         tvp.setTypeface(null, Typeface.BOLD);
         tvp.setLayoutParams(medidas(1));
 
+
         AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(context);
         ArrayAdapter<String> autoArray = new ArrayAdapter<>(context, R.layout.auto_complete_personal, soloOpciones(desplegable));
         autoCompleteTextView.setAdapter(autoArray);
         autoCompleteTextView.setHint(contenido);
+        autoCompleteTextView.setText((r.getRespuesta() != null ? r.getRespuesta() : ""));
         autoCompleteTextView.setTextSize(15);
         autoCompleteTextView.setLayoutParams(medidas(1));
         autoCompleteTextView.setBackgroundColor(Color.parseColor("#E5E7E9"));
@@ -66,9 +77,16 @@ public class CfilAuto {
 
         FunAuto(autoCompleteTextView, tvp);
 
+        String resultado = Buscar(autoCompleteTextView.getText().toString(), desplegable);
+
+        if (!resultado.isEmpty()) {
+            tvp.setText("Resultado : " + resultado);
+            tvp.setTextColor(Color.parseColor("#58d68d"));
+            Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
+        } else {}
+
         return ControlView;
     }
-
 
     public ArrayList soloOpciones(List<DesplegableTab> opcion) {
         ArrayList<String> opc = new ArrayList<>();
@@ -80,7 +98,7 @@ public class CfilAuto {
     }
 
     //funcionalidad del auto completado
-    public void FunAuto(final AutoCompleteTextView etdauto, final TextView tdp) {
+    public void FunAuto(final AutoCompleteTextView etdauto, final TextView tvp) {
 
         etdauto.addTextChangedListener(new TextWatcher() {
             @Override
@@ -94,20 +112,22 @@ public class CfilAuto {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    for (DesplegableTab ds : desplegable) {
-                        if (etdauto.getText().toString().equals(ds.getOpcion())) {
-                            tdp.setText("Resultados :   " + ds.getCodigo());
-                            tdp.setTextColor(Color.parseColor("#58d68d"));
-                        } else {
-                        }
-                    }
+                    String resultado = Buscar(etdauto.getText().toString(), desplegable);
+
+                    if (!resultado.isEmpty()) {
+                        tvp.setText("Resultado : " + resultado);
+                        tvp.setTextColor(Color.parseColor("#58d68d"));
+                        Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
+
+                        registro(etdauto.getText().toString(),"");
+                    } else {}
                 } catch (Exception ex) {
+                    Toast.makeText(context, "" + ex.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
-
 
     public LinearLayout.LayoutParams medidas(double med) {
 
@@ -118,5 +138,21 @@ public class CfilAuto {
         llparams.setMargins(5, 10, 5, 20);
 
         return llparams;
+    }
+
+    //funcion de registro en el tempóral
+    public void registro(String rta, String valor) throws Exception {
+        iContenedor conTemp = new iContenedor(path);
+        conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
+    }
+
+    //funcion de la busqueda
+    public String Buscar(String data, List<DesplegableTab> desplegable) {
+        for (DesplegableTab desp : desplegable) {
+            if (desp.getOpcion().equals(data)) {
+                return desp.getCodigo();
+            }
+        }
+        return "";
     }
 }

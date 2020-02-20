@@ -73,25 +73,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="5sp">
-
-                <LinearLayout
-                    android:id="@+id/linearbodycalipop"
-                    android:layout_width="fill_parent"
-                    android:layout_height="200sp"
-                    android:orientation="vertical">
-                </LinearLayout>
-
-            </ScrollView>
         </LinearLayout>
-
-
-
-
     </LinearLayout>
-
-
 </LinearLayout>

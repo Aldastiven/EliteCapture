@@ -14,7 +14,10 @@ import android.widget.Toast;
 
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
+import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
+import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +28,22 @@ public class Cfiltro {
     ControlGnr Cgnr = null;
 
     private Context context;
+    private String path;
     private Long id;
     private String contenido;
     private List<DesplegableTab> desplegable;
+    private String ubicacion;
+    private RespuestasTab r;
 
-    public Cfiltro(Context context, Long id, String contenido, List<DesplegableTab> desplegable) {
+    public Cfiltro(Context context, String path, Long id, String contenido, List<DesplegableTab> desplegable, String ubicacion, RespuestasTab r) {
         this.context = context;
+        this.path = path;
         this.id = id;
         this.contenido = contenido;
         this.desplegable = desplegable;
+        this.ubicacion = ubicacion;
+        this.r = r;
     }
-
 
     //metodo que crea dinamiamente el control del filtro
     public View filtro() {
@@ -49,6 +57,7 @@ public class Cfiltro {
         tv.setTypeface(null, Typeface.BOLD);
 
         final EditText edt = new EditText(context);
+        edt.setText((r.getRespuesta() != null ? r.getRespuesta() : ""));
         edt.setHint("" + contenido);
         edt.setHintTextColor(Color.parseColor("#626567"));
         edt.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -71,8 +80,19 @@ public class Cfiltro {
 
         Funfiltro(btn, edt, tv, desplegable);
 
+        String resultado = Buscar(edt.getText().toString(), desplegable);
+
+        if (!resultado.isEmpty()) {
+            tv.setText("Resultado : " + resultado);
+            tv.setTextColor(Color.parseColor("#58d68d"));
+            Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
+        } else {
+            edt.setText("");
+        }
+
         return ControlView;
     }
+
 
 
     //funcion del boton
@@ -81,10 +101,10 @@ public class Cfiltro {
             @Override
             public void onClick(View view) {
                 String resultado = Buscar(edt.getText().toString(), desplegable);
-                Log.i("FIL","FIL "+resultado);
+                Log.i("FIL", "FIL " + resultado);
 
                 if (!resultado.isEmpty()) {
-                    tv.setText("Resultado : "+resultado);
+                    tv.setText("Resultado : " + resultado);
                     tv.setTextColor(Color.parseColor("#58d68d"));
                     Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
                 } else {
@@ -93,9 +113,14 @@ public class Cfiltro {
                     Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainerred);
                 }
 
+                try {
+                    registro(edt.getText().toString(), "");
+                } catch (Exception e) {
+                }
             }
         });
     }
+
 
     //medidas para el boton y el campo de busqueda
     public LinearLayout.LayoutParams medidas(double med) {
@@ -110,14 +135,18 @@ public class Cfiltro {
 
     //funcion de la busqueda
     public String Buscar(String data, List<DesplegableTab> desplegable) {
-        String datareturn="";
         for (DesplegableTab desp : desplegable) {
             if (desp.getCodigo().equals(data)) {
-                datareturn = desp.getOpcion();
+                return desp.getOpcion();
             }
-            return datareturn;
         }
-        return datareturn;
+        return "";
+    }
+
+    //funcion de registro en el tempóral
+    public void registro(String rta, String valor) throws Exception {
+        iContenedor conTemp = new iContenedor(path);
+        conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
     }
 
 }

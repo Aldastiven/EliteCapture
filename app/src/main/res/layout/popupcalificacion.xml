@@ -1,75 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#96000000"
     android:orientation="vertical"
-    android:weightSum="10"
-    android:background="#96000000">
-
+    android:weightSum="10">
 
     <LinearLayout
+        android:id="@+id/linearCal"
         android:layout_width="match_parent"
-        android:layout_height="0sp"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
         android:orientation="vertical"
-        android:layout_gravity="center_vertical"
-        android:background="@drawable/borderpoptop"
-        android:layout_weight="10">
+        android:paddingHorizontal="20sp">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal">
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="5sp"
+            android:paddingVertical="10sp"
+            android:text="CALIFICACIÓN"
+            android:textAlignment="center"
+            android:textColor="#66bb6a"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20sp"
+            android:paddingHorizontal="5sp"
+            android:paddingVertical="10sp"
+            android:text="tu calificacion fue de :"
+            android:textAlignment="center"
+            android:textColor="#757575"
+            android:textSize="20sp" />
+
+        <ScrollView
+            android:id="@+id/scrollCalificacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="5sp">
 
             <LinearLayout
+                android:id="@+id/linearCalificacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_gravity="center_horizontal">
 
                 <TextView
+                    android:id="@+id/txtCalificacion"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:text="CALIFICACIÓN"
+                    android:layout_height="match_parent"
+                    android:text=""
                     android:textColor="#66bb6a"
-                    android:textSize="20sp"
+                    android:textSize="60sp"
                     android:textStyle="bold"
-                    android:paddingVertical="10sp"
-                    android:paddingHorizontal="5sp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:text="tu calificacion fue de :"
-                    android:textColor="#757575"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="20sp"
-                    android:paddingVertical="10sp"
-                    android:paddingHorizontal="5sp"/>
+                    android:layout_marginTop="20sp"/>
 
             </LinearLayout>
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="5sp">
-
-                <LinearLayout
-                    android:id="@+id/linearbodycalipop"
-                    android:layout_width="fill_parent"
-                    android:layout_height="200sp"
-                    android:orientation="vertical">
-                </LinearLayout>
-
-            </ScrollView>
-        </LinearLayout>
-
-
-
-
+        </ScrollView>
     </LinearLayout>
-
-
 </LinearLayout>
