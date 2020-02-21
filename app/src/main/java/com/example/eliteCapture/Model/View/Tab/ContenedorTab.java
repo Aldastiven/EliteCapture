@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ContenedorTab {
 
-    private static int consecutivo;
+    private int consecutivo;
     private String fecha;
     private int idProceso;
     private List<RespuestasTab> header;
@@ -17,7 +17,7 @@ public class ContenedorTab {
 
     public ContenedorTab(int idProceso, List<RespuestasTab> header, List<RespuestasTab> questions, List<RespuestasTab> footer, int idUsuario) {
         this.idProceso = idProceso;
-        this.fecha = fechaString();
+        this.fecha = "";
         this.header = header;
         this.questions = questions;
         this.footer = footer;
@@ -25,12 +25,13 @@ public class ContenedorTab {
         this.estado = 0;
     }
 
-    public static int getConsecutivo() {
+
+    public int getConsecutivo() {
         return consecutivo;
     }
 
-    public static void setConsecutivo(int consecutivo) {
-        ContenedorTab.consecutivo = consecutivo;
+    public void setConsecutivo(int consecutivo) {
+        this.consecutivo = consecutivo;
     }
 
     public int getIdProceso() {
@@ -45,7 +46,11 @@ public class ContenedorTab {
         return fecha;
     }
 
-    private String fechaString() {
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String fechaString() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(new Date());
     }

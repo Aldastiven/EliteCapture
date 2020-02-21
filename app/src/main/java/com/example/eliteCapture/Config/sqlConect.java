@@ -18,9 +18,19 @@ public abstract class sqlConect {
     String pass = "Inventarios2016*";
     */
 
-    String url = "jdbc:jtds:sqlserver://10.50.1.120;databaseName=Formularios";
+    //Variables de conexion.
+    String server = "10.50.1.120";
+    String db = "Formularios";
     String pass = "4dm1nPr0c";
     String user = "sa";
+    // Tiempo de espera en  segundos
+    int socketTimeout = 1;
+
+    //Creacion de cadena de  de conexion.
+    String ConnectionURL = "jdbc:jtds:sqlserver://" + server + "/" + db
+            + ";user=" + user
+            + ";password=" + pass + ";"
+            + ";socketTimeout=" + socketTimeout + ";";
 
 
     public Connection getConexion() {
@@ -30,7 +40,7 @@ public abstract class sqlConect {
             DriverManager.registerDriver(new net.sourceforge.jtds.jdbc.Driver());
             //Class.forName("net.sourceforge.jtds.jdbc.Driver");
             Log.i("CONEXION", "nos conectamos");
-            return DriverManager.getConnection(url, user, pass);
+            return DriverManager.getConnection(ConnectionURL);
 
 
         } catch (Exception e) {

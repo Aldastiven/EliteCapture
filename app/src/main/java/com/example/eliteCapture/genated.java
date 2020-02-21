@@ -46,6 +46,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.valueOf;
 
@@ -122,12 +123,24 @@ public class genated extends AppCompatActivity {
 
     public void crearform() {
         try {
-            CrearHeader(contenedor.getHeader());//crea los elemtos del header y pasa datos correspondientes
-            CrearForm(contenedor.getQuestions());//crea los elemtos del body (formulario) y pasa datos correspondientes
-            mypop.show();
+            CrearEncabezado();
+            CrearCuerpo();
         } catch (Exception ex) {
             Toast.makeText(this, "exc crearform" + ex.toString(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void CrearEncabezado() throws Exception {
+        CrearHeader(contenedor.getHeader());//crea los elemtos del header y pasa datos correspondientes
+
+    }
+
+    public void CrearCuerpo() throws Exception {
+        CrearForm(contenedor.getQuestions());//crea los elemtos del body (formulario) y pasa datos correspondientes
+        if (false) {
+            CrearForm(contenedor.getFooter());//crea los elemtos del body (formulario) y pasa datos correspondientes
+        }
+        mypop.show();
     }
 
     //INSTANCIA CONTROLES VIEWS
@@ -305,7 +318,6 @@ public class genated extends AppCompatActivity {
         mypop.dismiss();
     }
 
-
     //SI OPRIME EL BOTON DE RETROCESO
     public void onBackPressed() {
         Intent i = new Intent(this, Index.class);
@@ -317,55 +329,58 @@ public class genated extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void eliminarHijos() {
+    public void killChildrens(ContenedorTab temporal) {
         if (linearPrinc.getChildCount() > 0) {
             linearPrinc.removeAllViews();
+            try {
+                CrearCuerpo();
+                iCon.crearTemporal(new ContenedorTab(
+                        pro.getCodigo_proceso(),
+                        temporal.getHeader(),
+                        contenedor.getQuestions(),
+                        contenedor.getFooter(),
+                        temporal.getIdUsuario()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
-
 
     //SUBIR DATOS DEL FORMULARIO
     public void UpData(View v) {
+        ContenedorTab nuevo = iCon.optenerTemporal();
+        Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo);
+
+        boolean full = true;
+        String[] area = {"\nEncabezado: ", "\n Preguntas: ", "\n Pie: "};
+        String vacios = "";
+
         try {
-            ContenedorTab cc = iCon.optenerTemporal();
-            iEnvio iE = new iEnvio(path, new CargaDeDatos().CargaDeDatos());
-            envioTab eT = new envioTab();
 
-            for (RespuestasTab rr : cc.getHeader()) {
-                Toast.makeText(this, ""+cc.getFecha(), Toast.LENGTH_SHORT).show();
-                eT.setFecha(cc.getFecha());
-                eT.setIdProceso((long) cc.getIdProceso());
-                eT.setIdDetalle(rr.getId());
-                eT.setRespuesta(rr.getRespuesta());
-                eT.setPorcentaje(rr.getPonderado());
-                eT.setTerminal(getPhoneName());
-                eT.setIdUsuario(getcodUsuario());
-                eT.setConsecutivoJson(rr.getIdPregunta().intValue());
-                Toast.makeText(this, ""+iE.Record(eT), Toast.LENGTH_SHORT).show();
+            for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
+                Log.i("Enviar_Array", "clave=" + entry.getKey() + ", valor=" + entry.getValue());
+                if (entry.getValue().size() > 0) {
+                    vacios += area[entry.getKey()] + entry.getValue().toString();
+                    full = false;
+                }
             }
 
-            for (RespuestasTab rr : cc.getQuestions()) {
-                Toast.makeText(this, ""+cc.getFecha(), Toast.LENGTH_SHORT).show();
-                eT.setFecha(cc.getFecha());
-                eT.setIdProceso((long) cc.getIdProceso());
-                eT.setIdDetalle(rr.getId());
-                eT.setRespuesta(rr.getRespuesta());
-                eT.setPorcentaje(rr.getPonderado());
-                eT.setTerminal(getPhoneName());
-                eT.setIdUsuario(getcodUsuario());
-                eT.setConsecutivoJson(rr.getIdPregunta().intValue());
-                Toast.makeText(this, ""+iE.Record(eT), Toast.LENGTH_SHORT).show();
+            if (full) {
+                iCon.insert(nuevo);
+                killChildrens(nuevo);
+                if (iCon.enviar()) {
+                    Toast.makeText(this, "Insertado con exito!" + vacios, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Agregado a local" + vacios, Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(this, "tienes campos vacios: " + vacios, Toast.LENGTH_LONG).show();
             }
 
-        } catch (Exception ex) {
-            Toast.makeText(this, "" + ex.toString(), Toast.LENGTH_SHORT).show();
-        }
-    }
+        } catch (Exception e) {
 
-    protected class CargaDeDatos extends sqlConect {
-        public Connection CargaDeDatos() {
-            Connection cn = getConexion();
-            return cn;
+            Log.i("Enviar_error", e.toString());
+
         }
     }
 }
