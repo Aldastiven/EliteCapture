@@ -85,7 +85,7 @@ public class Cdesplegable {
 
             iDesplegable iDesp = new iDesplegable(null, path);
             iDesp.nombre = opcion;
-
+            opc.add("Selecciona... ");
             for (DesplegableTab des : iDesp.all()) {
                 opc.add(des.getOpcion());
             }

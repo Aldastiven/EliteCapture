@@ -32,11 +32,14 @@ import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
+import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.Data.Tab.envioTab;
 import com.example.eliteCapture.Model.Data.iEnvio;
 import com.example.eliteCapture.Model.View.Interfaz.Contenedor;
+import com.example.eliteCapture.Model.View.Tab.ContadorTab;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
+import com.example.eliteCapture.Model.View.iContador;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.Model.View.iRespuestas;
 
@@ -68,6 +71,7 @@ public class genated extends AppCompatActivity {
 
     int contConsec = 1;
     ProcesoTab pro = null;
+    UsuarioTab usu = null;
 
 
     public boolean ok, temporal; //retorna la respuesta de un formulario pendiente
@@ -92,7 +96,10 @@ public class genated extends AppCompatActivity {
             path = getExternalFilesDir(null) + File.separator; //path
             adm = new Admin(null, path);//administra la conexion de las entidades
             getcodProceso();//obtiene los datos del proceso
+            getcodUsuario();//obtiene los datos del usuario
+
             iCon = new iContenedor(path);//intancia funcionalidad de la entidad contenedort
+
             contenedor = validarTemporal();//valida si hay datos temporales de los formularios
 
             Bundle bundle = getIntent().getExtras();
@@ -113,8 +120,8 @@ public class genated extends AppCompatActivity {
             iCon.crearTemporal(contenedor);//crea el json temporal con los datos correspondientes
 
             EncabTitulo.setText(pro.getNombre_proceso());//asigna el nombre del encabezado
-
-            contcc.setText("1");//inicializa el conteo de formularios guardados o enviados
+            contConsec = new iContador(path).getCantidad(usu.getId_usuario(), pro.getCodigo_proceso()) + 1;
+            contcc.setText(String.valueOf(contConsec));//inicializa el conteo de formularios guardados o enviados
         } catch (Exception ex) {
             Log.i("Error_onCreate", ex.toString());
         }
@@ -174,16 +181,30 @@ public class genated extends AppCompatActivity {
                     return conTemp;
                 } else {
                     temporal = false;
-                    return iCon.generarContenedor(getcodUsuario(), adm.getDetalles().forDetalle(pro.getCodigo_proceso()));
+                    return iCon.generarContenedor(
+                            usu.getId_usuario(),
+                            getPhoneName(),
+                            adm.getDetalles().
+                                    forDetalle(pro.getCodigo_proceso()
+                                    )
+                    );
                 }
             }
 
-            return iCon.generarContenedor(getcodUsuario(), adm.getDetalles().forDetalle(pro.getCodigo_proceso()));
+            return iCon.generarContenedor(
+                    usu.getId_usuario(),
+                    getPhoneName(),
+                    adm.getDetalles()
+                            .forDetalle(pro.getCodigo_proceso()));
         } catch (Exception e) {
             Log.i("Contenedor_Error", e.toString());
             temporal = false;
         }
-        return iCon.generarContenedor(getcodUsuario(), adm.getDetalles().forDetalle(pro.getCodigo_proceso()));
+        return iCon.generarContenedor(
+                usu.getId_usuario(),
+                getPhoneName(),
+                adm.getDetalles()
+                        .forDetalle(pro.getCodigo_proceso()));
     }
 
     //REALIZA VALIDACION DEL POP (SI O NO EN FORMULARIO PENDIENTE)
@@ -201,7 +222,11 @@ public class genated extends AppCompatActivity {
         ok = false;
 
         try {
-            ContenedorTab conTemp = iCon.generarContenedor(getcodUsuario(), adm.getDetalles().forDetalle(pro.getCodigo_proceso()));
+            ContenedorTab conTemp = iCon.generarContenedor(
+                    usu.getId_usuario(),
+                    getPhoneName(),
+                    adm.getDetalles()
+                            .forDetalle(pro.getCodigo_proceso()));
             contenedor = conTemp;
             crearform();
         } catch (Exception ex) {
@@ -297,8 +322,13 @@ public class genated extends AppCompatActivity {
     }
 
     // metodo para extraer del SharedPreferences el id del usuario
-    public int getcodUsuario() {
-        return sp.getInt("codigo", 0);
+    public void getcodUsuario() {
+        usu = new Gson()
+                .fromJson(
+                        sp.getString("usuario", ""),
+                        new TypeToken<UsuarioTab>() {
+                        }.getType());
+
     }
 
     //METODOS PARA OBTENER DATOS
@@ -335,11 +365,14 @@ public class genated extends AppCompatActivity {
             try {
                 CrearCuerpo();
                 iCon.crearTemporal(new ContenedorTab(
-                        pro.getCodigo_proceso(),
-                        temporal.getHeader(),
-                        contenedor.getQuestions(),
-                        contenedor.getFooter(),
-                        temporal.getIdUsuario()));
+                                pro.getCodigo_proceso(),
+                                temporal.getHeader(),
+                                contenedor.getQuestions(),
+                                contenedor.getFooter(),
+                                temporal.getIdUsuario(),
+                                temporal.getTerminal()
+                        )
+                );
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -368,6 +401,10 @@ public class genated extends AppCompatActivity {
             if (full) {
                 iCon.insert(nuevo);
                 killChildrens(nuevo);
+
+                iContador contador = new iContador(path);
+                contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
+
                 if (iCon.enviar()) {
                     Toast.makeText(this, "Insertado con exito!" + vacios, Toast.LENGTH_LONG).show();
                 } else {

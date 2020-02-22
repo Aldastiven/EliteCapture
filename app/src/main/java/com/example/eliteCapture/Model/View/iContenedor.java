@@ -8,7 +8,6 @@ import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Interfaz.Contenedor;
-import com.example.eliteCapture.Model.View.Interfaz.Respuestas;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.Tab.DetalleTab;
@@ -21,7 +20,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +31,20 @@ import java.util.Map;
 public class iContenedor implements Contenedor {
     public static List<ContenedorTab> ct = new ArrayList<>();
     private String path = "";
+    private String nombre;
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
     public iContenedor(String path) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        nombre = sdf.format(new Date());
 
         this.path = path;
         try {
@@ -72,18 +85,20 @@ public class iContenedor implements Contenedor {
     @Override
     public boolean local() throws Exception {
         Log.i("Enviar_local", "Ingreso");
-        return new JsonAdmin().WriteJson(
-                path,
-                "registros",
-                new Gson().toJson(ct));
+        return new JsonAdmin()
+                .WriteJson(
+                        path,
+                        nombre,
+                        new Gson().toJson(ct));
     }
 
     @Override
     public List<ContenedorTab> all() throws Exception {
-        return new Gson().fromJson(
-                new JsonAdmin().ObtenerLista(path, "registros"),
-                new TypeToken<List<ContenedorTab>>() {
-                }.getType());
+        return new Gson()
+                .fromJson(
+                        new JsonAdmin().ObtenerLista(path, nombre),
+                        new TypeToken<List<ContenedorTab>>() {
+                        }.getType());
     }
 
     @Override
@@ -123,7 +138,7 @@ public class iContenedor implements Contenedor {
         return Float.parseFloat(format.format(calificacion / ponderado * 100));
     }
 
-    public ContenedorTab generarContenedor(int usuario, List<DetalleTab> formulario) throws Exception {
+    public ContenedorTab generarContenedor(int usuario, String terminal, List<DetalleTab> formulario) throws Exception {
         List<RespuestasTab> header = new ArrayList<>();
         List<RespuestasTab> questions = new ArrayList<>();
         List<RespuestasTab> footers = new ArrayList<>();
@@ -151,7 +166,8 @@ public class iContenedor implements Contenedor {
                 header,
                 questions,
                 footers,
-                usuario
+                usuario,
+                terminal
         );
     }
 
@@ -257,7 +273,6 @@ public class iContenedor implements Contenedor {
         return gson.toJson(o);
     }
 
-
     public boolean enviar() throws Exception {
 
         Log.i("Enviar_env", "Ingreso.");
@@ -308,7 +323,7 @@ public class iContenedor implements Contenedor {
             ps.setString(4, r.getRespuesta());
             ps.setString(5, r.getValor());
             ps.setFloat(6, r.getPonderado());
-            ps.setString(7, "Pruebas");
+            ps.setString(7, c.getTerminal());
             ps.setInt(8, c.getIdUsuario());
             ps.setInt(9, c.getConsecutivo());
             ps.addBatch();

@@ -12,19 +12,20 @@ public class ContenedorTab {
     private List<RespuestasTab> header;
     private List<RespuestasTab> questions;
     private List<RespuestasTab> footer;
+    private String terminal;
     private int idUsuario;
     private int estado;
 
-    public ContenedorTab(int idProceso, List<RespuestasTab> header, List<RespuestasTab> questions, List<RespuestasTab> footer, int idUsuario) {
+    public ContenedorTab(int idProceso, List<RespuestasTab> header, List<RespuestasTab> questions, List<RespuestasTab> footer, int idUsuario, String terminal) {
         this.idProceso = idProceso;
         this.fecha = "";
         this.header = header;
         this.questions = questions;
         this.footer = footer;
         this.idUsuario = idUsuario;
+        this.terminal = terminal;
         this.estado = 0;
     }
-
 
     public int getConsecutivo() {
         return consecutivo;
@@ -77,6 +78,14 @@ public class ContenedorTab {
 
     public void setFooter(List<RespuestasTab> footer) {
         this.footer = footer;
+    }
+
+    public String getTerminal() {
+        return terminal;
+    }
+
+    public void setTerminal(String terminal) {
+        this.terminal = terminal;
     }
 
     public int getIdUsuario() {

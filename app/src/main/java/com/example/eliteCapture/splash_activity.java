@@ -118,8 +118,8 @@ public class splash_activity extends AppCompatActivity {
 
 
         public CargaDeDatos(String path, Context context, TextView status) {
-                Connection cn = getConexion();
-            admin = new Admin(getConexion(), path);
+            Connection cn = getConexion();
+            admin = new Admin(cn, path);
             this.context = context;
             Status = status;
 
