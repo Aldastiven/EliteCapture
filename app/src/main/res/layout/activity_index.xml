@@ -31,7 +31,7 @@
             android:text="salir"
             android:textColor="#d98880"
             android:drawableEnd="@drawable/salir"
-            android:background="#ffffff"
+            style="?android:attr/borderlessButtonStyle"
             android:onClick="Salir"/>
 
     </LinearLayout>

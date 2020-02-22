@@ -36,6 +36,7 @@ public class Login extends AppCompatActivity {
     LinearLayout linearBox;
     TextView txtError;
     CheckBox checkusu;
+    String datacheck;
 
 
     @Override
@@ -63,7 +64,7 @@ public class Login extends AppCompatActivity {
             iUsuario iU = new iUsuario(null, path);
             iU.nombre = "Usuarios";
 
-            checkusu.setSelected(true);
+            checkusu.setChecked(false);
 
             recibirUsuario();
             PintarCheck();
@@ -86,12 +87,15 @@ public class Login extends AppCompatActivity {
                 SharedPreferences.Editor edit = sp.edit();
                 Log.i("Session:", admin.getUsuario().json(m));
                 edit.putString("usuario", admin.getUsuario().json(m));
-                edit.putInt("codigo",m.getPassword());
+                edit.putInt("codigo", m.getPassword());
+                edit.putString("check", "ok");
                 edit.commit();
                 edit.apply();
 
                 Intent intent = new Intent(this, Index.class);
                 startActivity(intent);
+
+                guardarUsuario();
 
             } else if (m == null) {
                 txtUser.setBackgroundResource(R.drawable.bordercontainerred);
@@ -130,6 +134,9 @@ public class Login extends AppCompatActivity {
             edit.putInt("passwordLogin", pass);
             edit.commit();
             edit.apply();
+
+
+
         } catch (Exception e) {
             Toast.makeText(this, "Error \n" + e.toString(), Toast.LENGTH_LONG).show();
         }
@@ -160,11 +167,12 @@ public class Login extends AppCompatActivity {
             final SharedPreferences.Editor edit = sp.edit();
 
             if (sp != null) {
-                Boolean datacheck = sp.getBoolean("check", false);
 
-                if (datacheck) {
+                datacheck = sp.getString("check", "");
+
+                if (datacheck.equals("ok")) {
                     checkusu.setChecked(true);
-                } else {
+                } else if (datacheck.equals("bad")) {
                     checkusu.setChecked(false);
                 }
             }
@@ -173,20 +181,25 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                    if (isChecked && txtUser != null) {
-
-
-                        edit.putBoolean("check", true);
+                    if (!isChecked) {
+                        edit.putString("check", "bad");
                         edit.commit();
                         edit.apply();
 
-                        guardarUsuario();
-                        Toast.makeText(getApplicationContext(), "Se guardo exitosamente tu usuario", Toast.LENGTH_SHORT).show();
-                    } else {
                         SharedPreferences.Editor edit = sp.edit();
                         edit.clear().commit();
                         edit.apply();
-                        Toast.makeText(getApplicationContext(), "Haz deselccionado la casilla", Toast.LENGTH_SHORT).show();
+
+                        txtError.setText("");
+                    }else {
+                        if(txtUser.getText().toString().isEmpty() || txtPass.getText().toString().isEmpty()){
+                            txtError.setText("¡ No se puede guardar tu usuario. \n asegurate de no tener campos vacios !");
+                            checkusu.setChecked(false);
+                            checkusu.setSelected(false);
+                            checkusu.setEnabled(true);
+                        }else{
+                            txtError.setText("");
+                        }
                     }
                 }
             });
