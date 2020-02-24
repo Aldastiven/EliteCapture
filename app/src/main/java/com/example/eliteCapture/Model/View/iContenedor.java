@@ -107,7 +107,7 @@ public class iContenedor implements Contenedor {
         return gson.toJson(o);
     }
 
-    public float calcular(ContenedorTab c) {
+    public float calcular(ContenedorTab c, boolean footer) {
         float ponderado = 0;
         float calificacion = 0;
 
@@ -120,7 +120,7 @@ public class iContenedor implements Contenedor {
             }
         }
 
-        if (c.getFooter().size() > 0) {
+        if (footer) {
             for (RespuestasTab respuesta : c.getFooter()) {
                 if (!respuesta.getValor().equals("-1")) {
                     ponderado += respuesta.getPonderado();
@@ -195,7 +195,7 @@ public class iContenedor implements Contenedor {
     }
 
     public void editarTemporal(String donde, int idPregunta, String respuesta, String valor) throws Exception {
-
+        Log.i("Footer", "Donde: " + donde + " id: " + idPregunta + " Rta: " + respuesta);
         ContenedorTab conTemp = new Gson().fromJson(new JsonAdmin().ObtenerLista(path, "temp"),
                 new TypeToken<ContenedorTab>() {
                 }.getType());
@@ -248,11 +248,13 @@ public class iContenedor implements Contenedor {
         return desp.all();
     }
 
-    public Map<Integer, List<Long>> validarVacios(ContenedorTab c) {
+    public Map<Integer, List<Long>> validarVacios(ContenedorTab c, boolean footer) {
         Map<Integer, List<Long>> retorno = new HashMap<Integer, List<Long>>();
         retorno.put(0, vacios(c.getHeader()));
         retorno.put(1, vacios(c.getQuestions()));
-        retorno.put(2, vacios(c.getFooter()));
+        if (footer) {
+            retorno.put(2, vacios(c.getFooter()));
+        }
 
         return retorno;
     }
