@@ -29,37 +29,37 @@ public class ControlGnr {
     }
 
     /*ORGANIZA LOS CONTROLES INTEGRADOS*/
-    public View Contenedor(){
+    public View Contenedor() {
 
         LinearLayout.LayoutParams llparamsTotal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
-        llparamsTotal.setMargins(0,0,0,10);
+        llparamsTotal.setMargins(0, 0, 0, 10);
 
         LinearLayout LLtotal = new LinearLayout(context);
         LLtotal.setLayoutParams(llparamsTotal);
         LLtotal.setWeightSum(2);
         LLtotal.setOrientation(LinearLayout.VERTICAL);
-        LLtotal.setPadding(8,15,8,12);
+        LLtotal.setPadding(8, 15, 8, 12);
         LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
         LLtotal.setBackgroundResource(R.drawable.bordercontainer);
 
         LLtotal.addView(Item());
 
-        switch (tiporescont){
+        switch (tiporescont) {
             case "hx2":
-                LLtotal.addView(hx2(pregunta,respuesta));
+                LLtotal.addView(hx2(pregunta, respuesta));
                 break;
             case "vx2":
-                LLtotal.addView(vx2(pregunta,respuesta));
+                LLtotal.addView(vx2(pregunta, respuesta));
                 break;
             case "hxbtn_izq":
                 LLtotal.addView(pregunta);
-                LLtotal.addView(hxbtn_izq(respuesta,btn));
+                LLtotal.addView(hxbtn_izq(respuesta, btn));
                 break;
             case "hxbtn_der":
                 LLtotal.addView(pregunta);
-                LLtotal.addView(hxbtn_der(respuesta,btn));
+                LLtotal.addView(hxbtn_der(respuesta, btn));
                 break;
         }
 
@@ -68,7 +68,7 @@ public class ControlGnr {
     }
 
     //CREA EL NUMERO DEL ITEM
-    public View Item(){
+    public View Item() {
         TextView tvItem = new TextView(context.getApplicationContext());
         tvItem.setText(String.valueOf(id.intValue()));
         tvItem.setVisibility(View.INVISIBLE);
@@ -78,12 +78,11 @@ public class ControlGnr {
     }
 
 
-
     //layout organizativo horizontal 2 elementos
     public LinearLayout hx2(View v1, View v2) {
         LinearLayout.LayoutParams llparamsPrincipal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        llparamsPrincipal.setMargins(2,5,2,5);
+        llparamsPrincipal.setMargins(2, 5, 2, 5);
 
         LinearLayout LLprincipal = new LinearLayout(context);
         LLprincipal.setLayoutParams(llparamsPrincipal);
@@ -103,7 +102,7 @@ public class ControlGnr {
     public LinearLayout vx2(View v1, View v2) {
         LinearLayout.LayoutParams llparamsPrincipal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        llparamsPrincipal.setMargins(2,5,2,5);
+        llparamsPrincipal.setMargins(2, 5, 2, 5);
 
         LinearLayout LLprincipal = new LinearLayout(context);
         LLprincipal.setLayoutParams(llparamsPrincipal);
@@ -120,7 +119,7 @@ public class ControlGnr {
     }
 
     //layout organizativo horizontal 2 elementos (view + boton hacia la izquierda)
-    public LinearLayout hxbtn_izq(View v1, View v2){
+    public LinearLayout hxbtn_izq(View v1, View v2) {
         LinearLayout.LayoutParams llparamsPrincipal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
@@ -138,7 +137,7 @@ public class ControlGnr {
     }
 
     //layout organizativo horizontal 2 elementos (view + boton hacia la derecha)
-    public LinearLayout hxbtn_der(View v1, View v2){
+    public LinearLayout hxbtn_der(View v1, View v2) {
         LinearLayout.LayoutParams llparamsPrincipal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
@@ -160,6 +159,7 @@ public class ControlGnr {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -168,6 +168,7 @@ public class ControlGnr {
     public View getViewtt() {
         return Viewtt;
     }
+
     public void setViewtt(View viewtt) {
         Viewtt = viewtt;
     }

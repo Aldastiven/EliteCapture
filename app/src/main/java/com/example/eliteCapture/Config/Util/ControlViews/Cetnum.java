@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -40,7 +41,7 @@ public class Cetnum {
     }
 
     //metodo que va crear el control de edittext numerico
-    public View tnumerico(){
+    public View tnumerico() {
 
         LinearLayout.LayoutParams llparams = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -57,8 +58,13 @@ public class Cetnum {
         tvp.setLayoutParams(llparams);
 
         final EditText etxtN = new EditText(context);
+
+        if (r.getReglas() != 0) {
+            etxtN.setFilters(new InputFilter[]{new InputFilter.LengthFilter(r.getReglas())});
+        }
+
         etxtN.setId(id.intValue());
-        etxtN.setText((r.getRespuesta()!=null ? r.getRespuesta() : ""));
+        etxtN.setText((r.getRespuesta() != null ? r.getRespuesta() : ""));
         etxtN.setTextSize(20);
         etxtN.setHint("NULL");
         etxtN.setHintTextColor(Color.TRANSPARENT);
@@ -71,22 +77,26 @@ public class Cetnum {
         etxtN.setBackgroundColor(Color.parseColor("#eeeeee"));
         etxtN.setSingleLine();
 
-        Cgnr = new ControlGnr(context,id,tvp,etxtN,null,"hx2");
+
+        Cgnr = new ControlGnr(context, id, tvp, etxtN, null, "hx2");
+
         ControlView = Cgnr.Contenedor();
 
         Funetn(etxtN);
 
-    return ControlView;
+        return ControlView;
     }
 
     //funcion del control
-    public void Funetn(final EditText etn){
+    public void Funetn(final EditText etn) {
         etn.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -94,7 +104,8 @@ public class Cetnum {
                 try {
                     String rta = etn.getText().toString();
                     registro(rta, null);
-                }catch (Exception ex){ }
+                } catch (Exception ex) {
+                }
             }
         });
     }

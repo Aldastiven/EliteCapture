@@ -31,6 +31,9 @@ public class Cdesplegable {
     private RespuestasTab r;
     View ControlView;
 
+
+    ArrayList<String> codigo = new ArrayList<>();
+
     ControlGnr Cgnr = null;
 
     //contructor
@@ -87,9 +90,9 @@ public class Cdesplegable {
 
             iDesplegable iDesp = new iDesplegable(null, path);
             iDesp.nombre = opcion;
-            opc.add("Selecciona");
             for (DesplegableTab des : iDesp.all()) {
                 opc.add(des.getOpcion());
+                codigo.add((des.getCodigo()));
             }
             return opc;
         } catch (Exception ex) {
@@ -106,10 +109,9 @@ public class Cdesplegable {
                 try {
                     String rta = spn.getItemAtPosition(position).toString();
                     if (spn.getSelectedItem() == "Selecciona") {
-                        Toast.makeText(context, "selecciona", Toast.LENGTH_SHORT).show();
                         registro("","");
                     } else {
-                        registro(rta,"");
+                        registro(rta,codigo.get(position));
                     }
                 } catch (Exception ex) {
                 }
