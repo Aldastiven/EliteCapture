@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -53,6 +54,11 @@ public class Cetalf {
         tvp.setLayoutParams(llparams);
 
         EditText etxtA = new EditText(context);
+
+        if (r.getReglas() != 0) {
+            etxtA.setFilters(new InputFilter[]{new InputFilter.LengthFilter(r.getReglas())});
+        }
+
         etxtA.setId(id.intValue());
         etxtA.setTextSize(20);
         etxtA.setHint("NULL");

@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +50,8 @@ public class Cfiltro {
     //metodo que crea dinamiamente el control del filtro
     public View filtro() {
 
+        Log.i("reglas","filtro: "+r.getReglas());
+
         final TextView tv = new TextView(context);
         tv.setId(id.intValue());
         tv.setText("Resultados :");
@@ -57,6 +61,11 @@ public class Cfiltro {
         tv.setTypeface(null, Typeface.BOLD);
 
         final EditText edt = new EditText(context);
+
+        if(r.getReglas()!=0) {
+            edt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(r.getReglas())});
+        }
+
         edt.setText((r.getRespuesta() != null ? r.getRespuesta() : ""));
         edt.setHint("" + contenido);
         edt.setHintTextColor(Color.parseColor("#626567"));
@@ -114,7 +123,7 @@ public class Cfiltro {
                 }
 
                 try {
-                    registro(edt.getText().toString(), "");
+                    registro(resultado, edt.getText().toString());
                 } catch (Exception e) {
                 }
             }

@@ -204,8 +204,8 @@ public class genated extends AppCompatActivity {
             if (conTemp != null) {
                 if (conTemp.getIdProceso() == pro.getCodigo_proceso()) {
 
-                    temporal = true;
-                    return conTemp;
+                temporal = true;
+                return conTemp;
 
                 } else {
                     temporal = false;

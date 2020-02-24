@@ -127,7 +127,7 @@ public class CfilAuto {
                         tvp.setTextColor(Color.parseColor("#58d68d"));
                         Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
 
-                        registro(etdauto.getText().toString(),"");
+                        registro(etdauto.getText().toString(),resultado);
                     } else {}
                 } catch (Exception ex) {
                     Toast.makeText(context, "" + ex.toString(), Toast.LENGTH_SHORT).show();
