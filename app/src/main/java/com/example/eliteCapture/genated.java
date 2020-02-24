@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -48,6 +49,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -177,8 +181,10 @@ public class genated extends AppCompatActivity {
         try {
             if (conTemp != null) {
                 if (conTemp.getIdProceso() == pro.getCodigo_proceso()) {
+
                     temporal = true;
                     return conTemp;
+
                 } else {
                     temporal = false;
                     return iCon.generarContenedor(
@@ -206,6 +212,7 @@ public class genated extends AppCompatActivity {
                 adm.getDetalles()
                         .forDetalle(pro.getCodigo_proceso()));
     }
+
 
     //REALIZA VALIDACION DEL POP (SI O NO EN FORMULARIO PENDIENTE)
     public void popSI(View v) {
@@ -306,8 +313,12 @@ public class genated extends AppCompatActivity {
     //CALIFICACIÓN POP
     public void onCalificar(View v) {
         try {
-            txtCalificacion.setText("" + iCon.calcular(iCon.optenerTemporal()) + "%");
-            popcalificacion.show();
+            if (!String.valueOf(iCon.calcular(iCon.optenerTemporal())).equals("NaN")) {
+                txtCalificacion.setText("" + iCon.calcular(iCon.optenerTemporal()) + "%");
+                popcalificacion.show();
+            } else {
+                Toast.makeText(this, "No se puede dar una calificación, \n por favor diligencia el formulario", Toast.LENGTH_SHORT).show();
+            }
         } catch (Exception ex) {
             Log.i("onCalificar", "" + ex.toString());
         }

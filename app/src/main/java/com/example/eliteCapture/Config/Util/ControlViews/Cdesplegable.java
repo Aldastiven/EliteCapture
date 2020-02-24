@@ -3,6 +3,7 @@ package com.example.eliteCapture.Config.Util.ControlViews;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -76,6 +77,7 @@ public class Cdesplegable {
 
         Funspinner(spinner);
 
+
         return ControlView;
     }
 
@@ -85,7 +87,7 @@ public class Cdesplegable {
 
             iDesplegable iDesp = new iDesplegable(null, path);
             iDesp.nombre = opcion;
-            opc.add("Selecciona... ");
+            opc.add("Selecciona");
             for (DesplegableTab des : iDesp.all()) {
                 opc.add(des.getOpcion());
             }
@@ -103,7 +105,12 @@ public class Cdesplegable {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     String rta = spn.getItemAtPosition(position).toString();
-                    registro(rta, "");
+                    if (spn.getSelectedItem() == "Selecciona") {
+                        Toast.makeText(context, "selecciona", Toast.LENGTH_SHORT).show();
+                        registro("","");
+                    } else {
+                        registro(rta,"");
+                    }
                 } catch (Exception ex) {
                 }
             }
