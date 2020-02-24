@@ -122,14 +122,18 @@ public class genated extends AppCompatActivity {
 
 
             iCon.crearTemporal(contenedor);//crea el json temporal con los datos correspondientes
-
-            EncabTitulo.setText(pro.getNombre_proceso());//asigna el nombre del encabezado
-            contConsec = new iContador(path).getCantidad(usu.getId_usuario(), pro.getCodigo_proceso()) + 1;
-            contcc.setText(String.valueOf(contConsec));//inicializa el conteo de formularios guardados o enviados
+            cargarContador();
         } catch (Exception ex) {
             Log.i("Error_onCreate", ex.toString());
         }
 
+    }
+
+    public void cargarContador() {
+
+        EncabTitulo.setText(pro.getNombre_proceso());//asigna el nombre del encabezado
+        contConsec = new iContador(path).getCantidad(usu.getId_usuario(), pro.getCodigo_proceso()) + 1;
+        contcc.setText(String.valueOf(contConsec));//inicializa el conteo de formularios guardados o enviados
     }
 
     public void crearform() {
@@ -212,7 +216,6 @@ public class genated extends AppCompatActivity {
                 adm.getDetalles()
                         .forDetalle(pro.getCodigo_proceso()));
     }
-
 
     //REALIZA VALIDACION DEL POP (SI O NO EN FORMULARIO PENDIENTE)
     public void popSI(View v) {
@@ -424,6 +427,7 @@ public class genated extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "tienes campos vacios: " + vacios, Toast.LENGTH_LONG).show();
             }
+            cargarContador();
 
         } catch (Exception e) {
 

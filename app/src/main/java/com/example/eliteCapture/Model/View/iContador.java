@@ -49,13 +49,20 @@ public class iContador implements Contador {
     }
 
     public String update(int usuario, int proceso) throws Exception {
+        boolean edito = false;
+
         try {
             ContadorTab c = contUsuario(usuario);
             for (ContadorTab.procesoTab p : c.getProcesos()) {
                 if (p.getProceso() == proceso) {
                     p.setCantidad(p.getCantidad() + 1);
+                    edito = true;
                 }
             }
+            if (!edito) {
+                c.addProcesos(proceso);
+            }
+
             ct.set(c.getId(), c);
             local();
 
