@@ -94,7 +94,7 @@ public class iUsuario implements Usuario {
                 rs.getString("Grupo1"),
                 rs.getString("Grupo2"),
                 rs.getString("Grupo3"),
-                convertir(rs.getString("procesos").split(",")));
+                (rs.getString("procesos") != null)? convertir(rs.getString("procesos").split(",")) : null);
     }
 
     public int[] convertir(String[] texto) {

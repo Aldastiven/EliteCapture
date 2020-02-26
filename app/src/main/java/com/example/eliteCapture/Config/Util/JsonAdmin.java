@@ -24,6 +24,7 @@ public class JsonAdmin {
             fos.close();
             ok = true;
         } catch (Exception e) {
+            Log.i("ErrorSplash_Usuario", e.toString());
             ok = false;
         }
         return ok;

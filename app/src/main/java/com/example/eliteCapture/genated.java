@@ -100,9 +100,8 @@ public class genated extends AppCompatActivity {
 
             path = getExternalFilesDir(null) + File.separator; //path
             adm = new Admin(null, path);//administra la conexion de las entidades
-            getcodProceso();//obtiene los datos del proceso
-            getcodUsuario();//obtiene los datos del usuario
-
+            getcodProceso(); //obtiene los datos del proceso
+            getcodUsuario(); //obtiene los datos del usuario
 
             iCon = new iContenedor(path);//intancia funcionalidad de la entidad contenedort
             contador = new iContador(path);
@@ -125,7 +124,6 @@ public class genated extends AppCompatActivity {
                     crearform();
                 }
             }
-
 
             iCon.crearTemporal(contenedor);//crea el json temporal con los datos correspondientes
 
@@ -432,7 +430,6 @@ public class genated extends AppCompatActivity {
             }
 
             if (full) {
-
 
                 iCon.insert(nuevo);
                 contador.update(usu.getId_usuario(), pro.getCodigo_proceso());

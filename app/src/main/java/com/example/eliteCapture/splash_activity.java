@@ -151,7 +151,7 @@ public class splash_activity extends AppCompatActivity {
                 admin.getUsuario().local();
                 msgStatus("Cargando...", "Datos de usuarios Cargado", 500);
             } catch (Exception ex) {
-                Log.i("Error", ex.toString());
+                Log.i("ErrorSplash_Usuario", ex.toString());
             }
         }
 
@@ -161,7 +161,7 @@ public class splash_activity extends AppCompatActivity {
                 admin.getProceso().local();
                 msgStatus("Cargando...", "Datos de procesos Cargado", 500);
             } catch (Exception ex) {
-                Log.i("Error", ex.toString());
+                Log.i("ErrorSplash", ex.toString());
             }
         }
 
@@ -171,7 +171,7 @@ public class splash_activity extends AppCompatActivity {
                 admin.getDetalles().local();
                 msgStatus("Cargando...", "Datos de Detalles Cargado", 1000);
             } catch (Exception ex) {
-                Log.i("Error", ex.toString());
+                Log.i("ErrorSplash", ex.toString());
             }
         }
 
@@ -187,7 +187,7 @@ public class splash_activity extends AppCompatActivity {
                 }
 
             } catch (Exception ex) {
-                Log.i("Error", ex.toString());
+                Log.i("ErrorSplash", ex.toString());
             }
         }
 
@@ -212,7 +212,7 @@ public class splash_activity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                int dur = 2500;
+                                int dur = 500;
                                 new Handler().postDelayed(new Runnable() {
                                     public void run() {
                                         txtStatus.setText(msgCompletado);

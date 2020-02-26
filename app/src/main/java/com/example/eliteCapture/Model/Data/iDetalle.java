@@ -37,7 +37,7 @@ public class iDetalle implements Detalle {
 			"      ,[reglas]\n" +
 			"      ,[tip]\n" +
 			"  FROM [Formularios].[dbo].[Procesos_Detalle]\n" +
-			"  ORDER BY [capitulo] , [item];";
+			"  ORDER BY [id_proceso], [capitulo] , [item];";
 
 	public iDetalle(Connection cn, String path) throws Exception {
 		this.cn = cn;

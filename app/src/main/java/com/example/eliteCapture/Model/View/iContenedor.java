@@ -115,8 +115,7 @@ public class iContenedor implements Contenedor {
             if (respuesta.getValor() != null && !respuesta.getValor().equals("-1")) {
                 ponderado += respuesta.getPonderado();
                 calificacion += Float.parseFloat(respuesta.getValor());
-                Log.i("calificar", "" + calificacion);
-                Log.i("calificar", "" + respuesta.getValor());
+                Log.i("calificar", respuesta.getId() + ") resp:" + respuesta.getValor() + " pon: " + respuesta.getPonderado() + " cal: " + calificacion + " ponTotal: " + ponderado);
             }
         }
 
