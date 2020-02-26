@@ -61,9 +61,10 @@ public class genated extends AppCompatActivity {
     String path = null;
     String dataCamera;
 
-    int contConsec = 1;
+    int contConsec = 0;
     ProcesoTab pro = null;
     UsuarioTab usu = null;
+    iContador contador = null;
 
     boolean camera;
     boolean inicial = false;
@@ -92,7 +93,12 @@ public class genated extends AppCompatActivity {
             getcodProceso();//obtiene los datos del proceso
             getcodUsuario();//obtiene los datos del usuario
 
+
             iCon = new iContenedor(path);//intancia funcionalidad de la entidad contenedort
+            contador = new iContador(path);
+
+            cargarContador();
+
 
             contenedor = validarTemporal();//valida si hay datos temporales de los formularios
 
@@ -112,7 +118,7 @@ public class genated extends AppCompatActivity {
 
 
             iCon.crearTemporal(contenedor);//crea el json temporal con los datos correspondientes
-            cargarContador();
+
         } catch (Exception ex) {
             Log.i("Error_onCreate", ex.toString());
         }
@@ -122,8 +128,20 @@ public class genated extends AppCompatActivity {
     public void cargarContador() {
 
         EncabTitulo.setText(pro.getNombre_proceso());//asigna el nombre del encabezado
-        contConsec = new iContador(path).getCantidad(usu.getId_usuario(), pro.getCodigo_proceso()) + 1;
+        contConsec = contador.getCantidad(usu.getId_usuario(), pro.getCodigo_proceso()) + 1;
         contcc.setText(String.valueOf(contConsec));//inicializa el conteo de formularios guardados o enviados
+        int regla = (pro.getPersonalizado5() != null) ? Integer.parseInt(pro.getPersonalizado5()) : 0;
+        validarFooter(contConsec, regla);
+    }
+
+    public void validarFooter(int contador, int regla) {
+        Log.i("Footer", "Contador: " + contador + " Regla: " + regla);
+        try {
+            footer = (regla != 0 && (contador % regla) == 0);
+
+        } catch (NumberFormatException en) {
+            footer = false;
+        }
     }
 
     public void crearform() {
@@ -141,9 +159,9 @@ public class genated extends AppCompatActivity {
     }
 
     public void CrearCuerpo() throws Exception {
-        CrearForm(contenedor.getQuestions());//crea los elemtos del body (formulario) y pasa datos correspondientes
-        if (false) {
-            CrearForm(contenedor.getFooter());//crea los elemtos del body (formulario) y pasa datos correspondientes
+        CrearForm(contenedor.getQuestions(), "Q");//crea los elemtos del body (formulario) y pasa datos correspondientes
+        if (footer) {
+            CrearForm(contenedor.getFooter(), "F");//crea los elemtos del body (formulario) y pasa datos correspondientes
         }
         mypop.show();
     }
@@ -288,7 +306,7 @@ public class genated extends AppCompatActivity {
     }
 
     //CREA CONTROLES DEL FORMULARIO
-    public void CrearForm(List<RespuestasTab> questions) throws Exception {
+    public void CrearForm(List<RespuestasTab> questions, String ubicacion) throws Exception {
         scrollForm.fullScroll(View.FOCUS_UP); //funcion que sube el scroll al inicio
 
         for (RespuestasTab r : questions) {
@@ -297,11 +315,11 @@ public class genated extends AppCompatActivity {
 
             switch (r.getTipo()) {
                 case "RS":
-                    Cconteos cc = new Cconteos(genated.this, path, "Q", r, (r.getRespuesta() != null ? true : false), inicial);
+                    Cconteos cc = new Cconteos(genated.this, path, "Q", r, (r.getRespuesta() != null), inicial);
                     linearPrinc.addView(cc.Cconteo());
                     break;
                 case "RB":
-                    CradioButton cb = new CradioButton(genated.this, path, "Q", r.getId(), r.getPregunta(), r.getPonderado(), r.getDesplegable(), r, (r.getRespuesta() != null ? true : false), inicial);
+                    CradioButton cb = new CradioButton(genated.this, path, "Q", r.getId(), r.getPregunta(), r.getPonderado(), r.getDesplegable(), r, (r.getRespuesta() != null), inicial);
                     linearPrinc.addView(cb.Tradiobtn());
                     break;
             }
@@ -311,8 +329,9 @@ public class genated extends AppCompatActivity {
     //CALIFICACIÓN POP
     public void onCalificar(View v) {
         try {
-            if (!String.valueOf(iCon.calcular(iCon.optenerTemporal())).equals("NaN")) {
-                txtCalificacion.setText("" + iCon.calcular(iCon.optenerTemporal()) + "%");
+            String cal = String.valueOf(iCon.calcular(iCon.optenerTemporal(), footer));
+            if (!cal.equals("NaN")) {
+                txtCalificacion.setText(cal + "%");
                 popcalificacion.show();
             } else {
                 Toast.makeText(this, "No se puede dar una calificación, \n por favor diligencia el formulario", Toast.LENGTH_SHORT).show();
@@ -400,7 +419,7 @@ public class genated extends AppCompatActivity {
     //SUBIR DATOS DEL FORMULARIO
     public void UpData(View v) {
         ContenedorTab nuevo = iCon.optenerTemporal();
-        Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo);
+        Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo, footer);
 
         boolean full = true;
         String[] area = {"\nEncabezado: ", "\n Preguntas: ", "\n Pie: "};
