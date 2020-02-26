@@ -29,6 +29,8 @@ public class Cdesplegable {
     private String opciones;
     private String ubicacion;
     private RespuestasTab r;
+    private Boolean vacio;
+    private Boolean inicial;
     View ControlView;
 
 
@@ -39,7 +41,7 @@ public class Cdesplegable {
     //contructor
 
 
-    public Cdesplegable(Context context, String path, Long id, String contenido, String opciones, String ubicacion, RespuestasTab r) {
+    public Cdesplegable(Context context, String path, Long id, String contenido, String opciones, String ubicacion, RespuestasTab r, Boolean vacio, Boolean inicial) {
         this.context = context;
         this.path = path;
         this.id = id;
@@ -47,6 +49,8 @@ public class Cdesplegable {
         this.opciones = opciones;
         this.ubicacion = ubicacion;
         this.r = r;
+        this.vacio = vacio;
+        this.inicial = inicial;
     }
 
     //metodo que crea el control desplegable y retorna view
@@ -76,7 +80,7 @@ public class Cdesplegable {
         spinner.setLayoutParams(llparams);
 
         Cgnr = new ControlGnr(context, id, tvp, spinner, null, "hx2");
-        ControlView = Cgnr.Contenedor();
+        ControlView = Cgnr.Contenedor(vacio,inicial);
 
         Funspinner(spinner);
 
@@ -90,6 +94,7 @@ public class Cdesplegable {
 
             iDesplegable iDesp = new iDesplegable(null, path);
             iDesp.nombre = opcion;
+            opc.add("Selecciona");
             for (DesplegableTab des : iDesp.all()) {
                 opc.add(des.getOpcion());
                 codigo.add((des.getCodigo()));
@@ -107,6 +112,7 @@ public class Cdesplegable {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
+                    Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
                     String rta = spn.getItemAtPosition(position).toString();
                     if (spn.getSelectedItem() == "Selecciona") {
                         registro("","");

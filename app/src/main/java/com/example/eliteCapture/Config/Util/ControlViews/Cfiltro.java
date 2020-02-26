@@ -36,8 +36,10 @@ public class Cfiltro {
     private String desplegable;
     private String ubicacion;
     private RespuestasTab r;
+    private Boolean vacio;
+    private Boolean inicial;
 
-    public Cfiltro(Context context, String path, Long id, String contenido, String desplegable, String ubicacion, RespuestasTab r) {
+    public Cfiltro(Context context, String path, Long id, String contenido, String desplegable, String ubicacion, RespuestasTab r, Boolean vacio, Boolean inicial) {
         this.context = context;
         this.path = path;
         this.id = id;
@@ -45,12 +47,25 @@ public class Cfiltro {
         this.desplegable = desplegable;
         this.ubicacion = ubicacion;
         this.r = r;
+        this.vacio = vacio;
+        this.inicial = inicial;
+    }
+
+    public Cfiltro(Context context, String path, Long id, String contenido, String desplegable, String ubicacion, RespuestasTab r, Boolean vacio) {
+        this.context = context;
+        this.path = path;
+        this.id = id;
+        this.contenido = contenido;
+        this.desplegable = desplegable;
+        this.ubicacion = ubicacion;
+        this.r = r;
+        this.vacio = vacio;
     }
 
     //metodo que crea dinamiamente el control del filtro
     public View filtro() {
 
-        Log.i("reglas","filtro: "+r.getReglas());
+        Log.i("pens","filtro: "+r.getValor());
 
         final TextView tv = new TextView(context);
         tv.setId(id.intValue());
@@ -66,7 +81,7 @@ public class Cfiltro {
             edt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(r.getReglas())});
         }
 
-        edt.setText((r.getRespuesta() != null ? r.getRespuesta() : ""));
+        edt.setText((r.getValor() != null ? r.getValor() : ""));
         edt.setHint("" + contenido);
         edt.setHintTextColor(Color.parseColor("#626567"));
         edt.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -85,7 +100,7 @@ public class Cfiltro {
         btn.setLayoutParams(medidas(1.5));
 
         Cgnr = new ControlGnr(context, id, tv, edt, btn, "hxbtn_izq");
-        ControlView = Cgnr.Contenedor();
+        ControlView = Cgnr.Contenedor(vacio, inicial);
 
         Funfiltro(btn, edt, tv, desplegable);
 

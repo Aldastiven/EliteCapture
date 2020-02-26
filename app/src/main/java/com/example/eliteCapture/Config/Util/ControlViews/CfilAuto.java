@@ -35,10 +35,13 @@ public class CfilAuto {
     private String ubicacion;
     private String desplegable;
     private RespuestasTab r;
+    private Boolean vacio;
+    private Boolean inicial;
+
 
     View ControlView;
 
-    public CfilAuto(Context context, String path, Long id, String contenido, String ubicacion, String desplegable, RespuestasTab r) {
+    public CfilAuto(Context context, String path, Long id, String contenido, String ubicacion, String desplegable, RespuestasTab r, Boolean vacio, Boolean inicial) {
         this.context = context;
         this.path = path;
         this.id = id;
@@ -46,6 +49,8 @@ public class CfilAuto {
         this.ubicacion = ubicacion;
         this.desplegable = desplegable;
         this.r = r;
+        this.vacio = vacio;
+        this.inicial = inicial;
     }
 
     public View autocompletado() throws Exception {
@@ -73,7 +78,7 @@ public class CfilAuto {
         autoCompleteTextView.setTypeface(null, Typeface.BOLD);
 
         Cgnr = new ControlGnr(context, id, tvp, autoCompleteTextView, null, "vx2");
-        ControlView = Cgnr.Contenedor();
+        ControlView = Cgnr.Contenedor(vacio,inicial);
 
         FunAuto(autoCompleteTextView, tvp);
 
@@ -120,6 +125,8 @@ public class CfilAuto {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
+                    Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
+
                     String resultado = Buscar(etdauto.getText().toString(), desplegable);
 
                     if (!resultado.isEmpty()) {

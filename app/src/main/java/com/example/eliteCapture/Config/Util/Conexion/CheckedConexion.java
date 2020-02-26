@@ -1,4 +1,4 @@
-package com.example.eliteCapture.Conexion;
+package com.example.eliteCapture.Config.Util.Conexion;
 
 import android.app.Activity;
 import android.content.Context;

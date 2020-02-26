@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
@@ -27,19 +28,19 @@ public class Cconteos {
     private String path;
     private String ubicacion;
     private RespuestasTab rt;
+    private boolean vacio;
+    private Boolean inicial;
 
     ControlGnr Cgnr;
 
-    public Cconteos(Context context, String path, String ubicacion, RespuestasTab rt) {
+    public Cconteos(Context context, String path, String ubicacion, RespuestasTab rt, boolean vacio, Boolean inicial) {
         this.context = context;
         this.path = path;
         this.ubicacion = ubicacion;
         this.rt = rt;
-
-        Log.i("Error_Crs", "Regla: " + rt.getReglas());
-
+        this.vacio = vacio;
+        this.inicial = inicial;
     }
-
 
     //metodo que crea el control del conteo
     public View Cconteo() {
@@ -70,7 +71,7 @@ public class Cconteos {
         tvpor.setLayoutParams(llparamsTextpo);
 
         Cgnr = new ControlGnr(context, rt.getId(), pp(tvp, tvpor), Cbotones(tvpor), null, "vx2");
-        ControlView = Cgnr.Contenedor();
+        ControlView = Cgnr.Contenedor(vacio, inicial);
 
         return ControlView;
     }
@@ -95,14 +96,14 @@ public class Cconteos {
         llbtn.setWeightSum(4);
         llbtn.setOrientation(LinearLayout.HORIZONTAL);
         llbtn.setVerticalGravity(Gravity.CENTER);
-        llbtn.setPadding(10, 10, 10, 10);
+        llbtn.setPadding(10, 0, 10, 0);
 
         LinearLayout.LayoutParams LLcmpweight = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LLcmpweight.weight = 3;
 
         final TextView tvr = new TextView(context);
-        tvr.setText((rt.getRespuesta() != null) ? rt.getRespuesta() : "-1");
-        Log.i("respuestaSR",""+rt.getRespuesta());
+        tvr.setText((rt.getRespuesta() == null) ? "-1" : rt.getRespuesta());
+        Log.i("respuestaSR", "" + rt.getRespuesta());
         tvr.setId(rt.getId().intValue());
         tvr.setTextSize(40);
         tvr.setTextColor(Color.parseColor("#5d6d7e"));
@@ -116,7 +117,7 @@ public class Cconteos {
         Button bntres = new Button(context);
         bntres.setId(rt.getId().intValue());
         bntres.setText("-");
-        bntres.setTextSize(30);
+        bntres.setTextSize(20);
         bntres.setTextColor(Color.parseColor("#ffffff"));
         bntres.setBackgroundResource(R.drawable.btnres);
         bntres.setLayoutParams(LLbtnweight);
@@ -124,7 +125,7 @@ public class Cconteos {
         Button bntsum = new Button(context);
         bntsum.setId(rt.getId().intValue());
         bntsum.setText("+");
-        bntsum.setTextSize(30);
+        bntsum.setTextSize(20);
         bntsum.setTextColor(Color.parseColor("#ffffff"));
         bntsum.setBackgroundResource(R.drawable.btnsum);
         bntsum.setLayoutParams(LLbtnweight);
@@ -134,6 +135,11 @@ public class Cconteos {
         llbtn.addView(bntsum);
 
         viewTotal = llbtn;
+        String data = tvr.getText().toString();
+        try {
+            registro(data, valor(Integer.parseInt(data)));
+        } catch (Exception ex) {
+        }
 
 
         bntsum.setOnClickListener(new View.OnClickListener() {
@@ -142,15 +148,16 @@ public class Cconteos {
                 int n = Integer.parseInt(tvr.getText().toString());
                 if (n < rt.getReglas()) {
                     int rta = n + 1;
-                    tvr.setText(valueOf(rta));
+                    String data =valueOf(rta);
+                    tvr.setText(data);
+
                     String vlr = valor(rta);
                     tvpor.setText((rta < 0) ? "resultado: \n NA" : "resultado: \n" + vlr);
                     try {
-                        registro(String.valueOf(rta), vlr);
+                        registro(data, vlr);
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
-
                 }
             }
         });
@@ -161,16 +168,19 @@ public class Cconteos {
                 int n = Integer.parseInt(tvr.getText().toString());
                 if (n > -1) {
                     int rta = n - 1;
-                    tvr.setText(valueOf(rta));
+                    String data =valueOf(rta);
+                    tvr.setText(data);
+
                     String vlr = valor(rta);
-                    tvpor.setText((rta < 0) ? "resultado: \n -1" : "resultado: \n" + vlr);
+                    tvpor.setText((rta < 0) ? "resultado: \n NA" : "resultado: \n" + vlr);
                     try {
-                        registro(String.valueOf(rta), vlr);
+                        registro(data, vlr);
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
                 }
             }
+
         });
 
         return viewTotal;
@@ -189,8 +199,7 @@ public class Cconteos {
     }
 
     public void registro(String rta, String valor) throws Exception {
-        iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor);
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, (valor.equals("-1") ? "NA" : valor));
     }
 
     //retorna el layout del encabezado pregunta porcentaje

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
+import com.example.eliteCapture.R;
 
 public class Cetalf {
 
@@ -22,18 +23,23 @@ public class Cetalf {
     private String contenido;
     private String ubicacion;
     private RespuestasTab r;
+    private Boolean vacio;
+    private Boolean inicial;
+
 
     ControlGnr Cgnr;
 
     View ControlView;
 
-    public Cetalf(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r) {
+    public Cetalf(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r, Boolean vacio, Boolean inicial) {
         this.context = context;
         this.path = path;
         this.id = id;
         this.contenido = contenido;
         this.ubicacion = ubicacion;
         this.r = r;
+        this.vacio = vacio;
+        this.inicial = inicial;
     }
 
     //metodo que crea el control edittext alfanumerico
@@ -73,7 +79,7 @@ public class Cetalf {
         etxtA.setSingleLine();
 
         Cgnr = new ControlGnr(context,id,tvp,etxtA,null,"hx2");
-        ControlView = Cgnr.Contenedor();
+        ControlView = Cgnr.Contenedor(vacio,inicial);
 
         Funeta(etxtA);
 
@@ -92,6 +98,7 @@ public class Cetalf {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
+                    Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
                     String rta = eta.getText().toString();
                     registro(rta, "");
                 }catch (Exception ex){}

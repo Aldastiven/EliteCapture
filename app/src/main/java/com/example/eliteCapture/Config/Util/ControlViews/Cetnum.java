@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
+import com.example.eliteCapture.R;
 
 import java.sql.SQLTransactionRollbackException;
 import java.util.ArrayList;
@@ -26,18 +27,33 @@ public class Cetnum {
     private String contenido;
     private String ubicacion;
     private RespuestasTab r;
+    private Boolean vacio;
+    private Boolean inicial;
+
 
     View ControlView;
 
     ControlGnr Cgnr;
 
-    public Cetnum(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r) {
+    public Cetnum(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r, Boolean vacio, Boolean inicial) {
         this.context = context;
         this.path = path;
         this.id = id;
         this.contenido = contenido;
         this.ubicacion = ubicacion;
         this.r = r;
+        this.vacio = vacio;
+        this.inicial = inicial;
+    }
+
+    public Cetnum(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r, Boolean vacio) {
+        this.context = context;
+        this.path = path;
+        this.id = id;
+        this.contenido = contenido;
+        this.ubicacion = ubicacion;
+        this.r = r;
+        this.vacio = vacio;
     }
 
     //metodo que va crear el control de edittext numerico
@@ -80,7 +96,7 @@ public class Cetnum {
 
         Cgnr = new ControlGnr(context, id, tvp, etxtN, null, "hx2");
 
-        ControlView = Cgnr.Contenedor();
+        ControlView = Cgnr.Contenedor(vacio, inicial);
 
         Funetn(etxtN);
 
@@ -102,6 +118,7 @@ public class Cetnum {
             public void afterTextChanged(Editable s) {
                 //Toast.makeText(context, ""+Cgnr.getId(), Toast.LENGTH_SHORT).show();
                 try {
+                    Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
                     String rta = etn.getText().toString();
                     registro(rta, null);
                 } catch (Exception ex) {

@@ -15,9 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.eliteCapture.Conexion.CheckedConexion;
+import com.example.eliteCapture.Config.Util.Conexion.CheckedConexion;
 import com.example.eliteCapture.Model.Data.Admin;
-import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iUsuario;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 
