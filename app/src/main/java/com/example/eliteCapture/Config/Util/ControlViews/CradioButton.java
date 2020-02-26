@@ -27,6 +27,8 @@ import java.util.List;
 public class CradioButton {
     View ControlView;
 
+    ControlGnr Cgnr = null;
+
     Context context;
     String path;
     String ubicacion;
@@ -35,8 +37,11 @@ public class CradioButton {
     float ponderado;
     String desplegable;
     RespuestasTab rt;
+    LinearLayout LLtotal;
+    private Boolean vacio;
+    private Boolean inicial;
 
-    public CradioButton(Context context, String path, String ubicacion, Long id, String pregunta, float ponderado, String desplegable, RespuestasTab rt) {
+    public CradioButton(Context context, String path, String ubicacion, Long id, String pregunta, float ponderado, String desplegable, RespuestasTab rt,Boolean vacio, Boolean inicial) {
         this.context = context;
         this.path = path;
         this.ubicacion = ubicacion;
@@ -45,6 +50,14 @@ public class CradioButton {
         this.ponderado = ponderado;
         this.desplegable = desplegable;
         this.rt = rt;
+        this.vacio = vacio;
+        this.inicial = inicial;
+    }
+
+
+
+    public CradioButton(Long id) {
+        this.id = id;
     }
 
     //crea el control del radio button y retorna el view
@@ -56,13 +69,20 @@ public class CradioButton {
 
         llparamsTotal.setMargins(0, 0, 0, 10);
 
-        LinearLayout LLtotal = new LinearLayout(context);
+        LLtotal = new LinearLayout(context);
         LLtotal.setLayoutParams(llparamsTotal);
         LLtotal.setWeightSum(2);
         LLtotal.setOrientation(LinearLayout.VERTICAL);
         LLtotal.setPadding(10, 30, 10, 12);
         LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
-        LLtotal.setBackgroundResource(R.drawable.bordercontainer);
+
+        if(vacio) {
+            LLtotal.setBackgroundResource(R.drawable.bordercontainer);
+        }else if(!vacio && inicial){
+            LLtotal.setBackgroundResource(R.drawable.bordercontainerred);
+        }else{
+            LLtotal.setBackgroundResource(R.drawable.bordercontainer);
+        }
 
         LinearLayout ll = new LinearLayout(context);
         RadioGroup rg = new RadioGroup(context);
@@ -97,7 +117,7 @@ public class CradioButton {
         tvp.setLayoutParams(llparamsText);
 
         final TextView tvpor = new TextView(context);
-        tvpor.setText((rt.getValor() != null) ? "Resultado: \n " + rt.getValor() : "Resultado: \n ");
+        tvpor.setText((rt.getValor() != null ? rt.getValor() : "resultado: \n NA"));
         tvpor.setTextColor(Color.parseColor("#979A9A"));
         tvpor.setBackgroundColor(Color.parseColor("#ffffff"));
         tvpor.setPadding(10, 10, 10, 10);
@@ -174,6 +194,9 @@ public class CradioButton {
             @Override
             public void onClick(View view) {
                 try {
+
+                    //Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
+
                     String rta;
                     String vlr;
                     switch (rb.getId()) {
@@ -223,7 +246,8 @@ public class CradioButton {
 
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor);
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, (valor.equals("-1") ? "NA" : valor));
     }
+
 
 }

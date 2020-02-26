@@ -31,13 +31,16 @@ public class Cscanner {
     private String ubicacion;
     private RespuestasTab r;
     private String camera;
+    private Boolean vacio;
+    private Boolean inicial;
+
 
     int ID;
 
     View controlView;
     ControlGnr Cgnr = null;
 
-    public Cscanner(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r, String camera) {
+    public Cscanner(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r, String camera, Boolean vacio, Boolean inicial) {
         this.context = context;
         this.path = path;
         this.id = id;
@@ -45,6 +48,8 @@ public class Cscanner {
         this.ubicacion = ubicacion;
         this.r = r;
         this.camera = camera;
+        this.vacio = vacio;
+        this.inicial = inicial;
     }
 
     //metodo que crea dinamicamente el contol scanner
@@ -80,7 +85,7 @@ public class Cscanner {
         ID = id.intValue();
 
         Cgnr = new ControlGnr(context, id, tv, edt, btn, "hxbtn_izq");
-        controlView = Cgnr.Contenedor();
+        controlView = Cgnr.Contenedor(vacio,inicial);
 
         StarCamera(btn);
 

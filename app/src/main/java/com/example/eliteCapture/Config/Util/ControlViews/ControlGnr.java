@@ -2,10 +2,13 @@ package com.example.eliteCapture.Config.Util.ControlViews;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.eliteCapture.R;
 
@@ -19,6 +22,8 @@ public class ControlGnr {
     private String tiporescont;
     private View Viewtt;
 
+    LinearLayout LLtotal;
+
     public ControlGnr(Context context, Long id, View pregunta, View respuesta, View btn, String tiporescont) {
         this.context = context;
         this.id = id;
@@ -28,21 +33,32 @@ public class ControlGnr {
         this.tiporescont = tiporescont;
     }
 
+    public ControlGnr() {
+    }
+
     /*ORGANIZA LOS CONTROLES INTEGRADOS*/
-    public View Contenedor() {
+    public View Contenedor(boolean vacio, boolean inicial) {
 
         LinearLayout.LayoutParams llparamsTotal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
         llparamsTotal.setMargins(0, 0, 0, 10);
 
-        LinearLayout LLtotal = new LinearLayout(context);
+        LLtotal = new LinearLayout(context);
+        LLtotal.setId(id.intValue());
         LLtotal.setLayoutParams(llparamsTotal);
         LLtotal.setWeightSum(2);
         LLtotal.setOrientation(LinearLayout.VERTICAL);
         LLtotal.setPadding(8, 15, 8, 12);
         LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
-        LLtotal.setBackgroundResource(R.drawable.bordercontainer);
+
+        if(vacio) {
+            LLtotal.setBackgroundResource(R.drawable.bordercontainer);
+        }else if(!vacio && inicial){
+            LLtotal.setBackgroundResource(R.drawable.bordercontainerred);
+        }else{
+            LLtotal.setBackgroundResource(R.drawable.bordercontainer);
+        }
 
         LLtotal.addView(Item());
 
@@ -71,7 +87,7 @@ public class ControlGnr {
     public View Item() {
         TextView tvItem = new TextView(context.getApplicationContext());
         tvItem.setText(String.valueOf(id.intValue()));
-        tvItem.setVisibility(View.INVISIBLE);
+        tvItem.setVisibility(View.VISIBLE);
         tvItem.setTextSize(5);
 
         return tvItem;
@@ -172,4 +188,5 @@ public class ControlGnr {
     public void setViewtt(View viewtt) {
         Viewtt = viewtt;
     }
+
 }

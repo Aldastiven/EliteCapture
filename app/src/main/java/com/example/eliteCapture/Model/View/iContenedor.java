@@ -4,6 +4,7 @@ import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.Switch;
 
+import com.example.eliteCapture.Config.Util.ControlViews.ControlGnr;
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.iDesplegable;
@@ -107,6 +108,13 @@ public class iContenedor implements Contenedor {
         return gson.toJson(o);
     }
 
+    public void clear(){
+        try {
+            ct.clear();
+            local();
+        }catch (Exception ex){}
+    }
+
     public float calcular(ContenedorTab c) {
         float ponderado = 0;
         float calificacion = 0;
@@ -202,9 +210,11 @@ public class iContenedor implements Contenedor {
 
         switch (donde) {
             case "H":
+                Log.i("reg_","llego aqui encab");
                 conTemp.setHeader(editar(conTemp.getHeader(), idPregunta, respuesta, valor));
                 break;
             case "Q":
+                Log.i("reg_","llego aqui");
                 conTemp.setQuestions(editar(conTemp.getQuestions(), idPregunta, respuesta, valor));
                 break;
             case "F":

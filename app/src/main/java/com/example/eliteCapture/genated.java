@@ -4,18 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.ArrayMap;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -26,18 +22,14 @@ import com.example.eliteCapture.Config.Util.ControlViews.Cetalf;
 import com.example.eliteCapture.Config.Util.ControlViews.Cetnum;
 import com.example.eliteCapture.Config.Util.ControlViews.CfilAuto;
 import com.example.eliteCapture.Config.Util.ControlViews.Cfiltro;
+import com.example.eliteCapture.Config.Util.ControlViews.ControlGnr;
 import com.example.eliteCapture.Config.Util.ControlViews.Cscanner;
 import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
 import com.example.eliteCapture.Config.Util.ControlViews.Cconteos;
 import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
-import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
-import com.example.eliteCapture.Model.Data.Tab.envioTab;
-import com.example.eliteCapture.Model.Data.iEnvio;
-import com.example.eliteCapture.Model.View.Interfaz.Contenedor;
-import com.example.eliteCapture.Model.View.Tab.ContadorTab;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContador;
@@ -48,10 +40,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
-import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -70,13 +59,14 @@ public class genated extends AppCompatActivity {
     Button popSi, popNo;
 
     String path = null;
-    boolean camera;
     String dataCamera;
 
     int contConsec = 1;
     ProcesoTab pro = null;
     UsuarioTab usu = null;
 
+    boolean camera;
+    boolean inicial = false;
 
     public boolean ok, temporal; //retorna la respuesta de un formulario pendiente
 
@@ -174,6 +164,8 @@ public class genated extends AppCompatActivity {
         scrollcomplete = findViewById(R.id.complete);
         txtCalificacion = popcalificacion.findViewById(R.id.txtCalificacion);
 
+        popvalidar.setCancelable(false);
+
         Window window = mypop.getWindow();
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
@@ -186,35 +178,40 @@ public class genated extends AppCompatActivity {
             if (conTemp != null) {
                 if (conTemp.getIdProceso() == pro.getCodigo_proceso()) {
 
-                temporal = true;
-                return conTemp;
+                    temporal = true;
+                    return conTemp;
 
                 } else {
                     temporal = false;
-                    return iCon.generarContenedor(
-                            usu.getId_usuario(),
-                            getPhoneName(),
-                            adm.getDetalles().
-                                    forDetalle(pro.getCodigo_proceso()
-                                    )
-                    );
+                    return contenedorLimipio();
                 }
             }
 
-            return iCon.generarContenedor(
-                    usu.getId_usuario(),
-                    getPhoneName(),
-                    adm.getDetalles()
-                            .forDetalle(pro.getCodigo_proceso()));
+            return contenedorLimipio();
         } catch (Exception e) {
             Log.i("Contenedor_Error", e.toString());
             temporal = false;
         }
+        return contenedorLimipio();
+    }
+
+    public ContenedorTab contenedorLimipio() throws Exception {
         return iCon.generarContenedor(
                 usu.getId_usuario(),
                 getPhoneName(),
                 adm.getDetalles()
                         .forDetalle(pro.getCodigo_proceso()));
+    }
+
+    public ContenedorTab contenedorEncabezado(ContenedorTab temporal) {
+        return new ContenedorTab(
+                pro.getCodigo_proceso(),
+                temporal.getHeader(),
+                contenedor.getQuestions(),
+                contenedor.getFooter(),
+                temporal.getIdUsuario(),
+                temporal.getTerminal()
+        );
     }
 
     //REALIZA VALIDACION DEL POP (SI O NO EN FORMULARIO PENDIENTE)
@@ -232,12 +229,8 @@ public class genated extends AppCompatActivity {
         ok = false;
 
         try {
-            ContenedorTab conTemp = iCon.generarContenedor(
-                    usu.getId_usuario(),
-                    getPhoneName(),
-                    adm.getDetalles()
-                            .forDetalle(pro.getCodigo_proceso()));
-            contenedor = conTemp;
+            contenedor = contenedorLimipio();
+            iCon.crearTemporal(contenedor);
             crearform();
         } catch (Exception ex) {
         }
@@ -255,28 +248,30 @@ public class genated extends AppCompatActivity {
                         linearBodypop.addView(ct.textview(genated.this, r.getId(), r.getPregunta()));
                         break;
                     case "ETN":
-                        Cetnum cen = new Cetnum(genated.this, path, r.getId(), r.getPregunta(), "H", r);
+                        Log.i("validar", "" + r.getRespuesta());
+
+                        Cetnum cen = new Cetnum(genated.this, path, r.getId(), r.getPregunta(), "H", r, (r.getRespuesta() != null), inicial);
                         linearBodypop.addView(cen.tnumerico());
                         break;
                     case "ETA":
-                        Cetalf cal = new Cetalf(genated.this, path, r.getId(), r.getPregunta(), "H", r);
+                        Cetalf cal = new Cetalf(genated.this, path, r.getId(), r.getPregunta(), "H", r, (r.getRespuesta() != null ? true : false), inicial);
                         linearBodypop.addView(cal.talfanumerico());
                         break;
                     case "CBX":
-                        Cdesplegable cd = new Cdesplegable(genated.this, path, r.getId(), r.getPregunta(), r.getDesplegable(), "H", r);
+                        Cdesplegable cd = new Cdesplegable(genated.this, path, r.getId(), r.getPregunta(), r.getDesplegable(), "H", r, (r.getRespuesta() != null ? true : false), inicial);
                         linearBodypop.addView(cd.desplegable());
                         break;
                     case "FIL":
-                        Cfiltro cf = new Cfiltro(genated.this, path, r.getId(), r.getPregunta(), r.getDesplegable(), "H", r);
+                        Cfiltro cf = new Cfiltro(genated.this, path, r.getId(), r.getPregunta(), r.getDesplegable(), "H", r, (r.getRespuesta() != null ? true : false), inicial);
                         linearBodypop.addView(cf.filtro());
                         break;
                     case "SCA":
                         Log.i("vcampo", "data " + r.getRespuesta());
-                        Cscanner cs = new Cscanner(genated.this, path, r.getId(), r.getPregunta(), "H", r, (dataCamera != null ? dataCamera : ""));
+                        Cscanner cs = new Cscanner(genated.this, path, r.getId(), r.getPregunta(), "H", r, (dataCamera != null ? dataCamera : ""), (r.getRespuesta() != null ? true : false), inicial);
                         linearBodypop.addView(cs.scanner());
                         break;
                     case "AUT":
-                        CfilAuto ca = new CfilAuto(genated.this, path, r.getId(), r.getPregunta(), "H", r.getDesplegable(), r);
+                        CfilAuto ca = new CfilAuto(genated.this, path, r.getId(), r.getPregunta(), "H", r.getDesplegable(), r, (r.getRespuesta() != null ? true : false), inicial);
                         linearBodypop.addView(ca.autocompletado());
                         break;
                     default:
@@ -302,11 +297,11 @@ public class genated extends AppCompatActivity {
 
             switch (r.getTipo()) {
                 case "RS":
-                    Cconteos cc = new Cconteos(genated.this, path, "Q", r);
+                    Cconteos cc = new Cconteos(genated.this, path, "Q", r, (r.getRespuesta() != null ? true : false), inicial);
                     linearPrinc.addView(cc.Cconteo());
                     break;
                 case "RB":
-                    CradioButton cb = new CradioButton(genated.this, path, "Q", r.getId(), r.getPregunta(), r.getPonderado(), r.getDesplegable(), r);
+                    CradioButton cb = new CradioButton(genated.this, path, "Q", r.getId(), r.getPregunta(), r.getPonderado(), r.getDesplegable(), r, (r.getRespuesta() != null ? true : false), inicial);
                     linearPrinc.addView(cb.Tradiobtn());
                     break;
             }
@@ -377,20 +372,29 @@ public class genated extends AppCompatActivity {
         if (linearPrinc.getChildCount() > 0) {
             linearPrinc.removeAllViews();
             try {
+                iCon.crearTemporal(contenedorEncabezado(temporal));
                 CrearCuerpo();
-                iCon.crearTemporal(new ContenedorTab(
-                                pro.getCodigo_proceso(),
-                                temporal.getHeader(),
-                                contenedor.getQuestions(),
-                                contenedor.getFooter(),
-                                temporal.getIdUsuario(),
-                                temporal.getTerminal()
-                        )
-                );
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void killChildrens2(ContenedorTab temporal) {
+        if (linearPrinc.getChildCount() > 0 && linearBodypop.getChildCount() > 0) {
+            linearPrinc.removeAllViews();
+            linearBodypop.removeAllViews();
+
+            try {
+                contenedor = temporal;
+                crearform();
+                contenedor = contenedorLimipio();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     //SUBIR DATOS DEL FORMULARIO
@@ -413,21 +417,24 @@ public class genated extends AppCompatActivity {
             }
 
             if (full) {
-                iCon.insert(nuevo);
-                killChildrens(nuevo);
 
-                iContador contador = new iContador(path);
-                contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
+                iCon.insert(nuevo);
+                cargarContador();
+                inicial = false;
 
                 if (iCon.enviar()) {
+                    killChildrens(nuevo);
                     Toast.makeText(this, "Insertado con exito!" + vacios, Toast.LENGTH_LONG).show();
                 } else {
+                    killChildrens(nuevo);
                     Toast.makeText(this, "Agregado a local" + vacios, Toast.LENGTH_LONG).show();
                 }
+
             } else {
-                Toast.makeText(this, "tienes campos vacios: " + vacios, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "¡tienes campos vacios! ", Toast.LENGTH_LONG).show();
+                inicial = true;
+                killChildrens2(nuevo);
             }
-            cargarContador();
 
         } catch (Exception e) {
 
