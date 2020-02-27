@@ -316,6 +316,7 @@ public class genated extends AppCompatActivity {
                 case "RS":
                     Cconteos cc = new Cconteos(genated.this, path, "Q", r, (r.getRespuesta() != null), inicial);
                     linearPrinc.addView(cc.Cconteo());
+                    cc.registrarInicial();
                     break;
                 case "RB":
                     CradioButton cb = new CradioButton(genated.this, path, "Q", r.getId(), r.getPregunta(), r.getPonderado(), r.getDesplegable(), r, (r.getRespuesta() != null), inicial);
@@ -328,13 +329,34 @@ public class genated extends AppCompatActivity {
     //CALIFICACIÓN POP
     public void onCalificar(View v) {
         try {
-            String cal = String.valueOf(iCon.calcular(iCon.optenerTemporal(), footer));
-            if (!cal.equals("NaN")) {
-                txtCalificacion.setText(cal + "%");
-                popcalificacion.show();
-            } else {
-                Toast.makeText(this, "No se puede dar una calificación, \n por favor diligencia el formulario", Toast.LENGTH_SHORT).show();
+            ContenedorTab nuevo = iCon.optenerTemporal();
+            Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo, footer);
+
+            String cuerpo = "";
+
+            for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
+                if(entry.getKey() == 1){
+                    cuerpo += entry.getValue().toString();
+                }
             }
+
+            String splitS = cuerpo.replaceAll("[^\\dA-Za-z]", "");
+            Log.i("Enviar_Array", "vacios = " +splitS);
+
+            if(splitS.isEmpty()){
+
+                String cal = String.valueOf(iCon.calcular(iCon.optenerTemporal(), footer));
+                if (!cal.equals("NaN")) {
+                    txtCalificacion.setText(cal + "%");
+                    popcalificacion.show();
+                } else {
+                    Toast.makeText(this, "No se puede dar una calificación, \npor favor diligencia el formulario", Toast.LENGTH_SHORT).show();
+                }
+
+            }else{
+                Toast.makeText(this, "No se puede dar una calificación, \n¡No puedes dejar campos vacios!", Toast.LENGTH_SHORT).show();
+            }
+
         } catch (Exception ex) {
             Log.i("onCalificar", "" + ex.toString());
         }
@@ -355,7 +377,6 @@ public class genated extends AppCompatActivity {
                         sp.getString("usuario", ""),
                         new TypeToken<UsuarioTab>() {
                         }.getType());
-
     }
 
     //METODOS PARA OBTENER DATOS

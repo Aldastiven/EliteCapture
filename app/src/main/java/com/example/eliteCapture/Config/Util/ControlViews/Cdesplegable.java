@@ -83,7 +83,6 @@ public class Cdesplegable {
 
         try {
             String rta = spinner.getItemAtPosition(0).toString();
-            Toast.makeText(context, ""+rta, Toast.LENGTH_SHORT).show();
             if (rta.equals("Selecciona")) {
                 registro(null, null);
             }
@@ -106,6 +105,7 @@ public class Cdesplegable {
                 opc.add(des.getOpcion());
                 codigo.add((des.getCodigo()));
             }
+            opc.add("");
             return opc;
         } catch (Exception ex) {
             Toast.makeText(context, "" + ex, Toast.LENGTH_SHORT).show();

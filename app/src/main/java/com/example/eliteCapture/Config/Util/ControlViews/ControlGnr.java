@@ -49,7 +49,7 @@ public class ControlGnr {
         LLtotal.setLayoutParams(llparamsTotal);
         LLtotal.setWeightSum(2);
         LLtotal.setOrientation(LinearLayout.VERTICAL);
-        LLtotal.setPadding(8, 15, 8, 12);
+        LLtotal.setPadding(8, 10, 8, 12);
         LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
 
         if(vacio) {
@@ -60,7 +60,7 @@ public class ControlGnr {
             LLtotal.setBackgroundResource(R.drawable.bordercontainer);
         }
 
-        LLtotal.addView(Item());
+        //LLtotal.addView(Item());
 
         switch (tiporescont) {
             case "hx2":

@@ -1,5 +1,6 @@
 package com.example.eliteCapture.Config.Util.ControlViews;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -53,7 +54,6 @@ public class CradioButton {
         this.vacio = vacio;
         this.inicial = inicial;
     }
-
 
 
     public CradioButton(Long id) {
@@ -117,12 +117,22 @@ public class CradioButton {
         tvp.setLayoutParams(llparamsText);
 
         final TextView tvpor = new TextView(context);
-        tvpor.setText((rt.getValor() != null ? rt.getValor() : "resultado: \n NA"));
+        tvpor.setText((rt.getValor() == null ? "Resultado : \n" : "resultado: \n"));
         tvpor.setTextColor(Color.parseColor("#979A9A"));
         tvpor.setBackgroundColor(Color.parseColor("#ffffff"));
         tvpor.setPadding(10, 10, 10, 10);
         tvpor.setTypeface(null, Typeface.BOLD);
         tvpor.setLayoutParams(llparamsTextpo);
+
+        if(rt.getValor() != null) {
+            String data = rt.getValor();
+            int val = Integer.parseInt(data);
+            if(val == -1){
+                tvpor.setText("Resultado : \nNA");
+            }else{
+            }
+        }else{
+        }
 
         try {
             iDesplegable iDesp = new iDesplegable(null, path);
@@ -214,9 +224,8 @@ public class CradioButton {
                             break;
                         case 1:
                             rta = rb.getText().toString();
-                            vlr = String.valueOf(-1);
                             tvpor.setText("resultado: \n  NA");
-                            registro(rta, vlr);
+                            registro(rta, "-1");
                             break;
                     }
 
@@ -246,7 +255,7 @@ public class CradioButton {
 
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, (valor.equals("-1") ? "NA" : valor));
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta,  valor);
     }
 
 
