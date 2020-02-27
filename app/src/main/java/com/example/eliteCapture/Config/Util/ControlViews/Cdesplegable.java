@@ -40,7 +40,6 @@ public class Cdesplegable {
 
     //contructor
 
-
     public Cdesplegable(Context context, String path, Long id, String contenido, String opciones, String ubicacion, RespuestasTab r, Boolean vacio, Boolean inicial) {
         this.context = context;
         this.path = path;
@@ -80,10 +79,18 @@ public class Cdesplegable {
         spinner.setLayoutParams(llparams);
 
         Cgnr = new ControlGnr(context, id, tvp, spinner, null, "hx2");
-        ControlView = Cgnr.Contenedor(vacio,inicial);
+        ControlView = Cgnr.Contenedor(vacio, inicial);
+
+        try {
+            String rta = spinner.getItemAtPosition(0).toString();
+            Toast.makeText(context, ""+rta, Toast.LENGTH_SHORT).show();
+            if (rta.equals("Selecciona")) {
+                registro(null, null);
+            }
+        } catch (Exception ex) {
+        }
 
         Funspinner(spinner);
-
 
         return ControlView;
     }
@@ -115,9 +122,9 @@ public class Cdesplegable {
                     Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
                     String rta = spn.getItemAtPosition(position).toString();
                     if (spn.getSelectedItem() == "Selecciona") {
-                        registro("","");
+                        registro(null, null);
                     } else {
-                        registro(rta,codigo.get(position));
+                        registro(rta, codigo.get(position));
                     }
                 } catch (Exception ex) {
                 }

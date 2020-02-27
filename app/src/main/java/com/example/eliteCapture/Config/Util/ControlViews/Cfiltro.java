@@ -65,7 +65,7 @@ public class Cfiltro {
     //metodo que crea dinamiamente el control del filtro
     public View filtro() {
 
-        Log.i("pens","filtro: "+r.getValor());
+        Log.i("pens", "filtro: " + r.getValor());
 
         final TextView tv = new TextView(context);
         tv.setId(id.intValue());
@@ -77,7 +77,7 @@ public class Cfiltro {
 
         final EditText edt = new EditText(context);
 
-        if(r.getReglas()!=0) {
+        if (r.getReglas() != 0) {
             edt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(r.getReglas())});
         }
 
@@ -118,29 +118,32 @@ public class Cfiltro {
     }
 
 
-
     //funcion del boton
     public void Funfiltro(Button btn, final EditText edt, final TextView tv, final String desplegable) {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String resultado = Buscar(edt.getText().toString(), desplegable);
-                Log.i("FIL", "FIL " + resultado);
-
-                if (!resultado.isEmpty()) {
-                    tv.setText("Resultado : " + resultado);
-                    tv.setTextColor(Color.parseColor("#58d68d"));
-                    Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
-                } else {
-                    tv.setText("No se encontraron resultados");
-                    tv.setTextColor(Color.parseColor("#f1948a"));
-                    Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainerred);
-                }
-
                 try {
-                    registro(resultado, edt.getText().toString());
+                    String resultado = Buscar(edt.getText().toString(), desplegable);
+                    Log.i("FIL", "FIL " + resultado);
+
+                    if (!resultado.isEmpty()) {
+                        tv.setText("Resultado : " + resultado);
+                        tv.setTextColor(Color.parseColor("#58d68d"));
+                        Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
+
+                        registro(resultado, edt.getText().toString());
+
+                    } else {
+                        tv.setText("No se encontraron resultados");
+                        tv.setTextColor(Color.parseColor("#f1948a"));
+                        Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainerred);
+
+                        registro(null,null);
+                    }
                 } catch (Exception e) {
                 }
+
             }
         });
     }
@@ -169,7 +172,7 @@ public class Cfiltro {
                 }
             }
             return "";
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return "";
         }
     }

@@ -100,7 +100,11 @@ public class Cetalf {
                 try {
                     Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
                     String rta = eta.getText().toString();
-                    registro(rta, "");
+                    if (!rta.isEmpty()) {
+                        registro(rta, null);
+                    } else {
+                        registro(null, null);
+                    }
                 }catch (Exception ex){}
             }
         });

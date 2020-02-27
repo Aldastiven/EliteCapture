@@ -372,7 +372,26 @@ public class genated extends AppCompatActivity {
 
     //OCULTA EL POP CON LOS CAMPOS DEL HEADER
     public void ocultarPop(View v) {
-        mypop.dismiss();
+        ContenedorTab nuevo = iCon.optenerTemporal();
+        Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo, footer);
+
+        String encabezado = "";
+
+        for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
+            if(entry.getKey() == 0){
+                encabezado += entry.getValue().toString();
+            }
+        }
+
+        String splitS = encabezado.replaceAll("[^\\dA-Za-z]", "");
+        Log.i("Enviar_Array", "vacios = " +splitS);
+
+        if(splitS.isEmpty()){
+            mypop.dismiss();
+        }else{
+            Toast.makeText(this, "¡No puedes dejar campos vacios!", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     //SI OPRIME EL BOTON DE RETROCESO

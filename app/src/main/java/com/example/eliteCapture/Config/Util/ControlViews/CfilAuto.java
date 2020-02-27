@@ -135,7 +135,9 @@ public class CfilAuto {
                         Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
 
                         registro(etdauto.getText().toString(),resultado);
-                    } else {}
+                    } else {
+                        registro(null,null);
+                    }
                 } catch (Exception ex) {
                     Toast.makeText(context, "" + ex.toString(), Toast.LENGTH_SHORT).show();
                 }

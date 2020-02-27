@@ -116,11 +116,14 @@ public class Cetnum {
 
             @Override
             public void afterTextChanged(Editable s) {
-                //Toast.makeText(context, ""+Cgnr.getId(), Toast.LENGTH_SHORT).show();
                 try {
                     Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
                     String rta = etn.getText().toString();
-                    registro(rta, null);
+                    if (!rta.isEmpty()) {
+                        registro(rta, null);
+                    } else {
+                        registro(null, null);
+                    }
                 } catch (Exception ex) {
                 }
             }
