@@ -18,6 +18,7 @@ import com.example.eliteCapture.R;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
 
 import static java.lang.String.valueOf;
 
@@ -30,6 +31,8 @@ public class Cconteos {
     private RespuestasTab rt;
     private boolean vacio;
     private Boolean inicial;
+
+    ArrayList<Integer> idnull = new ArrayList<>();
 
     ControlGnr Cgnr;
 
@@ -51,7 +54,6 @@ public class Cconteos {
         LinearLayout.LayoutParams llparamsTextpo = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         llparamsText.weight = (float) 0.7;
 
-
         final TextView tvp = new TextView(context);
         tvp.setId(rt.getId().intValue());
         tvp.setText(rt.getPregunta() + "\nponderado: " + rt.getPonderado());
@@ -62,7 +64,7 @@ public class Cconteos {
 
         final TextView tvpor = new TextView(context);
         tvpor.setId(rt.getId().intValue());
-        tvpor.setText((rt.getValor() != null) ? "Resultado: \n " + rt.getValor() : "Resultado: \n ");
+        tvpor.setText((rt.getValor() == null ? "Resultado : \nNA" : "resultado: \nNA"));
         tvpor.setTextColor(Color.parseColor("#979A9A"));
         tvpor.setBackgroundColor(Color.parseColor("#00FFFFFF"));
         tvpor.setPadding(10, 10, 10, 10);
@@ -116,7 +118,6 @@ public class Cconteos {
 
         final TextView tvr = new TextView(context);
         tvr.setText((rt.getRespuesta() == null) ? "-1" : rt.getRespuesta());
-        Log.i("respuestaSR", "" + rt.getRespuesta());
         tvr.setId(rt.getId().intValue());
         tvr.setTextSize(40);
         tvr.setTextColor(Color.parseColor("#5d6d7e"));
@@ -149,11 +150,6 @@ public class Cconteos {
         llbtn.addView(bntsum);
 
         viewTotal = llbtn;
-        String data = tvr.getText().toString();
-        try {
-            registro(data, valor(Integer.parseInt(data)));
-        } catch (Exception ex) {
-        }
 
 
         bntsum.setOnClickListener(new View.OnClickListener() {
@@ -162,17 +158,20 @@ public class Cconteos {
                 int n = Integer.parseInt(tvr.getText().toString());
                 if (n < rt.getReglas()) {
                     int rta = n + 1;
-                    String data =valueOf(rta);
+                    String data = valueOf(rta);
                     tvr.setText(data);
 
                     String vlr = valor(rta);
                     tvpor.setText((rta < 0) ? "resultado: \n NA" : "resultado: \n" + vlr);
+
                     try {
                         registro(data, vlr);
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
                 }
+
+                tvr.setVisibility(tvr.getText().equals("-1") ? View.INVISIBLE : View.VISIBLE);
             }
         });
 
@@ -180,22 +179,25 @@ public class Cconteos {
             @Override
             public void onClick(View view) {
                 int n = Integer.parseInt(tvr.getText().toString());
-                if (n > -1) {
+                if (n >= 0) {
                     int rta = n - 1;
-                    String data =valueOf(rta);
+                    String data = valueOf(rta);
                     tvr.setText(data);
+
 
                     String vlr = valor(rta);
                     tvpor.setText((rta < 0) ? "resultado: \n NA" : "resultado: \n" + vlr);
                     try {
-                        registro(data, vlr);
+                        registro(data, (rta < 0) ? "-1" : vlr);
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
                 }
+                tvr.setVisibility(tvr.getText().equals("-1") ? View.INVISIBLE : View.VISIBLE);
             }
 
         });
+
 
         return viewTotal;
     }
@@ -232,6 +234,19 @@ public class Cconteos {
         llpregunta.addView(v2); //retorna pocentaje
 
         return llpregunta;
+    }
+
+    public void registrarInicial(){
+        try {
+            if (rt.getValor() == null) {
+                for (int data : idnull) {
+                    Log.i("recorrer_valor", String.valueOf(data));
+                    registro("-1", "-1");
+                }
+            }
+        }catch (Exception ex){
+
+        }
     }
 
 }

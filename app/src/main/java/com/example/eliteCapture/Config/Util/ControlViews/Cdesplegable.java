@@ -104,6 +104,7 @@ public class Cdesplegable {
                 opc.add(des.getOpcion());
                 codigo.add((des.getCodigo()));
             }
+            opc.add("");
             return opc;
         } catch (Exception ex) {
             Toast.makeText(context, "" + ex, Toast.LENGTH_SHORT).show();

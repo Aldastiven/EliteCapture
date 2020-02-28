@@ -195,7 +195,7 @@ public class iContenedor implements Contenedor {
     }
 
     public void editarTemporal(String donde, int idPregunta, String respuesta, String valor) throws Exception {
-        Log.i("Footer", "Donde: " + donde + " id: " + idPregunta + " Rta: " + respuesta);
+        Log.i("Footer", "Donde: " + donde + " id: " + idPregunta + " Rta: " + respuesta + " Valor: " + valor);
         ContenedorTab conTemp = new Gson().fromJson(new JsonAdmin().ObtenerLista(path, "temp"),
                 new TypeToken<ContenedorTab>() {
                 }.getType());
