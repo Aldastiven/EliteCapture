@@ -34,7 +34,6 @@ public class Cscanner {
     private Boolean vacio;
     private Boolean inicial;
 
-
     int ID;
 
     View controlView;
@@ -59,8 +58,7 @@ public class Cscanner {
         tv.setId(id.intValue());
         tv.setText("Escanea el codigo de barras activando la camara:");
         tv.setTextColor(Color.parseColor("#979A9A"));
-        tv.setPadding(5, 15, 5, 5);
-        tv.setBackgroundColor(Color.parseColor("#ffffff"));
+        tv.setPadding(5, 0, 5, 5);
         tv.setTypeface(null, Typeface.BOLD);
 
         final EditText edt = new EditText(context);

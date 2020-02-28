@@ -73,8 +73,9 @@ public class CradioButton {
         LLtotal.setLayoutParams(llparamsTotal);
         LLtotal.setWeightSum(2);
         LLtotal.setOrientation(LinearLayout.VERTICAL);
-        LLtotal.setPadding(10, 30, 10, 12);
+        LLtotal.setPadding(10, 10, 10, 10);
         LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
+        LLtotal.setBackgroundColor(Color.parseColor("#00ffffff"));
 
         if(vacio) {
             LLtotal.setBackgroundResource(R.drawable.bordercontainer);
@@ -112,14 +113,14 @@ public class CradioButton {
         tvp.setText(pregunta + "\nponderado: " + ponderado);
         tvp.setTextColor(Color.parseColor("#979A9A"));
         tvp.setPadding(5, 5, 5, 5);
-        tvp.setBackgroundColor(Color.parseColor("#ffffff"));
+        tvp.setBackgroundColor(Color.parseColor("#00ffffff"));
         tvp.setTypeface(null, Typeface.BOLD);
         tvp.setLayoutParams(llparamsText);
 
         final TextView tvpor = new TextView(context);
-        tvpor.setText((rt.getValor() != null ? rt.getValor() : "resultado: \n NA"));
+        tvpor.setText((rt.getValor() != null ? rt.getValor() : "resultado: "));
         tvpor.setTextColor(Color.parseColor("#979A9A"));
-        tvpor.setBackgroundColor(Color.parseColor("#ffffff"));
+        tvpor.setBackgroundColor(Color.parseColor("#00ffffff"));
         tvpor.setPadding(10, 10, 10, 10);
         tvpor.setTypeface(null, Typeface.BOLD);
         tvpor.setLayoutParams(llparamsTextpo);

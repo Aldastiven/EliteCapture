@@ -72,7 +72,7 @@ public class Cfiltro {
         tv.setText("Resultados :");
         tv.setTextColor(Color.parseColor("#979A9A"));
         tv.setPadding(5, 5, 5, 5);
-        tv.setBackgroundColor(Color.parseColor("#ffffff"));
+        tv.setBackgroundColor(Color.parseColor("#00ffffff"));
         tv.setTypeface(null, Typeface.BOLD);
 
         final EditText edt = new EditText(context);

@@ -39,7 +39,6 @@ public class Cdesplegable {
     ControlGnr Cgnr = null;
 
     //contructor
-
     public Cdesplegable(Context context, String path, Long id, String contenido, String opciones, String ubicacion, RespuestasTab r, Boolean vacio, Boolean inicial) {
         this.context = context;
         this.path = path;
@@ -83,7 +82,6 @@ public class Cdesplegable {
 
         try {
             String rta = spinner.getItemAtPosition(0).toString();
-            Toast.makeText(context, ""+rta, Toast.LENGTH_SHORT).show();
             if (rta.equals("Selecciona")) {
                 registro(null, null);
             }
@@ -119,11 +117,11 @@ public class Cdesplegable {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
                     String rta = spn.getItemAtPosition(position).toString();
                     if (spn.getSelectedItem() == "Selecciona") {
                         registro(null, null);
                     } else {
+                        Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
                         registro(rta, codigo.get(position));
                     }
                 } catch (Exception ex) {

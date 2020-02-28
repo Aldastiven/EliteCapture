@@ -57,7 +57,6 @@ public class Cconteos {
         tvp.setText(rt.getPregunta() + "\nponderado: " + rt.getPonderado());
         tvp.setTextColor(Color.parseColor("#979A9A"));
         tvp.setPadding(5, 5, 5, 5);
-        tvp.setBackgroundColor(Color.parseColor("#ffffff"));
         tvp.setTypeface(null, Typeface.BOLD);
         tvp.setLayoutParams(llparamsText);
 
@@ -65,10 +64,23 @@ public class Cconteos {
         tvpor.setId(rt.getId().intValue());
         tvpor.setText((rt.getValor() != null) ? "Resultado: \n " + rt.getValor() : "Resultado: \n ");
         tvpor.setTextColor(Color.parseColor("#979A9A"));
-        tvpor.setBackgroundColor(Color.parseColor("#ffffff"));
+        tvpor.setBackgroundColor(Color.parseColor("#00FFFFFF"));
         tvpor.setPadding(10, 10, 10, 10);
         tvpor.setTypeface(null, Typeface.BOLD);
         tvpor.setLayoutParams(llparamsTextpo);
+
+        if (rt.getValor() != null) {
+            String data = rt.getValor();
+            int val = Integer.parseInt(data);
+
+            if (val == -1) {
+                tvpor.setText("Resultado : \nNA");
+            } else {
+                tvpor.setText("Resultado : \n" + rt.getValor());
+            }
+
+        } else {
+        }
 
         Cgnr = new ControlGnr(context, rt.getId(), pp(tvp, tvpor), Cbotones(tvpor), null, "vx2");
         ControlView = Cgnr.Contenedor(vacio, inicial);
@@ -97,6 +109,7 @@ public class Cconteos {
         llbtn.setOrientation(LinearLayout.HORIZONTAL);
         llbtn.setVerticalGravity(Gravity.CENTER);
         llbtn.setPadding(10, 0, 10, 0);
+        llbtn.setBackgroundColor(Color.parseColor("#00FFFFFF"));
 
         LinearLayout.LayoutParams LLcmpweight = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LLcmpweight.weight = 3;
@@ -110,6 +123,7 @@ public class Cconteos {
         tvr.setTypeface(null, Typeface.BOLD);
         tvr.setGravity(Gravity.CENTER);
         tvr.setLayoutParams(LLcmpweight);
+        //tvr.setVisibility((tvr.getText().equals("-1")) ? View.INVISIBLE : View.VISIBLE);
 
         LinearLayout.LayoutParams LLbtnweight = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LLbtnweight.weight = (float) 0.5;
@@ -199,7 +213,7 @@ public class Cconteos {
     }
 
     public void registro(String rta, String valor) throws Exception {
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, (valor.equals("-1") ? "NA" : valor));
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, (valor));
     }
 
     //retorna el layout del encabezado pregunta porcentaje
@@ -207,10 +221,12 @@ public class Cconteos {
         LinearLayout.LayoutParams llparamspregunta = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+
         LinearLayout llpregunta = new LinearLayout(context);
         llpregunta.setLayoutParams(llparamspregunta);
         llpregunta.setWeightSum(3);
         llpregunta.setOrientation(LinearLayout.HORIZONTAL);
+        llpregunta.setBackgroundColor(Color.parseColor("#00FFFFFF"));
 
         llpregunta.addView(v1); //retorna pregunta
         llpregunta.addView(v2); //retorna pocentaje

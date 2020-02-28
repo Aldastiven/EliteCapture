@@ -182,6 +182,7 @@ public class genated extends AppCompatActivity {
         txtCalificacion = popcalificacion.findViewById(R.id.txtCalificacion);
 
         popvalidar.setCancelable(false);
+        mypop.setCancelable(false);
 
         Window window = mypop.getWindow();
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -325,20 +326,6 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    //CALIFICACIÓN POP
-    public void onCalificar(View v) {
-        try {
-            String cal = String.valueOf(iCon.calcular(iCon.optenerTemporal(), footer));
-            if (!cal.equals("NaN")) {
-                txtCalificacion.setText(cal + "%");
-                popcalificacion.show();
-            } else {
-                Toast.makeText(this, "No se puede dar una calificación, \n por favor diligencia el formulario", Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception ex) {
-            Log.i("onCalificar", "" + ex.toString());
-        }
-    }
 
     // metodo para extraer del SharedPreferences el id del proceso
     public void getcodProceso() {
@@ -372,19 +359,8 @@ public class genated extends AppCompatActivity {
 
     //OCULTA EL POP CON LOS CAMPOS DEL HEADER
     public void ocultarPop(View v) {
-        ContenedorTab nuevo = iCon.optenerTemporal();
-        Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo, footer);
 
-        String encabezado = "";
-
-        for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
-            if(entry.getKey() == 0){
-                encabezado += entry.getValue().toString();
-            }
-        }
-
-        String splitS = encabezado.replaceAll("[^\\dA-Za-z]", "");
-        Log.i("Enviar_Array", "vacios = " +splitS);
+        String splitS = obtenerNulos(0);
 
         if(splitS.isEmpty()){
             mypop.dismiss();
@@ -392,6 +368,51 @@ public class genated extends AppCompatActivity {
             Toast.makeText(this, "¡No puedes dejar campos vacios!", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public void regresarMenu(View v){
+        Intent i = new Intent(this, Index.class);
+        startActivity(i);
+    }
+
+    //CALIFICACIÓN POP
+    public void onCalificar(View v) {
+        try {
+
+            String splitS = obtenerNulos(1);
+
+            if(splitS.isEmpty()) {
+
+                String cal = String.valueOf(iCon.calcular(iCon.optenerTemporal(), footer));
+                if (!cal.equals("NaN")) {
+                    txtCalificacion.setText(cal + "%");
+                    popcalificacion.show();
+                } else {
+                    Toast.makeText(this, "No se puede dar una calificación, \n por favor diligencia el formulario", Toast.LENGTH_SHORT).show();
+                }
+            }else {
+                Toast.makeText(this, "No se puede dar una calificación, \n por favor completa el formulario", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception ex) {
+            Log.i("onCalificar", "" + ex.toString());
+        }
+    }
+
+    public String obtenerNulos(int ubicacion){
+        ContenedorTab nuevo = iCon.optenerTemporal();
+        Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo, footer);
+
+        String encabezado = "";
+
+        for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
+            if(entry.getKey() == ubicacion){
+                encabezado += entry.getValue().toString();
+            }
+        }
+
+        String splitS = encabezado.replaceAll("[^\\dA-Za-z]", "");
+        Log.i("Enviar_Array", "vacios = " +splitS);
+        return splitS;
     }
 
     //SI OPRIME EL BOTON DE RETROCESO

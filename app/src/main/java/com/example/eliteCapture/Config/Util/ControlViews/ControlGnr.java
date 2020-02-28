@@ -49,8 +49,10 @@ public class ControlGnr {
         LLtotal.setLayoutParams(llparamsTotal);
         LLtotal.setWeightSum(2);
         LLtotal.setOrientation(LinearLayout.VERTICAL);
-        LLtotal.setPadding(8, 15, 8, 12);
+        LLtotal.setPadding(8, 0, 8, 0);
         LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
+        //LLtotal.setBackgroundColor(Color.parseColor("#00FFFFFF"));
+
 
         if(vacio) {
             LLtotal.setBackgroundResource(R.drawable.bordercontainer);
@@ -60,7 +62,7 @@ public class ControlGnr {
             LLtotal.setBackgroundResource(R.drawable.bordercontainer);
         }
 
-        LLtotal.addView(Item());
+        //LLtotal.addView(Item());
 
         switch (tiporescont) {
             case "hx2":
@@ -83,16 +85,6 @@ public class ControlGnr {
         return LLtotal;
     }
 
-    //CREA EL NUMERO DEL ITEM
-    public View Item() {
-        TextView tvItem = new TextView(context.getApplicationContext());
-        tvItem.setText(String.valueOf(id.intValue()));
-        tvItem.setVisibility(View.VISIBLE);
-        tvItem.setTextSize(5);
-
-        return tvItem;
-    }
-
 
     //layout organizativo horizontal 2 elementos
     public LinearLayout hx2(View v1, View v2) {
@@ -102,11 +94,11 @@ public class ControlGnr {
 
         LinearLayout LLprincipal = new LinearLayout(context);
         LLprincipal.setLayoutParams(llparamsPrincipal);
-        LLprincipal.setBackgroundColor(Color.parseColor("#ffffff"));
         LLprincipal.setWeightSum(2);
         LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
         LLprincipal.setPadding(5, 5, 5, 5);
         LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
+        //LLprincipal.setBackgroundColor(Color.parseColor("#00FFFFFF"));
 
         LLprincipal.addView(v1);
         LLprincipal.addView(v2);
@@ -122,7 +114,6 @@ public class ControlGnr {
 
         LinearLayout LLprincipal = new LinearLayout(context);
         LLprincipal.setLayoutParams(llparamsPrincipal);
-        LLprincipal.setBackgroundColor(Color.parseColor("#ffffff"));
         LLprincipal.setWeightSum(2);
         LLprincipal.setOrientation(LinearLayout.VERTICAL);
         LLprincipal.setPadding(5, 5, 5, 5);
@@ -143,8 +134,9 @@ public class ControlGnr {
         LLprincipal.setLayoutParams(llparamsPrincipal);
         LLprincipal.setWeightSum(2);
         LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
-        LLprincipal.setPadding(5, 5, 5, 5);
+        LLprincipal.setPadding(5, 8, 5, 5);
         LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
+        //)LLprincipal.setBackgroundColor(Color.parseColor("#00FFFFFF"));
 
         LLprincipal.addView(v1);
         LLprincipal.addView(v2);
@@ -163,6 +155,7 @@ public class ControlGnr {
         LLprincipal.setOrientation(LinearLayout.HORIZONTAL);
         LLprincipal.setPadding(5, 5, 5, 5);
         LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
+        //LLprincipal.setBackgroundColor(Color.parseColor("#00FFFFFF"));
 
         LLprincipal.addView(v2);
         LLprincipal.addView(v1);
