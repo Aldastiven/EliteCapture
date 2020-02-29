@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="10"
-    android:background="#96000000"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="#40FFFFFF">
 
 
     <LinearLayout
@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/borderpoptop">
+        android:background="@drawable/borderpoptop"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,7 +25,7 @@
             android:gravity="center_vertical">
 
             <LinearLayout
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -49,24 +50,6 @@
 
             </LinearLayout>
 
-            <ImageButton
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="0sp"
-                android:layout_height="70sp"
-                android:layout_weight="0.5"
-                android:background="@android:color/transparent"
-                android:onClick="ocultarPop"
-                android:src="@drawable/ok"/>
-
-            <ImageButton
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="0sp"
-                android:layout_height="70sp"
-                android:layout_weight="0.5"
-                android:background="@android:color/transparent"
-                android:onClick="regresarMenu"
-                android:padding="1sp"
-                android:src="@drawable/menu"/>
 
         </LinearLayout>
 
@@ -83,14 +66,15 @@
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
         android:background="@drawable/borderpopbotom"
         android:paddingTop="10sp">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="5sp">
+            android:layout_height="0sp"
+            android:layout_weight="8"
+            android:paddingHorizontal="5sp"
+            >
 
             <LinearLayout
                 android:id="@+id/linearbodypop"
@@ -100,6 +84,38 @@
             </LinearLayout>
 
         </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="1"
+            android:weightSum="2"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="volver al menu"
+                android:onClick="regresarMenu"
+                android:background="#e67e22"
+                android:layout_margin="5sp"
+                android:textColor="#ffffff"
+                android:textStyle="bold"/>
+
+            <Button
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="ir al formulario"
+                android:onClick="ocultarPop"
+                android:background="#66bb6a"
+                android:layout_margin="5sp"
+                android:textColor="#ffffff"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 

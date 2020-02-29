@@ -30,6 +30,7 @@ import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
+import com.example.eliteCapture.Model.View.Interfaz.Contenedor;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContador;
@@ -108,6 +109,7 @@ public class genated extends AppCompatActivity {
                 dataCamera = bundle.getString("codigo");
                 ok = true;
                 crearform();
+                mypop.show();
             } else {
                 if (temporal) {
                     popvalidar.show();
@@ -149,12 +151,12 @@ public class genated extends AppCompatActivity {
             CrearCuerpo();
         } catch (Exception ex) {
             Toast.makeText(this, "exc crearform" + ex.toString(), Toast.LENGTH_SHORT).show();
+            Log.i("exc crearform", ex.toString());
         }
     }
 
     public void CrearEncabezado() throws Exception {
         CrearHeader(contenedor.getHeader());//crea los elemtos del header y pasa datos correspondientes
-
     }
 
     public void CrearCuerpo() throws Exception {
@@ -162,7 +164,6 @@ public class genated extends AppCompatActivity {
         if (footer) {
             CrearForm(contenedor.getFooter(), "F");//crea los elemtos del body (formulario) y pasa datos correspondientes
         }
-        mypop.show();
     }
 
     //INSTANCIA CONTROLES VIEWS
@@ -237,6 +238,7 @@ public class genated extends AppCompatActivity {
         ok = true;
         try {
             crearform();
+            mypop.show();
         } catch (Exception ex) {
             Log.i("Contenedor", "" + ex.toString());
         }
@@ -250,6 +252,7 @@ public class genated extends AppCompatActivity {
             contenedor = contenedorLimipio();
             iCon.crearTemporal(contenedor);
             crearform();
+            mypop.show();
         } catch (Exception ex) {
         }
         popvalidar.dismiss();
@@ -306,62 +309,30 @@ public class genated extends AppCompatActivity {
     }
 
     //CREA CONTROLES DEL FORMULARIO
-    public void CrearForm(List<RespuestasTab> questions, String ubicacion) throws Exception {
-        scrollForm.fullScroll(View.FOCUS_UP); //funcion que sube el scroll al inicio
-
-        for (RespuestasTab r : questions) {
-
-            Log.i("Error_Crs", "" + new iRespuestas().json(r));
-
-            switch (r.getTipo()) {
-                case "RS":
-                    Cconteos cc = new Cconteos(genated.this, path, "Q", r, (r.getRespuesta() != null), inicial);
-                    linearPrinc.addView(cc.Cconteo());
-                    cc.registrarInicial();
-                    break;
-                case "RB":
-                    CradioButton cb = new CradioButton(genated.this, path, "Q", r.getId(), r.getPregunta(), r.getPonderado(), r.getDesplegable(), r, (r.getRespuesta() != null), inicial);
-                    linearPrinc.addView(cb.Tradiobtn());
-                    break;
-            }
-        }
-    }
-
-    //CALIFICACIÓN POP
-    public void onCalificar(View v) {
+    public void CrearForm(List<RespuestasTab> questions, String ubicacion) {
         try {
-            ContenedorTab nuevo = iCon.optenerTemporal();
-            Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo, footer);
+            scrollForm.fullScroll(View.FOCUS_UP); //funcion que sube el scroll al inicio
 
-            String cuerpo = "";
+            for (RespuestasTab r : questions) {
 
-            for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
-                if(entry.getKey() == 1){
-                    cuerpo += entry.getValue().toString();
+                Log.i("Error_Crs", "" + new iRespuestas().json(r));
+
+                switch (r.getTipo()) {
+                    case "RS":
+                        Cconteos cc = new Cconteos(genated.this, path, "Q", r, (r.getRespuesta() != null), inicial);
+                        linearPrinc.addView(cc.Cconteo());
+                        break;
+                    case "RB":
+                        CradioButton cb = new CradioButton(genated.this, path, "Q", r.getId(), r.getPregunta(), r.getPonderado(), r.getDesplegable(), r, (r.getRespuesta() != null), inicial);
+                        linearPrinc.addView(cb.Tradiobtn());
+                        break;
                 }
             }
-
-            String splitS = cuerpo.replaceAll("[^\\dA-Za-z]", "");
-            Log.i("Enviar_Array", "vacios = " +splitS);
-
-            if(splitS.isEmpty()){
-
-                String cal = String.valueOf(iCon.calcular(iCon.optenerTemporal(), footer));
-                if (!cal.equals("NaN")) {
-                    txtCalificacion.setText(cal + "%");
-                    popcalificacion.show();
-                } else {
-                    Toast.makeText(this, "No se puede dar una calificación, \npor favor diligencia el formulario", Toast.LENGTH_SHORT).show();
-                }
-
-            }else{
-                Toast.makeText(this, "No se puede dar una calificación, \n¡No puedes dejar campos vacios!", Toast.LENGTH_SHORT).show();
-            }
-
         } catch (Exception ex) {
-            Log.i("onCalificar", "" + ex.toString());
+            Log.i("exc_crearForm", ex.toString());
         }
     }
+
 
     // metodo para extraer del SharedPreferences el id del proceso
     public void getcodProceso() {
@@ -397,15 +368,15 @@ public class genated extends AppCompatActivity {
 
         String splitS = obtenerNulos(0);
 
-        if(splitS.isEmpty()){
+        if (splitS.isEmpty()) {
             mypop.dismiss();
-        }else{
+        } else {
             Toast.makeText(this, "¡No puedes dejar campos vacios!", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    public void regresarMenu(View v){
+    public void regresarMenu(View v) {
         Intent i = new Intent(this, Index.class);
         startActivity(i);
     }
@@ -416,7 +387,7 @@ public class genated extends AppCompatActivity {
 
             String splitS = obtenerNulos(1);
 
-            if(splitS.isEmpty()) {
+            if (splitS.isEmpty()) {
 
                 String cal = String.valueOf(iCon.calcular(iCon.optenerTemporal(), footer));
                 if (!cal.equals("NaN")) {
@@ -425,7 +396,7 @@ public class genated extends AppCompatActivity {
                 } else {
                     Toast.makeText(this, "No se puede dar una calificación, \n por favor diligencia el formulario", Toast.LENGTH_SHORT).show();
                 }
-            }else {
+            } else {
                 Toast.makeText(this, "No se puede dar una calificación, \n por favor completa el formulario", Toast.LENGTH_LONG).show();
             }
         } catch (Exception ex) {
@@ -433,20 +404,20 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    public String obtenerNulos(int ubicacion){
+    public String obtenerNulos(int ubicacion) {
         ContenedorTab nuevo = iCon.optenerTemporal();
         Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo, footer);
 
         String encabezado = "";
 
         for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
-            if(entry.getKey() == ubicacion){
+            if (entry.getKey() == ubicacion) {
                 encabezado += entry.getValue().toString();
             }
         }
 
         String splitS = encabezado.replaceAll("[^\\dA-Za-z]", "");
-        Log.i("Enviar_Array", "vacios = " +splitS);
+        Log.i("Enviar_Array", "vacios = " + splitS);
         return splitS;
     }
 
@@ -461,13 +432,14 @@ public class genated extends AppCompatActivity {
         startActivity(i);
     }
 
+
     public void killChildrens(ContenedorTab temporal) {
         if (linearPrinc.getChildCount() > 0) {
             linearPrinc.removeAllViews();
             try {
                 iCon.crearTemporal(contenedorEncabezado(temporal));
-                CrearCuerpo();
-
+                crearform();
+                mypop.show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -483,6 +455,7 @@ public class genated extends AppCompatActivity {
                 contenedor = temporal;
                 crearform();
                 contenedor = contenedorLimipio();
+                //mypop.show();
             } catch (Exception e) {
                 e.printStackTrace();
             }

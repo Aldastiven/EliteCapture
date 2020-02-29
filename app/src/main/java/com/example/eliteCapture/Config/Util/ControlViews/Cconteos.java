@@ -64,25 +64,12 @@ public class Cconteos {
 
         final TextView tvpor = new TextView(context);
         tvpor.setId(rt.getId().intValue());
-        tvpor.setText((rt.getValor() == null ? "Resultado : \nNA" : "resultado: \nNA"));
+        tvpor.setText((rt.getValor() == null ? "Resultado : \n" : "Resultado: \n"+rt.getValor()));
         tvpor.setTextColor(Color.parseColor("#979A9A"));
         tvpor.setBackgroundColor(Color.parseColor("#00FFFFFF"));
         tvpor.setPadding(10, 10, 10, 10);
         tvpor.setTypeface(null, Typeface.BOLD);
         tvpor.setLayoutParams(llparamsTextpo);
-
-        if (rt.getValor() != null) {
-            String data = rt.getValor();
-            int val = Integer.parseInt(data);
-
-            if (val == -1) {
-                tvpor.setText("Resultado : \nNA");
-            } else {
-                tvpor.setText("Resultado : \n" + rt.getValor());
-            }
-
-        } else {
-        }
 
         Cgnr = new ControlGnr(context, rt.getId(), pp(tvp, tvpor), Cbotones(tvpor), null, "vx2");
         ControlView = Cgnr.Contenedor(vacio, inicial);
@@ -90,17 +77,6 @@ public class Cconteos {
         return ControlView;
     }
 
-    //medidas para el boton y el campo de busqueda
-    public LinearLayout.LayoutParams medidas(double med, String data) {
-
-        LinearLayout.LayoutParams llparams = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-        llparams.weight = (float) med;
-        llparams.setMargins(5, 10, 5, 5);
-
-        return llparams;
-    }
 
     //metodo que crea los botones de conteos
     public View Cbotones(final TextView tvpor) {
@@ -124,7 +100,6 @@ public class Cconteos {
         tvr.setTypeface(null, Typeface.BOLD);
         tvr.setGravity(Gravity.CENTER);
         tvr.setLayoutParams(LLcmpweight);
-        //tvr.setVisibility((tvr.getText().equals("-1")) ? View.INVISIBLE : View.VISIBLE);
 
         LinearLayout.LayoutParams LLbtnweight = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LLbtnweight.weight = (float) 0.5;
@@ -151,6 +126,9 @@ public class Cconteos {
 
         viewTotal = llbtn;
 
+        int data = Integer.parseInt(tvr.getText().toString());
+        ResSum(data, rt.getRespuesta() == null, tvr);
+
 
         bntsum.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,11 +136,11 @@ public class Cconteos {
                 int n = Integer.parseInt(tvr.getText().toString());
                 if (n < rt.getReglas()) {
                     int rta = n + 1;
-                    String data = valueOf(rta);
+                    String data = ResSum(rta, false, tvr);
                     tvr.setText(data);
 
                     String vlr = valor(rta);
-                    tvpor.setText((rta < 0) ? "resultado: \n NA" : "resultado: \n" + vlr);
+                    tvpor.setText((rta < 0) ? "Resultado: " : "Resultado: \n" + vlr);
 
                     try {
                         registro(data, vlr);
@@ -171,7 +149,6 @@ public class Cconteos {
                     }
                 }
 
-                tvr.setVisibility(tvr.getText().equals("-1") ? View.INVISIBLE : View.VISIBLE);
             }
         });
 
@@ -181,19 +158,17 @@ public class Cconteos {
                 int n = Integer.parseInt(tvr.getText().toString());
                 if (n >= 0) {
                     int rta = n - 1;
-                    String data = valueOf(rta);
+                    String data = ResSum(rta, false, tvr);
                     tvr.setText(data);
 
-
                     String vlr = valor(rta);
-                    tvpor.setText((rta < 0) ? "resultado: \n NA" : "resultado: \n" + vlr);
+                    tvpor.setText((rta < 0) ? "Resultado: \n NA" : "Resultado: \n" + vlr);
                     try {
                         registro(data, (rta < 0) ? "-1" : vlr);
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
                 }
-                tvr.setVisibility(tvr.getText().equals("-1") ? View.INVISIBLE : View.VISIBLE);
             }
 
         });
@@ -202,20 +177,41 @@ public class Cconteos {
         return viewTotal;
     }
 
+    public String ResSum(int rta, boolean inicial, TextView tvr) {
+        String data = String.valueOf(rta);
+        try {
+            if (inicial && data.equals("-1")) {
+                tvr.setVisibility(View.INVISIBLE);
+            } else if (!inicial && rta > -1) {
+                tvr.setVisibility(View.VISIBLE);
+            } else if (!inicial && rta <= 0) {
+                tvr.setVisibility(View.VISIBLE);
+                registro("-1", "-1");
+            }
+        } catch (Exception ex) {
+            Toast.makeText(context, "" + ex.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+        return data;
+    }
+
     public String valor(int rta) {
+        try {
+            DecimalFormatSymbols separator = new DecimalFormatSymbols();
+            separator.setDecimalSeparator('.');
 
-        DecimalFormatSymbols separador = new DecimalFormatSymbols();
-        separador.setDecimalSeparator('.');
+            DecimalFormat decimalFormat = new DecimalFormat("#.##",separator);
+            float operacion = Float.parseFloat((rta < 0) ? "-1" : String.valueOf((rt.getPonderado() / rt.getReglas()) * (rt.getReglas() - rta)));
 
-        DecimalFormat format = new DecimalFormat("#.##", separador);
-
-        float operacion = Float.parseFloat((rta < 0) ? "-1" : String.valueOf((rt.getPonderado() / rt.getReglas()) * (rt.getReglas() - rta)));
-
-        return format.format(operacion);
+            return String.valueOf(decimalFormat.format(operacion));
+        }catch (Exception ex){
+            Toast.makeText(context, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+            return "";
+        }
     }
 
     public void registro(String rta, String valor) throws Exception {
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, (valor));
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor));
     }
 
     //retorna el layout del encabezado pregunta porcentaje
@@ -234,19 +230,6 @@ public class Cconteos {
         llpregunta.addView(v2); //retorna pocentaje
 
         return llpregunta;
-    }
-
-    public void registrarInicial(){
-        try {
-            if (rt.getValor() == null) {
-                for (int data : idnull) {
-                    Log.i("recorrer_valor", String.valueOf(data));
-                    registro("-1", "-1");
-                }
-            }
-        }catch (Exception ex){
-
-        }
     }
 
 }

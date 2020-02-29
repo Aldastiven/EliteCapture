@@ -56,10 +56,6 @@ public class CradioButton {
     }
 
 
-    public CradioButton(Long id) {
-        this.id = id;
-    }
-
     //crea el control del radio button y retorna el view
     public View Tradiobtn() {
 
@@ -118,22 +114,12 @@ public class CradioButton {
         tvp.setLayoutParams(llparamsText);
 
         final TextView tvpor = new TextView(context);
-        tvpor.setText((rt.getValor() != null ? rt.getValor() : "resultado: "));
+        tvpor.setText((rt.getValor() != null ? "Resultado: \n" +rt.getValor() : "Resultado: \n"));
         tvpor.setTextColor(Color.parseColor("#979A9A"));
         tvpor.setBackgroundColor(Color.parseColor("#00ffffff"));
         tvpor.setPadding(10, 10, 10, 10);
         tvpor.setTypeface(null, Typeface.BOLD);
         tvpor.setLayoutParams(llparamsTextpo);
-
-        if(rt.getValor() != null) {
-            String data = rt.getValor();
-            int val = Integer.parseInt(data);
-            if(val == -1){
-                tvpor.setText("Resultado : \nNA");
-            }else{
-            }
-        }else{
-        }
 
         try {
             iDesplegable iDesp = new iDesplegable(null, path);
@@ -214,18 +200,18 @@ public class CradioButton {
                         case 2:
                             rta = rb.getText().toString();
                             vlr = String.valueOf(rt.getPonderado());
-                            tvpor.setText("resultado: \n" + vlr);
+                            tvpor.setText("Resultado: \n" + vlr);
                             registro(rta, vlr);
                             break;
                         case 0:
                             rta = rb.getText().toString();
                             vlr = String.valueOf(0);
-                            tvpor.setText("resultado: \n" + vlr);
+                            tvpor.setText("Resultado: \n" + vlr);
                             registro(rta, vlr);
                             break;
                         case 1:
                             rta = rb.getText().toString();
-                            tvpor.setText("resultado: \n  NA");
+                            tvpor.setText("Resultado: \n  NA");
                             registro(rta, "-1");
                             break;
                     }
