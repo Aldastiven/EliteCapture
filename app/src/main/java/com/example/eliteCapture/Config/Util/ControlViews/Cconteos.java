@@ -169,6 +169,23 @@ public class Cconteos {
                         Log.i("Error_Crs", e.toString());
                     }
                 }
+
+                if(tvr.getVisibility()==View.INVISIBLE && n<0){
+
+                    tvr.setVisibility(View.VISIBLE);
+                    tvpor.setText("Resultado: \n NA");
+
+                    int rta = n;
+                    String vlr = valor(rta);
+                    String data = ResSum(rta, false, tvr);
+                    try {
+                        registro(data, (rta < 0) ? "-1" : vlr);
+                    } catch (Exception e) {
+                        Log.i("Error_Crs", e.toString());
+                    }
+
+                }else{}
+
             }
 
         });
