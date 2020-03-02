@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -90,6 +91,7 @@ public class Cfiltro {
         edt.setTypeface(null, Typeface.BOLD);
         edt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
+        //edt.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         edt.setBackgroundColor(Color.parseColor("#eeeeee"));
         edt.setSingleLine();
 

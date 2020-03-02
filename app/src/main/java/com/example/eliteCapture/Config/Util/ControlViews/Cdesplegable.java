@@ -123,7 +123,7 @@ public class Cdesplegable {
                         registro(null, null);
                     } else {
                         Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
-                        registro(rta, codigo.get(position));
+                        registro(rta, codigo.get(position-1));
                     }
                 } catch (Exception ex) {
                 }

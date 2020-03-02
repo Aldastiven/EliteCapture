@@ -115,6 +115,7 @@ public class genated extends AppCompatActivity {
                     popvalidar.show();
                 } else {
                     crearform();
+                    mypop.show();
                 }
             }
 
@@ -438,7 +439,7 @@ public class genated extends AppCompatActivity {
             linearPrinc.removeAllViews();
             try {
                 iCon.crearTemporal(contenedorEncabezado(temporal));
-                crearform();
+                CrearCuerpo();
                 mypop.show();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -455,7 +456,6 @@ public class genated extends AppCompatActivity {
                 contenedor = temporal;
                 crearform();
                 contenedor = contenedorLimipio();
-                //mypop.show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
