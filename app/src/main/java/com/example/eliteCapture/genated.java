@@ -41,7 +41,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -288,8 +290,7 @@ public class genated extends AppCompatActivity {
                         linearBodypop.addView(cf.filtro());
                         break;
                     case "SCA":
-                        Log.i("vcampo", "data " + r.getRespuesta());
-                        Cscanner cs = new Cscanner(genated.this, path, r.getId(), r.getPregunta(), "H", r, (dataCamera != null ? dataCamera : ""), (r.getRespuesta() != null ? true : false), inicial);
+                        Cscanner cs = new Cscanner(genated.this, path, r.getId(), r.getPregunta(), "H", r, (dataCamera != null ? dataCamera : ""), (r.getRespuesta() != null ? true : false), inicial,sp);
                         linearBodypop.addView(cs.scanner());
                         break;
                     case "AUT":

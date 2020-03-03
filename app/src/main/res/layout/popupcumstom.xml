@@ -85,36 +85,35 @@
 
         </ScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0sp"
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:weightSum="2"
-            android:orientation="horizontal">
+            android:text="volver al menu"
+            android:onClick="regresarMenu"
+            android:background="#e67e22"
+            android:layout_margin="5sp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"/>
 
-            <Button
-                android:layout_width="0sp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="volver al menu"
-                android:onClick="regresarMenu"
-                android:background="#e67e22"
-                android:layout_margin="5sp"
-                android:textColor="#ffffff"
-                android:textStyle="bold"/>
-
-            <Button
-                android:layout_width="0sp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="ir al formulario"
-                android:onClick="ocultarPop"
-                android:background="#66bb6a"
-                android:layout_margin="5sp"
-                android:textColor="#ffffff"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
+        <Button
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="ir al formulario"
+            android:onClick="ocultarPop"
+            android:background="#66bb6a"
+            android:layout_margin="5sp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 

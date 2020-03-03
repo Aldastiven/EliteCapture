@@ -28,10 +28,12 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Index extends AppCompatActivity {
     LinearLayout linearCheck, titulodata;
-    TextView txtPaneluser, txtELige;
+    TextView txtPaneluser, txtELige, txtUpdateData;
     RelativeLayout contenUser;
 
     int sizeprocesos = 0;
@@ -57,6 +59,7 @@ public class Index extends AppCompatActivity {
         contenUser = findViewById(R.id.contenUser);
         txtPaneluser = findViewById(R.id.txtPaneluser);
         txtELige = findViewById(R.id.txtELige);
+        txtUpdateData = findViewById(R.id.txtUpdateData);
 
         path = getExternalFilesDir(null) + File.separator;
         sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
@@ -68,11 +71,17 @@ public class Index extends AppCompatActivity {
 
 
             traerDataUser();
+            traerFechaUpDate();
             CargaMenu();
 
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), "Error \n" + ex, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void traerFechaUpDate() {
+        String fechaUp = sp.getString("fechaUpDate", "");
+        txtUpdateData.setText("Ultima Actualización. \n "+fechaUp);
     }
 
 
@@ -101,39 +110,6 @@ public class Index extends AppCompatActivity {
 
         } catch (Exception ex) {
             Toast.makeText(this, "Se genero un error al traer los datos del usuario \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    public void Messagenull(int size) {
-        try {
-            titulodata.removeView(txtELige);
-
-            for (int i = 0; i < size; i++) {
-
-                LinearLayout.LayoutParams ltxtparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                ltxtparams.setMargins(0, 0, 0, 20);
-
-                TextView tv = new TextView(getApplicationContext());
-                tv.setText("Lo sentimos , \n pero no tienes formularios vinculados!!");
-                tv.setTextColor(Color.parseColor("#C0392B"));
-                tv.setGravity(View.TEXT_ALIGNMENT_CENTER);
-                tv.setTextSize(25);
-                tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                tv.setTypeface(null, Typeface.BOLD);
-                tv.setLayoutParams(ltxtparams);
-
-                ImageView btn = new ImageView(getApplicationContext());
-                btn.setBackgroundColor(Color.TRANSPARENT);
-                btn.setAdjustViewBounds(true);
-                btn.setImageDrawable(getDrawable(R.drawable.nofoundx400));
-
-                linearCheck.addView(tv);
-                linearCheck.addView(btn);
-            }
-
-        } catch (Exception ex) {
-            Toast.makeText(this, "Error  Message null " + ex.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -197,6 +173,16 @@ public class Index extends AppCompatActivity {
         Intent i = new Intent(Index.this, splash_activity.class);
         i.putExtra("class", "Index");
         startActivity(i);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm:ss a");
+        String fechaUpDate = sdf.format(new Date());
+        String horaUpDate = sdf2.format(new Date());
+
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString("fechaUpDate", "Fecha : "+fechaUpDate+"\n Hora : "+horaUpDate);
+        edit.commit();
+        edit.apply();
     }
 
     public void onBackPressed() {
