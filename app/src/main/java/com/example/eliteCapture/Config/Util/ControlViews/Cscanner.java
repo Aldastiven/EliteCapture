@@ -178,11 +178,12 @@ public class Cscanner {
                         if (res != null) {
                             tv.setText(!res.equals("NO DATA SCAN") ? "Resultado : " + res : "Escanea el codigo de barras activando la camara");
                             tv.setTextColor(!res.equals("NO DATA SCAN") ? Color.parseColor("#58d68d") : Color.parseColor("#979A9A"));
-                            if (!res.equals("NO DATA SCAN")) {
+                            if (res.equals("NO DATA SCAN")) {
                                 registro(null, null);
                             } else {
                                 if (!edt.getText().toString().isEmpty()) {
-                                    registro(edt.getText().toString(), null);
+                                    Toast.makeText(context, "llego", Toast.LENGTH_SHORT).show();
+                                    registro(edt.getText().toString(), res);
                                 } else {
                                     registro(null, null);
                                 }

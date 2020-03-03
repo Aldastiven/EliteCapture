@@ -369,6 +369,7 @@ public class genated extends AppCompatActivity {
     public void ocultarPop(View v) {
 
         String splitS = obtenerNulos(0);
+        Log.i("vaciosDD",splitS);
 
         if (splitS.isEmpty()) {
             mypop.dismiss();
@@ -486,14 +487,15 @@ public class genated extends AppCompatActivity {
             if (full) {
 
                 iCon.insert(nuevo);
+                contador.update(usu.getId_usuario(),pro.getCodigo_proceso());
                 cargarContador();
+
                 inicial = false;
+                killChildrens(nuevo);
 
                 if (iCon.enviar()) {
-                    killChildrens(nuevo);
                     Toast.makeText(this, "Insertado con exito!" + vacios, Toast.LENGTH_LONG).show();
                 } else {
-                    killChildrens(nuevo);
                     Toast.makeText(this, "Agregado a local" + vacios, Toast.LENGTH_LONG).show();
                 }
 
