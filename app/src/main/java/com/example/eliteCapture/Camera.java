@@ -23,6 +23,8 @@ public class Camera extends AppCompatActivity {
 
     private ZBarScannerView vbc;
 
+    int id, regla;
+    String ubicacion, path, desplegable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,23 +77,49 @@ public class Camera extends AppCompatActivity {
 
     //funcion de registro en el tempóral
     public void registro(String rta, String valor) throws Exception {
+        Bundle();
 
-        Bundle bundle = getIntent().getExtras();
-        if (!bundle.isEmpty()) {
+        Cscanner cscanner = new Cscanner(path);
+        iContenedor conTemp = new iContenedor(path);
 
-            int id = bundle.getInt("id", 0);
-            String ubi = bundle.getString("ubi", "");
-            String path = bundle.getString("path", "");
-            String desplegable = bundle.getString("desplegable","");
+        if (!desplegable.isEmpty()) {
 
-            Cscanner cscanner = new Cscanner(path);
-            String resultado = cscanner.Buscar(rta,desplegable);
+            String cadena = "";
 
-            valor = resultado;
+            Integer b = new Integer(regla);
+            if (b == null) {
+                valor = cscanner.Buscar(rta, desplegable);
+            } else {
+                cadena = quitCadena(rta, regla);
+                valor = cscanner.Buscar(cadena, desplegable);
+            }
 
-            iContenedor conTemp = new iContenedor(path);
-            conTemp.editarTemporal(ubi, id, rta, valor);
+            if (!valor.equals("NO DATA SCAN")) {
+                conTemp.editarTemporal(ubicacion, id, cadena, valor);
+            } else {
+                conTemp.editarTemporal(ubicacion, id, null, null);
+            }
+        }else{
+            conTemp.editarTemporal(ubicacion, id, rta, valor);
         }
     }
 
+    //funcion que resta la cadena de texto con la regla
+    public String quitCadena(String respuesta, int n) {
+        String cadena;
+        cadena = respuesta;
+        return cadena.substring(0, cadena.length() - n);
+    }
+
+    //funcion que devuelve los datos pasados por Cscanner
+    public void Bundle() {
+        Bundle bundle = getIntent().getExtras();
+        if (!bundle.isEmpty()) {
+            id = bundle.getInt("id", 0);
+            ubicacion = bundle.getString("ubi", "");
+            path = bundle.getString("path", "");
+            desplegable = bundle.getString("desplegable", "");
+            regla = bundle.getInt("regla", 0);
+        }
+    }
 }

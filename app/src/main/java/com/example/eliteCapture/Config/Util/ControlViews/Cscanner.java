@@ -47,7 +47,6 @@ public class Cscanner {
     TextView tv;
 
     int ID;
-    String dataCapture ;
 
     View controlView;
     ControlGnr Cgnr = null;
@@ -78,22 +77,12 @@ public class Cscanner {
         tv.setPadding(5, 5, 5, 5);
         tv.setTypeface(null, Typeface.BOLD);
 
-        if(r.getValor() != null){
-            if(r.getValor().equals("NO DATA SCAN")){
-                tv.setText("Escanea el codigo de barras activando la camara:");
-                tv.setTextColor(Color.parseColor("#979A9A"));
-            }else{
-                tv.setText("Resultado : "+r.getValor());
-                tv.setTextColor(Color.parseColor("#58d68d"));
-            }
-        }else{
-            tv.setText("Escanea el codigo de barras activando la camara:");
-            tv.setTextColor(Color.parseColor("#979A9A"));
-        }
+        tv.setText((r.getValor() == null ? "Escanea el codigo de barras activando la camara" : "Resultado : " + r.getValor()));
+        tv.setTextColor((r.getValor() == null ? Color.parseColor("#979A9A") : Color.parseColor("#58d68d")));
 
         final EditText edt = new EditText(context);
         edt.setHint("" + contenido);
-        edt.setText((!camera.isEmpty() ? camera : r.getRespuesta()));
+        edt.setText((r.getRespuesta() != null ? r.getRespuesta() : ""));
         edt.setHintTextColor(Color.parseColor("#626567"));
         edt.setBackgroundColor(Color.parseColor("#ffffff"));
         edt.setTextColor(Color.parseColor("#1C2833"));
@@ -113,9 +102,10 @@ public class Cscanner {
         ID = id.intValue();
 
         Cgnr = new ControlGnr(context, id, tv, edt, btn, "hxbtn_izq");
-        controlView = Cgnr.Contenedor(vacio,inicial);
+        controlView = Cgnr.Contenedor(vacio, inicial);
 
         StarCamera(btn);
+        funScannerEdit(edt, tv);
 
         return controlView;
     }
@@ -143,6 +133,7 @@ public class Cscanner {
                     i.putExtra("ubi", ubicacion);
                     i.putExtra("path", path);
                     i.putExtra("desplegable", r.getDesplegable());
+                    i.putExtra("regla", r.getReglas());
                     context.startActivity(i);
                 }
             });
@@ -164,8 +155,67 @@ public class Cscanner {
             }
             return "NO DATA SCAN";
         } catch (Exception ex) {
-            return "" ;
+            return "NO DATA SCAN";
         }
+    }
+
+    //funcion de detecion de cambio en el cambo e inserta
+    public void funScannerEdit(final EditText edt, final TextView tv) {
+
+        edt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+
+                    if (!r.getDesplegable().isEmpty()) {
+                        String res = Buscar(edt.getText().toString(), r.getDesplegable());
+
+                        if (res != null) {
+                            tv.setText(!res.equals("NO DATA SCAN") ? "Resultado : " + res : "Escanea el codigo de barras activando la camara");
+                            tv.setTextColor(!res.equals("NO DATA SCAN") ? Color.parseColor("#58d68d") : Color.parseColor("#979A9A"));
+                            if (!res.equals("NO DATA SCAN")) {
+                                registro(null, null);
+                            } else {
+                                if (!edt.getText().toString().isEmpty()) {
+                                    registro(edt.getText().toString(), null);
+                                } else {
+                                    registro(null, null);
+                                }
+                            }
+
+                        } else {
+                            tv.setText("Escanea el codigo de barras activando la camara");
+                            tv.setTextColor(Color.parseColor("#979A9A"));
+                        }
+                    } else {
+                        if (!edt.getText().toString().isEmpty()) {
+                            registro(edt.getText().toString(), null);
+                        } else {
+                            registro(null, null);
+                        }
+                    }
+
+                } catch (Exception ex) {
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
+
+    //funcion de registro en el tempóral
+    public void registro(String rta, String valor) throws Exception {
+        iContenedor conTemp = new iContenedor(path);
+        conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
     }
 
 }

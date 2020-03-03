@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +67,7 @@ public class CfilAuto {
 
         AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(context);
         ArrayAdapter<String> autoArray = new ArrayAdapter<>(context, R.layout.auto_complete_personal, soloOpciones(desplegable));
+
         autoCompleteTextView.setAdapter(autoArray);
         autoCompleteTextView.setHint(contenido);
         autoCompleteTextView.setText((r.getRespuesta() != null ? r.getRespuesta() : ""));
@@ -120,11 +122,13 @@ public class CfilAuto {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                etdauto.dismissDropDown();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 try {
+
                     Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
 
                     String resultado = Buscar(etdauto.getText().toString(), desplegable);
