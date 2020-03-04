@@ -22,7 +22,6 @@ import com.example.eliteCapture.Config.Util.ControlViews.Cetalf;
 import com.example.eliteCapture.Config.Util.ControlViews.Cetnum;
 import com.example.eliteCapture.Config.Util.ControlViews.CfilAuto;
 import com.example.eliteCapture.Config.Util.ControlViews.Cfiltro;
-import com.example.eliteCapture.Config.Util.ControlViews.ControlGnr;
 import com.example.eliteCapture.Config.Util.ControlViews.Cscanner;
 import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
 import com.example.eliteCapture.Config.Util.ControlViews.Cconteos;
@@ -30,7 +29,6 @@ import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
-import com.example.eliteCapture.Model.View.Interfaz.Contenedor;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContador;
@@ -41,9 +39,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -274,28 +269,22 @@ public class genated extends AppCompatActivity {
                     case "ETN":
                         Log.i("validar", "" + r.getRespuesta());
 
-                        Cetnum cen = new Cetnum(genated.this, path, r.getId(), r.getPregunta(), "H", r, (r.getRespuesta() != null), inicial);
-                        linearBodypop.addView(cen.tnumerico());
+                        linearBodypop.addView(new Cetnum(genated.this, path, "H", r, inicial).tnumerico());
                         break;
                     case "ETA":
-                        Cetalf cal = new Cetalf(genated.this, path, r.getId(), r.getPregunta(), "H", r, (r.getRespuesta() != null ? true : false), inicial);
-                        linearBodypop.addView(cal.talfanumerico());
+                        linearBodypop.addView(new Cetalf(genated.this, path, "H", r, inicial).talfanumerico());
                         break;
                     case "CBX":
-                        Cdesplegable cd = new Cdesplegable(genated.this, path, r.getId(), r.getPregunta(), r.getDesplegable(), "H", r, (r.getRespuesta() != null ? true : false), inicial);
-                        linearBodypop.addView(cd.desplegable());
+                        linearBodypop.addView(new Cdesplegable(genated.this, path, "H", r, inicial).desplegable());
                         break;
                     case "FIL":
-                        Cfiltro cf = new Cfiltro(genated.this, path, r.getId(), r.getPregunta(), r.getDesplegable(), "H", r, (r.getRespuesta() != null ? true : false), inicial);
-                        linearBodypop.addView(cf.filtro());
+                        linearBodypop.addView(new Cfiltro(genated.this, path, "H", r, inicial).filtro());
                         break;
                     case "SCA":
-                        Cscanner cs = new Cscanner(genated.this, path, r.getId(), r.getPregunta(), "H", r, (dataCamera != null ? dataCamera : ""), (r.getRespuesta() != null ? true : false), inicial,sp);
-                        linearBodypop.addView(cs.scanner());
+                        linearBodypop.addView(new Cscanner(genated.this, path, "H", r, inicial).scanner());
                         break;
                     case "AUT":
-                        CfilAuto ca = new CfilAuto(genated.this, path, r.getId(), r.getPregunta(), "H", r.getDesplegable(), r, (r.getRespuesta() != null ? true : false), inicial);
-                        linearBodypop.addView(ca.autocompletado());
+                        linearBodypop.addView(new CfilAuto(genated.this, path, "H", r, inicial).autocompletado());
                         break;
                     default:
                         Toast.makeText(this, "ocurrio un error al crear ", Toast.LENGTH_SHORT).show();
@@ -321,12 +310,10 @@ public class genated extends AppCompatActivity {
 
                 switch (r.getTipo()) {
                     case "RS":
-                        Cconteos cc = new Cconteos(genated.this, path, "Q", r, (r.getRespuesta() != null), inicial);
-                        linearPrinc.addView(cc.Cconteo());
+                        linearPrinc.addView(new Cconteos(genated.this, path, ubicacion, r, inicial).Cconteo());
                         break;
                     case "RB":
-                        CradioButton cb = new CradioButton(genated.this, path, "Q", r.getId(), r.getPregunta(), r.getPonderado(), r.getDesplegable(), r, (r.getRespuesta() != null), inicial);
-                        linearPrinc.addView(cb.Tradiobtn());
+                        linearPrinc.addView(new CradioButton(genated.this, path, ubicacion, r, inicial).Tradiobtn());
                         break;
                 }
             }
@@ -355,9 +342,13 @@ public class genated extends AppCompatActivity {
 
     //METODOS PARA OBTENER DATOS
     public String getPhoneName() {
-        BluetoothAdapter myDevice = BluetoothAdapter.getDefaultAdapter();
-        String deviceName = myDevice.getName();
-        return deviceName;
+        try {
+            BluetoothAdapter myDevice = BluetoothAdapter.getDefaultAdapter();
+            String deviceName = myDevice.getName();
+            return deviceName;
+        } catch (Exception e) {
+            return "Neron_Navarrete";
+        }
     }
 
     //MUESTRA EL POP CON LOS CAMPOS DEL HEADER
@@ -369,7 +360,7 @@ public class genated extends AppCompatActivity {
     public void ocultarPop(View v) {
 
         String splitS = obtenerNulos(0);
-        Log.i("vaciosDD",splitS);
+        Log.i("vaciosDD", splitS);
 
         if (splitS.isEmpty()) {
             mypop.dismiss();
@@ -487,7 +478,7 @@ public class genated extends AppCompatActivity {
             if (full) {
 
                 iCon.insert(nuevo);
-                contador.update(usu.getId_usuario(),pro.getCodigo_proceso());
+                contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
                 cargarContador();
 
                 inicial = false;

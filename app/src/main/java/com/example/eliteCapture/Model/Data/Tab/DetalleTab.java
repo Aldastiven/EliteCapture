@@ -4,7 +4,7 @@ public class DetalleTab {
 
 	private Long id_detalle;
 	private int id_proceso;
-	private Long codigo_detalle;
+	private int codigo_detalle;
 	private String nombre_detalle;
 	private String tipo;
 	private String lista_desp;
@@ -17,7 +17,7 @@ public class DetalleTab {
 	private int reglas;
 	private String tip;
 
-	public DetalleTab(Long id_detalle, int id_proceso, Long codigo_detalle, String nombre_detalle, String tipo, String lista_desp, String tipo_M, Float porcentaje, String capitulo, String item, String capitulo_Nombre, String grupo1, int reglas, String tip) {
+	public DetalleTab(Long id_detalle, int id_proceso, int codigo_detalle, String nombre_detalle, String tipo, String lista_desp, String tipo_M, Float porcentaje, String capitulo, String item, String capitulo_Nombre, String grupo1, int reglas, String tip) {
 		this.setId_detalle(id_detalle);
 		this.setId_proceso(id_proceso);
 		this.setCodigo_detalle(codigo_detalle);
@@ -51,11 +51,11 @@ public class DetalleTab {
 		this.id_proceso = id_proceso;
 	}
 
-	public Long getCodigo_detalle() {
+	public int getCodigo_detalle() {
 		return codigo_detalle;
 	}
 
-	public void setCodigo_detalle(Long codigo_detalle) {
+	public void setCodigo_detalle(int codigo_detalle) {
 		this.codigo_detalle = codigo_detalle;
 	}
 

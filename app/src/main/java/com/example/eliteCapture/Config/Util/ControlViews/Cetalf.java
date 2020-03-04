@@ -19,10 +19,8 @@ public class Cetalf {
 
     private Context context;
     private String path;
-    private Long id;
-    private String contenido;
     private String ubicacion;
-    private RespuestasTab r;
+    private RespuestasTab rt;
     private Boolean vacio;
     private Boolean inicial;
 
@@ -31,14 +29,12 @@ public class Cetalf {
 
     View ControlView;
 
-    public Cetalf(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r, Boolean vacio, Boolean inicial) {
+    public Cetalf(Context context, String path, String ubicacion, RespuestasTab rt,Boolean inicial)  {
         this.context = context;
         this.path = path;
-        this.id = id;
-        this.contenido = contenido;
         this.ubicacion = ubicacion;
-        this.r = r;
-        this.vacio = vacio;
+        this.rt = rt;
+        this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
     }
 
@@ -51,8 +47,8 @@ public class Cetalf {
         llparams.setMargins(5, 10, 5, 10);
 
         final TextView tvp = new TextView(context);
-        tvp.setId(id.intValue());
-        tvp.setText(contenido);
+        tvp.setId(rt.getId().intValue());
+        tvp.setText(rt.getPregunta());
         tvp.setTextSize(20);
         tvp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tvp.setTextColor(Color.parseColor("#979A9A"));
@@ -61,15 +57,15 @@ public class Cetalf {
 
         EditText etxtA = new EditText(context);
 
-        if (r.getReglas() != 0) {
-            etxtA.setFilters(new InputFilter[]{new InputFilter.LengthFilter(r.getReglas())});
+        if (rt.getReglas() != 0) {
+            etxtA.setFilters(new InputFilter[]{new InputFilter.LengthFilter(rt.getReglas())});
         }
 
-        etxtA.setId(id.intValue());
+        etxtA.setId(rt.getId().intValue());
         etxtA.setTextSize(20);
         etxtA.setHint("NULL");
         etxtA.setHintTextColor(Color.TRANSPARENT);
-        etxtA.setText((r.getRespuesta()!=null ? r.getRespuesta(): ""));
+        etxtA.setText((vacio ? rt.getRespuesta(): ""));
         etxtA.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         etxtA.setTextColor(Color.parseColor("#515A5A"));
         etxtA.setBackgroundColor(Color.parseColor("#E5E7E9"));
@@ -78,7 +74,7 @@ public class Cetalf {
         etxtA.setBackgroundColor(Color.parseColor("#eeeeee"));
         etxtA.setSingleLine();
 
-        Cgnr = new ControlGnr(context,id,tvp,etxtA,null,"hx2");
+        Cgnr = new ControlGnr(context,rt.getId(),tvp,etxtA,null,"hx2");
         ControlView = Cgnr.Contenedor(vacio,inicial);
 
         Funeta(etxtA);
@@ -113,7 +109,7 @@ public class Cetalf {
     //funcion de registro en el tempóral
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor);
     }
 
 }

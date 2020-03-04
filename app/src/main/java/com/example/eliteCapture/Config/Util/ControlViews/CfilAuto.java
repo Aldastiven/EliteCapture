@@ -31,33 +31,27 @@ public class CfilAuto {
 
     private Context context;
     private String path;
-    private Long id;
-    private String contenido;
     private String ubicacion;
-    private String desplegable;
-    private RespuestasTab r;
+    private RespuestasTab rt;
     private Boolean vacio;
     private Boolean inicial;
 
 
-    View ControlView;
+    public View ControlView;
 
-    public CfilAuto(Context context, String path, Long id, String contenido, String ubicacion, String desplegable, RespuestasTab r, Boolean vacio, Boolean inicial) {
+    public CfilAuto(Context context, String path, String ubicacion, RespuestasTab rt,Boolean inicial)   {
         this.context = context;
         this.path = path;
-        this.id = id;
-        this.contenido = contenido;
         this.ubicacion = ubicacion;
-        this.desplegable = desplegable;
-        this.r = r;
-        this.vacio = vacio;
+        this.rt = rt;
+        this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
     }
 
     public View autocompletado() throws Exception {
 
         final TextView tvp = new TextView(context);
-        tvp.setId(id.intValue());
+        tvp.setId(rt.getId().intValue());
         tvp.setText("Resultados :");
         tvp.setTextSize(15);
         tvp.setTextColor(Color.parseColor("#979A9A"));
@@ -66,11 +60,11 @@ public class CfilAuto {
 
 
         AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(context);
-        ArrayAdapter<String> autoArray = new ArrayAdapter<>(context, R.layout.auto_complete_personal, soloOpciones(desplegable));
+        ArrayAdapter<String> autoArray = new ArrayAdapter<>(context, R.layout.auto_complete_personal, soloOpciones(rt.getDesplegable()));
 
         autoCompleteTextView.setAdapter(autoArray);
-        autoCompleteTextView.setHint(contenido);
-        autoCompleteTextView.setText((r.getRespuesta() != null ? r.getRespuesta() : ""));
+        autoCompleteTextView.setHint(rt.getPregunta());
+        autoCompleteTextView.setText((vacio ? rt.getRespuesta() : ""));
         autoCompleteTextView.setTextSize(15);
         autoCompleteTextView.setLayoutParams(medidas(1));
         autoCompleteTextView.setBackgroundColor(Color.parseColor("#E5E7E9"));
@@ -79,12 +73,12 @@ public class CfilAuto {
         autoCompleteTextView.setTextColor(Color.parseColor("#515A5A"));
         autoCompleteTextView.setTypeface(null, Typeface.BOLD);
 
-        Cgnr = new ControlGnr(context, id, tvp, autoCompleteTextView, null, "vx2");
+        Cgnr = new ControlGnr(context, rt.getId(), tvp, autoCompleteTextView, null, "vx2");
         ControlView = Cgnr.Contenedor(vacio,inicial);
 
         FunAuto(autoCompleteTextView, tvp);
 
-        String resultado = Buscar(autoCompleteTextView.getText().toString(), desplegable);
+        String resultado = Buscar(autoCompleteTextView.getText().toString(), rt.getDesplegable());
 
         if (!resultado.isEmpty()) {
             tvp.setText("Resultado : " + resultado);
@@ -131,7 +125,7 @@ public class CfilAuto {
 
                     Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
 
-                    String resultado = Buscar(etdauto.getText().toString(), desplegable);
+                    String resultado = Buscar(etdauto.getText().toString(), rt.getDesplegable());
 
                     if (!resultado.isEmpty()) {
                         tvp.setText("Resultado : " + resultado);
@@ -164,7 +158,7 @@ public class CfilAuto {
     //funcion de registro en el tempóral
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor);
     }
 
     //funcion de la busqueda

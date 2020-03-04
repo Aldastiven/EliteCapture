@@ -227,6 +227,7 @@ public class iContenedor implements Contenedor {
         Log.i("Error_onCreate", "a convertir " + detalle.getLista_desp());
         return new RespuestasTab(
                 id,
+                detalle.getCodigo_detalle(),
                 detalle.getId_proceso(),
                 detalle.getId_detalle(),
                 detalle.getTipo(),
@@ -287,6 +288,7 @@ public class iContenedor implements Contenedor {
                     "     INSERT INTO [dbo].[datos_procesos_detalle]\n" +
                     "           ([fecha]\n" +
                     "           ,[id_procesos]\n" +
+                    "           ,[id_codigo]\n" +
                     "           ,[id_procesos_detalle]\n" +
                     "           ,[rUsu_resp_d]\n" +
                     "           ,[valor_resp_d]\n" +
@@ -295,7 +297,7 @@ public class iContenedor implements Contenedor {
                     "           ,[id_usuario]\n" +
                     "           ,[consec_json])\n" +
                     "     VALUES\n" +
-                    "           (?,?,?,?,?,?,?,?,?);";
+                    "           (?,?,?,?,?,?,?,?,?,?);";
 
 
             int load = ct.size();
@@ -323,13 +325,14 @@ public class iContenedor implements Contenedor {
         for (RespuestasTab r : rtas) {
             ps.setString(1, c.getFecha());
             ps.setInt(2, c.getIdProceso());
-            ps.setLong(3, r.getIdPregunta());
-            ps.setString(4, r.getRespuesta());
-            ps.setString(5, r.getValor());
-            ps.setFloat(6, r.getPonderado());
-            ps.setString(7, c.getTerminal());
-            ps.setInt(8, c.getIdUsuario());
-            ps.setInt(9, c.getConsecutivo());
+            ps.setInt(3, r.getCodigo());
+            ps.setLong(4, r.getIdPregunta());
+            ps.setString(5, r.getRespuesta());
+            ps.setString(6, r.getValor());
+            ps.setFloat(7, r.getPonderado());
+            ps.setString(8, c.getTerminal());
+            ps.setInt(9, c.getIdUsuario());
+            ps.setInt(10, c.getConsecutivo());
             ps.addBatch();
         }
     }

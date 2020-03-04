@@ -31,17 +31,19 @@ public class Cconteos {
     private RespuestasTab rt;
     private boolean vacio;
     private Boolean inicial;
+    private int id;
 
     ArrayList<Integer> idnull = new ArrayList<>();
 
     ControlGnr Cgnr;
 
-    public Cconteos(Context context, String path, String ubicacion, RespuestasTab rt, boolean vacio, Boolean inicial) {
+    public Cconteos(Context context, String path, String ubicacion, RespuestasTab rt, Boolean inicial) {
         this.context = context;
         this.path = path;
         this.ubicacion = ubicacion;
         this.rt = rt;
-        this.vacio = vacio;
+        this.id = rt.getId().intValue() + 1;
+        this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
     }
 
@@ -56,7 +58,7 @@ public class Cconteos {
 
         final TextView tvp = new TextView(context);
         tvp.setId(rt.getId().intValue());
-        tvp.setText(rt.getPregunta() + "\nponderado: " + rt.getPonderado());
+        tvp.setText(id + ". " + rt.getPregunta() + "\nponderado: " + rt.getPonderado());
         tvp.setTextColor(Color.parseColor("#979A9A"));
         tvp.setPadding(5, 5, 5, 5);
         tvp.setTypeface(null, Typeface.BOLD);

@@ -113,7 +113,7 @@ public class iDetalle implements Detalle {
 		return new DetalleTab(
 				rs.getLong("id_detalle"),
 				rs.getInt("id_proceso"),
-				rs.getLong("codigo_detalle"),
+				rs.getInt("codigo_detalle"),
 				rs.getString("nombre_detalle").trim(),
 				rs.getString("tipo").trim(),
 				rs.getString("lista_desp"),

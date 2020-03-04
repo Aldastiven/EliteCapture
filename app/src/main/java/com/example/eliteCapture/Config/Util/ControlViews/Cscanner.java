@@ -34,35 +34,24 @@ import static android.content.Intent.getIntentOld;
 public class Cscanner {
 
     private Context context;
-    String path;
-    private Long id;
-    private String contenido;
-    private String ubicacion;
-    private RespuestasTab r;
-    private String camera;
+    private String path;
+    private RespuestasTab rt;
     private Boolean vacio;
     private Boolean inicial;
-    private SharedPreferences sp;
+    private String ubicacion;
+    public TextView tv;
 
-    TextView tv;
-
-    int ID;
-
-    View controlView;
-    ControlGnr Cgnr = null;
+    public View controlView;
+    public ControlGnr Cgnr = null;
 
 
-    public Cscanner(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r, String camera, Boolean vacio, Boolean inicial, SharedPreferences sp) {
+    public Cscanner(Context context, String path, String ubicacion, RespuestasTab rt,Boolean inicial)  {
         this.context = context;
         this.path = path;
-        this.id = id;
-        this.contenido = contenido;
         this.ubicacion = ubicacion;
-        this.r = r;
-        this.camera = camera;
-        this.vacio = vacio;
+        this.rt = rt;
+        this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
-        this.sp = sp;
     }
 
     public Cscanner(String path) {
@@ -73,16 +62,16 @@ public class Cscanner {
     public View scanner() {
 
         tv = new TextView(context);
-        tv.setId(id.intValue());
+        tv.setId(rt.getId().intValue());
         tv.setPadding(5, 5, 5, 5);
         tv.setTypeface(null, Typeface.BOLD);
 
-        tv.setText((r.getValor() == null ? "Escanea el codigo de barras activando la camara" : "Resultado : " + r.getValor()));
-        tv.setTextColor((r.getValor() == null ? Color.parseColor("#979A9A") : Color.parseColor("#58d68d")));
+        tv.setText((rt.getValor() == null ? "Escanea el codigo de barras activando la camara" : "Resultado : " + rt.getValor()));
+        tv.setTextColor((rt.getValor() == null ? Color.parseColor("#979A9A") : Color.parseColor("#58d68d")));
 
         final EditText edt = new EditText(context);
-        edt.setHint("" + contenido);
-        edt.setText((r.getRespuesta() != null ? r.getRespuesta() : ""));
+        edt.setHint("" + rt.getPregunta());
+        edt.setText((vacio ? rt.getRespuesta() : ""));
         edt.setHintTextColor(Color.parseColor("#626567"));
         edt.setBackgroundColor(Color.parseColor("#ffffff"));
         edt.setTextColor(Color.parseColor("#1C2833"));
@@ -99,9 +88,7 @@ public class Cscanner {
         btn.setPadding(10, 10, 10, 10);
         btn.setLayoutParams(medidas(1.5));
 
-        ID = id.intValue();
-
-        Cgnr = new ControlGnr(context, id, tv, edt, btn, "hxbtn_izq");
+        Cgnr = new ControlGnr(context, rt.getId(), tv, edt, btn, "hxbtn_izq");
         controlView = Cgnr.Contenedor(vacio, inicial);
 
         StarCamera(btn);
@@ -129,11 +116,11 @@ public class Cscanner {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(context, Camera.class);
-                    i.putExtra("id", ID);
+                    i.putExtra("id", rt.getId().intValue());
                     i.putExtra("ubi", ubicacion);
                     i.putExtra("path", path);
-                    i.putExtra("desplegable", r.getDesplegable());
-                    i.putExtra("regla", r.getReglas());
+                    i.putExtra("desplegable", rt.getDesplegable());
+                    i.putExtra("regla", rt.getReglas());
                     context.startActivity(i);
                 }
             });
@@ -172,8 +159,8 @@ public class Cscanner {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
 
-                    if (!r.getDesplegable().isEmpty()) {
-                        String res = Buscar(edt.getText().toString(), r.getDesplegable());
+                    if (!rt.getDesplegable().isEmpty()) {
+                        String res = Buscar(edt.getText().toString(), rt.getDesplegable());
 
                         if (res != null) {
                             tv.setText(!res.equals("NO DATA SCAN") ? "Resultado : " + res : "Escanea el codigo de barras activando la camara");
@@ -216,7 +203,7 @@ public class Cscanner {
     //funcion de registro en el tempóral
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor);
     }
 
 }

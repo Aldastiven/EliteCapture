@@ -32,44 +32,27 @@ public class Cfiltro {
 
     private Context context;
     private String path;
-    private Long id;
-    private String contenido;
-    private String desplegable;
     private String ubicacion;
-    private RespuestasTab r;
+    private RespuestasTab rt;
     private Boolean vacio;
     private Boolean inicial;
 
-    public Cfiltro(Context context, String path, Long id, String contenido, String desplegable, String ubicacion, RespuestasTab r, Boolean vacio, Boolean inicial) {
+    public Cfiltro(Context context, String path, String ubicacion, RespuestasTab rt,Boolean inicial)  {
         this.context = context;
         this.path = path;
-        this.id = id;
-        this.contenido = contenido;
-        this.desplegable = desplegable;
         this.ubicacion = ubicacion;
-        this.r = r;
-        this.vacio = vacio;
+        this.rt = rt;
+        this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
-    }
-
-    public Cfiltro(Context context, String path, Long id, String contenido, String desplegable, String ubicacion, RespuestasTab r, Boolean vacio) {
-        this.context = context;
-        this.path = path;
-        this.id = id;
-        this.contenido = contenido;
-        this.desplegable = desplegable;
-        this.ubicacion = ubicacion;
-        this.r = r;
-        this.vacio = vacio;
     }
 
     //metodo que crea dinamiamente el control del filtro
     public View filtro() {
 
-        Log.i("pens", "filtro: " + r.getValor());
+        Log.i("pens", "filtro: " + rt.getValor());
 
         final TextView tv = new TextView(context);
-        tv.setId(id.intValue());
+        tv.setId(rt.getId().intValue());
         tv.setText("Resultados :");
         tv.setTextColor(Color.parseColor("#979A9A"));
         tv.setPadding(5, 5, 5, 5);
@@ -78,12 +61,12 @@ public class Cfiltro {
 
         final EditText edt = new EditText(context);
 
-        if (r.getReglas() != 0) {
-            edt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(r.getReglas())});
+        if (rt.getReglas() != 0) {
+            edt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(rt.getReglas())});
         }
 
-        edt.setText((r.getValor() != null ? r.getValor() : ""));
-        edt.setHint("" + contenido);
+        edt.setText((vacio != null ? rt.getValor() : ""));
+        edt.setHint(rt.getPregunta());
         edt.setHintTextColor(Color.parseColor("#626567"));
         edt.setBackgroundColor(Color.parseColor("#ffffff"));
         edt.setTextColor(Color.parseColor("#1C2833"));
@@ -101,12 +84,12 @@ public class Cfiltro {
         btn.setPadding(10, 10, 10, 10);
         btn.setLayoutParams(medidas(1.5));
 
-        Cgnr = new ControlGnr(context, id, tv, edt, btn, "hxbtn_izq");
+        Cgnr = new ControlGnr(context, rt.getId(), tv, edt, btn, "hxbtn_izq");
         ControlView = Cgnr.Contenedor(vacio, inicial);
 
-        Funfiltro(btn, edt, tv, desplegable);
+        Funfiltro(btn, edt, tv, rt.getDesplegable());
 
-        String resultado = Buscar(edt.getText().toString(), desplegable);
+        String resultado = Buscar(edt.getText().toString(), rt.getDesplegable());
 
         if (!resultado.isEmpty()) {
             tv.setText("Resultado : " + resultado);
@@ -182,7 +165,7 @@ public class Cfiltro {
     //funcion de registro en el tempóral
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor);
     }
 
 }

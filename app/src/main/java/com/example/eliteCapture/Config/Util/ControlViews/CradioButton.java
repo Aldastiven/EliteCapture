@@ -33,25 +33,19 @@ public class CradioButton {
     Context context;
     String path;
     String ubicacion;
-    Long id;
-    String pregunta;
-    float ponderado;
-    String desplegable;
     RespuestasTab rt;
     LinearLayout LLtotal;
     private Boolean vacio;
     private Boolean inicial;
+    private int id;
 
-    public CradioButton(Context context, String path, String ubicacion, Long id, String pregunta, float ponderado, String desplegable, RespuestasTab rt,Boolean vacio, Boolean inicial) {
+    public CradioButton(Context context, String path, String ubicacion, RespuestasTab rt,Boolean inicial) {
         this.context = context;
         this.path = path;
         this.ubicacion = ubicacion;
-        this.id = id;
-        this.pregunta = pregunta;
-        this.ponderado = ponderado;
-        this.desplegable = desplegable;
         this.rt = rt;
-        this.vacio = vacio;
+        this.id = rt.getId().intValue() + 1;
+        this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
     }
 
@@ -97,7 +91,7 @@ public class CradioButton {
         LinearLayout.LayoutParams llparamsTextitem = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         TextView tvItem = new TextView(context);
-        tvItem.setText("" + id.intValue());
+        tvItem.setText("" + rt.getId().intValue());
         tvItem.setTextColor(Color.parseColor("#58d68d"));
         tvItem.setTypeface(null, Typeface.BOLD);
         tvItem.setVisibility(View.INVISIBLE);
@@ -105,8 +99,8 @@ public class CradioButton {
         tvItem.setLayoutParams(llparamsTextitem);
 
         final TextView tvp = new TextView(context);
-        tvp.setId(id.intValue());
-        tvp.setText(pregunta + "\nponderado: " + ponderado);
+        tvp.setId(rt.getId().intValue());
+        tvp.setText(id + ". " + rt.getPregunta() + "\nponderado: " + rt.getPonderado());
         tvp.setTextColor(Color.parseColor("#979A9A"));
         tvp.setPadding(5, 5, 5, 5);
         tvp.setBackgroundColor(Color.parseColor("#00ffffff"));
@@ -123,7 +117,7 @@ public class CradioButton {
 
         try {
             iDesplegable iDesp = new iDesplegable(null, path);
-            iDesp.nombre = desplegable;
+            iDesp.nombre = rt.getDesplegable();
 
             List<DesplegableTab> DT = iDesp.all();
 

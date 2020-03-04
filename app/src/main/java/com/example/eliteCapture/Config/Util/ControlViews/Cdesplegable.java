@@ -24,14 +24,12 @@ import java.util.List;
 public class Cdesplegable {
     private Context context;
     private String path;
-    private Long id;
-    private String contenido;
-    private String opciones;
     private String ubicacion;
-    private RespuestasTab r;
+    private RespuestasTab rt;
     private Boolean vacio;
     private Boolean inicial;
-    View ControlView;
+    public View ControlView;
+
 
 
     ArrayList<String> codigo = new ArrayList<>();
@@ -39,15 +37,12 @@ public class Cdesplegable {
     ControlGnr Cgnr = null;
 
     //contructor
-    public Cdesplegable(Context context, String path, Long id, String contenido, String opciones, String ubicacion, RespuestasTab r, Boolean vacio, Boolean inicial) {
+    public Cdesplegable(Context context, String path, String ubicacion, RespuestasTab rt,Boolean inicial)  {
         this.context = context;
         this.path = path;
-        this.id = id;
-        this.contenido = contenido;
-        this.opciones = opciones;
         this.ubicacion = ubicacion;
-        this.r = r;
-        this.vacio = vacio;
+        this.rt = rt;
+        this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
     }
 
@@ -61,8 +56,8 @@ public class Cdesplegable {
 
         //esta es la pregunta
         final TextView tvp = new TextView(context);
-        tvp.setId(id.intValue());
-        tvp.setText(contenido);
+        tvp.setId(rt.getId().intValue());
+        tvp.setText(rt.getPregunta());
         tvp.setTextSize(20);
         tvp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tvp.setTextColor(Color.parseColor("#979A9A"));
@@ -70,14 +65,16 @@ public class Cdesplegable {
         tvp.setLayoutParams(llparams);
 
         //este es el desplegable
-        ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.spinner_item_personal, soloOpciones(opciones));
+        ArrayList soloOpciones = soloOpciones(rt.getDesplegable());
+
+        ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.spinner_item_personal, soloOpciones);
         final Spinner spinner = new Spinner(context);
-        spinner.setId(id.intValue());
+        spinner.setId(rt.getId().intValue());
         spinner.setAdapter(spinnerArray);
-        spinner.setSelection((r.getRespuesta() != null ? soloOpciones(opciones).indexOf(r.getRespuesta()) : 0));
+        spinner.setSelection((vacio ? soloOpciones.indexOf(rt.getRespuesta()) : 0));
         spinner.setLayoutParams(llparams);
 
-        Cgnr = new ControlGnr(context, id, tvp, spinner, null, "hx2");
+        Cgnr = new ControlGnr(context, rt.getId(), tvp, spinner, null, "hx2");
         ControlView = Cgnr.Contenedor(vacio, inicial);
 
         try {
@@ -138,7 +135,7 @@ public class Cdesplegable {
     //funcion de registro en el tempóral
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor);
     }
 
 }

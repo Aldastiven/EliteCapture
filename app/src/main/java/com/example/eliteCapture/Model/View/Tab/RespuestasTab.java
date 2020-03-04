@@ -3,6 +3,7 @@ package com.example.eliteCapture.Model.View.Tab;
 
 public class RespuestasTab {
 	private Long id;
+	private int codigo;
 	private int idProceso;
 	private Long idPregunta;
 	private String tipo;
@@ -14,8 +15,9 @@ public class RespuestasTab {
 	private int reglas;
 	private String tip;
 
-	public RespuestasTab(Long id, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, String valor, String desplegable, int reglas, String tip) {
+	public RespuestasTab(Long id, int codigo, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, String valor, String desplegable, int reglas, String tip) {
 		this.id = id;
+		this.codigo = codigo;
 		this.idProceso = idProceso;
 		this.idPregunta = idPregunta;
 		this.tipo = tipo;
@@ -34,6 +36,14 @@ public class RespuestasTab {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 
 	public int getIdProceso() {

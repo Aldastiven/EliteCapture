@@ -23,10 +23,8 @@ import java.util.ArrayList;
 public class Cetnum {
     private Context context;
     private String path;
-    private Long id;
-    private String contenido;
     private String ubicacion;
-    private RespuestasTab r;
+    private RespuestasTab rt;
     private Boolean vacio;
     private Boolean inicial;
 
@@ -35,26 +33,15 @@ public class Cetnum {
 
     ControlGnr Cgnr;
 
-    public Cetnum(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r, Boolean vacio, Boolean inicial) {
+    public Cetnum(Context context, String path, String ubicacion, RespuestasTab rt,Boolean inicial)  {
         this.context = context;
         this.path = path;
-        this.id = id;
-        this.contenido = contenido;
         this.ubicacion = ubicacion;
-        this.r = r;
-        this.vacio = vacio;
+        this.rt = rt;
+        this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
     }
 
-    public Cetnum(Context context, String path, Long id, String contenido, String ubicacion, RespuestasTab r, Boolean vacio) {
-        this.context = context;
-        this.path = path;
-        this.id = id;
-        this.contenido = contenido;
-        this.ubicacion = ubicacion;
-        this.r = r;
-        this.vacio = vacio;
-    }
 
     //metodo que va crear el control de edittext numerico
     public View tnumerico() {
@@ -65,8 +52,8 @@ public class Cetnum {
         llparams.setMargins(5, 10, 5, 10);
 
         final TextView tvp = new TextView(context);
-        tvp.setId(id.intValue());
-        tvp.setText(contenido);
+        tvp.setId(rt.getId().intValue());
+        tvp.setText(rt.getPregunta());
         tvp.setTextSize(20);
         tvp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tvp.setTextColor(Color.parseColor("#979A9A"));
@@ -75,12 +62,12 @@ public class Cetnum {
 
         final EditText etxtN = new EditText(context);
 
-        if (r.getReglas() != 0) {
-            etxtN.setFilters(new InputFilter[]{new InputFilter.LengthFilter(r.getReglas())});
+        if (rt.getReglas() != 0) {
+            etxtN.setFilters(new InputFilter[]{new InputFilter.LengthFilter(rt.getReglas())});
         }
 
-        etxtN.setId(id.intValue());
-        etxtN.setText((r.getRespuesta() != null ? r.getRespuesta() : ""));
+        etxtN.setId(rt.getId().intValue());
+        etxtN.setText((vacio ? rt.getRespuesta() : ""));
         etxtN.setTextSize(20);
         etxtN.setHint("NULL");
         etxtN.setHintTextColor(Color.TRANSPARENT);
@@ -94,7 +81,7 @@ public class Cetnum {
         etxtN.setSingleLine();
 
 
-        Cgnr = new ControlGnr(context, id, tvp, etxtN, null, "hx2");
+        Cgnr = new ControlGnr(context, rt.getId(), tvp, etxtN, null, "hx2");
 
         ControlView = Cgnr.Contenedor(vacio, inicial);
 
@@ -133,7 +120,7 @@ public class Cetnum {
     //funcion de registro en el tempóral
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor);
     }
 
 }
