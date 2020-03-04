@@ -79,6 +79,7 @@ public class CfilAuto {
         autoCompleteTextView.setTextColor(Color.parseColor("#515A5A"));
         autoCompleteTextView.setTypeface(null, Typeface.BOLD);
 
+
         Cgnr = new ControlGnr(context, id, tvp, autoCompleteTextView, null, "vx2");
         ControlView = Cgnr.Contenedor(vacio,inicial);
 
@@ -122,11 +123,7 @@ public class CfilAuto {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                etdauto.dismissDropDown();
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
                 try {
 
                     Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
@@ -145,6 +142,11 @@ public class CfilAuto {
                 } catch (Exception ex) {
                     Toast.makeText(context, "" + ex.toString(), Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 

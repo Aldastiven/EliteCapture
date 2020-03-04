@@ -171,37 +171,26 @@ public class Cscanner {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
+                    if (!edt.getText().toString().isEmpty()) {
 
-                    if (!r.getDesplegable().isEmpty()) {
-                        String res = Buscar(edt.getText().toString(), r.getDesplegable());
+                        if (!r.getDesplegable().isEmpty()) {
+                            String res = Buscar(edt.getText().toString(), r.getDesplegable());
 
-                        if (res != null) {
                             tv.setText(!res.equals("NO DATA SCAN") ? "Resultado : " + res : "Escanea el codigo de barras activando la camara");
                             tv.setTextColor(!res.equals("NO DATA SCAN") ? Color.parseColor("#58d68d") : Color.parseColor("#979A9A"));
-                            if (res.equals("NO DATA SCAN")) {
-                                registro(null, null);
-                            } else {
-                                if (!edt.getText().toString().isEmpty()) {
-                                    Toast.makeText(context, "llego", Toast.LENGTH_SHORT).show();
-                                    registro(edt.getText().toString(), res);
-                                } else {
-                                    registro(null, null);
-                                }
-                            }
+
+                            noDataScan(edt.getText().toString(), res);
 
                         } else {
-                            tv.setText("Escanea el codigo de barras activando la camara");
-                            tv.setTextColor(Color.parseColor("#979A9A"));
-                        }
-                    } else {
-                        if (!edt.getText().toString().isEmpty()) {
                             registro(edt.getText().toString(), null);
-                        } else {
-                            registro(null, null);
                         }
+
+                    } else {
+                        registro(null, null);
                     }
 
                 } catch (Exception ex) {
+                    Log.i("ECX_REG",""+ex.toString());
                 }
             }
 
@@ -219,5 +208,13 @@ public class Cscanner {
         conTemp.editarTemporal(ubicacion, r.getId().intValue(), rta, valor);
     }
 
+    //valida el resultado de la busqueda al momento de escribir en el campo
+    public void noDataScan(String rta, String res) throws Exception {
+        if (res.equals("NO DATA SCAN")) {
+            registro(null, null);
+        } else {
+            registro(rta, res);
+        }
+    }
 }
 
