@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
+import com.example.eliteCapture.Model.View.iContenedor;
 
 import java.io.File;
 import java.sql.Connection;
@@ -69,7 +70,6 @@ public class splash_activity extends AppCompatActivity {
                 ;
             }, delayed);
 
-            onActualizar();
 
         } catch (Exception e) {
             Toast.makeText(this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
@@ -85,7 +85,7 @@ public class splash_activity extends AppCompatActivity {
         String horaUpDate = sdf2.format(new Date());
 
         SharedPreferences.Editor edit = sp.edit();
-        edit.putString("fechaUpDate", "Fecha : "+fechaUpDate+"\n Hora : "+horaUpDate);
+        edit.putString("fechaUpDate", "Fecha : " + fechaUpDate + "\n Hora : " + horaUpDate);
         edit.commit();
         edit.apply();
     }
@@ -138,7 +138,8 @@ public class splash_activity extends AppCompatActivity {
 
         public CargaDeDatos(String path, Context context, TextView status) {
             Connection cn = getConexion();
-            admin = new Admin(cn, path);
+            this.path = path;
+            admin = new Admin(cn, this.path);
             this.context = context;
             Status = status;
 
@@ -154,17 +155,19 @@ public class splash_activity extends AppCompatActivity {
 
         private void CargeInicial() {
             try {
-                ObtenerUsuarios();
-                ObtenerProcesos();
-                ObtenerDetalles();
-                ObtenerDesplegables();
+                obtenerUsuarios();
+                obtenerProcesos();
+                obtenerDetalles();
+                obtenerDesplegables();
+                enviarPendientes();
+                onActualizar();
 
             } catch (Exception ex) {
                 Log.i("Error Splash Carge", ex.toString());
             }
         }
 
-        public void ObtenerUsuarios() {
+        private void obtenerUsuarios() {
             try {
                 txtStatus.setText("Cargando Usuarios...");
                 admin.getUsuario().local();
@@ -174,7 +177,7 @@ public class splash_activity extends AppCompatActivity {
             }
         }
 
-        public void ObtenerProcesos() {
+        private void obtenerProcesos() {
             try {
                 txtStatus.setText("Cargando Procesos...");
                 admin.getProceso().local();
@@ -184,7 +187,7 @@ public class splash_activity extends AppCompatActivity {
             }
         }
 
-        public void ObtenerDetalles() {
+        private void obtenerDetalles() {
             try {
                 txtStatus.setText("Cargando Detalles...");
                 admin.getDetalles().local();
@@ -194,7 +197,7 @@ public class splash_activity extends AppCompatActivity {
             }
         }
 
-        public void ObtenerDesplegables() {
+        private void obtenerDesplegables() {
             try {
 
                 for (String e : admin.getDesplegable().group()) {
@@ -210,7 +213,19 @@ public class splash_activity extends AppCompatActivity {
             }
         }
 
-        public void msgStatus(final String msgCarga, final String msgCompletado, final int tiempoSalteado) {
+
+        private void enviarPendientes(){
+            try {
+             boolean enviado = new  iContenedor(path).enviar();
+                msgStatus("Cargando...", "Enviando pendientes.", 200);
+                Log.i("Envio", (enviado) ? "Envio exitoso" : "Error de envio");
+
+            } catch (Exception ex) {
+                Log.i("ErrorSplash_Envio", ex.toString());
+            }
+        }
+
+        private void msgStatus(final String msgCarga, final String msgCompletado, final int tiempoSalteado) {
             try {
                 final int totalProgressTime = 100;
                 final Thread t = new Thread() {

@@ -300,7 +300,7 @@ public class iContenedor implements Contenedor {
                     "           (?,?,?,?,?,?,?,?,?,?);";
 
 
-            int load = ct.size();
+            int load = 0;
 
             PreparedStatement ps = cn.prepareStatement(ins);
             for (ContenedorTab c : ct) {
@@ -311,6 +311,7 @@ public class iContenedor implements Contenedor {
                     ps.executeBatch();
                     c.setEstado(1);
                     update((long) c.getConsecutivo(), c);
+                    load++;
                 }
             }
             Log.i("Enviar_env", "Registros actualizados: " + load);
