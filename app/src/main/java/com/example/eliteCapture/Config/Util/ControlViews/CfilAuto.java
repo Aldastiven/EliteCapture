@@ -116,11 +116,7 @@ public class CfilAuto {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                etdauto.dismissDropDown();
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
                 try {
 
                     Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
@@ -139,6 +135,11 @@ public class CfilAuto {
                 } catch (Exception ex) {
                     Toast.makeText(context, "" + ex.toString(), Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 

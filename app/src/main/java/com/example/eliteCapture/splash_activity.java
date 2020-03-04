@@ -2,10 +2,12 @@ package com.example.eliteCapture;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,18 +19,19 @@ import com.example.eliteCapture.Model.Data.Admin;
 
 import java.io.File;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class splash_activity extends AppCompatActivity {
 
     private long delayed;
     long ini, fin;
+    SharedPreferences sp = null;
 
     TextView txtStatus;
 
     String path = null;
-    Calendar calendarDate;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class splash_activity extends AppCompatActivity {
 
         ini = Calendar.getInstance().getTimeInMillis();
         try {
+            sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
             CargaDeDatos cdd = new CargaDeDatos(path, this, txtStatus);
 
             fin = Calendar.getInstance().getTimeInMillis();
@@ -65,10 +69,25 @@ public class splash_activity extends AppCompatActivity {
                 ;
             }, delayed);
 
+            onActualizar();
+
         } catch (Exception e) {
             Toast.makeText(this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
 
         }
+    }
+
+    public void onActualizar() {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm:ss a");
+        String fechaUpDate = sdf.format(new Date());
+        String horaUpDate = sdf2.format(new Date());
+
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString("fechaUpDate", "Fecha : "+fechaUpDate+"\n Hora : "+horaUpDate);
+        edit.commit();
+        edit.apply();
     }
 
     public void redirecion() {

@@ -29,8 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="salir"
+            android:textStyle="bold"
             android:textColor="#d98880"
-            android:drawableEnd="@drawable/salir"
             style="?android:attr/borderlessButtonStyle"
             android:onClick="Salir"/>
 
@@ -61,7 +61,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Bienvenid@"
-                    android:drawableStart="@drawable/user"
                     android:textSize="15sp"/>
             </RelativeLayout>
 
@@ -83,18 +82,17 @@
             android:id="@+id/txtELige"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Elige el formulario  "
-            android:drawableEnd="@drawable/form"
+            android:text="Elige el formulario"
             android:textSize="20sp"
             android:textAlignment="center"
             android:textStyle="bold"
-            android:textColor="#27ae60"
+            android:textColor=" #808b96 "
             />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_weight="6"
+        android:layout_weight="6.5"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0sp">
@@ -120,7 +118,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_weight="1.5"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:orientation="horizontal"
@@ -134,19 +132,15 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:weightSum="2"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:gravity="center">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0sp"
-            android:layout_weight="1"
-            android:text="Si deseas actulizar los datos en el celular, presiona el boton."/>
 
         <TextView
             android:id="@+id/txtUpdateData"
             android:layout_width="wrap_content"
-            android:layout_height="0sp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="" />
 
@@ -157,8 +151,9 @@
             android:layout_height="wrap_content"
             android:onClick="onActualizar"
             android:text="Actualizar"
-            android:textColor="#2ecc71"
-            android:background="@drawable/borderconinergreen"
+            android:textColor="#ffffff"
+            android:background="@drawable/border"
+            android:backgroundTint="#2980b9"
             android:layout_weight="1"
             android:layout_margin="5sp"
             />

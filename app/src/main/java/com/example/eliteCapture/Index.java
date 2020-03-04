@@ -36,16 +36,11 @@ public class Index extends AppCompatActivity {
     TextView txtPaneluser, txtELige, txtUpdateData;
     RelativeLayout contenUser;
 
-    int sizeprocesos = 0;
-    int mostrarError = 0;
-
     public String path = null;
 
     SharedPreferences sp = null;
     UsuarioTab usu;
 
-
-    Connection cn = null;
     Admin admin = null;
 
     @Override
@@ -66,14 +61,11 @@ public class Index extends AppCompatActivity {
 
         try {
 
-
             admin = new Admin(null, path);
-
 
             traerDataUser();
             traerFechaUpDate();
             CargaMenu();
-
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), "Error \n" + ex, Toast.LENGTH_SHORT).show();
         }
@@ -84,37 +76,18 @@ public class Index extends AppCompatActivity {
         txtUpdateData.setText("Ultima Actualización. \n "+fechaUp);
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
     public void traerDataUser() {
         try {
-
             usu = new Gson().fromJson(sp.getString("usuario", ""), new TypeToken<UsuarioTab>() {
             }.getType());
 
             txtPaneluser.setText("Usuario : " + usu.getNombre_usuario());
-
         } catch (Exception ex) {
             Toast.makeText(this, "Se genero un error al traer los datos del usuario \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
     public void CargaMenu() {
-
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -173,16 +146,6 @@ public class Index extends AppCompatActivity {
         Intent i = new Intent(Index.this, splash_activity.class);
         i.putExtra("class", "Index");
         startActivity(i);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm:ss a");
-        String fechaUpDate = sdf.format(new Date());
-        String horaUpDate = sdf2.format(new Date());
-
-        SharedPreferences.Editor edit = sp.edit();
-        edit.putString("fechaUpDate", "Fecha : "+fechaUpDate+"\n Hora : "+horaUpDate);
-        edit.commit();
-        edit.apply();
     }
 
     public void onBackPressed() {
