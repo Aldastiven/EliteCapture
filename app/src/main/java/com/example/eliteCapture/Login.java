@@ -84,9 +84,10 @@ public class Login extends AppCompatActivity {
             if (m != null) {
 
                 SharedPreferences.Editor edit = sp.edit();
-                Log.i("Session:", admin.getUsuario().json(m));
-                edit.putString("usuario", admin.getUsuario().json(m));
-                edit.putInt("codigo", m.getPassword());
+                String session = admin.getUsuario().json(m);
+                Log.i("Session:", session);
+
+                edit.putString("usuario", session);
                 edit.putString("check", "ok");
                 edit.commit();
                 edit.apply();
@@ -94,7 +95,7 @@ public class Login extends AppCompatActivity {
                 Intent intent = new Intent(this, Index.class);
                 startActivity(intent);
 
-                guardarUsuario();
+                guardarUsuario(txt_user, txt_pass);
 
             } else if (m == null) {
                 txtUser.setBackgroundResource(R.drawable.bordercontainerred);
@@ -122,11 +123,8 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    public void guardarUsuario() {
+    public void guardarUsuario(int id, int pass) {
         try {
-
-            int id = Integer.parseInt(txtUser.getText().toString());
-            int pass = Integer.parseInt(txtPass.getText().toString());
 
             SharedPreferences.Editor edit = sp.edit();
             edit.putInt("codigoLogin", id);

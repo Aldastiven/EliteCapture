@@ -16,7 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
+import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.View.iContenedor;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.sql.Connection;
@@ -160,6 +163,7 @@ public class splash_activity extends AppCompatActivity {
                 obtenerDetalles();
                 obtenerDesplegables();
                 enviarPendientes();
+                recargarSession();
                 onActualizar();
 
             } catch (Exception ex) {
@@ -214,15 +218,42 @@ public class splash_activity extends AppCompatActivity {
         }
 
 
-        private void enviarPendientes(){
+        private void enviarPendientes() {
             try {
-             boolean enviado = new  iContenedor(path).enviar();
+                boolean enviado = new iContenedor(path).enviar();
                 msgStatus("Cargando...", "Enviando pendientes.", 200);
                 Log.i("Envio", (enviado) ? "Envio exitoso" : "Error de envio");
 
             } catch (Exception ex) {
                 Log.i("ErrorSplash_Envio", ex.toString());
             }
+        }
+
+        public void recargarSession() {
+            String Session = sp.getString("usuario", "");
+            UsuarioTab sess = null;
+            try {
+                if (!Session.isEmpty()) {
+                    sess = new Gson()
+                            .fromJson(Session,
+                                    new TypeToken<UsuarioTab>() {
+                                    }.getType());
+
+                   sess = admin.getUsuario().login(sess.getId_usuario(), sess.getPassword());
+                    SharedPreferences.Editor edit = sp.edit();
+                    Session = admin.getUsuario().json(sess);
+
+                    Log.i("Envio_Session", Session);
+                    edit.putString("usuario", Session);
+                    msgStatus("Cargando...", "Recargando Sesión.", 200);
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
         }
 
         private void msgStatus(final String msgCarga, final String msgCompletado, final int tiempoSalteado) {
