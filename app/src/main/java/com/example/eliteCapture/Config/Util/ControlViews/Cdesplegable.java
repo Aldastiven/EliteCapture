@@ -71,19 +71,12 @@ public class Cdesplegable {
         final Spinner spinner = new Spinner(context);
         spinner.setId(rt.getId().intValue());
         spinner.setAdapter(spinnerArray);
+        Toast.makeText(context, ""+rt.getRespuesta() , Toast.LENGTH_SHORT).show();
         spinner.setSelection((vacio ? soloOpciones.indexOf(rt.getRespuesta()) : 0));
         spinner.setLayoutParams(llparams);
 
         Cgnr = new ControlGnr(context, rt.getId(), tvp, spinner, null, "hx2");
         ControlView = Cgnr.Contenedor(vacio, inicial);
-
-        try {
-            String rta = spinner.getItemAtPosition(0).toString();
-            if (rta.equals("Selecciona")) {
-                registro(null, null);
-            }
-        } catch (Exception ex) {
-        }
 
         Funspinner(spinner);
 
