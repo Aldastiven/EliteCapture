@@ -98,6 +98,7 @@ public class Index extends AppCompatActivity {
             iContador contar = new iContador(path);
 
             for (final ProcesoTab c : admin.getProceso().procesosUsuario(usu.getProcesos())) {
+
                 int cuenta = contar.getCantidad(usu.getId_usuario(), c.getCodigo_proceso());
                 String cuenText = (cuenta > 0) ? " (" + cuenta + ")" : "";
                 Log.i("Procesos:", c.getNombre_proceso());
@@ -138,14 +139,23 @@ public class Index extends AppCompatActivity {
     }
 
     public void Salir(View v) {
+
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString("usuario", "");
+
+        edit.apply();
+
         Intent i = new Intent(Index.this, Login.class);
         startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
     public void onActualizar(View v) {
-        Intent i = new Intent(Index.this, splash_activity.class);
+
+        Intent i = new Intent(Index.this, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.putExtra("class", "Index");
+
         startActivity(i);
+        linearCheck.removeAllViews();
     }
 
     public void onBackPressed() {
