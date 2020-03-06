@@ -66,7 +66,7 @@ public class Cscanner {
         tv.setPadding(5, 5, 5, 5);
         tv.setTypeface(null, Typeface.BOLD);
 
-        tv.setText((rt.getValor() == null ? "Escanea el codigo de barras activando la camara" : "Resultado : " + rt.getValor()));
+        tv.setText((rt.getValor() == null ? rt.getPregunta() : rt.getPregunta()+ " : \n" + rt.getValor()));
         tv.setTextColor((rt.getValor() == null ? Color.parseColor("#979A9A") : Color.parseColor("#58d68d")));
 
         final EditText edt = new EditText(context);

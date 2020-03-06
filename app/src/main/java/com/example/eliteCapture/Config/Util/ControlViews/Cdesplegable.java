@@ -31,7 +31,6 @@ public class Cdesplegable {
     public View ControlView;
 
 
-
     ArrayList<String> codigo = new ArrayList<>();
 
     ControlGnr Cgnr = null;
@@ -71,7 +70,7 @@ public class Cdesplegable {
         final Spinner spinner = new Spinner(context);
         spinner.setId(rt.getId().intValue());
         spinner.setAdapter(spinnerArray);
-        Toast.makeText(context, ""+rt.getRespuesta() , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, ""+rt.getRespuesta() , Toast.LENGTH_SHORT).show();
         spinner.setSelection((vacio ? soloOpciones.indexOf(rt.getRespuesta()) : 0));
         spinner.setLayoutParams(llparams);
 
