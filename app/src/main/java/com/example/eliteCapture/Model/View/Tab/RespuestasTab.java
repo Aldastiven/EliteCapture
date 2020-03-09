@@ -11,11 +11,12 @@ public class RespuestasTab {
 	private float ponderado;
 	private String respuesta;
 	private String valor;
+	private String causa;
 	private String desplegable;
 	private int reglas;
 	private String tip;
 
-	public RespuestasTab(Long id, int codigo, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, String valor, String desplegable, int reglas, String tip) {
+	public RespuestasTab(Long id, int codigo, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, String valor, String causa, String desplegable, int reglas, String tip) {
 		this.id = id;
 		this.codigo = codigo;
 		this.idProceso = idProceso;
@@ -25,6 +26,7 @@ public class RespuestasTab {
 		this.ponderado = ponderado;
 		this.respuesta = respuesta;
 		this.valor = valor;
+		this.causa = causa;
 		this.desplegable = desplegable;
 		this.reglas = reglas;
 		this.tip = tip;
@@ -124,5 +126,13 @@ public class RespuestasTab {
 
 	public void setTip(String tip) {
 		this.tip = tip;
+	}
+
+	public String getCausa() {
+		return causa;
+	}
+
+	public void setCausa(String causa) {
+		this.causa = causa;
 	}
 }

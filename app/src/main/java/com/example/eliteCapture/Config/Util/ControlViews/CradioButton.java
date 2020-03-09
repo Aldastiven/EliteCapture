@@ -236,7 +236,7 @@ public class CradioButton {
 
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta,  valor);
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta,  valor, null);
     }
 
 

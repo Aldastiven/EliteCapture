@@ -194,7 +194,7 @@ public class iContenedor implements Contenedor {
         }
     }
 
-    public void editarTemporal(String donde, int idPregunta, String respuesta, String valor) throws Exception {
+    public void editarTemporal(String donde, int idPregunta, String respuesta, String valor, String causa) throws Exception {
         Log.i("Footer", "Donde: " + donde + " id: " + idPregunta + " Rta: " + respuesta + " Valor: " + valor);
         ContenedorTab conTemp = new Gson().fromJson(new JsonAdmin().ObtenerLista(path, "temp"),
                 new TypeToken<ContenedorTab>() {
@@ -203,22 +203,23 @@ public class iContenedor implements Contenedor {
         switch (donde) {
             case "H":
                 Log.i("reg_","llego aqui encab");
-                conTemp.setHeader(editar(conTemp.getHeader(), idPregunta, respuesta, valor));
+                conTemp.setHeader(editar(conTemp.getHeader(), idPregunta, respuesta, valor, causa));
                 break;
             case "Q":
                 Log.i("reg_","llego aqui");
-                conTemp.setQuestions(editar(conTemp.getQuestions(), idPregunta, respuesta, valor));
+                conTemp.setQuestions(editar(conTemp.getQuestions(), idPregunta, respuesta, valor, causa));
                 break;
             case "F":
-                conTemp.setFooter(editar(conTemp.getFooter(), idPregunta, respuesta, valor));
+                conTemp.setFooter(editar(conTemp.getFooter(), idPregunta, respuesta, valor, causa));
                 break;
         }
         Log.i("vcampo", "" + crearTemporal(conTemp));
     }
 
-    public List<RespuestasTab> editar(List<RespuestasTab> editar, int idPregunta, String respuesta, String valor) {
+    public List<RespuestasTab> editar(List<RespuestasTab> editar, int idPregunta, String respuesta, String valor, String causa) {
         editar.get(idPregunta).setRespuesta(respuesta);
         editar.get(idPregunta).setValor(valor);
+        editar.get(idPregunta).setCausa(causa);
         return editar;
     }
 
@@ -233,6 +234,7 @@ public class iContenedor implements Contenedor {
                 detalle.getTipo(),
                 detalle.getNombre_detalle(),
                 detalle.getPorcentaje(),
+                null,
                 null,
                 null,
                 detalle.getLista_desp(),
@@ -329,7 +331,7 @@ public class iContenedor implements Contenedor {
             ps.setInt(3, r.getCodigo());
             ps.setLong(4, r.getIdPregunta());
             ps.setString(5, r.getRespuesta());
-            ps.setString(6, r.getValor());
+            ps.setString(6, (r.getCausa()!=null ? r.getCausa() : r.getValor()));
             ps.setFloat(7, r.getPonderado());
             ps.setString(8, c.getTerminal());
             ps.setInt(9, c.getIdUsuario());

@@ -6,12 +6,16 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
+import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
+import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
@@ -19,8 +23,6 @@ import com.example.eliteCapture.R;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-
-import static java.lang.String.valueOf;
 
 public class Cconteos {
     View ControlView;
@@ -36,6 +38,8 @@ public class Cconteos {
     ArrayList<Integer> idnull = new ArrayList<>();
 
     ControlGnr Cgnr;
+
+    String respuestaSpin;
 
     public Cconteos(Context context, String path, String ubicacion, RespuestasTab rt, Boolean inicial) {
         this.context = context;
@@ -73,12 +77,87 @@ public class Cconteos {
         tvpor.setTypeface(null, Typeface.BOLD);
         tvpor.setLayoutParams(llparamsTextpo);
 
-        Cgnr = new ControlGnr(context, rt.getId(), pp(tvp, tvpor), Cbotones(tvpor), null, "vx2");
+        Cgnr = new ControlGnr(context, rt.getId(), pp(Cdesp(llparamsText), tvpor), Cbotones(tvpor), null, "vx2");
         ControlView = Cgnr.Contenedor(vacio, inicial);
 
         return ControlView;
     }
 
+
+    public View Cdesp(LinearLayout.LayoutParams llparamsText) {
+        //metodo que crea el desplegable o la pregunta segun la BD
+
+        Log.i("desplegabledata",rt.getDesplegable());
+
+        String splitS = rt.getDesplegable().replaceAll("[^\\dA-Za-z]", "");
+
+        if (!splitS.isEmpty()) {
+
+            ArrayList soloOpciones = soloOpciones(rt.getDesplegable());
+
+            ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.spinner_item_personal, soloOpciones);
+            final Spinner spinner = new Spinner(context);
+            spinner.setId(rt.getId().intValue());
+            spinner.setAdapter(spinnerArray);
+            spinner.setSelection((vacio ? soloOpciones.indexOf(rt.getCausa()) : 0));
+            spinner.setLayoutParams(llparamsText);
+            Funspinner(spinner);
+            return spinner;
+
+        } else {
+
+            final TextView tvp = new TextView(context);
+            tvp.setId(rt.getId().intValue());
+            tvp.setText(id + ". " + rt.getPregunta() + "\nponderado: " + rt.getPonderado());
+            tvp.setTextColor(Color.parseColor("#979A9A"));
+            tvp.setPadding(5, 5, 5, 5);
+            tvp.setTypeface(null, Typeface.BOLD);
+            tvp.setLayoutParams(llparamsText);
+            return tvp;
+
+        }
+    }
+
+    //opciones del desplegable
+    public ArrayList soloOpciones(String opcion) {
+        try {
+            ArrayList<String> opc = new ArrayList<>();
+
+            iDesplegable iDesp = new iDesplegable(null, path);
+            iDesp.nombre = opcion;
+            opc.add("Selecciona");
+            for (DesplegableTab des : iDesp.all()) {
+                opc.add(des.getOpcion());
+            }
+            return opc;
+        } catch (Exception ex) {
+            Toast.makeText(context, "" + ex, Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+    //funcion del spinner
+    public void Funspinner(final Spinner spn) {
+        spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    String rta = spn.getItemAtPosition(position).toString();
+                    if (spn.getSelectedItem() == "Selecciona") {
+                        respuestaSpin = "null";
+                    } else {
+                        Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
+                        respuestaSpin = rta;
+                    }
+                } catch (Exception ex) {
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
 
     //metodo que crea los botones de conteos
     public View Cbotones(final TextView tvpor) {
@@ -131,7 +210,7 @@ public class Cconteos {
         int data = Integer.parseInt(tvr.getText().toString());
         ResSum(data, rt.getRespuesta() == null, tvr);
 
-
+        //btn de suma
         bntsum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,7 +224,7 @@ public class Cconteos {
                     tvpor.setText((rta < 0) ? "Resultado: " : "Resultado: \n" + vlr);
 
                     try {
-                        registro(data, vlr);
+                        registro(data, vlr, respuestaSpin);
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
@@ -154,6 +233,7 @@ public class Cconteos {
             }
         });
 
+        //btn de resta
         bntres.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,12 +246,13 @@ public class Cconteos {
                     String vlr = valor(rta);
                     tvpor.setText((rta < 0) ? "Resultado: \n NA" : "Resultado: \n" + vlr);
                     try {
-                        registro(data, (rta < 0) ? "-1" : vlr);
+                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin);
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
                 }
 
+                //valida si no aplica
                 if(tvr.getVisibility()==View.INVISIBLE && n<0){
 
                     tvr.setVisibility(View.VISIBLE);
@@ -181,7 +262,7 @@ public class Cconteos {
                     String vlr = valor(rta);
                     String data = ResSum(rta, false, tvr);
                     try {
-                        registro(data, (rta < 0) ? "-1" : vlr);
+                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin);
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
@@ -205,7 +286,7 @@ public class Cconteos {
                 tvr.setVisibility(View.VISIBLE);
             } else if (!inicial && rta <= 0) {
                 tvr.setVisibility(View.VISIBLE);
-                registro("-1", "-1");
+                registro("-1", "-1", respuestaSpin);
             }
         } catch (Exception ex) {
             Toast.makeText(context, "" + ex.toString(), Toast.LENGTH_SHORT).show();
@@ -229,8 +310,8 @@ public class Cconteos {
         }
     }
 
-    public void registro(String rta, String valor) throws Exception {
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor));
+    public void registro(String rta, String valor, String causa) throws Exception {
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), causa);
     }
 
     //retorna el layout del encabezado pregunta porcentaje
