@@ -1,7 +1,9 @@
 package com.example.eliteCapture.Config.Util.ControlViews;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -16,6 +18,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
@@ -25,8 +29,10 @@ import com.example.eliteCapture.R;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
-public class Cconteos {
+public class CconteosEditar {
     View ControlView;
 
     private Context context;
@@ -36,13 +42,14 @@ public class Cconteos {
     private boolean vacio;
     private Boolean inicial;
     private int id;
+    private Dialog dialog;
 
 
     ControlGnr Cgnr;
 
     String respuestaSpin;
 
-    public Cconteos(Context context, String path, String ubicacion, RespuestasTab rt, Boolean inicial) {
+    public CconteosEditar(Context context, String path, String ubicacion, RespuestasTab rt, Boolean inicial, Dialog dialog) {
         this.context = context;
         this.path = path;
         this.ubicacion = ubicacion;
@@ -50,10 +57,12 @@ public class Cconteos {
         this.id = rt.getId().intValue() + 1;
         this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
+        this.dialog = dialog;
     }
 
+
     //metodo que crea el control del conteo
-    public View Cconteo() {
+    public View CconteoEditar() {
 
         LinearLayout.LayoutParams llparamsText = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         llparamsText.weight = (float) 2.3;
@@ -170,7 +179,7 @@ public class Cconteos {
         llbtn.setBackgroundColor(Color.parseColor("#00FFFFFF"));
 
         LinearLayout.LayoutParams LLcmpweight = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        LLcmpweight.weight = (float) 2;
+        LLcmpweight.weight = (float) 1.5;
 
         final TextView tvr = new TextView(context);
         tvr.setText((rt.getRespuesta() == null) ? "-1" : rt.getRespuesta());
@@ -200,9 +209,28 @@ public class Cconteos {
         bntsum.setBackgroundResource(R.drawable.btnsum);
         bntsum.setLayoutParams(LLbtnweight);
 
+        LinearLayout.LayoutParams LLbtnregla = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LLbtnregla.weight = (float) 0.5;
+
+        final ImageButton btnRegla = new ImageButton(context);
+        btnRegla.setId(rt.getId().intValue());
+        btnRegla.setBackgroundColor(Color.TRANSPARENT);
+        btnRegla.setImageResource(R.drawable.lapiz);
+        btnRegla.setPadding(10, 10, 10, 10);
+        btnRegla.setLayoutParams(LLbtnregla);
+
+        btnRegla.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insButtons();
+                dialog.show();
+            }
+        });
+
         llbtn.addView(bntres);
         llbtn.addView(tvr);
         llbtn.addView(bntsum);
+        llbtn.addView(btnRegla);
 
         viewTotal = llbtn;
 
@@ -223,7 +251,7 @@ public class Cconteos {
                     tvpor.setText((rta < 0) ? "Resultado: " : "Resultado: \n" + vlr);
 
                     try {
-                        registro(data, vlr, respuestaSpin);
+                        registro(data, vlr, respuestaSpin, rt.getReglas());
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
@@ -245,7 +273,7 @@ public class Cconteos {
                     String vlr = valor(rta);
                     tvpor.setText((rta < 0) ? "Resultado: \n NA" : "Resultado: \n" + vlr);
                     try {
-                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin);
+                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin, rt.getReglas());
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
@@ -261,7 +289,7 @@ public class Cconteos {
                     String vlr = valor(rta);
                     String data = ResSum(rta, false, tvr);
                     try {
-                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin);
+                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin, rt.getReglas());
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
@@ -285,7 +313,7 @@ public class Cconteos {
                 tvr.setVisibility(View.VISIBLE);
             } else if (!inicial && rta <= 0) {
                 tvr.setVisibility(View.VISIBLE);
-                registro("-1", "-1", respuestaSpin);
+                registro("-1", "-1", respuestaSpin, rt.getReglas());
             }
         } catch (Exception ex) {
             Toast.makeText(context, "" + ex.toString(), Toast.LENGTH_SHORT).show();
@@ -309,15 +337,14 @@ public class Cconteos {
         }
     }
 
-    public void registro(String rta, String valor, String causa) throws Exception {
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), causa, rt.getReglas());
+    public void registro(String rta, String valor, String causa, int regla) throws Exception {
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), causa, regla);
     }
 
     //retorna el layout del encabezado pregunta porcentaje
     public LinearLayout pp(View v1, View v2) {
         LinearLayout.LayoutParams llparamspregunta = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
 
         LinearLayout llpregunta = new LinearLayout(context);
         llpregunta.setLayoutParams(llparamspregunta);
@@ -331,4 +358,31 @@ public class Cconteos {
         return llpregunta;
     }
 
+    public void insButtons(){
+        try {
+            Button btnacep = dialog.findViewById(R.id.popaceptarRegla);
+            Button btnDene = dialog.findViewById(R.id.popcancelarRegla);
+            final TextView txtnewRegla = dialog.findViewById(R.id.txtnewRegla);
+
+
+            btnacep.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        registro(rt.getRespuesta(), rt.getValor(), respuestaSpin, Integer.parseInt(txtnewRegla.getText().toString()));
+                    }catch (Exception ex){
+                        Toast.makeText(context, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            btnDene.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.hide();
+                }
+            });
+        }catch (Exception ex){
+            Toast.makeText(context, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
 }

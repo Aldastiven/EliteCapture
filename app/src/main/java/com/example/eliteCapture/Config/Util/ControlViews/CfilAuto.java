@@ -159,7 +159,7 @@ public class CfilAuto {
     //funcion de registro en el tempóral
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null);
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null, rt.getReglas());
     }
 
     //funcion de la busqueda

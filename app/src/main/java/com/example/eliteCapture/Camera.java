@@ -95,12 +95,12 @@ public class Camera extends AppCompatActivity {
             }
 
             if (!valor.equals("NO DATA SCAN")) {
-                conTemp.editarTemporal(ubicacion, id, cadena, valor, null);
+                conTemp.editarTemporal(ubicacion, id, cadena, valor, null,regla);
             } else {
-                conTemp.editarTemporal(ubicacion, id, null, null, null);
+                conTemp.editarTemporal(ubicacion, id, null, null, null,regla);
             }
         }else{
-            conTemp.editarTemporal(ubicacion, id, rta, valor, null);
+            conTemp.editarTemporal(ubicacion, id, rta, valor, null, regla);
         }
     }
 

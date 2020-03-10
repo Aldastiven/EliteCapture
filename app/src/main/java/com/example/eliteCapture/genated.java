@@ -17,6 +17,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eliteCapture.Config.Util.ControlViews.CconteosEditar;
 import com.example.eliteCapture.Config.Util.ControlViews.Cdesplegable;
 import com.example.eliteCapture.Config.Util.ControlViews.Cetalf;
 import com.example.eliteCapture.Config.Util.ControlViews.Cetnum;
@@ -46,15 +47,15 @@ import static java.lang.String.valueOf;
 
 public class genated extends AppCompatActivity {
 
-    TextView EncabTitulo, contcc, scrollcomplete, txtCalificacion;
+    TextView EncabTitulo, contcc, scrollcomplete, txtCalificacion, txtDialogID;
     LinearLayout linearBodypop, linearPrinc;
     ScrollView scrollForm, scrollCalificacion;
-    Dialog mypop, popcalificacion, popvalidar;
+    Dialog mypop, popcalificacion, popvalidar, popregla;
     Admin adm = null;
     iContenedor iCon = null;
     ContenedorTab contenedor = null;
     SharedPreferences sp = null;
-    Button popSi, popNo;
+    Button popSi, popNo, popaceptarregla, popcancelarregla;
 
     String path = null;
     String dataCamera;
@@ -84,8 +85,10 @@ public class genated extends AppCompatActivity {
             mypop = new Dialog(this);
             popcalificacion = new Dialog(this);
             popvalidar = new Dialog(this);
+            popregla = new Dialog(this);
 
             insView(); //instancia los elementos del layout
+
 
             path = getExternalFilesDir(null) + File.separator; //path
             adm = new Admin(null, path);//administra la conexion de las entidades
@@ -117,6 +120,13 @@ public class genated extends AppCompatActivity {
             }
 
             iCon.crearTemporal(contenedor);//crea el json temporal con los datos correspondientes
+
+            popaceptarregla.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(genated.this, "llego al genated", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         } catch (Exception ex) {
             Log.i("Error_onCreate", ex.toString());
@@ -169,8 +179,12 @@ public class genated extends AppCompatActivity {
         mypop.setContentView(R.layout.popupcumstom);
         popcalificacion.setContentView(R.layout.popupcalificacion);
         popvalidar.setContentView(R.layout.popupvalidar);
+        popregla.setContentView(R.layout.popreglaconteos);
         popSi = findViewById((R.id.popSi));
         popNo = findViewById((R.id.popNo));
+        popaceptarregla = popregla.findViewById(R.id.popaceptarRegla);
+        popcancelarregla = popregla.findViewById(R.id.popcancelarRegla);
+        txtDialogID = findViewById(R.id.txtDialogID);
         linearPrinc = findViewById(R.id.LinearCheck);
         EncabTitulo = findViewById(R.id.EncabTitulo);
         scrollForm = findViewById(R.id.scrollForm);
@@ -312,6 +326,9 @@ public class genated extends AppCompatActivity {
                     case "RS":
                         linearPrinc.addView(new Cconteos(genated.this, path, ubicacion, r, inicial).Cconteo());
                         break;
+                    case "RSE":
+                        linearPrinc.addView(new CconteosEditar(genated.this, path, ubicacion, r, inicial, popregla).CconteoEditar());
+                        break;
                     case "RB":
                         linearPrinc.addView(new CradioButton(genated.this, path, ubicacion, r, inicial).Tradiobtn());
                         break;
@@ -321,7 +338,6 @@ public class genated extends AppCompatActivity {
             Log.i("exc_crearForm", ex.toString());
         }
     }
-
 
     // metodo para extraer del SharedPreferences el id del proceso
     public void getcodProceso() {
@@ -502,4 +518,5 @@ public class genated extends AppCompatActivity {
 
         }
     }
+
 }

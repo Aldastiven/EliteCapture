@@ -1,11 +1,9 @@
 package com.example.eliteCapture.Config.Util.ControlViews;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,15 +12,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
-import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CradioButton {
@@ -236,7 +231,7 @@ public class CradioButton {
 
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta,  valor, null);
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta,  valor, null, rt.getReglas());
     }
 
 

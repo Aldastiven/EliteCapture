@@ -192,7 +192,7 @@ public class Cscanner {
     //funcion de registro en el tempóral
     public void registro(String rta, String valor) throws Exception {
         iContenedor conTemp = new iContenedor(path);
-        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null);
+        conTemp.editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null, rt.getReglas());
     }
 
     //valida el resultado de la busqueda al momento de escribir en el campo
