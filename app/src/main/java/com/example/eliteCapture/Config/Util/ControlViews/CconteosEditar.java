@@ -1,9 +1,8 @@
 package com.example.eliteCapture.Config.Util.ControlViews;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -12,16 +11,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
+import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
@@ -29,8 +28,6 @@ import com.example.eliteCapture.R;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 public class CconteosEditar {
     View ControlView;
@@ -44,10 +41,10 @@ public class CconteosEditar {
     private int id;
     private Dialog dialog;
 
-
+    Button btnAceptar, btnDenegar;
     ControlGnr Cgnr;
-
     String respuestaSpin;
+
 
     public CconteosEditar(Context context, String path, String ubicacion, RespuestasTab rt, Boolean inicial, Dialog dialog) {
         this.context = context;
@@ -58,6 +55,8 @@ public class CconteosEditar {
         this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
         this.dialog = dialog;
+
+        iContenedor icon = new iContenedor(path);
     }
 
 
@@ -150,13 +149,20 @@ public class CconteosEditar {
         spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                iContenedor icon = new iContenedor(path);
+                ContenedorTab ct = icon.optenerTemporal();
+                RespuestasTab rtt = ct.getQuestions().get(spn.getId());
+
                 try {
                     String rta = spn.getItemAtPosition(position).toString();
                     if (spn.getSelectedItem() == "Selecciona") {
                         respuestaSpin = "null";
+                        registro(rtt.getRespuesta(), rtt.getValor(), respuestaSpin, rtt.getReglas());
                     } else {
                         Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
                         respuestaSpin = rta;
+                        registro(rtt.getRespuesta(), rtt.getValor(), rta, rtt.getReglas());
                     }
                 } catch (Exception ex) {
                 }
@@ -222,7 +228,7 @@ public class CconteosEditar {
         btnRegla.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insButtons();
+                insDialog(tvr);
                 dialog.show();
             }
         });
@@ -235,23 +241,25 @@ public class CconteosEditar {
         viewTotal = llbtn;
 
         int data = Integer.parseInt(tvr.getText().toString());
-        ResSum(data, rt.getRespuesta() == null, tvr);
+        ResSum(data, rt.getRespuesta() == null, tvr, rt.getId().intValue());
+
 
         //btn de suma
         bntsum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int n = Integer.parseInt(tvr.getText().toString());
-                if (n < rt.getReglas()) {
+
+                if (n < (regla(rt.getId().intValue()))) {
                     int rta = n + 1;
-                    String data = ResSum(rta, false, tvr);
+                    String data = ResSum(rta, false, tvr, rt.getId().intValue());
                     tvr.setText(data);
 
-                    String vlr = valor(rta);
+                    String vlr = valor(rta, regla(rt.getId().intValue()));
                     tvpor.setText((rta < 0) ? "Resultado: " : "Resultado: \n" + vlr);
 
                     try {
-                        registro(data, vlr, respuestaSpin, rt.getReglas());
+                        registro(data, vlr, respuestaSpin, regla(rt.getId().intValue()));
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
@@ -262,18 +270,20 @@ public class CconteosEditar {
 
         //btn de resta
         bntres.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+
                 int n = Integer.parseInt(tvr.getText().toString());
                 if (n >= 0) {
                     int rta = n - 1;
-                    String data = ResSum(rta, false, tvr);
+                    String data = ResSum(rta, false, tvr, rt.getId().intValue());
                     tvr.setText(data);
 
-                    String vlr = valor(rta);
+                    String vlr = valor(rta, regla(rt.getId().intValue()));
                     tvpor.setText((rta < 0) ? "Resultado: \n NA" : "Resultado: \n" + vlr);
                     try {
-                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin, rt.getReglas());
+                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin, regla(rt.getId().intValue()));
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
@@ -286,10 +296,10 @@ public class CconteosEditar {
                     tvpor.setText("Resultado: \n NA");
 
                     int rta = n;
-                    String vlr = valor(rta);
-                    String data = ResSum(rta, false, tvr);
+                    String vlr = valor(rta, regla(rt.getId().intValue()));
+                    String data = ResSum(rta, false, tvr, rt.getId().intValue());
                     try {
-                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin, rt.getReglas());
+                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin, regla(rt.getId().intValue()));
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
@@ -297,23 +307,33 @@ public class CconteosEditar {
                 }else{}
 
             }
-
         });
-
-
         return viewTotal;
     }
 
-    public String ResSum(int rta, boolean inicial, TextView tvr) {
+    public int regla(int id) {
+        iContenedor icon = new iContenedor(path);
+        ContenedorTab ct = icon.optenerTemporal();
+        RespuestasTab rtt = ct.getQuestions().get(id);
+
+        return rtt.getReglas();
+    }
+
+    public String ResSum(int rta, boolean inicial, TextView tvr, int id) {
+        iContenedor icon = new iContenedor(path);
+        ContenedorTab ct = icon.optenerTemporal();
+        RespuestasTab rtt = ct.getQuestions().get(id);
+
         String data = String.valueOf(rta);
         try {
+
             if (inicial && data.equals("-1")) {
                 tvr.setVisibility(View.INVISIBLE);
             } else if (!inicial && rta > -1) {
                 tvr.setVisibility(View.VISIBLE);
             } else if (!inicial && rta <= 0) {
                 tvr.setVisibility(View.VISIBLE);
-                registro("-1", "-1", respuestaSpin, rt.getReglas());
+                registro("-1", "-1", respuestaSpin, rtt.getReglas());
             }
         } catch (Exception ex) {
             Toast.makeText(context, "" + ex.toString(), Toast.LENGTH_SHORT).show();
@@ -322,13 +342,13 @@ public class CconteosEditar {
         return data;
     }
 
-    public String valor(int rta) {
+    public String valor(int rta, int regla) {
         try {
             DecimalFormatSymbols separator = new DecimalFormatSymbols();
             separator.setDecimalSeparator('.');
 
             DecimalFormat decimalFormat = new DecimalFormat("#.##",separator);
-            float operacion = Float.parseFloat((rta < 0) ? "-1" : String.valueOf((rt.getPonderado() / rt.getReglas()) * (rt.getReglas() - rta)));
+            float operacion = Float.parseFloat((rta < 0) ? "-1" : String.valueOf((rt.getPonderado() / regla) * (regla - rta)));
 
             return String.valueOf(decimalFormat.format(operacion));
         }catch (Exception ex){
@@ -358,31 +378,86 @@ public class CconteosEditar {
         return llpregunta;
     }
 
-    public void insButtons(){
+    public void insDialog(final TextView tvr) {
         try {
-            Button btnacep = dialog.findViewById(R.id.popaceptarRegla);
-            Button btnDene = dialog.findViewById(R.id.popcancelarRegla);
-            final TextView txtnewRegla = dialog.findViewById(R.id.txtnewRegla);
 
+            LinearLayout lineDialog = dialog.findViewById(R.id.linearDialog);
+            lineDialog.removeAllViews();
+            TextView vtxt = new TextView(context);
+            vtxt.setText("Digita el limite de conteo maximo para este campo. \nPor defecto trae un limite de : "+rt.getReglas()+"\n");
+            vtxt.setTextSize(15);
+            vtxt.setPadding(10, 0, 10, 0);
 
-            btnacep.setOnClickListener(new View.OnClickListener() {
+            LinearLayout.LayoutParams lletxt = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lletxt.setMargins(0, 10, 0, 10);
+            final EditText etxt = new EditText(context);
+            etxt.setId(rt.getId().intValue());
+            etxt.setBackgroundColor(Color.parseColor("#e5e7e9"));
+            etxt.setTypeface(null, Typeface.BOLD);
+            etxt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            etxt.setHint("                   ");
+            etxt.setRawInputType(Configuration.KEYBOARD_QWERTY);
+            etxt.setSingleLine();
+            etxt.setLayoutParams(lletxt);
+
+            LinearLayout linearLayoutBtns = new LinearLayout(context);
+            linearLayoutBtns.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayoutBtns.setWeightSum(2);
+            linearLayoutBtns.setPadding(10, 10, 10, 10);
+
+            LinearLayout.LayoutParams llbtn = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            llbtn.weight = 1;
+            llbtn.setMargins(5,0,5,0);
+
+            btnDenegar = new Button(context);
+            btnDenegar.setId(rt.getId().intValue());
+            btnDenegar.setText("Cancelar");
+            btnDenegar.setLayoutParams(llbtn);
+            btnDenegar.setBackgroundColor(Color.parseColor("#85929e"));
+            btnDenegar.setTypeface(null, Typeface.BOLD);
+            btnDenegar.setTextColor(Color.WHITE);
+            btnDenegar.setPadding(0, 10, 0, 10);
+
+            btnAceptar = new Button(context);
+            btnAceptar.setId(rt.getId().intValue());
+            btnAceptar.setText("Aceptar");
+            btnAceptar.setBackgroundColor(Color.parseColor("#27ae60"));
+            btnAceptar.setLayoutParams(llbtn);
+            btnAceptar.setTypeface(null, Typeface.BOLD);
+            btnAceptar.setTextColor(Color.WHITE);
+            btnAceptar.setPadding(0, 10, 0, 10);
+
+            linearLayoutBtns.addView(btnDenegar);
+            linearLayoutBtns.addView(btnAceptar);
+
+            lineDialog.addView(vtxt);
+            lineDialog.addView(etxt);
+            lineDialog.addView(linearLayoutBtns);
+
+            btnAceptar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
-                        registro(rt.getRespuesta(), rt.getValor(), respuestaSpin, Integer.parseInt(txtnewRegla.getText().toString()));
-                    }catch (Exception ex){
-                        Toast.makeText(context, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+                            registro(rt.getRespuesta(), rt.getValor(), respuestaSpin, Integer.parseInt(etxt.getText().toString()));
+                            tvr.setText("-1");
+                            tvr.setVisibility(View.INVISIBLE);
+                            dialog.dismiss();
+
+                    } catch (Exception ex) {
+                        Toast.makeText(context, "Debes poner un digito numerio", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
-            btnDene.setOnClickListener(new View.OnClickListener() {
+
+            btnDenegar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialog.hide();
+                    dialog.dismiss();
                 }
             });
-        }catch (Exception ex){
-            Toast.makeText(context, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+
+        }catch (NumberFormatException ex){
+            Toast.makeText(context, "Debes poner un digito mayor a 0", Toast.LENGTH_SHORT).show();
         }
     }
 }

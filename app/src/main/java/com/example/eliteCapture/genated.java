@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -55,7 +56,7 @@ public class genated extends AppCompatActivity {
     iContenedor iCon = null;
     ContenedorTab contenedor = null;
     SharedPreferences sp = null;
-    Button popSi, popNo, popaceptarregla, popcancelarregla;
+    Button popSi, popNo, popaceptarregla, btnOK;
 
     String path = null;
     String dataCamera;
@@ -70,6 +71,7 @@ public class genated extends AppCompatActivity {
     boolean inicial = false;
 
     public boolean ok, temporal; //retorna la respuesta de un formulario pendiente
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +130,7 @@ public class genated extends AppCompatActivity {
                 }
             });
 
+
         } catch (Exception ex) {
             Log.i("Error_onCreate", ex.toString());
         }
@@ -182,9 +185,6 @@ public class genated extends AppCompatActivity {
         popregla.setContentView(R.layout.popreglaconteos);
         popSi = findViewById((R.id.popSi));
         popNo = findViewById((R.id.popNo));
-        popaceptarregla = popregla.findViewById(R.id.popaceptarRegla);
-        popcancelarregla = popregla.findViewById(R.id.popcancelarRegla);
-        txtDialogID = findViewById(R.id.txtDialogID);
         linearPrinc = findViewById(R.id.LinearCheck);
         EncabTitulo = findViewById(R.id.EncabTitulo);
         scrollForm = findViewById(R.id.scrollForm);
@@ -198,6 +198,9 @@ public class genated extends AppCompatActivity {
         mypop.setCancelable(false);
 
         Window window = mypop.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        window = popregla.getWindow();
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
@@ -469,7 +472,6 @@ public class genated extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
     }
 
     //SUBIR DATOS DEL FORMULARIO
@@ -513,10 +515,9 @@ public class genated extends AppCompatActivity {
             }
 
         } catch (Exception e) {
-
             Log.i("Enviar_error", e.toString());
-
         }
     }
+
 
 }
