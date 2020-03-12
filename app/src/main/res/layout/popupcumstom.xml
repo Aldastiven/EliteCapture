@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="10"
-    android:fitsSystemWindows="true"
-    android:background="#40FFFFFF">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:id="@+id/UPLinear"
@@ -62,7 +61,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="#66bb6a"/>
+            android:background="#85929e"/>
 
     </LinearLayout>
 
@@ -102,24 +101,24 @@
         <Button
             android:layout_width="0sp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="volver al menu"
-            android:onClick="regresarMenu"
-            android:background="#e67e22"
             android:layout_margin="5sp"
+            android:layout_weight="1"
+            android:background="#85929e"
+            android:onClick="regresarMenu"
+            android:text="menu"
             android:textColor="#ffffff"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <Button
             android:layout_width="0sp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="ir al formulario"
-            android:onClick="ocultarPop"
-            android:background="#66bb6a"
             android:layout_margin="5sp"
+            android:layout_weight="1"
+            android:background="#27ae60"
+            android:onClick="ocultarPop"
+            android:text="siguente"
             android:textColor="#ffffff"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 

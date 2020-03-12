@@ -442,6 +442,7 @@ public class genated extends AppCompatActivity {
         if (linearPrinc.getChildCount() > 0) {
             linearPrinc.removeAllViews();
             try {
+                contenedor = contenedorLimipio();
                 iCon.crearTemporal(contenedorEncabezado(temporal));
                 CrearCuerpo();
                 mypop.show();

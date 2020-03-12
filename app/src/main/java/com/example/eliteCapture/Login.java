@@ -14,8 +14,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.eliteCapture.Config.Util.Conexion.CheckedConexion;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.iUsuario;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -47,7 +45,6 @@ public class Login extends AppCompatActivity {
         Screen();
 
         path = getExternalFilesDir(null) + File.separator;
-        CheckedConexion Cc = new CheckedConexion();
 
         try {
 

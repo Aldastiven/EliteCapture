@@ -37,7 +37,7 @@ public class ControlGnr {
     }
 
     /*ORGANIZA LOS CONTROLES INTEGRADOS*/
-    public View Contenedor(boolean vacio, boolean inicial) {
+    public View Contenedor(boolean vacio, boolean inicial, String tipocampo) {
 
         LinearLayout.LayoutParams llparamsTotal = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -51,14 +51,14 @@ public class ControlGnr {
         LLtotal.setOrientation(LinearLayout.VERTICAL);
         LLtotal.setPadding(8, 0, 8, 0);
         LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
-        //LLtotal.setBackgroundColor(Color.parseColor("#00FFFFFF"));
 
+        Log.i("TIPOVIEW", tipocampo);
 
         if(vacio) {
             LLtotal.setBackgroundResource(R.drawable.bordercontainer);
-        }else if(!vacio && inicial){
+        }else if(!vacio && inicial ){
             LLtotal.setBackgroundResource(R.drawable.bordercontainerred);
-        }else{
+        }else {
             LLtotal.setBackgroundResource(R.drawable.bordercontainer);
         }
 

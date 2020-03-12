@@ -85,7 +85,7 @@ public class Cfiltro {
         btn.setLayoutParams(medidas(1.5));
 
         Cgnr = new ControlGnr(context, rt.getId(), tv, edt, btn, "hxbtn_izq");
-        ControlView = Cgnr.Contenedor(vacio, inicial);
+        ControlView = Cgnr.Contenedor(vacio, inicial, rt.getTipo());
 
         Funfiltro(btn, edt, tv, rt.getDesplegable());
 

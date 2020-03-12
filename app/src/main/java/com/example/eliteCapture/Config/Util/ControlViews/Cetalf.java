@@ -75,7 +75,7 @@ public class Cetalf {
         etxtA.setSingleLine();
 
         Cgnr = new ControlGnr(context,rt.getId(),tvp,etxtA,null,"hx2");
-        ControlView = Cgnr.Contenedor(vacio,inicial);
+        ControlView = Cgnr.Contenedor(vacio,inicial,rt.getTipo());
 
         Funeta(etxtA);
 

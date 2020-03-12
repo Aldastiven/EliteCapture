@@ -89,7 +89,7 @@ public class Cscanner {
         btn.setLayoutParams(medidas(1.5));
 
         Cgnr = new ControlGnr(context, rt.getId(), tv, edt, btn, "hxbtn_izq");
-        controlView = Cgnr.Contenedor(vacio, inicial);
+        controlView = Cgnr.Contenedor(vacio, inicial, rt.getTipo());
 
         StarCamera(btn);
         funScannerEdit(edt, tv);

@@ -74,7 +74,7 @@ public class CfilAuto {
         autoCompleteTextView.setTypeface(null, Typeface.BOLD);
 
         Cgnr = new ControlGnr(context, rt.getId(), tvp, autoCompleteTextView, null, "vx2");
-        ControlView = Cgnr.Contenedor(vacio,inicial);
+        ControlView = Cgnr.Contenedor(vacio,inicial,rt.getTipo());
 
         FunAuto(autoCompleteTextView, tvp);
 
@@ -83,7 +83,7 @@ public class CfilAuto {
         if (!resultado.isEmpty()) {
             tvp.setText("Resultado : " + resultado);
             tvp.setTextColor(Color.parseColor("#58d68d"));
-            Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
+            //Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
         } else {}
 
         return ControlView;
@@ -119,14 +119,14 @@ public class CfilAuto {
 
                 try {
 
-                    Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
+                    //Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
 
                     String resultado = Buscar(etdauto.getText().toString(), rt.getDesplegable());
 
                     if (!resultado.isEmpty()) {
                         tvp.setText("Resultado : " + resultado);
                         tvp.setTextColor(Color.parseColor("#58d68d"));
-                        Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
+                        //Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
 
                         registro(etdauto.getText().toString(),resultado);
                     } else {

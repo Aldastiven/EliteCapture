@@ -83,7 +83,7 @@ public class Cetnum {
 
         Cgnr = new ControlGnr(context, rt.getId(), tvp, etxtN, null, "hx2");
 
-        ControlView = Cgnr.Contenedor(vacio, inicial);
+        ControlView = Cgnr.Contenedor(vacio, inicial, rt.getTipo());
 
         Funetn(etxtN);
 

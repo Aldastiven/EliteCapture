@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -102,13 +103,27 @@ public class CradioButton {
         tvp.setTypeface(null, Typeface.BOLD);
         tvp.setLayoutParams(llparamsText);
 
+        String valor;
+        if(rt.getValor()==null){
+            valor = "Resultado : \n";
+        }else {
+            if(rt.getValor().equals("-1")){
+                valor = "Resultado :\nNA";
+            }else {
+                valor = "Resultado : \n"+rt.getValor();
+            }
+        }
+
         final TextView tvpor = new TextView(context);
-        tvpor.setText((rt.getValor() != null ? "Resultado: \n" +rt.getValor() : "Resultado: \n"));
+        tvpor.setText((rt.getValor() == null || rt.getValor().equals("null") ? "Resultado : \n" : valor));
         tvpor.setTextColor(Color.parseColor("#979A9A"));
         tvpor.setBackgroundColor(Color.parseColor("#00ffffff"));
         tvpor.setPadding(10, 10, 10, 10);
         tvpor.setTypeface(null, Typeface.BOLD);
         tvpor.setLayoutParams(llparamsTextpo);
+
+        Log.i("getvalor", "RadioButtonsEditar "+rt.getValor());
+
 
         try {
             iDesplegable iDesp = new iDesplegable(null, path);

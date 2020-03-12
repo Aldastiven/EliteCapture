@@ -45,7 +45,6 @@ public class CconteosEditar {
     ControlGnr Cgnr;
     String respuestaSpin;
 
-
     public CconteosEditar(Context context, String path, String ubicacion, RespuestasTab rt, Boolean inicial, Dialog dialog) {
         this.context = context;
         this.path = path;
@@ -58,7 +57,6 @@ public class CconteosEditar {
 
         iContenedor icon = new iContenedor(path);
     }
-
 
     //metodo que crea el control del conteo
     public View CconteoEditar() {
@@ -77,9 +75,20 @@ public class CconteosEditar {
         tvp.setTypeface(null, Typeface.BOLD);
         tvp.setLayoutParams(llparamsText);
 
+        String valor;
+        if(rt.getValor()==null){
+            valor = "Resultado : \n";
+        }else {
+            if(rt.getValor().equals("-1")){
+                valor = "Resultado :\nNA";
+            }else {
+                valor = "Resultado : \n"+rt.getValor();
+            }
+        }
+
         final TextView tvpor = new TextView(context);
         tvpor.setId(rt.getId().intValue());
-        tvpor.setText((rt.getValor() == null ? "Resultado : \n" : "Resultado: \n"+rt.getValor()));
+        tvpor.setText((rt.getValor() == null || rt.getValor().equals("null") ? "Resultado : \n" : valor));
         tvpor.setTextColor(Color.parseColor("#979A9A"));
         tvpor.setBackgroundColor(Color.parseColor("#00FFFFFF"));
         tvpor.setPadding(10, 10, 10, 10);
@@ -87,7 +96,7 @@ public class CconteosEditar {
         tvpor.setLayoutParams(llparamsTextpo);
 
         Cgnr = new ControlGnr(context, rt.getId(), pp(Cdesp(llparamsText), tvpor), Cbotones(tvpor), null, "vx2");
-        ControlView = Cgnr.Contenedor(vacio, inicial);
+        ControlView = Cgnr.Contenedor(vacio, inicial, rt.getTipo());
 
         return ControlView;
     }
@@ -150,19 +159,16 @@ public class CconteosEditar {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                iContenedor icon = new iContenedor(path);
-                ContenedorTab ct = icon.optenerTemporal();
-                RespuestasTab rtt = ct.getQuestions().get(spn.getId());
+                RespuestasTab rtab = datosVivos(spn.getId());
 
                 try {
                     String rta = spn.getItemAtPosition(position).toString();
-                    if (spn.getSelectedItem() == "Selecciona") {
-                        respuestaSpin = "null";
-                        registro(rtt.getRespuesta(), rtt.getValor(), respuestaSpin, rtt.getReglas());
+                    if (rta.equals("Selecciona")) {
+                        rta = "null";
+                        registro(rtab.getRespuesta(), rtab.getValor(), rta, rtab.getReglas());
                     } else {
                         Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
-                        respuestaSpin = rta;
-                        registro(rtt.getRespuesta(), rtt.getValor(), rta, rtt.getReglas());
+                        registro(rtab.getRespuesta(), rtab.getValor(), rta, rtab.getReglas());
                     }
                 } catch (Exception ex) {
                 }
@@ -199,7 +205,7 @@ public class CconteosEditar {
         LinearLayout.LayoutParams LLbtnweight = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LLbtnweight.weight = (float) 0.5;
 
-        Button bntres = new Button(context);
+        final Button bntres = new Button(context);
         bntres.setId(rt.getId().intValue());
         bntres.setText("-");
         bntres.setTextSize(20);
@@ -207,7 +213,7 @@ public class CconteosEditar {
         bntres.setBackgroundResource(R.drawable.btnres);
         bntres.setLayoutParams(LLbtnweight);
 
-        Button bntsum = new Button(context);
+        final Button bntsum = new Button(context);
         bntsum.setId(rt.getId().intValue());
         bntsum.setText("+");
         bntsum.setTextSize(20);
@@ -228,7 +234,7 @@ public class CconteosEditar {
         btnRegla.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insDialog(tvr);
+                insDialog(tvr,tvpor);
                 dialog.show();
             }
         });
@@ -243,28 +249,33 @@ public class CconteosEditar {
         int data = Integer.parseInt(tvr.getText().toString());
         ResSum(data, rt.getRespuesta() == null, tvr, rt.getId().intValue());
 
-
         //btn de suma
         bntsum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                RespuestasTab rtab = datosVivos(bntres.getId());
+
                 int n = Integer.parseInt(tvr.getText().toString());
 
-                if (n < (regla(rt.getId().intValue()))) {
-                    int rta = n + 1;
-                    String data = ResSum(rta, false, tvr, rt.getId().intValue());
-                    tvr.setText(data);
+                if (rtab.getCausa().equals("null")) {
+                    Toast.makeText(context, "Debes escoger una opcion", Toast.LENGTH_SHORT).show();
+                } else {
 
-                    String vlr = valor(rta, regla(rt.getId().intValue()));
-                    tvpor.setText((rta < 0) ? "Resultado: " : "Resultado: \n" + vlr);
+                    if (n < (rtab.getReglas())) {
+                        int rta = n + 1;
+                        String data = ResSum(rta, false, tvr, rt.getId().intValue());
+                        tvr.setText(data);
 
-                    try {
-                        registro(data, vlr, respuestaSpin, regla(rt.getId().intValue()));
-                    } catch (Exception e) {
-                        Log.i("Error_Crs", e.toString());
+                        String vlr = valor(rta, rtab.getReglas());
+                        tvpor.setText((rta < 0) ? "Resultado: " : "Resultado: \n" + vlr);
+
+                        try {
+                            registro(data, vlr, rtab.getCausa(), rtab.getReglas());
+                        } catch (Exception e) {
+                            Log.i("Error_Crs", e.toString());
+                        }
                     }
                 }
-
             }
         });
 
@@ -274,66 +285,70 @@ public class CconteosEditar {
             @Override
             public void onClick(View view) {
 
-                int n = Integer.parseInt(tvr.getText().toString());
-                if (n >= 0) {
-                    int rta = n - 1;
-                    String data = ResSum(rta, false, tvr, rt.getId().intValue());
-                    tvr.setText(data);
+                RespuestasTab rtab = datosVivos(bntres.getId());
 
-                    String vlr = valor(rta, regla(rt.getId().intValue()));
-                    tvpor.setText((rta < 0) ? "Resultado: \n NA" : "Resultado: \n" + vlr);
-                    try {
-                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin, regla(rt.getId().intValue()));
-                    } catch (Exception e) {
-                        Log.i("Error_Crs", e.toString());
+                if (rtab.getCausa().equals("null")) {
+                    Toast.makeText(context, "Debes escoger una opcion", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    int n = Integer.parseInt(tvr.getText().toString());
+                    if (n >= 0) {
+                        int rta = n - 1;
+                        String data = ResSum(rta, false, tvr, rt.getId().intValue());
+                        tvr.setText(data);
+
+                        String vlr = valor(rta, rtab.getReglas());
+                        tvpor.setText((rta < 0) ? "Resultado: \n NA" : "Resultado: \n" + vlr);
+                        try {
+                            registro(data, (rta < 0) ? "-1" : vlr, rtab.getCausa(), rtab.getReglas());
+                        } catch (Exception e) {
+                            Log.i("Error_Crs", e.toString());
+                        }
+                    }
+
+                    //valida si no aplica
+                    if (tvr.getVisibility() == View.INVISIBLE && n < 0) {
+
+                        tvr.setVisibility(View.VISIBLE);
+                        tvpor.setText("Resultado: \n NA");
+
+                        int rta = n;
+                        String vlr = valor(rta, rtab.getReglas());
+                        String data = ResSum(rta, false, tvr, rt.getId().intValue());
+                        try {
+                            registro(data, (rta < 0) ? "-1" : vlr, rtab.getCausa(), rtab.getReglas());
+                        } catch (Exception e) {
+                            Log.i("Error_Crs", e.toString());
+                        }
+
                     }
                 }
 
-                //valida si no aplica
-                if(tvr.getVisibility()==View.INVISIBLE && n<0){
-
-                    tvr.setVisibility(View.VISIBLE);
-                    tvpor.setText("Resultado: \n NA");
-
-                    int rta = n;
-                    String vlr = valor(rta, regla(rt.getId().intValue()));
-                    String data = ResSum(rta, false, tvr, rt.getId().intValue());
-                    try {
-                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin, regla(rt.getId().intValue()));
-                    } catch (Exception e) {
-                        Log.i("Error_Crs", e.toString());
-                    }
-
-                }else{}
-
             }
         });
+
         return viewTotal;
     }
 
-    public int regla(int id) {
+    public RespuestasTab datosVivos(int id) {
         iContenedor icon = new iContenedor(path);
         ContenedorTab ct = icon.optenerTemporal();
-        RespuestasTab rtt = ct.getQuestions().get(id);
 
-        return rtt.getReglas();
+        return ct.getQuestions().get(id);
     }
 
     public String ResSum(int rta, boolean inicial, TextView tvr, int id) {
-        iContenedor icon = new iContenedor(path);
-        ContenedorTab ct = icon.optenerTemporal();
-        RespuestasTab rtt = ct.getQuestions().get(id);
+        RespuestasTab rtab = datosVivos(id);
 
         String data = String.valueOf(rta);
         try {
-
             if (inicial && data.equals("-1")) {
                 tvr.setVisibility(View.INVISIBLE);
             } else if (!inicial && rta > -1) {
                 tvr.setVisibility(View.VISIBLE);
             } else if (!inicial && rta <= 0) {
                 tvr.setVisibility(View.VISIBLE);
-                registro("-1", "-1", respuestaSpin, rtt.getReglas());
+                registro("-1", "-1", respuestaSpin, rtab.getReglas());
             }
         } catch (Exception ex) {
             Toast.makeText(context, "" + ex.toString(), Toast.LENGTH_SHORT).show();
@@ -378,7 +393,7 @@ public class CconteosEditar {
         return llpregunta;
     }
 
-    public void insDialog(final TextView tvr) {
+    public void insDialog(final TextView tvr, final TextView tvpor) {
         try {
 
             LinearLayout lineDialog = dialog.findViewById(R.id.linearDialog);
@@ -435,16 +450,20 @@ public class CconteosEditar {
             lineDialog.addView(linearLayoutBtns);
 
             btnAceptar.setOnClickListener(new View.OnClickListener() {
+
+                RespuestasTab rtab = datosVivos(btnAceptar.getId());
+
                 @Override
                 public void onClick(View v) {
                     try {
-                            registro(rt.getRespuesta(), rt.getValor(), respuestaSpin, Integer.parseInt(etxt.getText().toString()));
+                        registro(rt.getRespuesta(), rt.getValor(), rtab.getCausa(), Integer.parseInt(etxt.getText().toString()));
                             tvr.setText("-1");
                             tvr.setVisibility(View.INVISIBLE);
+                            tvpor.setText("Resultado: ");
                             dialog.dismiss();
 
                     } catch (Exception ex) {
-                        Toast.makeText(context, "Debes poner un digito numerio", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Debes poner un digito numerio \n" + ex.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

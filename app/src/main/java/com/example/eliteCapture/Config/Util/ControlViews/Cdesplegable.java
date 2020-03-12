@@ -75,7 +75,7 @@ public class Cdesplegable {
         spinner.setLayoutParams(llparams);
 
         Cgnr = new ControlGnr(context, rt.getId(), tvp, spinner, null, "hx2");
-        ControlView = Cgnr.Contenedor(vacio, inicial);
+        ControlView = Cgnr.Contenedor(vacio, inicial, rt.getTipo());
 
         Funspinner(spinner);
 

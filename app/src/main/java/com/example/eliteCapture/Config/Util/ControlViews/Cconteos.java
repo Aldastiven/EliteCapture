@@ -69,17 +69,30 @@ public class Cconteos {
         tvp.setTypeface(null, Typeface.BOLD);
         tvp.setLayoutParams(llparamsText);
 
+        String valor;
+        if(rt.getValor()==null){
+            valor = "Resultado : \n";
+        }else {
+            if(rt.getValor().equals("-1")){
+                valor = "Resultado :\nNA";
+            }else {
+                valor = "Resultado : \n"+rt.getValor();
+            }
+        }
+
         final TextView tvpor = new TextView(context);
         tvpor.setId(rt.getId().intValue());
-        tvpor.setText((rt.getValor() == null ? "Resultado : \n" : "Resultado: \n"+rt.getValor()));
+        tvpor.setText((rt.getValor() == null || rt.getValor().equals("null") ? "Resultado : \n" : valor));
         tvpor.setTextColor(Color.parseColor("#979A9A"));
         tvpor.setBackgroundColor(Color.parseColor("#00FFFFFF"));
         tvpor.setPadding(10, 10, 10, 10);
         tvpor.setTypeface(null, Typeface.BOLD);
         tvpor.setLayoutParams(llparamsTextpo);
 
+        Log.i("getvalor", "Conteos "+rt.getValor());
+
         Cgnr = new ControlGnr(context, rt.getId(), pp(Cdesp(llparamsText), tvpor), Cbotones(tvpor), null, "vx2");
-        ControlView = Cgnr.Contenedor(vacio, inicial);
+        ControlView = Cgnr.Contenedor(vacio, inicial, rt.getTipo());
 
         return ControlView;
     }
