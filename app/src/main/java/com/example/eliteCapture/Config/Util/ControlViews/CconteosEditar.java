@@ -254,13 +254,9 @@ public class CconteosEditar {
             @Override
             public void onClick(View view) {
                 RespuestasTab rtab = datosVivos(bntres.getId());
-
                 int n = Integer.parseInt(tvr.getText().toString());
 
-                if (rtab.getCausa().equals("null")) {
-                    Toast.makeText(context, "Debes escoger una opcion", Toast.LENGTH_SHORT).show();
-                } else {
-
+                if (rt.getCausa() == null) {
                     if (n < (rtab.getReglas())) {
                         int rta = n + 1;
                         String data = ResSum(rta, false, tvr, rt.getId().intValue());
@@ -275,7 +271,30 @@ public class CconteosEditar {
                             Log.i("Error_Crs", e.toString());
                         }
                     }
+                } else {
+                    if (rtab.getCausa().equals("null")) {
+                        Toast.makeText(context, "Debes escoger una opcion", Toast.LENGTH_SHORT).show();
+                    } else if (!rtab.getCausa().equals("null")) {
+
+                        if (n < (rtab.getReglas())) {
+                            int rta = n + 1;
+                            String data = ResSum(rta, false, tvr, rt.getId().intValue());
+                            tvr.setText(data);
+
+                            String vlr = valor(rta, rtab.getReglas());
+                            tvpor.setText((rta < 0) ? "Resultado: " : "Resultado: \n" + vlr);
+
+                            try {
+                                registro(data, vlr, rtab.getCausa(), rtab.getReglas());
+                            } catch (Exception e) {
+                                Log.i("Error_Crs", e.toString());
+                            }
+                        }
+                    }
                 }
+
+
+
             }
         });
 
@@ -287,9 +306,7 @@ public class CconteosEditar {
 
                 RespuestasTab rtab = datosVivos(bntres.getId());
 
-                if (rtab.getCausa().equals("null")) {
-                    Toast.makeText(context, "Debes escoger una opcion", Toast.LENGTH_SHORT).show();
-                } else {
+                if (rt.getCausa() == null) {
 
                     int n = Integer.parseInt(tvr.getText().toString());
                     if (n >= 0) {
@@ -321,6 +338,44 @@ public class CconteosEditar {
                             Log.i("Error_Crs", e.toString());
                         }
 
+                    }
+
+                } else {
+                    if (rtab.getCausa().equals("null")) {
+                        Toast.makeText(context, "Debes escoger una opcion", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        int n = Integer.parseInt(tvr.getText().toString());
+                        if (n >= 0) {
+                            int rta = n - 1;
+                            String data = ResSum(rta, false, tvr, rt.getId().intValue());
+                            tvr.setText(data);
+
+                            String vlr = valor(rta, rtab.getReglas());
+                            tvpor.setText((rta < 0) ? "Resultado: \n NA" : "Resultado: \n" + vlr);
+                            try {
+                                registro(data, (rta < 0) ? "-1" : vlr, rtab.getCausa(), rtab.getReglas());
+                            } catch (Exception e) {
+                                Log.i("Error_Crs", e.toString());
+                            }
+                        }
+
+                        //valida si no aplica
+                        if (tvr.getVisibility() == View.INVISIBLE && n < 0) {
+
+                            tvr.setVisibility(View.VISIBLE);
+                            tvpor.setText("Resultado: \n NA");
+
+                            int rta = n;
+                            String vlr = valor(rta, rtab.getReglas());
+                            String data = ResSum(rta, false, tvr, rt.getId().intValue());
+                            try {
+                                registro(data, (rta < 0) ? "-1" : vlr, rtab.getCausa(), rtab.getReglas());
+                            } catch (Exception e) {
+                                Log.i("Error_Crs", e.toString());
+                            }
+
+                        }
                     }
                 }
 

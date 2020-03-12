@@ -81,7 +81,7 @@ public class CfilAuto {
         String resultado = Buscar(autoCompleteTextView.getText().toString(), rt.getDesplegable());
 
         if (!resultado.isEmpty()) {
-            tvp.setText("Resultado : " + resultado);
+            tvp.setText(rt.getPregunta()+" : \n" + resultado);
             tvp.setTextColor(Color.parseColor("#58d68d"));
             //Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
         } else {}
@@ -124,7 +124,7 @@ public class CfilAuto {
                     String resultado = Buscar(etdauto.getText().toString(), rt.getDesplegable());
 
                     if (!resultado.isEmpty()) {
-                        tvp.setText("Resultado : " + resultado);
+                        tvp.setText(rt.getPregunta()+": \n" + resultado);
                         tvp.setTextColor(Color.parseColor("#58d68d"));
                         //Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
 

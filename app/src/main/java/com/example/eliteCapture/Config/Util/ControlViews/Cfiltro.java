@@ -92,7 +92,7 @@ public class Cfiltro {
         String resultado = Buscar(edt.getText().toString(), rt.getDesplegable());
 
         if (!resultado.isEmpty()) {
-            tv.setText("Resultado : " + resultado);
+            tv.setText(rt.getPregunta()+": \n" + resultado);
             tv.setTextColor(Color.parseColor("#58d68d"));
             Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
         } else {
@@ -113,7 +113,7 @@ public class Cfiltro {
                     Log.i("FIL", "FIL " + resultado);
 
                     if (!resultado.isEmpty()) {
-                        tv.setText("Resultado : " + resultado);
+                        tv.setText(rt.getPregunta()+": \n" + resultado);
                         tv.setTextColor(Color.parseColor("#58d68d"));
                         Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
 
