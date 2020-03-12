@@ -123,14 +123,6 @@ public class genated extends AppCompatActivity {
 
             iCon.crearTemporal(contenedor);//crea el json temporal con los datos correspondientes
 
-            popaceptarregla.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(genated.this, "llego al genated", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-
         } catch (Exception ex) {
             Log.i("Error_onCreate", ex.toString());
         }
