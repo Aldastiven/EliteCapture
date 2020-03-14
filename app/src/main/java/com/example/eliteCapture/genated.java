@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.ControlViews.CconteosEditar;
+import com.example.eliteCapture.Config.Util.ControlViews.CdespelgableQ;
 import com.example.eliteCapture.Config.Util.ControlViews.Cdesplegable;
 import com.example.eliteCapture.Config.Util.ControlViews.Cetalf;
 import com.example.eliteCapture.Config.Util.ControlViews.Cetnum;
@@ -326,6 +327,12 @@ public class genated extends AppCompatActivity {
                         break;
                     case "RB":
                         linearPrinc.addView(new CradioButton(genated.this, path, ubicacion, r, inicial).Tradiobtn());
+                        break;
+                    case "CBX":
+                        linearPrinc.addView(new CradioButton(genated.this, path, ubicacion, r, inicial).Tradiobtn());
+                        break;
+                    case "DES":
+                        linearPrinc.addView(new CdespelgableQ(genated.this, r, path, inicial, ubicacion).Cdesp());
                         break;
                 }
             }

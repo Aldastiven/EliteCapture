@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -54,8 +55,6 @@ public class CconteosEditar {
         this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
         this.dialog = dialog;
-
-        iContenedor icon = new iContenedor(path);
     }
 
     //metodo que crea el control del conteo
@@ -253,48 +252,18 @@ public class CconteosEditar {
         bntsum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RespuestasTab rtab = datosVivos(bntres.getId());
+                RespuestasTab rtab = datosVivos(bntsum.getId());
                 int n = Integer.parseInt(tvr.getText().toString());
 
                 if (rt.getCausa() == null) {
-                    if (n < (rtab.getReglas())) {
-                        int rta = n + 1;
-                        String data = ResSum(rta, false, tvr, rt.getId().intValue());
-                        tvr.setText(data);
-
-                        String vlr = valor(rta, rtab.getReglas());
-                        tvpor.setText((rta < 0) ? "Resultado: " : "Resultado: \n" + vlr);
-
-                        try {
-                            registro(data, vlr, rtab.getCausa(), rtab.getReglas());
-                        } catch (Exception e) {
-                            Log.i("Error_Crs", e.toString());
-                        }
-                    }
+                    suma(bntsum, n, tvr, tvpor);
                 } else {
                     if (rtab.getCausa().equals("null")) {
                         Toast.makeText(context, "Debes escoger una opcion", Toast.LENGTH_SHORT).show();
                     } else if (!rtab.getCausa().equals("null")) {
-
-                        if (n < (rtab.getReglas())) {
-                            int rta = n + 1;
-                            String data = ResSum(rta, false, tvr, rt.getId().intValue());
-                            tvr.setText(data);
-
-                            String vlr = valor(rta, rtab.getReglas());
-                            tvpor.setText((rta < 0) ? "Resultado: " : "Resultado: \n" + vlr);
-
-                            try {
-                                registro(data, vlr, rtab.getCausa(), rtab.getReglas());
-                            } catch (Exception e) {
-                                Log.i("Error_Crs", e.toString());
-                            }
-                        }
+                        suma(bntsum, n, tvr, tvpor);
                     }
                 }
-
-
-
             }
         });
 
@@ -309,73 +278,16 @@ public class CconteosEditar {
                 if (rt.getCausa() == null) {
 
                     int n = Integer.parseInt(tvr.getText().toString());
-                    if (n >= 0) {
-                        int rta = n - 1;
-                        String data = ResSum(rta, false, tvr, rt.getId().intValue());
-                        tvr.setText(data);
-
-                        String vlr = valor(rta, rtab.getReglas());
-                        tvpor.setText((rta < 0) ? "Resultado: \n NA" : "Resultado: \n" + vlr);
-                        try {
-                            registro(data, (rta < 0) ? "-1" : vlr, rtab.getCausa(), rtab.getReglas());
-                        } catch (Exception e) {
-                            Log.i("Error_Crs", e.toString());
-                        }
-                    }
-
-                    //valida si no aplica
-                    if (tvr.getVisibility() == View.INVISIBLE && n < 0) {
-
-                        tvr.setVisibility(View.VISIBLE);
-                        tvpor.setText("Resultado: \n NA");
-
-                        int rta = n;
-                        String vlr = valor(rta, rtab.getReglas());
-                        String data = ResSum(rta, false, tvr, rt.getId().intValue());
-                        try {
-                            registro(data, (rta < 0) ? "-1" : vlr, rtab.getCausa(), rtab.getReglas());
-                        } catch (Exception e) {
-                            Log.i("Error_Crs", e.toString());
-                        }
-
-                    }
-
+                    resta(bntres, n, tvr, tvpor);
+                    visibilidad(n, tvr, tvpor);
                 } else {
                     if (rtab.getCausa().equals("null")) {
                         Toast.makeText(context, "Debes escoger una opcion", Toast.LENGTH_SHORT).show();
                     } else {
 
                         int n = Integer.parseInt(tvr.getText().toString());
-                        if (n >= 0) {
-                            int rta = n - 1;
-                            String data = ResSum(rta, false, tvr, rt.getId().intValue());
-                            tvr.setText(data);
-
-                            String vlr = valor(rta, rtab.getReglas());
-                            tvpor.setText((rta < 0) ? "Resultado: \n NA" : "Resultado: \n" + vlr);
-                            try {
-                                registro(data, (rta < 0) ? "-1" : vlr, rtab.getCausa(), rtab.getReglas());
-                            } catch (Exception e) {
-                                Log.i("Error_Crs", e.toString());
-                            }
-                        }
-
-                        //valida si no aplica
-                        if (tvr.getVisibility() == View.INVISIBLE && n < 0) {
-
-                            tvr.setVisibility(View.VISIBLE);
-                            tvpor.setText("Resultado: \n NA");
-
-                            int rta = n;
-                            String vlr = valor(rta, rtab.getReglas());
-                            String data = ResSum(rta, false, tvr, rt.getId().intValue());
-                            try {
-                                registro(data, (rta < 0) ? "-1" : vlr, rtab.getCausa(), rtab.getReglas());
-                            } catch (Exception e) {
-                                Log.i("Error_Crs", e.toString());
-                            }
-
-                        }
+                        resta(bntres, n, tvr, tvpor);
+                        visibilidad(n, tvr, tvpor);
                     }
                 }
 
@@ -383,6 +295,60 @@ public class CconteosEditar {
         });
 
         return viewTotal;
+    }
+
+    public void suma(Button bntsum, int n, TextView tvr, TextView tvpor) {
+        try {
+            RespuestasTab rtab = datosVivos(bntsum.getId());
+            if (n < (rtab.getReglas())) {
+                int rta = n + 1;
+                String data = ResSum(rta, false, tvr, rt.getId().intValue());
+                tvr.setText(data);
+
+                String vlr = valor(rta, rtab.getReglas());
+                tvpor.setText((rta < 0) ? "Resultado: " : "Resultado: \n" + vlr);
+
+                registro(data, vlr, rtab.getCausa(), rtab.getReglas());
+            }
+        } catch (Exception ex) {
+            Toast.makeText(context, "suma \n" + ex.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void resta(Button btnres, int n, TextView tvr, TextView tvpor) {
+        try {
+            RespuestasTab rtab = datosVivos(btnres.getId());
+            if (n >= 0) {
+                int rta = n - 1;
+                String data = ResSum(rta, false, tvr, rt.getId().intValue());
+                tvr.setText(data);
+
+                String vlr = valor(rta, rtab.getReglas());
+                tvpor.setText((rta < 0) ? "Resultado: \n NA" : "Resultado: \n" + vlr);
+
+                registro(data, (rta < 0) ? "-1" : vlr, rtab.getCausa(), rtab.getReglas());
+            }
+        } catch (Exception e) {
+            Log.i("Error_Crs", e.toString());
+        }
+    }
+
+    public void visibilidad(int n, TextView tvr, TextView tvpor) {
+        RespuestasTab rtab = datosVivos(tvr.getId());
+        if (tvr.getVisibility() == View.INVISIBLE && n < 0) {
+
+            tvr.setVisibility(View.VISIBLE);
+            tvpor.setText("Resultado: \n NA");
+
+            int rta = n;
+            String vlr = valor(rta, rtab.getReglas());
+            String data = ResSum(rta, false, tvr, rt.getId().intValue());
+            try {
+                registro(data, (rta < 0) ? "-1" : vlr, rtab.getCausa(), rtab.getReglas());
+            } catch (Exception e) {
+                Log.i("Error_Crs", e.toString());
+            }
+        }
     }
 
     public RespuestasTab datosVivos(int id) {
@@ -515,6 +481,7 @@ public class CconteosEditar {
                             tvr.setText("-1");
                             tvr.setVisibility(View.INVISIBLE);
                             tvpor.setText("Resultado: ");
+                            bajarTeclado(etxt);
                             dialog.dismiss();
 
                     } catch (Exception ex) {
@@ -533,5 +500,10 @@ public class CconteosEditar {
         }catch (NumberFormatException ex){
             Toast.makeText(context, "Debes poner un digito mayor a 0", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void bajarTeclado(EditText txt) {
+        InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(txt.getWindowToken(),0);
     }
 }

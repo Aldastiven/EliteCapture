@@ -197,7 +197,7 @@ public class splash_activity extends AppCompatActivity {
                 admin.getDetalles().local();
                 msgStatus("Cargando...", "Datos de Detalles Cargado", 1000);
             } catch (Exception ex) {
-                Log.i("ErrorSplash", ex.toString());
+                Log.i("ErrorSplashDetalle", ex.toString());
             }
         }
 

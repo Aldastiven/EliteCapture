@@ -16,7 +16,7 @@ import java.util.List;
 public class iDetalle implements Detalle {
 
 	public List<DetalleTab> D1 = new ArrayList<>();
-	Connection cn = null;
+	Connection cn;
 	String path = null;
 	JsonAdmin ja = null;
 
@@ -125,6 +125,5 @@ public class iDetalle implements Detalle {
 				rs.getString("grupo1"),
 				rs.getInt("reglas"),
 				rs.getString("tip"));
-
 	}
 }
