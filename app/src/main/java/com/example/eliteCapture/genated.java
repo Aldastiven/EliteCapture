@@ -18,6 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eliteCapture.Config.Util.ControlViews.CconteosCheck;
 import com.example.eliteCapture.Config.Util.ControlViews.CconteosEditar;
 import com.example.eliteCapture.Config.Util.ControlViews.CdespelgableQ;
 import com.example.eliteCapture.Config.Util.ControlViews.Cdesplegable;
@@ -277,8 +278,6 @@ public class genated extends AppCompatActivity {
                         linearBodypop.addView(ct.textview(genated.this, r.getId(), r.getPregunta()));
                         break;
                     case "ETN":
-                        Log.i("validar", "" + r.getRespuesta());
-
                         linearBodypop.addView(new Cetnum(genated.this, path, "H", r, inicial).tnumerico());
                         break;
                     case "ETA":
@@ -324,6 +323,9 @@ public class genated extends AppCompatActivity {
                         break;
                     case "RSE":
                         linearPrinc.addView(new CconteosEditar(genated.this, path, ubicacion, r, inicial, popregla).CconteoEditar());
+                        break;
+                    case "RSC":
+                        linearPrinc.addView(new CconteosCheck(genated.this, path, ubicacion, r, inicial).Cconteo());
                         break;
                     case "RB":
                         linearPrinc.addView(new CradioButton(genated.this, path, ubicacion, r, inicial).Tradiobtn());

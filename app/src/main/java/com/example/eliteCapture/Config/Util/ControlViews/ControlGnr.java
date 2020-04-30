@@ -33,8 +33,10 @@ public class ControlGnr {
         this.tiporescont = tiporescont;
     }
 
+    /*
     public ControlGnr() {
     }
+     */
 
     /*ORGANIZA LOS CONTROLES INTEGRADOS*/
     public View Contenedor(boolean vacio, boolean inicial, String tipocampo) {
@@ -70,6 +72,9 @@ public class ControlGnr {
                 break;
             case "vx2":
                 LLtotal.addView(vx2(pregunta, respuesta));
+                break;
+            case "vx3":
+                LLtotal.addView(vx3(pregunta, respuesta, btn));
                 break;
             case "hxbtn_izq":
                 LLtotal.addView(pregunta);
@@ -121,6 +126,25 @@ public class ControlGnr {
 
         LLprincipal.addView(v1);
         LLprincipal.addView(v2);
+
+        return LLprincipal;
+    }
+
+    public LinearLayout vx3(View v1, View v2, View v3) {
+        LinearLayout.LayoutParams llparamsPrincipal = new
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        llparamsPrincipal.setMargins(2, 5, 2, 5);
+
+        LinearLayout LLprincipal = new LinearLayout(context);
+        LLprincipal.setLayoutParams(llparamsPrincipal);
+        LLprincipal.setWeightSum(2);
+        LLprincipal.setOrientation(LinearLayout.VERTICAL);
+        LLprincipal.setPadding(5, 5, 5, 5);
+        LLprincipal.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        LLprincipal.addView(v1);
+        LLprincipal.addView(v2);
+        LLprincipal.addView(v3);
 
         return LLprincipal;
     }
