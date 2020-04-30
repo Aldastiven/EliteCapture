@@ -6,9 +6,12 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ import com.example.eliteCapture.R;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CconteosCheck {
 
@@ -230,12 +234,18 @@ public class CconteosCheck {
 
     public View Check(){
 
-        for(int i = 0 ; i < soloOpciones(rT.getDesplegable()).size(); i++){
+        LinearLayout line = new LinearLayout(c);
+        line.setOrientation(LinearLayout.VERTICAL);
+
+        List soloOpciones = soloOpciones(rT.getDesplegable());
+
+        for(int i = 0; i < soloOpciones.size(); i++){
             cB = new CheckBox(c);
-            cB.setText(i);
+            cB.setText(""+soloOpciones.get(i));
+            line.addView(cB);
         }
 
-        return cB;
+        return line;
     }
 
     //opciones del desplegable
@@ -245,7 +255,6 @@ public class CconteosCheck {
 
             iDesplegable iDesp = new iDesplegable(null, path);
             iDesp.nombre = opcion;
-            opc.add("Selecciona");
             for (DesplegableTab des : iDesp.all()) {
                 opc.add(des.getOpcion());
             }
