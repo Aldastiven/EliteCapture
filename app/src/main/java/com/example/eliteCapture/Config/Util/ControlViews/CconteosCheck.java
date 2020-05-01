@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -36,11 +37,13 @@ public class CconteosCheck {
     int id;
     boolean vacio, inicial;
 
-    String respuestaSpin;
+    String respuestaSpin, vlr, data;
 
     CheckBox cB;
 
     ControlGnr Cgnr;
+
+    List<String> respuestaCheck = new ArrayList<>();
 
     public CconteosCheck(Context context, String path, String ubicacion, RespuestasTab rt, Boolean inicial) {
         this.c = context;
@@ -52,8 +55,13 @@ public class CconteosCheck {
         this.inicial = inicial;
     }
 
-    //metodo que crea el control del conteo
+    public String respuestaLimpia(){
+        String d = respuestaCheck.toString().replace("[", "").replace("]", "");
+        return d;
+    }
+
     public View Cconteo() {
+        //metodo que crea el control del conteo
 
         LinearLayout.LayoutParams llparamsText = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         llparamsText.weight = (float) 2.3;
@@ -97,8 +105,8 @@ public class CconteosCheck {
         return ControlView;
     }
 
-    //metodo que crea los botones de conteos
     public View Cbotones(final TextView tvpor) {
+        //metodo que crea los botones de conteos
         View viewTotal;
 
         LinearLayout llbtn = new LinearLayout(c);
@@ -157,11 +165,11 @@ public class CconteosCheck {
                     String data = ResSum(rta, false, tvr);
                     tvr.setText(data);
 
-                    String vlr = valor(rta);
+                    vlr = valor(rta);
                     tvpor.setText((rta < 0) ? "Resultado: " : "Resultado: \n" + vlr);
 
                     try {
-                        registro(data, vlr, respuestaSpin);
+                        registro(data, vlr, respuestaLimpia());
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
@@ -180,10 +188,10 @@ public class CconteosCheck {
                     String data = ResSum(rta, false, tvr);
                     tvr.setText(data);
 
-                    String vlr = valor(rta);
+                    vlr = valor(rta);
                     tvpor.setText((rta < 0) ? "Resultado: \n NA" : "Resultado: \n" + vlr);
                     try {
-                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin);
+                        registro(data, (rta < 0) ? "-1" : vlr, respuestaLimpia());
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
@@ -196,10 +204,10 @@ public class CconteosCheck {
                     tvpor.setText("Resultado: \n NA");
 
                     int rta = n;
-                    String vlr = valor(rta);
+                    vlr = valor(rta);
                     String data = ResSum(rta, false, tvr);
                     try {
-                        registro(data, (rta < 0) ? "-1" : vlr, respuestaSpin);
+                        registro(data, (rta < 0) ? "-1" : vlr, respuestaLimpia());
                     } catch (Exception e) {
                         Log.i("Error_Crs", e.toString());
                     }
@@ -215,7 +223,7 @@ public class CconteosCheck {
     }
 
     public String ResSum(int rta, boolean inicial, TextView tvr) {
-        String data = String.valueOf(rta);
+        data = String.valueOf(rta);
         try {
             if (inicial && data.equals("-1")) {
                 tvr.setVisibility(View.INVISIBLE);
@@ -233,23 +241,84 @@ public class CconteosCheck {
     }
 
     public View Check(){
-
         LinearLayout line = new LinearLayout(c);
         line.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout lineItems = new LinearLayout(c);
+        lineItems.setOrientation(LinearLayout.VERTICAL);
+        lineItems.setVisibility(View.GONE);
+
+        line.addView(botonDesp(lineItems));
 
         List soloOpciones = soloOpciones(rT.getDesplegable());
 
         for(int i = 0; i < soloOpciones.size(); i++){
             cB = new CheckBox(c);
             cB.setText(""+soloOpciones.get(i));
-            line.addView(cB);
+            lineItems.addView(cB);
+            funCheck(cB);
         }
 
+        line.addView(lineItems);
         return line;
     }
 
-    //opciones del desplegable
+    private void funVisible(Button btn, final LinearLayout lres) {
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(lres.getVisibility() == View.VISIBLE){
+                    lres.setVisibility(View.GONE);
+                }else if(lres.getVisibility() == View.GONE){
+                    lres.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    public void funCheck(final CheckBox ck){
+        ck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                try {
+                    if(ck.isChecked()){
+                        respuestaCheck.add(ck.getText().toString());
+                        Log.i("Lcheck",respuestaLimpia());
+                    }if(!ck.isChecked()){
+                        deleteObjList(ck.getText().toString());
+                        Log.i("Lcheck",respuestaLimpia());
+                    }
+                    registro(data, vlr, respuestaLimpia());
+                }catch (Exception e){
+                    Log.i("ERRORDATA",e.toString());
+                }
+
+            }
+        });
+    }
+
+    public View botonDesp(LinearLayout line){
+        Button btn = new Button(c);
+        btn.setText(""+rT.getDesplegable());
+        btn.setBackgroundResource(R.drawable.border5sp);
+        btn.setTextColor(Color.parseColor("#ffffff"));
+        btn.setTextSize(15);
+
+        funVisible(btn, line);
+
+        return btn;
+    }
+
+    public void deleteObjList(String obj){
+        for(int i = 0; i < respuestaCheck.size(); i++){
+            if(respuestaCheck.get(i).equals(obj)){
+                respuestaCheck.remove(obj);
+            }
+        }
+    }
+
     public ArrayList soloOpciones(String opcion) {
+        //opciones del desplegable
         try {
             ArrayList<String> opc = new ArrayList<>();
 
@@ -284,8 +353,8 @@ public class CconteosCheck {
         new iContenedor(path).editarTemporal(ubicacion, rT.getId().intValue(), rta, String.valueOf(valor), causa, rT.getReglas());
     }
 
-    //retorna el layout del encabezado pregunta porcentaje
     public LinearLayout pp(View v1, View v2) {
+        //retorna el layout del encabezado pregunta porcentaje
         LinearLayout.LayoutParams llparamspregunta = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
