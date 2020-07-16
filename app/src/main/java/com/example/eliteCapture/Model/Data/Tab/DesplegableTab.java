@@ -4,12 +4,14 @@ public class DesplegableTab {
     private String Filtro;
     private String Codigo;
     private String Opcion;
+    private String Condicional;
 
 
-    public DesplegableTab(String filtro, String codigo, String opcion) {
-        Filtro = filtro;
-        Codigo = codigo;
-        Opcion = opcion;
+    public DesplegableTab(String filtro, String codigo, String opcion, String Condicional) {
+        this.Filtro = filtro;
+        this.Codigo = codigo;
+        this.Opcion = opcion;
+        this.Condicional = Condicional;
     }
 
     public String getFiltro() {
@@ -34,5 +36,13 @@ public class DesplegableTab {
 
     public void setOpcion(String opcion) {
         Opcion = opcion;
+    }
+
+    public String getCondicional() {
+        return Condicional;
+    }
+
+    public void setCondicional(String condicional) {
+        Condicional = condicional;
     }
 }

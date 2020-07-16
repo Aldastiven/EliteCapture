@@ -43,17 +43,14 @@ public class iContenedor implements Contenedor {
     }
 
     public iContenedor(String path) {
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         nombre = sdf.format(new Date());
-
         this.path = path;
         try {
             ct = all();
         } catch (Exception e) {
             Log.i("Error_onCreate", e.toString());
         }
-
     }
 
     @Override

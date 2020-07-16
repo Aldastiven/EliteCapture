@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -183,7 +184,7 @@ public class Cconteos {
         LinearLayout.LayoutParams LLcmpweight = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LLcmpweight.weight = (float) 2;
 
-        final TextView tvr = new TextView(context);
+        final EditText tvr = new EditText(context);
         tvr.setText((rt.getRespuesta() == null) ? "-1" : rt.getRespuesta());
         tvr.setId(rt.getId().intValue());
         tvr.setTextSize(40);

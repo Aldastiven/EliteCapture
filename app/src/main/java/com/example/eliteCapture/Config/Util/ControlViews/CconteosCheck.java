@@ -1,8 +1,11 @@
 package com.example.eliteCapture.Config.Util.ControlViews;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eliteCapture.Config.Util.AdminItem;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
@@ -44,6 +48,8 @@ public class CconteosCheck {
     ControlGnr Cgnr;
 
     List<String> respuestaCheck = new ArrayList<>();
+
+    AdminItem ai;
 
     public CconteosCheck(Context context, String path, String ubicacion, RespuestasTab rt, Boolean inicial) {
         this.c = context;
@@ -118,14 +124,19 @@ public class CconteosCheck {
         LinearLayout.LayoutParams LLcmpweight = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LLcmpweight.weight = (float) 2;
 
-        final TextView tvr = new TextView(c);
+        final EditText tvr = new EditText(c);
         tvr.setText((rT.getRespuesta() == null) ? "-1" : rT.getRespuesta());
         tvr.setId(rT.getId().intValue());
         tvr.setTextSize(40);
         tvr.setTextColor(Color.parseColor("#5d6d7e"));
+        tvr.setRawInputType(Configuration.KEYBOARD_QWERTY);
         tvr.setTypeface(null, Typeface.BOLD);
         tvr.setGravity(Gravity.CENTER);
+        tvr.setVisibility(View.VISIBLE);
         tvr.setLayoutParams(LLcmpweight);
+
+        Funetn(tvr);
+
 
         LinearLayout.LayoutParams LLbtnweight = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LLbtnweight.weight = (float) 0.5;
@@ -219,6 +230,12 @@ public class CconteosCheck {
         });
 
 
+        try{
+            registro("SIN SELECCION", "0", respuestaLimpia());
+        }catch (Exception e){
+            Toast.makeText(c, ""+e, Toast.LENGTH_SHORT).show();
+        }
+
         return viewTotal;
     }
 
@@ -226,7 +243,7 @@ public class CconteosCheck {
         data = String.valueOf(rta);
         try {
             if (inicial && data.equals("-1")) {
-                tvr.setVisibility(View.INVISIBLE);
+                //tvr.setVisibility(View.INVISIBLE);
             } else if (!inicial && rta > -1) {
                 tvr.setVisibility(View.VISIBLE);
             } else if (!inicial && rta <= 0) {
@@ -240,7 +257,7 @@ public class CconteosCheck {
         return data;
     }
 
-    public View Check(){
+    public View Check() {
         LinearLayout line = new LinearLayout(c);
         line.setOrientation(LinearLayout.VERTICAL);
 
@@ -250,11 +267,13 @@ public class CconteosCheck {
 
         line.addView(botonDesp(lineItems));
 
-        List soloOpciones = soloOpciones(rT.getDesplegable());
+        ai = new AdminItem(c, path);
 
-        for(int i = 0; i < soloOpciones.size(); i++){
+        List items = ai.soloOpciones(rT.getDesplegable());
+
+        for(int i = 0; i < items.size(); i++){
             cB = new CheckBox(c);
-            cB.setText(""+soloOpciones.get(i));
+            cB.setText(""+items.get(i));
             lineItems.addView(cB);
             funCheck(cB);
         }
@@ -369,5 +388,32 @@ public class CconteosCheck {
         llpregunta.addView(v2); //retorna pocentaje
 
         return llpregunta;
+    }
+
+    //funcion del control
+    public void Funetn(final EditText etn) {
+        etn.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    Cgnr.getViewtt().setBackgroundResource(R.drawable.bordercontainer);
+                    String rta = etn.getText().toString();
+                    if (!rta.isEmpty()) {
+                        registro(rta, rta, respuestaLimpia());
+                    } else {
+                        registro(null, null, respuestaLimpia());
+                    }
+                } catch (Exception ex) {
+                }
+            }
+        });
     }
 }

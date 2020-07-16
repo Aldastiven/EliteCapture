@@ -42,30 +42,11 @@ public abstract class sqlConect {
             StrictMode.setThreadPolicy(policy);
             DriverManager.registerDriver(new net.sourceforge.jtds.jdbc.Driver());
             Log.i("CONEXION", "nos conectamos");
-            //return DriverManager.getConnection(ConnectionURL);
             return DriverManager.getConnection(url,user,pass);
-
         } catch (Exception e) {
             Log.i("CONEXION ERROR", "error de conexion \n" + e);
             return null;
         }
-
-    }
-
-    public void closeConexion(Connection con) throws Exception {
-        if (con != null) {
-            con.close();
-        }
-    }
-
-    public void closeConexion(Connection con, ResultSet rs) throws Exception {
-        if (con != null) {
-            con.close();
-        }
-        if (rs != null) {
-            rs.close();
-        }
-
 
     }
 

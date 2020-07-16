@@ -1,6 +1,10 @@
 package com.example.eliteCapture.Model.Data;
 
 
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.Data.Interfaz.Desplegable;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
@@ -67,6 +71,7 @@ public class iDesplegable implements Desplegable {
     PreparedStatement ps = cn.prepareStatement("SELECT [Filtro]\n" +
         ",[Codigo]\n" +
         ",[Opcion]\n" +
+        ",[condicional]"+
         "FROM [dbo].[Desplegables] \n" +
         "ORDER BY Codigo");
     rs = ps.executeQuery();
@@ -105,20 +110,18 @@ public class iDesplegable implements Desplegable {
     DT.clear();
     try {
       ResultSet rs;
-      PreparedStatement ps = cn.prepareStatement("SELECT id_Desplegable, Filtro, Codigo, Opcion\n" +
+      PreparedStatement ps = cn.prepareStatement("SELECT id_Desplegable, Filtro, Codigo, Opcion, condicional\n" +
           "FROM  Desplegables\n" +
           "WHERE [Filtro]='" + nombreD + "' ORDER BY Codigo");
       rs = ps.executeQuery();
+
       while (rs.next()) {
         DT.add(gift(rs));
       }
 
-      rs.isBeforeFirst();
-      String contenido = new Gson().toJson(DT);
-
-
-      return ja.WriteJson(path, nombre, contenido);
+      return ja.WriteJson(path, nombre, new Gson().toJson(DT));
     } catch (Exception EX) {
+      Log.i("CONSULTA",""+EX.toString());
       return false;
     }
   }
@@ -131,20 +134,6 @@ public class iDesplegable implements Desplegable {
     return DT;
   }
 
-  public String clearJson() {
-    String msj = "";
-    try {
-      DT.clear();
-      local();
-
-      msj = "ok";
-      return msj;
-    } catch (Exception ex) {
-      msj = "Exception clearBeDelete \n \n" + ex;
-      return msj;
-    }
-  }
-
   @Override
   public String json(DesplegableTab o) throws Exception {
     Gson gson = new Gson();
@@ -152,10 +141,13 @@ public class iDesplegable implements Desplegable {
   }
 
   public DesplegableTab gift(ResultSet rs) throws Exception {
+    Log.i("CONSULTA","Filtro : "+rs.getString("Filtro")+" condi : "+rs.getString("condicional"));
     return new DesplegableTab(
         rs.getString("Filtro"),
         rs.getString("Codigo"),
-        rs.getString("Opcion"));
+        rs.getString("Opcion"),
+        rs.getString("condicional")
+    );
   }
 
 }

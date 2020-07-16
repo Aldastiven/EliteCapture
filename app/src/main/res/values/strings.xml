@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EliteCapture</string>
+    <string name="app_name">com.EliteCaptureRC</string>
     <string name="subir">SUBIR</string>
     <string name="SUBIR" />
     <string name="hello_blank_fragment">Hello blank fragment</string>
