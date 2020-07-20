@@ -78,7 +78,6 @@ public class Cscanner {
         edt.setLayoutParams(medidas(0.5));
         edt.setTypeface(null, Typeface.BOLD);
         edt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
         edt.setBackgroundColor(Color.parseColor("#eeeeee"));
         edt.setSingleLine();
 

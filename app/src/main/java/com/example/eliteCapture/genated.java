@@ -30,6 +30,7 @@ import com.example.eliteCapture.Config.Util.ControlViews.Cscanner;
 import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
 import com.example.eliteCapture.Config.Util.ControlViews.Cconteos;
 import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
+import com.example.eliteCapture.Config.Util.formAdmin;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -74,6 +75,8 @@ public class genated extends AppCompatActivity {
 
     public boolean ok, temporal; //retorna la respuesta de un formulario pendiente
 
+    formAdmin formA;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +110,10 @@ public class genated extends AppCompatActivity {
 
             contenedor = validarTemporal();//valida si hay datos temporales de los formularios
 
+
             Bundle bundle = getIntent().getExtras();
+
+
             if (bundle != null) {
                 camera = bundle.getBoolean("camera");
                 dataCamera = bundle.getString("codigo");
@@ -124,6 +130,7 @@ public class genated extends AppCompatActivity {
             }
 
             iCon.crearTemporal(contenedor);//crea el json temporal con los datos correspondientes
+
 
         } catch (Exception ex) {
             Log.i("Error_onCreate", ex.toString());
@@ -152,6 +159,7 @@ public class genated extends AppCompatActivity {
 
     public void crearform() {
         try {
+            formA = new formAdmin(linearPrinc, this, path, inicial, 0);
             CrearEncabezado();
             CrearCuerpo();
         } catch (Exception ex) {
@@ -165,9 +173,14 @@ public class genated extends AppCompatActivity {
     }
 
     public void CrearCuerpo() throws Exception {
-        CrearForm(contenedor.getQuestions(), "Q");//crea los elemtos del body (formulario) y pasa datos correspondientes
+        /*CrearForm(contenedor.getQuestions(), "Q");//crea los elemtos del body (formulario) y pasa datos correspondientes
         if (footer) {
             CrearForm(contenedor.getFooter(), "F");//crea los elemtos del body (formulario) y pasa datos correspondientes
+        }*/
+
+        formA.CrearForm("Q");
+        if(footer) {
+            formA.CrearForm("F");
         }
     }
 
@@ -334,7 +347,7 @@ public class genated extends AppCompatActivity {
                         linearPrinc.addView(new CradioButton(genated.this, path, ubicacion, r, inicial).Tradiobtn());
                         break;
                     case "DES":
-                        linearPrinc.addView(new CdespelgableQ(genated.this, r, path, inicial, ubicacion).Cdesp());
+                        linearPrinc.addView(new CdespelgableQ(genated.this, r, path, inicial, ubicacion, linearPrinc, contenedor).Cdesp());
                         break;
                 }
             }
@@ -345,10 +358,7 @@ public class genated extends AppCompatActivity {
 
     // metodo para extraer del SharedPreferences el id del proceso
     public void getcodProceso() {
-        pro = new Gson().fromJson(sp.getString("proceso", ""), new TypeToken<ProcesoTab>() {
-        }.getType());
-        Log.i("ProContenedor:", sp.getString("proceso", ""));
-
+        pro = new Gson().fromJson(sp.getString("proceso", ""), new TypeToken<ProcesoTab>() {}.getType());
     }
 
     // metodo para extraer del SharedPreferences el id del usuario

@@ -11,8 +11,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eliteCapture.Config.Util.formAdmin;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
+import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
@@ -23,21 +25,33 @@ public class CdespelgableQ {
     RespuestasTab rt;
     String path;
     boolean incial;
-    boolean vacio;
+    boolean vacio, estado ;
     int id;
     String ubicacion;
     View ControlView;
+    LinearLayout linearPrinc;
 
     ControlGnr Cgnr;
 
-    public CdespelgableQ(Context context, RespuestasTab rt, String path, boolean incial,  String ubicacion) {
-        this.context = context;
-        this.rt = rt;
-        this.path = path;
-        this.incial = incial;
-        this.vacio = rt.getRespuesta() != null;
-        this.id = rt.getId().intValue();
-        this.ubicacion = ubicacion;
+    ContenedorTab contenedor;
+
+    public CdespelgableQ(Context context, RespuestasTab rt, String path, boolean incial,  String ubicacion, LinearLayout linearPrinc, ContenedorTab contenedor) {
+        try {
+            this.context = context;
+            this.rt = rt;
+            this.path = path;
+            this.incial = incial;
+            this.vacio = rt.getRespuesta() != null;
+            this.id = rt.getId().intValue();
+            this.ubicacion = ubicacion;
+            this.linearPrinc = linearPrinc;
+            this.contenedor = contenedor;
+
+            estado = false;
+
+        }catch (Exception e){
+            Toast.makeText(context, "Error en CdespelgableQ : "+e.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public View Cdesp() {
@@ -68,7 +82,7 @@ public class CdespelgableQ {
         Cgnr = new ControlGnr(context, rt.getId(), pp(tvp, tvpor),Cdespleg(llparamsText,tvpor), null, "vx2");
         ControlView = Cgnr.Contenedor(vacio, incial, rt.getTipo());
 
-        return ControlView;
+        return tvp;
     }
 
     private View Cdespleg(LinearLayout.LayoutParams llparamsText, TextView tvpor) {
@@ -80,15 +94,16 @@ public class CdespelgableQ {
         spinner.setAdapter(spinnerArray);
         spinner.setSelection((vacio ? soloOpciones.indexOf(rt.getRespuesta()) : 0));
         spinner.setLayoutParams(llparamsText);
-        Funspinner(spinner, tvpor);
+        Funspinner(spinner, tvpor, estado);
         return spinner;
     }
 
-    private void Funspinner(final Spinner spn, final TextView tvpor) {
+    private void Funspinner(final Spinner spn, final TextView tvpor, final boolean estado) {
         spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
+
                     String rta = spn.getItemAtPosition(position).toString();
                     String vlr;
                     if (spn.getSelectedItem() == "Selecciona") {
@@ -99,8 +114,12 @@ public class CdespelgableQ {
                         vlr = String.valueOf(rt.getPonderado());
                         tvpor.setText("Resultado: \n" + vlr);
                         registro(rta,vlr);
+
+                        if(estado) new formAdmin(linearPrinc, context, path, incial, 0).CrearForm("Q");
                     }
+
                 } catch (Exception ex) {
+                    Toast.makeText(context, "Error en el cambio : "+ex.toString(), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -122,7 +141,7 @@ public class CdespelgableQ {
             }
             return opc;
         } catch (Exception ex) {
-            Toast.makeText(context, "" + ex, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "SOLO OPCIONES" + ex, Toast.LENGTH_SHORT).show();
             return null;
         }
     }

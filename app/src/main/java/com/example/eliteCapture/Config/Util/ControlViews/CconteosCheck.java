@@ -269,7 +269,7 @@ public class CconteosCheck {
 
         ai = new AdminItem(c, path);
 
-        List items = ai.soloOpciones(rT.getDesplegable());
+        List items = soloOpciones(rT.getDesplegable());
 
         for(int i = 0; i < items.size(); i++){
             cB = new CheckBox(c);

@@ -17,6 +17,7 @@ public class Admin implements Administrador {
     private Detalle det = null;
     private Proceso pro = null;
     private Usuario usu = null;
+    private idespVariedades var = null;
 
 
     public Admin(Connection con, String path) {
@@ -54,5 +55,12 @@ public class Admin implements Administrador {
             usu = new iUsuario(con, path);
         }
         return usu;
+    }
+
+    public idespVariedades getProductos() throws Exception{
+        if(var == null){
+            var = new idespVariedades(path, con);
+        }
+        return var;
     }
 }
