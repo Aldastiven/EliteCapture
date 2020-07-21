@@ -3,15 +3,21 @@ package com.example.eliteCapture.Config.Util.ControlViews;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.Tab.despVariedadesTab;
+import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.Data.idespVariedades;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
@@ -92,7 +98,7 @@ public class CVariedadJson {
 
         lineVariedad = new LinearLayout(c);
         lineVariedad.setOrientation(LinearLayout.VERTICAL);
-        lineVariedad.addView(CdesplegVariedad(tvpor));
+        lineVariedad.addView(CdesplegVariedad());
 
         line.addView(CdesplegProducto(llparamsText,tvpor));
         line.addView(tvp2);
@@ -136,100 +142,124 @@ public class CVariedadJson {
     }
 
     private View CdesplegProducto(LinearLayout.LayoutParams llparamsText, TextView tvpor) {
-        ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(c, R.layout.spinner_item_personal, getProducto());
-            final Spinner spinner = new Spinner(c);
-            spinner.setId(rt.getId().intValue());
-            spinner.setAdapter(spinnerArray);
-            spinner.setSelection((vacio ? getProducto().indexOf(rt.getRespuesta()) : 0));
-            spinner.setLayoutParams(llparamsText);
-            FunspinnerVproducto(spinner);
-        return spinner;
+        ArrayAdapter<String> autoArray = new ArrayAdapter<String>(c, R.layout.spinner_item_personal, getProducto());
+        AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(c);
+
+        autoCompleteTextView.setAdapter(autoArray);
+        autoCompleteTextView.setHint(rt.getPregunta());
+        autoCompleteTextView.setText((vacio ? rt.getRespuesta() : ""));
+        autoCompleteTextView.setTextSize(15);
+        autoCompleteTextView.setLayoutParams(llparamsText);
+        autoCompleteTextView.setBackgroundColor(Color.parseColor("#E5E7E9"));
+        autoCompleteTextView.setSingleLine(true);
+        autoCompleteTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        autoCompleteTextView.setTextColor(Color.parseColor("#515A5A"));
+        autoCompleteTextView.setTypeface(null, Typeface.BOLD);
+
+        FunspinnerVproducto(autoCompleteTextView);
+        return autoCompleteTextView;
     }
 
-    private View CdesplegVariedad(TextView tvpor) {
+    private View CdesplegVariedad() {
 
         LinearLayout.LayoutParams llparamsText = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         llparamsText.weight = (float) 2.3;
 
-        ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(c, R.layout.spinner_item_personal, getVariedad());
-        final Spinner spinner = new Spinner(c);
-        spinner.setId(rt.getId().intValue());
-        spinner.setAdapter(spinnerArray);
-        spinner.setSelection((vacio ? getProducto().indexOf(rt.getRespuesta()) : 0));
-        spinner.setLayoutParams(llparamsText);
-        Funspinner(spinner, tvpor);
-        return spinner;
+        ArrayAdapter<String> autoArray = new ArrayAdapter<String>(c, R.layout.spinner_item_personal, getVariedad());
+        AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(c);
+
+        autoCompleteTextView.setAdapter(autoArray);
+        autoCompleteTextView.setHint("variedad");
+        autoCompleteTextView.setText((vacio ? rt.getRespuesta() : ""));
+        autoCompleteTextView.setTextSize(15);
+        autoCompleteTextView.setLayoutParams(llparamsText);
+        autoCompleteTextView.setBackgroundColor(Color.parseColor("#E5E7E9"));
+        autoCompleteTextView.setSingleLine(true);
+        autoCompleteTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        autoCompleteTextView.setTextColor(Color.parseColor("#515A5A"));
+        autoCompleteTextView.setTypeface(null, Typeface.BOLD);
+
+        FunspinnerVariedad(autoCompleteTextView);
+        return autoCompleteTextView;
     }
 
     //FUNCION DEL SPINNER DEL PRODUCTO
-    public void FunspinnerVproducto(final  Spinner spn){
-        spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    public void FunspinnerVproducto(final AutoCompleteTextView etdauto) {
+
+        etdauto.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                producto = spn.getItemAtPosition(position).toString();
-
-                lineVariedad.removeAllViews();
-                lineVariedad.addView(CdesplegVariedad(tvpor));
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    //FUNCION DEL SPINNER DE LA VARIEDAD
-    private void Funspinner(final Spinner spn, final TextView tvpor) {
-        spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-
-                    String rta = spn.getItemAtPosition(position).toString();
-                    String vlr;
-                    if (spn.getSelectedItem() == "Selecciona") {
-                        vlr = String.valueOf(0);
-                        tvpor.setText("Resultado: \n" + vlr);
-                        registro(rta,vlr);
-                    } else {
-                        vlr = String.valueOf(rt.getPonderado());
-                        tvpor.setText("Resultado: \n" + vlr);
-
-                        String idVar = "";
-
-                        for (despVariedadesTab dt : idv.all()) {
-                            if(dt.getProducto().equals(producto)){
-                                for(despVariedadesTab.variedades variedades : dt.getVariedades()){
-                                    if(variedades.getVariedad().equals(rta)){
-                                        idVar = variedades.getIdVariedad()+"";
-                                    }
-                                }
-                                break;
-                            }
-                        }
-
-                        registro(idVar ,vlr);
+                    String resultado = Buscar(etdauto.getText().toString(), rt.getDesplegable());
+                    Log.i("RESULTADO",resultado);
+                    producto = resultado;
+                    if (!resultado.isEmpty()) {
+                        lineVariedad.removeAllViews();
+                        lineVariedad.addView(CdesplegVariedad());
                     }
-
                 } catch (Exception ex) {
-                    Toast.makeText(c, "Error en el cambio : "+ex.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(c, "" + ex.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void afterTextChanged(Editable s) {
+
             }
         });
+
     }
+
+
+    //FUNCION DEL SPINNER DE LA VARIEDAD
+    public void FunspinnerVariedad(final AutoCompleteTextView etdauto) {
+
+        etdauto.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    despVariedadesTab.variedades variedad = BuscarVariedad(etdauto.getText().toString());
+                    String vlr;
+
+                    if(variedad != null) {
+                        if (!variedad.getVariedad().isEmpty()) {
+                            vlr = String.valueOf(rt.getPonderado());
+                            tvpor.setText("Resultado: \n" + vlr);
+
+                            registro(variedad.getIdVariedad() + "", variedad.getVariedad());
+                        } else {
+                            registro(null, null);
+                        }
+                    }else{
+                        registro(null, null);
+                    }
+                } catch (Exception ex) {
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
+
+
 
     // ITEMS PRODUCTO
     public List<String> getProducto(){
         try {
             List<String> Lproducto = new ArrayList<>();
 
-            Lproducto.add("Selecciona");
             for (despVariedadesTab dt : idv.all()) {
                 Lproducto.add(dt.getProducto());
             }
@@ -246,7 +276,6 @@ public class CVariedadJson {
         try {
             List<String> Lvariedad = new ArrayList<>();
 
-            Lvariedad.add("Selecciona");
             for (despVariedadesTab dt : idv.all()) {
                 if(dt.getProducto().equals(producto)){
                     for(despVariedadesTab.variedades variedades : dt.getVariedades()){
@@ -263,6 +292,49 @@ public class CVariedadJson {
         }
     }
 
+
+    //BUSQUEDA DEL PRODUCTO
+    public String Buscar(String data, String desplegable) {
+        try {
+            String producto = "";
+            for (despVariedadesTab desp : idv.all()) {
+                if (desp.getProducto().equals(data)) {
+                    producto = desp.getProducto();
+                    break;
+                }
+            }
+            return producto;
+        }catch (Exception ex){
+            Toast.makeText(c, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+            return "";
+        }
+    }
+
+    //BUSQUEDA DEL VARIEDAD
+    public despVariedadesTab.variedades BuscarVariedad(String data) {
+        try {
+            despVariedadesTab.variedades variedad = null;
+            for (despVariedadesTab dt : idv.all()) {
+                if(dt.getProducto().equals(producto)){
+                    for(despVariedadesTab.variedades variedades : dt.getVariedades()){
+                        if (variedades.getVariedad().equals(data)) {
+                            Toast.makeText(c, "llego", Toast.LENGTH_SHORT).show();
+                            variedad = variedades;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            return variedad;
+        }catch (Exception ex){
+            //Toast.makeText(c, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+
+    //REGISTRO
     public void registro(String rta, String valor) throws Exception {
         new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), null, rt.getReglas());
     }
