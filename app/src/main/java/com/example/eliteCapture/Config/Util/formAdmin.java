@@ -113,7 +113,6 @@ public class formAdmin {
                     case "DPV":
                         linearPrinc.addView(new CVariedadJson(context, path, inicial, r, ubicacion).Cvariedad());
                         break;
-
                 }
             }
         } catch (Exception ex) {

@@ -50,4 +50,16 @@ public class JsonAdmin {
 
     }
 
+    //COMPRUEBA SI EL ARCHIVO EXISTE
+    public Boolean ExitsJson(String path, String nombre)throws Exception{
+        path = path + nombre + ".json";
+        File file = new File(path);
+
+        if(file.exists()){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
 }

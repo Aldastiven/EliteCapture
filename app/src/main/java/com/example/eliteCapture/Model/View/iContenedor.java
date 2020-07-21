@@ -1,10 +1,7 @@
 package com.example.eliteCapture.Model.View;
 
-import android.util.ArrayMap;
-import android.util.Log;
-import android.widget.Switch;
 
-import com.example.eliteCapture.Config.Util.ControlViews.ControlGnr;
+import android.util.Log;
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.iDesplegable;
@@ -21,18 +18,16 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 public class iContenedor implements Contenedor {
+    private String nombre = "pendientes_envio", path;
+
     public static List<ContenedorTab> ct = new ArrayList<>();
-    private String path = "";
-    private String nombre;
 
     public String getNombre() {
         return nombre;
@@ -43,10 +38,9 @@ public class iContenedor implements Contenedor {
     }
 
     public iContenedor(String path) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        nombre = sdf.format(new Date());
         this.path = path;
         try {
+            if (!exist()){local();}
             ct = all();
         } catch (Exception e) {
             Log.i("Error_onCreate", e.toString());
@@ -339,6 +333,14 @@ public class iContenedor implements Contenedor {
     }
 
     protected class Conexion extends sqlConect {
+    }
+
+    public boolean exist(){
+        try {
+            return new JsonAdmin().ExitsJson(path, nombre);
+        }catch (Exception e){
+            return false;
+        }
     }
 
 }

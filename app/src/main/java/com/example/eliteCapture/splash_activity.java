@@ -35,7 +35,7 @@ public class splash_activity extends AppCompatActivity {
 
     TextView txtStatus;
 
-    String path = null;
+    String path = null, carga;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,9 @@ public class splash_activity extends AppCompatActivity {
         ini = Calendar.getInstance().getTimeInMillis();
         try {
             sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
-            CargaDeDatos cdd = new CargaDeDatos(path, this, txtStatus);
+            getActivity();
+
+            new CargaDeDatos(path, this, txtStatus);
 
             fin = Calendar.getInstance().getTimeInMillis();
             if ((fin - ini) > 5000) {
@@ -64,13 +66,10 @@ public class splash_activity extends AppCompatActivity {
                 delayed = delayed - (fin - ini);
             }
 
-
             new Handler().postDelayed(new Runnable() {
                 public void run() {
                     redirecion();
                 }
-
-                ;
             }, delayed);
 
 
@@ -115,13 +114,13 @@ public class splash_activity extends AppCompatActivity {
 
             if (bundle != null) {
                 String code = bundle.getString("class");
+                carga = bundle.getString("carga");
                 if (code.equals("Index")) {
                     act = Index.class;
+                } else if(code.equals("Login")){
+                    act = Login.class;
                 }
-            } else {
             }
-
-
         } catch (Exception ex) {
             return act;
         }
@@ -139,31 +138,42 @@ public class splash_activity extends AppCompatActivity {
         TextView Status;
 
 
-        public CargaDeDatos(String path, Context context, TextView status) {
+        public CargaDeDatos(String path, Context context, TextView status) throws Exception{
             Connection cn = getConexion();
             this.path = path;
             admin = new Admin(cn, this.path);
             this.context = context;
             Status = status;
 
-            // Validando conexion
-            if (cn != null) {
-                txtStatus.setText("Conectado...");
-                CargeInicial();
-            } else {
-                txtStatus.setText("No hay Conexion a la BD");
+            String onLine = admin.getOnline().all();
+            if(onLine.isEmpty() || onLine.equals("no existe")){
+                admin.getOnline().local("offLine");
             }
+
+            if(admin.getOnline().all().equals("onLine")) {
+                // Validando conexion
+                if (cn != null) {
+                    txtStatus.setText("Conectado...");
+                    CargeInicial();
+                } else {
+                    txtStatus.setText("No hay Conexion a la BD");
+                }
+            }else{}
         }
 
 
         private void CargeInicial() {
             try {
-                obtenerUsuarios();
-                obtenerProcesos();
-                obtenerDetalles();
-                obtenerDesplegables();
-                enviarPendientes();
-                recargarSession();
+
+                if(carga.equals("BajarDatos")){
+                    obtenerUsuarios();
+                    obtenerProcesos();
+                    obtenerDetalles();
+                    obtenerDesplegables();
+                }else{
+                    enviarPendientes();
+                    recargarSession();
+                }
                 onActualizar();
 
             } catch (Exception ex) {

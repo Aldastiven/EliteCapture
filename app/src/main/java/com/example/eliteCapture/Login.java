@@ -2,6 +2,7 @@ package com.example.eliteCapture;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -14,9 +15,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.eliteCapture.Config.Util.Modal.modalSetting;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.iUsuario;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
+import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
+import com.example.eliteCapture.Model.View.iContenedor;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,6 +40,13 @@ public class Login extends AppCompatActivity {
     TextView txtError;
     CheckBox checkusu;
     String datacheck;
+
+    modalSetting ms;
+    Dialog dialogSettings;
+
+    TextView btnPendientes;
+
+    iContenedor icont;
 
 
     @Override
@@ -53,9 +66,9 @@ public class Login extends AppCompatActivity {
             txtUser = findViewById(R.id.txtUser);
             txtPass = findViewById(R.id.txtPass);
             linearBox = findViewById(R.id.linearBox);
-
             txtError = findViewById(R.id.txtError);
             checkusu = findViewById(R.id.guardarUsuario);
+            btnPendientes = findViewById(R.id.btnPendientes);
 
             iUsuario iU = new iUsuario(null, path);
             iU.nombre = "Usuarios";
@@ -64,6 +77,13 @@ public class Login extends AppCompatActivity {
 
             recibirUsuario();
             PintarCheck();
+
+            ms = new modalSetting(this, path);
+            dialogSettings = ms.modal();
+            icont = new iContenedor(path);
+
+            pintarPendientes();
+            enviarPendientes();
 
         } catch (Exception ex) {
             Toast.makeText(this, "Se genero un Error al traer los datos de Usuario \n \n" + ex.toString(), Toast.LENGTH_LONG).show();
@@ -116,7 +136,6 @@ public class Login extends AppCompatActivity {
 
         } else if ((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
-
         }
     }
 
@@ -128,8 +147,6 @@ public class Login extends AppCompatActivity {
             edit.putInt("passwordLogin", pass);
             edit.commit();
             edit.apply();
-
-
 
         } catch (Exception e) {
             Toast.makeText(this, "Error \n" + e.toString(), Toast.LENGTH_LONG).show();
@@ -201,4 +218,44 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    public void onActualizar(View v) {
+        Intent i = new Intent(Login.this, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        i.putExtra("class", "Login");
+        i.putExtra("carga", "BajarDatos");
+        startActivity(i);
+    }
+
+    public void Settings(View v){
+        dialogSettings.show();
+    }
+
+    public void pintarPendientes(){
+        try {
+            int size = 0;
+
+            for(ContenedorTab c : icont.all()){
+                Log.i("ESTADO",c.getEstado()+"");
+                if(c.getEstado() < 1){
+                    size ++;
+                }
+            }
+
+            btnPendientes.setVisibility(size > 0 ? View.VISIBLE : View.INVISIBLE);
+            btnPendientes.setText(""+size);
+        }catch (Exception e){
+            Toast.makeText(this, ""+e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public  void enviarPendientes(){
+        btnPendientes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Login.this, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                i.putExtra("class", "Login");
+                i.putExtra("carga", "Pendientes");
+                startActivity(i);
+            }
+        });
+    }
 }

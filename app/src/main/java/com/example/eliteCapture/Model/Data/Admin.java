@@ -18,6 +18,7 @@ public class Admin implements Administrador {
     private Proceso pro = null;
     private Usuario usu = null;
     private idespVariedades var = null;
+    private ionLine online = null;
 
 
     public Admin(Connection con, String path) {
@@ -62,5 +63,12 @@ public class Admin implements Administrador {
             var = new idespVariedades(path, con);
         }
         return var;
+    }
+
+    public ionLine getOnline() throws Exception{
+        if(online == null){
+            online = new ionLine(path);
+        }
+        return online;
     }
 }

@@ -100,7 +100,7 @@ public class CVariedadJson {
         lineVariedad.setOrientation(LinearLayout.VERTICAL);
         lineVariedad.addView(CdesplegVariedad());
 
-        line.addView(CdesplegProducto(llparamsText,tvpor));
+        line.addView(CdesplegProducto(llparamsText));
         line.addView(tvp2);
         line.addView(lineVariedad);
 
@@ -141,8 +141,8 @@ public class CVariedadJson {
         return valor;
     }
 
-    private View CdesplegProducto(LinearLayout.LayoutParams llparamsText, TextView tvpor) {
-        ArrayAdapter<String> autoArray = new ArrayAdapter<String>(c, R.layout.spinner_item_personal, getProducto());
+    private View CdesplegProducto(LinearLayout.LayoutParams llparamsText) {
+        ArrayAdapter<String> autoArray = new ArrayAdapter<>(c, R.layout.spinner_item_personal, getProducto());
         AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(c);
 
         autoCompleteTextView.setAdapter(autoArray);
@@ -236,9 +236,11 @@ public class CVariedadJson {
 
                             registro(variedad.getIdVariedad() + "", variedad.getVariedad());
                         } else {
+                            tvpor.setText("Resultado: \n0");
                             registro(null, null);
                         }
                     }else{
+                        tvpor.setText("Resultado: \n0");
                         registro(null, null);
                     }
                 } catch (Exception ex) {
@@ -259,7 +261,6 @@ public class CVariedadJson {
     public List<String> getProducto(){
         try {
             List<String> Lproducto = new ArrayList<>();
-
             for (despVariedadesTab dt : idv.all()) {
                 Lproducto.add(dt.getProducto());
             }
@@ -318,7 +319,6 @@ public class CVariedadJson {
                 if(dt.getProducto().equals(producto)){
                     for(despVariedadesTab.variedades variedades : dt.getVariedades()){
                         if (variedades.getVariedad().equals(data)) {
-                            Toast.makeText(c, "llego", Toast.LENGTH_SHORT).show();
                             variedad = variedades;
                             break;
                         }
@@ -328,7 +328,6 @@ public class CVariedadJson {
             }
             return variedad;
         }catch (Exception ex){
-            //Toast.makeText(c, ""+ex.toString(), Toast.LENGTH_SHORT).show();
             return null;
         }
     }

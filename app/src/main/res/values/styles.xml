@@ -25,5 +25,8 @@
         <item name="colorAccent">#00C853</item>
     </style>
 
+    <style name="TransparentDialog" parent="Theme.AppCompat.Light.Dialog">
+    </style>
+
 
 </resources>

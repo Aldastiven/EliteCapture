@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,34 +8,43 @@
     android:orientation="vertical"
     android:weightSum="10"
     android:padding="10sp"
-    android:background="#ffffff"
-    >
+    android:background="#ffffff">
 
     <ImageView
-        android:layout_width="200sp"
-        android:layout_height="0sp"
-        app:srcCompat="@drawable/flor"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="3"
-        android:contentDescription="@drawable/flor" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Version 1.1"
-        android:layout_gravity="center"/>
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/ic_settings_black_18dp"/>
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:srcCompat="@drawable/flor"
+        android:layout_gravity="center"
+        android:contentDescription="@drawable/flor"
+        android:onClick="Settings"/>
+
+    <TextView
+        android:id="@+id/txtVersion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Version 2.0"
+        android:textAlignment="center"
+        android:layout_below="@+id/logo"/>
 
     <LinearLayout
         android:id="@+id/linearBox"
         android:weightSum="8.5"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0sp"
+        android:layout_height="wrap_content"
         android:layout_weight="7"
         android:gravity="center_horizontal"
         android:paddingStart="20sp"
         android:paddingEnd="20sp"
-        >
+        android:layout_below="@+id/txtVersion">
 
             <ImageView
                 android:layout_weight="2"
@@ -108,4 +117,35 @@
                     android:textAlignment="center"/>
     </LinearLayout>
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="490dp"
+        android:backgroundTint="#ECEFF1"
+        android:clickable="true"
+        android:tint="#000000"
+        tools:ignore="VectorDrawableCompat"
+        android:layout_marginRight="10sp"
+        app:srcCompat="@drawable/ic_cloud_download_white_18dp"
+        android:onClick="onActualizar"/>
+
+    <TextView
+        android:id="@+id/btnPendientes"
+        android:layout_margin="10dp"
+        android:layout_gravity="right"
+        android:gravity="center"
+        android:background="@drawable/circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFF"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif"
+        android:textSize="20dp"
+        android:elevation="10dp"
+        android:layout_below="@+id/floatingActionButton3"
+        android:layout_alignParentRight="true"/>
+
+
+</RelativeLayout>

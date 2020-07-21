@@ -54,7 +54,6 @@ public class Index extends AppCompatActivity {
         contenUser = findViewById(R.id.contenUser);
         txtPaneluser = findViewById(R.id.txtPaneluser);
         txtELige = findViewById(R.id.txtELige);
-        txtUpdateData = findViewById(R.id.txtUpdateData);
 
         path = getExternalFilesDir(null) + File.separator;
         sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
@@ -73,7 +72,6 @@ public class Index extends AppCompatActivity {
 
     private void traerFechaUpDate() {
         String fechaUp = sp.getString("fechaUpDate", "");
-        txtUpdateData.setText("Ultima Actualización. \n "+fechaUp);
     }
 
     public void traerDataUser() {
@@ -150,7 +148,6 @@ public class Index extends AppCompatActivity {
     }
 
     public void onActualizar(View v) {
-
         Intent i = new Intent(Index.this, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.putExtra("class", "Index");
 

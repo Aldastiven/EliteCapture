@@ -34,6 +34,7 @@ import com.example.eliteCapture.Config.Util.formAdmin;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
+import com.example.eliteCapture.Model.Data.ionLine;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContador;
@@ -76,6 +77,8 @@ public class genated extends AppCompatActivity {
     public boolean ok, temporal; //retorna la respuesta de un formulario pendiente
 
     formAdmin formA;
+
+    ionLine ion;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +133,7 @@ public class genated extends AppCompatActivity {
             }
 
             iCon.crearTemporal(contenedor);//crea el json temporal con los datos correspondientes
-
+            ion = new ionLine(path);
 
         } catch (Exception ex) {
             Log.i("Error_onCreate", ex.toString());
@@ -514,9 +517,13 @@ public class genated extends AppCompatActivity {
                 inicial = false;
                 killChildrens(nuevo);
 
-                if (iCon.enviar()) {
-                    Toast.makeText(this, "Insertado con exito!" + vacios, Toast.LENGTH_LONG).show();
-                } else {
+                if(ion.all().equals("onLine")) {
+                    if (iCon.enviar()) {
+                        Toast.makeText(this, "Insertado con exito!" + vacios, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(this, "Agregado a local" + vacios, Toast.LENGTH_LONG).show();
+                    }
+                }else{
                     Toast.makeText(this, "Agregado a local" + vacios, Toast.LENGTH_LONG).show();
                 }
 
