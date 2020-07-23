@@ -12,14 +12,18 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eliteCapture.Config.Util.Modal.modalServer;
 import com.example.eliteCapture.Config.Util.Modal.modalSetting;
 import com.example.eliteCapture.Model.Data.Admin;
+import com.example.eliteCapture.Model.Data.Tab.onLineTab;
 import com.example.eliteCapture.Model.Data.iUsuario;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
+import com.example.eliteCapture.Model.Data.ionLine;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,12 +43,12 @@ public class Login extends AppCompatActivity {
     LinearLayout linearBox;
     TextView txtError;
     CheckBox checkusu;
+    ImageView imgOnline;
+
     String datacheck;
 
     modalSetting ms;
     Dialog dialogSettings;
-
-    TextView btnPendientes;
 
     iContenedor icont;
 
@@ -68,7 +72,7 @@ public class Login extends AppCompatActivity {
             linearBox = findViewById(R.id.linearBox);
             txtError = findViewById(R.id.txtError);
             checkusu = findViewById(R.id.guardarUsuario);
-            btnPendientes = findViewById(R.id.btnPendientes);
+            imgOnline = findViewById(R.id.imgOnline);
 
             iUsuario iU = new iUsuario(null, path);
             iU.nombre = "Usuarios";
@@ -78,12 +82,10 @@ public class Login extends AppCompatActivity {
             recibirUsuario();
             PintarCheck();
 
-            ms = new modalSetting(this, path);
-            dialogSettings = ms.modal();
             icont = new iContenedor(path);
 
-            pintarPendientes();
-            enviarPendientes();
+            imgOnline.setBackgroundResource(new ionLine(path).all().equals("onLine") ? R.drawable.ic_wifi_on : R.drawable.ic_wifi_off);
+
 
         } catch (Exception ex) {
             Toast.makeText(this, "Se genero un Error al traer los datos de Usuario \n \n" + ex.toString(), Toast.LENGTH_LONG).show();
@@ -219,43 +221,11 @@ public class Login extends AppCompatActivity {
     }
 
     public void onActualizar(View v) {
-        Intent i = new Intent(Login.this, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        i.putExtra("class", "Login");
-        i.putExtra("carga", "BajarDatos");
-        startActivity(i);
+        new modalServer(this, path).modal().show();
     }
 
     public void Settings(View v){
-        dialogSettings.show();
+        new modalSetting(this, path, imgOnline).modal().show();
     }
 
-    public void pintarPendientes(){
-        try {
-            int size = 0;
-
-            for(ContenedorTab c : icont.all()){
-                Log.i("ESTADO",c.getEstado()+"");
-                if(c.getEstado() < 1){
-                    size ++;
-                }
-            }
-
-            btnPendientes.setVisibility(size > 0 ? View.VISIBLE : View.INVISIBLE);
-            btnPendientes.setText(""+size);
-        }catch (Exception e){
-            Toast.makeText(this, ""+e.toString(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public  void enviarPendientes(){
-        btnPendientes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Login.this, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                i.putExtra("class", "Login");
-                i.putExtra("carga", "Pendientes");
-                startActivity(i);
-            }
-        });
-    }
 }

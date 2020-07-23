@@ -97,6 +97,9 @@ public class Index extends AppCompatActivity {
 
             for (final ProcesoTab c : admin.getProceso().procesosUsuario(usu.getProcesos())) {
 
+                LinearLayout.LayoutParams layoutParamsbtn = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
                 int cuenta = contar.getCantidad(usu.getId_usuario(), c.getCodigo_proceso());
                 String cuenText = (cuenta > 0) ? " (" + cuenta + ")" : "";
                 Log.i("Procesos:", c.getNombre_proceso());
@@ -105,9 +108,10 @@ public class Index extends AppCompatActivity {
                 btn.setId(c.getCodigo_proceso());
                 btn.setTextColor(Color.parseColor("#ffffff"));
                 btn.setTextSize(16);
-                btn.setBackgroundColor(Color.parseColor("#27ae60"));
+                //btn.setBackgroundColor(Color.parseColor("#27ae60"));
+                btn.setBackgroundColor(Color.parseColor("#2e2d33"));
                 btn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                btn.setHeight(100);
+                btn.setLayoutParams(layoutParamsbtn);
 
                 //agregando check dinamicos
                 linearCheck.addView(btn, layoutParams);

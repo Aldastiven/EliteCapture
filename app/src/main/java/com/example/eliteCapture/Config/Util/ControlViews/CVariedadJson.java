@@ -24,6 +24,7 @@ import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class CVariedadJson {
@@ -64,10 +65,12 @@ public class CVariedadJson {
     public ControlGnr crear(){
         LinearLayout.LayoutParams llparamsText = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         llparamsText.weight = (float) 2.3;
+        String pregunta = ubicacion.equals("Q") ? id + ". " + "Producto" : "Producto";
+        String ponderado = "\nponderado: " + rt.getPonderado();
 
         final TextView tvp = new TextView(c);
         tvp.setId(rt.getId().intValue());
-        tvp.setText(id + ". " + rt.getPregunta() + "\nponderado: " + rt.getPonderado());
+        tvp.setText(ubicacion.equals("Q") ? pregunta+ponderado : pregunta);
         tvp.setTextColor(Color.parseColor("#979A9A"));
         tvp.setPadding(5, 5, 5, 5);
         tvp.setTypeface(null, Typeface.BOLD);
@@ -122,7 +125,7 @@ public class CVariedadJson {
         llpregunta.setBackgroundColor(Color.parseColor("#00FFFFFF"));
 
         llpregunta.addView(v1); //retorna pregunta
-        llpregunta.addView(v2); //retorna pocentaje
+        if(ubicacion.equals("Q")) llpregunta.addView(v2); //retorna pocentaje si es igual a una pregunta del detalle (Q)
 
         return llpregunta;
     }
@@ -146,7 +149,7 @@ public class CVariedadJson {
         AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(c);
 
         autoCompleteTextView.setAdapter(autoArray);
-        autoCompleteTextView.setHint(rt.getPregunta());
+        autoCompleteTextView.setHint("Producto");
         autoCompleteTextView.setText((vacio ? rt.getRespuesta() : ""));
         autoCompleteTextView.setTextSize(15);
         autoCompleteTextView.setLayoutParams(llparamsText);
@@ -234,7 +237,7 @@ public class CVariedadJson {
                             vlr = String.valueOf(rt.getPonderado());
                             tvpor.setText("Resultado: \n" + vlr);
 
-                            registro(variedad.getIdVariedad() + "", variedad.getVariedad());
+                            registro( variedad.getVariedad(), variedad.getIdVariedad()+ "");
                         } else {
                             tvpor.setText("Resultado: \n0");
                             registro(null, null);
@@ -264,6 +267,11 @@ public class CVariedadJson {
             for (despVariedadesTab dt : idv.all()) {
                 Lproducto.add(dt.getProducto());
             }
+
+            HashSet sh = new HashSet();
+            sh.addAll(Lproducto);
+            Lproducto.clear();
+            Lproducto.addAll(sh);
 
             return Lproducto;
         }catch (Exception e){

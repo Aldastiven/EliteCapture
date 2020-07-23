@@ -115,7 +115,7 @@ public class CdespelgableQ {
                         tvpor.setText("Resultado: \n" + vlr);
                         registro(rta,vlr);
 
-                        if(estado) new formAdmin(linearPrinc, context, path, incial, 0).CrearForm("Q");
+                        //if(estado) new formAdmin(linearPrinc,  context, path, incial, 0).CrearForm("Q");
                     }
 
                 } catch (Exception ex) {

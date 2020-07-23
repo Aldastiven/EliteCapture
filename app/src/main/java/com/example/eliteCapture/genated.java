@@ -162,7 +162,7 @@ public class genated extends AppCompatActivity {
 
     public void crearform() {
         try {
-            formA = new formAdmin(linearPrinc, this, path, inicial, 0);
+            formA = new formAdmin(linearPrinc, linearBodypop,this, path, inicial, 0);
             CrearEncabezado();
             CrearCuerpo();
         } catch (Exception ex) {
@@ -172,7 +172,8 @@ public class genated extends AppCompatActivity {
     }
 
     public void CrearEncabezado() throws Exception {
-        CrearHeader(contenedor.getHeader());//crea los elemtos del header y pasa datos correspondientes
+        //CrearHeader(contenedor.getHeader());//crea los elemtos del header y pasa datos correspondientes
+        formA.CrearHeader("H");
     }
 
     public void CrearCuerpo() throws Exception {

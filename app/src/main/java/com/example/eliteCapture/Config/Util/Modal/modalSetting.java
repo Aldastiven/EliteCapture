@@ -9,10 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.widget.CompoundButtonCompat;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
@@ -26,13 +30,15 @@ public class modalSetting {
     String path;
     Dialog d;
     textAdmin ta;
+    ImageView imgOnline;
     containerAdmin ca;
 
     ionLine ionLine;
 
-    public modalSetting(Context context, String path) {
+    public modalSetting(Context context, String path, ImageView imgOnline) {
         this.context = context;
         this.path = path;
+        this.imgOnline = imgOnline;
 
         ionLine = new ionLine(path);
         ta = new textAdmin(context);
@@ -73,34 +79,30 @@ public class modalSetting {
 
         LinearLayout linearLayout1 = ca.container();
         linearLayout1.setOrientation(LinearLayout.HORIZONTAL);
-        linearLayout1.setWeightSum(3);
+        linearLayout1.setWeightSum(2);
 
         LinearLayout.LayoutParams ll = ca.params();
         ll.weight = 1;
         ll.gravity = Gravity.CENTER;
 
-        TextView txtL = (TextView) ta.textColor("offLine", "negro", 15, "c");
-        txtL.setLayoutParams(ll);
-
         Switch sw = new Switch(context);
-        sw.setLayoutParams(ll);
         sw.setGravity(Gravity.CENTER);
+        sw.setLayoutParams(ll);
 
-        estadoOnline(sw);
-
-        TextView txtR = (TextView) ta.textColor("onLine", "negro", 15, "c");
+        TextView txtR = (TextView) ta.textColor(ionLine.all(), "negro", 15, "c");
         txtR.setLayoutParams(ll);
+
+        estadoOnline(sw, txtR);
 
         linearLayout1.addView(txtR);
         linearLayout1.addView(sw);
-        linearLayout1.addView(txtL);
 
         linearLayout.addView(txt);
         linearLayout.addView(linearLayout1);
         return linearLayout;
     }
 
-    public void estadoOnline(final Switch sw) throws Exception{
+    public void estadoOnline(final Switch sw, final TextView txt) throws Exception{
         sw.setChecked(ionLine.all().equals("onLine") ? false : true);
 
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -108,6 +110,9 @@ public class modalSetting {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
                     ionLine.local(sw.isChecked() ? "offLine" : "onLine");
+                    sw.setButtonDrawable(sw.isChecked() ? R.color.verde : R.color.rojo);
+                    txt.setText(sw.isChecked() ? "offLine" : "onLine");
+                    imgOnline.setBackgroundResource( sw.isChecked() ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
                     Toast.makeText(context, ionLine.all(), Toast.LENGTH_SHORT).show();
                 }catch (Exception e){
                     Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
@@ -116,19 +121,23 @@ public class modalSetting {
         });
 
 
-        ColorStateList buttonStates = new ColorStateList(
-                new int[][]{
-                        new int[]{-android.R.attr.state_enabled},
-                        new int[]{android.R.attr.state_checked},
-                        new int[]{}
-                },
-                new int[]{
-                        Color.BLUE,
-                        Color.RED,
-                        Color.GREEN
-                }
-        );
-        sw.getThumbDrawable().setTintList(buttonStates);
-        sw.getTrackDrawable().setTintList(buttonStates);
+        int[][] states = new int[][] {
+                new int[] {-android.R.attr.state_checked},
+                new int[] {android.R.attr.state_checked},
+        };
+
+        int[] thumbColors = new int[] {
+                Color.rgb(88, 214, 141),
+                Color.rgb(236, 112, 99)
+
+        };
+
+        int[] trackColors = new int[] {
+                Color.rgb(88, 214, 141),
+                Color.rgb(236, 112, 99)
+        };
+        sw.setButtonTintList(new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(sw.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(sw.getTrackDrawable()), new ColorStateList(states, trackColors));
     }
 }

@@ -97,6 +97,9 @@ public class textAdmin {
             case "negro":
                 C = Color.parseColor("#17202A");
                 break;
+            case "rojo":
+                C = Color.parseColor("#E74C3C");
+                break;
         }
         return C;
     }

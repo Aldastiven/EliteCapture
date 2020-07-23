@@ -1,5 +1,7 @@
 package com.example.eliteCapture.Model.Data;
 
+import android.util.Log;
+
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.Data.Tab.onLineTab;
 import com.google.gson.Gson;
@@ -24,18 +26,24 @@ public class ionLine {
         return new JsonAdmin().WriteJson(path, nombre, new Gson().toJson(Lonline));
     }
 
-    public String all() throws Exception{
-        Lonline = new Gson().fromJson(new JsonAdmin().ObtenerLista(path, nombre),
-                                        new TypeToken<List<onLineTab>>(){}.getType()
-                                    );
-        String Sonline = "";
-        for(onLineTab on : Lonline){
-            Sonline = on.getOnline();
-        }
-        if(Lonline != null) {
-            return Sonline;
-        }else{
-            return "no existe";
+    public String all(){
+        try {
+            Lonline = new Gson().fromJson(new JsonAdmin().ObtenerLista(path, nombre),
+                    new TypeToken<List<onLineTab>>() {
+                    }.getType()
+            );
+            String Sonline = "";
+            for (onLineTab on : Lonline) {
+                Sonline = on.getOnline();
+            }
+            if (Lonline != null) {
+                return Sonline;
+            } else {
+                return "no existe";
+            }
+        }catch (Exception e){
+            Log.i("Error",e.toString());
+            return "no exixte";
         }
     }
 

@@ -26,8 +26,8 @@ public class idespVariedades {
 
     public boolean local() throws Exception{
         ResultSet rs;
-        PreparedStatement ps = cn.prepareStatement("SELECT        idproducto, Producto\n" +
-                                                        "FROM            Desp_variedades\n" +
+        PreparedStatement ps = cn.prepareStatement("SELECT idproducto, Producto\n" +
+                                                        "FROM  Desp_variedades\n" +
                                                         "GROUP BY idproducto, Producto\n" +
                                                         "ORDER BY Producto ASC");
         rs = ps.executeQuery();

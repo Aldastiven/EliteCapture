@@ -215,14 +215,11 @@ public class splash_activity extends AppCompatActivity {
             try {
 
                 for (String e : admin.getDesplegable().group()) {
-
-                    Log.i("resultado final ", e);
                     admin.getDesplegable().setNombre(e);
                     admin.getDesplegable().traerDesplegable(e);
-                    admin.getProductos().local();
                     msgStatus("Cargando...", "Datos de Detalles: " + e, 200);
                 }
-
+                admin.getProductos().local();
             } catch (Exception ex) {
                 Log.i("ErrorSplash", ex.toString());
             }

@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -26,7 +25,6 @@ import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
-import com.example.eliteCapture.Model.View.Interfaz.Contenedor;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
@@ -40,7 +38,7 @@ import java.util.List;
 
 public class formAdmin {
 
-    LinearLayout linearPrinc;
+    LinearLayout linearPrinc, linearBodypop;
     Context context;
     String path;
     Boolean inicial;
@@ -58,9 +56,10 @@ public class formAdmin {
     boolean temporal;
     int estado = 1;
 
-    public formAdmin(LinearLayout linearPrinc, Context context, String path, Boolean inicial, int estado) {
+    public formAdmin(LinearLayout linearPrinc,LinearLayout linearBodypop, Context context, String path, Boolean inicial, int estado) {
         try {
             this.linearPrinc = linearPrinc;
+            this.linearBodypop = linearBodypop;
             this.context = context;
             this.path = path;
             this.inicial = inicial;
@@ -118,6 +117,51 @@ public class formAdmin {
         } catch (Exception ex) {
             Log.i("ADMIN","Error : "+ex);
         }
+    }
+
+
+    //CREA LOS CONTROLES DEL HEADER EN EL POP
+    public void CrearHeader(String ubicacion) {
+        try {
+            for (RespuestasTab r : contenedor.getHeader()) {
+
+                switch (r.getTipo()) {
+                    case "TV":
+                        Ctextview ct = new Ctextview();
+                        linearBodypop.addView(ct.textview(context, r.getId(), r.getPregunta()));
+                        break;
+                    case "ETN":
+                        linearBodypop.addView(new Cetnum(context, path, "H", r, inicial).tnumerico());
+                        break;
+                    case "ETA":
+                        linearBodypop.addView(new Cetalf(context, path, "H", r, inicial).talfanumerico());
+                        break;
+                    case "CBX":
+                        linearBodypop.addView(new Cdesplegable(context, path, "H", r, inicial).desplegable());
+                        break;
+                    case "FIL":
+                        linearBodypop.addView(new Cfiltro(context, path, "H", r, inicial).filtro());
+                        break;
+                    case "SCA":
+                        linearBodypop.addView(new Cscanner(context, path, "H", r, inicial).scanner());
+                        break;
+                    case "AUT":
+                        linearBodypop.addView(new CfilAuto(context, path, "H", r, inicial).autocompletado());
+                        break;
+                    case "DPV":
+                        linearBodypop.addView(new CVariedadJson(context, path, inicial, r, ubicacion).Cvariedad());
+                        break;
+                    default:
+                        Toast.makeText(context, "ocurrio un error al crear ", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
+            }
+        } catch (Exception exception) {
+            Toast.makeText(context, "exception en generated \n \n" + exception.toString(), Toast.LENGTH_SHORT).show();
+            Log.i("Excepcreate", exception.toString());
+        }
+
     }
 
 
