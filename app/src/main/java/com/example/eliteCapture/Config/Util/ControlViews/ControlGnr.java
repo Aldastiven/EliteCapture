@@ -51,7 +51,7 @@ public class ControlGnr {
         LLtotal.setLayoutParams(llparamsTotal);
         LLtotal.setWeightSum(2);
         LLtotal.setOrientation(LinearLayout.VERTICAL);
-        LLtotal.setPadding(8, 0, 8, 0);
+        LLtotal.setPadding(5, 0, 5, 0);
         LLtotal.setGravity(Gravity.CENTER_HORIZONTAL);
 
         Log.i("TIPOVIEW", tipocampo);

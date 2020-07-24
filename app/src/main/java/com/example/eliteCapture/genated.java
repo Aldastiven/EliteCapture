@@ -48,11 +48,17 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.eliteCapture.R.drawable.ic_cloud;
+import static com.example.eliteCapture.R.drawable.ic_cloud_noti;
+import static com.example.eliteCapture.R.drawable.ic_cloud_upload;
+import static com.example.eliteCapture.R.drawable.ic_cloud_upload_white_18dp;
+import static com.example.eliteCapture.R.drawable.ic_save;
+import static com.example.eliteCapture.R.drawable.ic_star;
 import static java.lang.String.valueOf;
 
 public class genated extends AppCompatActivity {
 
-    TextView EncabTitulo, contcc, scrollcomplete, txtCalificacion, txtDialogID;
+    TextView EncabTitulo, contcc, scrollcomplete, txtCalificacion, btnEnvioGuardar, btnCalificar;
     LinearLayout linearBodypop, linearPrinc;
     ScrollView scrollForm, scrollCalificacion;
     Dialog mypop, popcalificacion, popvalidar, popregla;
@@ -60,7 +66,7 @@ public class genated extends AppCompatActivity {
     iContenedor iCon = null;
     ContenedorTab contenedor = null;
     SharedPreferences sp = null;
-    Button popSi, popNo, popaceptarregla, btnOK;
+    Button popSi, popNo;
 
     String path = null;
     String dataCamera;
@@ -135,6 +141,10 @@ public class genated extends AppCompatActivity {
             iCon.crearTemporal(contenedor);//crea el json temporal con los datos correspondientes
             ion = new ionLine(path);
 
+            btnEnvioGuardar.setText(ion.all().equals("onLine") ?"Enviar":"Guardar");
+            btnEnvioGuardar.setCompoundDrawablesWithIntrinsicBounds( 0, 0, ion.all().equals("onLine") ? ic_cloud_upload : ic_save, 0);
+            btnCalificar.setCompoundDrawablesWithIntrinsicBounds( 0, 0, ic_star, 0);
+
         } catch (Exception ex) {
             Log.i("Error_onCreate", ex.toString());
         }
@@ -204,6 +214,8 @@ public class genated extends AppCompatActivity {
         linearBodypop = mypop.findViewById(R.id.linearbodypop);
         scrollcomplete = findViewById(R.id.complete);
         txtCalificacion = popcalificacion.findViewById(R.id.txtCalificacion);
+        btnEnvioGuardar = findViewById(R.id.btnEnvioGuardar);
+        btnCalificar = findViewById(R.id.btnCalificar);
 
         popvalidar.setCancelable(false);
         mypop.setCancelable(false);

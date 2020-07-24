@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".genated"
     android:weightSum="10"
     android:orientation="vertical"
@@ -13,86 +12,87 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="0.4"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:weightSum="2">
 
         <TextView
             android:id="@+id/EncabTitulo"
             android:layout_width="0sp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:textStyle="bold"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textAlignment="gravity"
             android:gravity="center_horizontal"
-            android:layout_weight="1.7"
-            android:background="#66bb6a"
-            />
+            android:layout_weight="1.5"
+            android:background="@color/negro" />
 
         <TextView
             android:id="@+id/contcc"
-            android:layout_weight="0.3"
+            android:layout_weight="0.5"
             android:layout_width="0sp"
             android:layout_height="match_parent"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textColor="#ffffff"
             android:text=""
             android:textAlignment="center"
             android:textStyle="bold"
-            android:background="#66bb6a"
-            />
+            android:background="@color/negro"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_weight="0.7"
         android:layout_width="match_parent"
-        android:layout_height="0sp"
+        android:layout_height="wrap_content"
         android:gravity="right"
         android:paddingHorizontal="10sp"
-        android:background="@drawable/blueheader"
+        android:background="@color/negro"
         android:paddingBottom="2sp"
         android:weightSum="2"
         android:orientation="horizontal">
 
-        <Button
+        <TextView
             android:layout_weight="1"
             android:id="@+id/devolverform"
             android:layout_width="0sp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:text="Volver"
-            android:background="@drawable/bordercontaineryellow"
+            android:background="@color/negro"
             android:paddingHorizontal="10sp"
             android:onClick="onBackPressedform"
             android:layout_margin="2sp"
-            android:paddingVertical="10sp" />
+            android:paddingVertical="10sp"
+            android:textAllCaps="false"
+            android:drawableStart="@drawable/ic_row_back"
+            android:textAlignment="center"/>
 
-        <Button
+        <TextView
             android:layout_weight="1"
             android:id="@+id/editarEncab"
             android:layout_width="0sp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:text="Editar encabezado"
-            android:background="@drawable/bordercontaineryellow"
+            android:background="@color/negro"
             android:paddingHorizontal="10sp"
             android:onClick="Showpop"
             android:layout_margin="2sp"
-            android:paddingVertical="10sp" />
+            android:paddingVertical="10sp"
+            android:textAllCaps="false"
+            android:drawableStart="@drawable/ic_edit"
+            android:textAlignment="center"/>
     </LinearLayout>
 
-
     <LinearLayout
-        android:layout_weight="7.9"
+        android:layout_weight="9.3"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:paddingHorizontal="11sp">
+        android:background="#E5E7E9">
 
         <ScrollView
             android:id="@+id/scrollForm"
@@ -104,7 +104,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="5sp">
+                android:paddingTop="5sp"
+                android:paddingHorizontal="11sp">
 
             </LinearLayout>
 
@@ -112,101 +113,43 @@
 
     </LinearLayout>
 
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="1"
-        android:background="#000000">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:orientation="horizontal"
-            >
-
-            <RelativeLayout
-                android:layout_weight="1"
-                android:layout_width="0sp"
-                android:layout_height="match_parent"
-                android:padding="5sp">
-
-                <Button
-                    android:id="@+id/guardar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#2980B9"
-                    android:onClick="registroJson"
-                    android:text="GUARDAR"
-                    android:textColor="#ffffff"
-                    android:textStyle="bold">
-
-                </Button>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_weight="1"
-                android:layout_width="0sp"
-                android:layout_height="match_parent"
-                android:padding="5sp">
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background=" #28b463 "
-                    android:text="ENVIAR"
-                    android:textColor="#ffffff"
-                    android:textStyle="bold"
-                    android:onClick="Enviar">
-
-                </Button>
-            </RelativeLayout>
-        </LinearLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:clickable="true"
-            app:backgroundTint=" #a569bd"
-            app:layout_anchorGravity="top|end"
-            app:srcCompat="@drawable/strella"
-            android:layout_marginRight="10sp"/>
-
-    </LinearLayout>-->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:layout_weight="1"
-        android:background="@drawable/footer"
+        android:layout_weight="0.7"
+        android:background="@color/negro"
         android:weightSum="2"
         android:orientation="horizontal"
-        android:paddingHorizontal="4sp"
-        android:paddingTop="5sp">
+        android:paddingHorizontal="4sp">
 
-        <Button
+        <TextView
+            android:id="@+id/btnEnvioGuardar"
             android:layout_weight="1"
             android:layout_width="0sp"
             android:layout_height="match_parent"
-            android:background="@drawable/buttongreen"
-            android:layout_margin="2sp"
-            android:text="Enviar"
+            android:background="@color/negro"
+            android:layout_marginHorizontal="2sp"
             android:textStyle="bold"
             android:textColor="#ffffff"
-            android:onClick="UpData"/>
+            android:onClick="UpData"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:paddingHorizontal="30dp"/>
 
-        <Button
+        <TextView
+            android:id="@+id/btnCalificar"
             android:layout_weight="1"
             android:layout_width="0sp"
             android:layout_height="match_parent"
-            android:background="@drawable/buttonblue"
+            android:background="@color/negro"
             android:layout_margin="2sp"
             android:text="calificar"
             android:textStyle="bold"
-            android:textColor="#ffffff"
-            android:onClick="onCalificar"/>
+            android:textColor="#F1C40F"
+            android:onClick="onCalificar"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:paddingHorizontal="30dp"/>
 
     </LinearLayout>
 

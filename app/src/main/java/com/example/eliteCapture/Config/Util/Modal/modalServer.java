@@ -78,7 +78,7 @@ public class modalServer {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
         linearLayout.addView(descarga());
-        if(pendientesCantidad()>0) linearLayout.addView(subida() );
+        if(icont.pendientesCantidad() > 0) linearLayout.addView(subida() );
 
         return linearLayout;
     }
@@ -102,7 +102,7 @@ public class modalServer {
 
         LinearLayout lineSubida = line();
 
-        TextView txtDescarga =(TextView) ta.textColor("Tienes pendendientes ("+pendientesCantidad()+") registros por enviar.","rojo",18,"l");
+        TextView txtDescarga =(TextView) ta.textColor("Tienes pendendientes ("+icont.pendientesCantidad()+") registros por enviar.","rojo",18,"l");
         txtDescarga.setLayoutParams(params(2));
 
         lineSubida.addView(txtDescarga);
@@ -133,21 +133,6 @@ public class modalServer {
         imageDescarga.setForegroundGravity(Gravity.RIGHT);
 
         return imageDescarga;
-    }
-
-    public int pendientesCantidad(){
-        try {
-            int size = 0;
-            for (ContenedorTab c : icont.all()) {
-                Log.i("ESTADO", c.getEstado() + "");
-                if (c.getEstado() < 1) {
-                    size++;
-                }
-            }
-            return size;
-        }catch (Exception e){
-            return 0;
-        }
     }
 
     public void funDescargar(View v){

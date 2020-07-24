@@ -17,10 +17,19 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"/>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
     <ImageView
         android:id="@+id/logo"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         app:srcCompat="@drawable/flor"
         android:layout_gravity="center"
         android:contentDescription="@drawable/flor"
@@ -34,102 +43,110 @@
         android:textAlignment="center"
         android:layout_below="@+id/logo"/>
 
-    <LinearLayout
-        android:id="@+id/linearBox"
-        android:weightSum="8.5"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="7"
-        android:gravity="center_horizontal"
-        android:paddingStart="20sp"
-        android:paddingEnd="20sp"
-        android:layout_below="@+id/txtVersion">
-
-            <ImageView
-                android:layout_weight="2"
+            <LinearLayout
+                android:id="@+id/linearBox"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="0sp"
-                android:layout_marginBottom="20sp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:textStyle="bold"
-                android:textSize="50sp"
-                app:srcCompat="@drawable/login"
-                />
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingStart="20sp"
+                android:paddingEnd="20sp"
+                android:layout_below="@+id/txtVersion"
+                android:layout_gravity="center">
 
-            <EditText
-                android:id="@+id/txtUser"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="0sp"
-                android:layout_weight="1.3"
-                android:background="@drawable/bordercontainer"
-                android:drawableStart="@drawable/persona"
-                android:singleLine="true"
-                android:layout_marginBottom="20sp"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                android:paddingStart="5sp"
-                android:inputType="number"
-                />
+                    <ImageView
+                        android:layout_width="130dp"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="20sp"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/login" />
 
-            <EditText
-                android:id="@+id/txtPass"
-                android:textAlignment="center"
-                android:layout_width="match_parent"
-                android:layout_height="0sp"
-                android:layout_weight="1.3"
-                android:background="@drawable/bordercontainer"
-                android:drawableStart="@drawable/candado"
-                android:singleLine="true"
-                android:inputType="numberPassword"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                android:paddingStart="5sp"/>
+                    <EditText
+                        android:id="@+id/txtUser"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="0sp"
+                        android:layout_weight="1.3"
+                        android:background="@drawable/camp_login"
+                        android:drawableStart="@drawable/persona"
+                        android:singleLine="true"
+                        android:layout_marginBottom="20sp"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        android:paddingStart="5sp"
+                        android:inputType="number"
+                        android:hint="Usuario" />
 
-        <CheckBox
-            android:id="@+id/guardarUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Recordar mi usuario"/>
+                    <EditText
+                        android:id="@+id/txtPass"
+                        android:textAlignment="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="0sp"
+                        android:layout_weight="1.3"
+                        android:background="@drawable/camp_login"
+                        android:drawableStart="@drawable/candado"
+                        android:singleLine="true"
+                        android:inputType="numberPassword"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        android:paddingStart="5sp"
+                        android:hint="Contraseña"/>
 
-            <Button
-                android:layout_gravity="bottom"
-                android:layout_marginTop="20sp"
-                android:layout_marginBottom="10sp"
-                android:layout_width="match_parent"
-                android:layout_height="0sp"
-                android:layout_weight="2"
-                android:text="Ingresa"
-                android:textSize="25sp"
-                android:textColor="#ffffff"
-                android:background="@color/negro"
-                android:onClick="ingresar"
-                android:textStyle="bold"
-                android:textAllCaps="false"/>
-
-                <TextView
-                    android:id="@+id/txtError"
+                <CheckBox
+                    android:id="@+id/guardarUsuario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textColor="#e57373"
-                    android:textAlignment="center"/>
-    </LinearLayout>
+                    android:text="Recordar mi usuario"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="490dp"
-        android:backgroundTint="#ECEFF1"
-        android:clickable="true"
-        android:tint="#000000"
-        tools:ignore="VectorDrawableCompat"
-        android:layout_marginRight="10sp"
-        app:srcCompat="@drawable/ic_cloud"
-        android:onClick="onActualizar"/>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/floatingServer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:backgroundTint="#ECEFF1"
+                        android:clickable="true"
+                        android:tint="#000000"
+                        android:onClick="onActualizar"
+                        android:background="@drawable/circle"
+                        android:paddingStart="15dp"
+                        android:elevation="10dp"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginRight="10dp"/>
+
+                    <Button
+                        android:id="@+id/btnIngresar"
+                        android:layout_gravity="bottom"
+                        android:layout_marginTop="20sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Ingresa"
+                        android:textSize="25sp"
+                        android:textColor="#ffffff"
+                        android:background="@color/negro"
+                        android:onClick="ingresar"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:paddingVertical="15dp" />
+
+                        <TextView
+                            android:id="@+id/txtError"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp"
+                            android:textColor="#e57373"
+                            android:textAlignment="center"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

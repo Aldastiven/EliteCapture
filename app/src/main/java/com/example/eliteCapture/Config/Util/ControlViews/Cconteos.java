@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
@@ -29,17 +30,15 @@ public class Cconteos {
     View ControlView;
 
     private Context context;
-    private String path;
-    private String ubicacion;
+    private String path, respuestaSpin, ubicacion;
     private RespuestasTab rt;
-    private boolean vacio;
-    private Boolean inicial;
+    private boolean vacio, inicial;
     private int id;
 
-
+    containerAdmin ca;
     ControlGnr Cgnr;
 
-    String respuestaSpin;
+    TextView tvpor;
 
     public Cconteos(Context context, String path, String ubicacion, RespuestasTab rt, Boolean inicial) {
         this.context = context;
@@ -49,6 +48,8 @@ public class Cconteos {
         this.id = rt.getId().intValue() + 1;
         this.vacio = rt.getRespuesta() != null;
         this.inicial = inicial;
+
+        ca = new containerAdmin(context);
     }
 
     //metodo que crea el control del conteo
@@ -90,33 +91,20 @@ public class Cconteos {
 
         Log.i("getvalor", "Conteos "+rt.getValor());
 
-        Cgnr = new ControlGnr(context, rt.getId(), pp(Cdesp(llparamsText), tvpor), Cbotones(tvpor), null, "vx2");
+        Cgnr = new ControlGnr(context, rt.getId(), pp(Cdesp(llparamsText), tvpor), Cbotones(), null, "vx2");
         ControlView = Cgnr.Contenedor(vacio, inicial, rt.getTipo());
 
         return ControlView;
     }
 
+    //metodo que crea el desplegable o la pregunta segun la BD
     public View Cdesp(LinearLayout.LayoutParams llparamsText) {
-        //metodo que crea el desplegable o la pregunta segun la BD
-
-        Log.i("desplegabledata",rt.getDesplegable());
+        LinearLayout line = ca.container();
+        line.setOrientation(LinearLayout.VERTICAL);
 
         String splitS = rt.getDesplegable().replaceAll("[^\\dA-Za-z]", "");
 
-        if (!splitS.isEmpty()) {
-
-            ArrayList soloOpciones = soloOpciones(rt.getDesplegable());
-
-            ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.spinner_item_personal, soloOpciones);
-            final Spinner spinner = new Spinner(context);
-            spinner.setId(rt.getId().intValue());
-            spinner.setAdapter(spinnerArray);
-            spinner.setSelection((vacio ? soloOpciones.indexOf(rt.getCausa()) : 0));
-            spinner.setLayoutParams(llparamsText);
-            Funspinner(spinner);
-            return spinner;
-
-        } else {
+            llparamsText.weight = (float) 2.3;
 
             final TextView tvp = new TextView(context);
             tvp.setId(rt.getId().intValue());
@@ -125,9 +113,33 @@ public class Cconteos {
             tvp.setPadding(5, 5, 5, 5);
             tvp.setTypeface(null, Typeface.BOLD);
             tvp.setLayoutParams(llparamsText);
-            return tvp;
 
+            LinearLayout.LayoutParams llparamsTextpo = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            llparamsText.weight = (float) 0.7;
+
+            tvpor = new TextView(context);
+            tvpor.setId(rt.getId().intValue());
+            tvpor.setText((rt.getValor() == null || rt.getValor().equals("null") ? "Resultado : \n" : valor()));
+            tvpor.setTextColor(Color.parseColor("#979A9A"));
+            tvpor.setBackgroundColor(Color.parseColor("#00FFFFFF"));
+            tvpor.setPadding(10, 10, 10, 10);
+            tvpor.setTypeface(null, Typeface.BOLD);
+            tvpor.setLayoutParams(llparamsTextpo);
+
+            line.addView(pp(tvp, tvpor));
+
+        if(!splitS.isEmpty()) {
+            ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.spinner_item_personal, soloOpciones(rt.getDesplegable()));
+            final Spinner spinner = new Spinner(context);
+            spinner.setId(rt.getId().intValue());
+            spinner.setAdapter(spinnerArray);
+            spinner.setSelection((vacio ? soloOpciones(rt.getDesplegable()).indexOf(rt.getCausa()) : 0));
+            spinner.setLayoutParams(llparamsText);
+            Funspinner(spinner);
+
+            line.addView(spinner);
         }
+        return line;
     }
 
     //opciones del desplegable
@@ -172,7 +184,7 @@ public class Cconteos {
     }
 
     //metodo que crea los botones de conteos
-    public View Cbotones(final TextView tvpor) {
+    public View Cbotones() {
         View viewTotal;
 
         LinearLayout llbtn = new LinearLayout(context);
@@ -343,4 +355,17 @@ public class Cconteos {
         return llpregunta;
     }
 
+    public String valor() {
+        String valor;
+        if (rt.getValor() == null) {
+            valor = "Resultado : \n";
+        } else {
+            if (rt.getValor().equals("-1")) {
+                valor = "Resultado :\nNA";
+            } else {
+                valor = "Resultado : \n" + rt.getValor();
+            }
+        }
+        return valor;
+    }
 }

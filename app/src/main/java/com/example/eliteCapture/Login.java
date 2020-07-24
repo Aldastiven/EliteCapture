@@ -2,7 +2,6 @@ package com.example.eliteCapture;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -20,43 +19,33 @@ import android.widget.Toast;
 import com.example.eliteCapture.Config.Util.Modal.modalServer;
 import com.example.eliteCapture.Config.Util.Modal.modalSetting;
 import com.example.eliteCapture.Model.Data.Admin;
-import com.example.eliteCapture.Model.Data.Tab.onLineTab;
 import com.example.eliteCapture.Model.Data.iUsuario;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.Data.ionLine;
-import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.iContenedor;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+
+import static com.example.eliteCapture.R.*;
+import static com.example.eliteCapture.R.drawable.*;
+
 
 public class Login extends AppCompatActivity {
     SharedPreferences sp;
 
-    public String path = null;
-
-    List<UsuarioTab> UP = new ArrayList<>();
-
+    public String path = null, datacheck;
     EditText txtUser, txtPass;
     LinearLayout linearBox;
-    TextView txtError;
+    TextView txtError, floatingServer;
     CheckBox checkusu;
     ImageView imgOnline;
-
-    String datacheck;
-
-    modalSetting ms;
-    Dialog dialogSettings;
-
     iContenedor icont;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(layout.activity_login);
         getSupportActionBar().hide();
 
         Screen();
@@ -67,12 +56,13 @@ public class Login extends AppCompatActivity {
 
             sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
 
-            txtUser = findViewById(R.id.txtUser);
-            txtPass = findViewById(R.id.txtPass);
-            linearBox = findViewById(R.id.linearBox);
-            txtError = findViewById(R.id.txtError);
-            checkusu = findViewById(R.id.guardarUsuario);
-            imgOnline = findViewById(R.id.imgOnline);
+            txtUser = findViewById(id.txtUser);
+            txtPass = findViewById(id.txtPass);
+            linearBox = findViewById(id.linearBox);
+            txtError = findViewById(id.txtError);
+            checkusu = findViewById(id.guardarUsuario);
+            imgOnline = findViewById(id.imgOnline);
+            floatingServer = findViewById(id.floatingServer);
 
             iUsuario iU = new iUsuario(null, path);
             iU.nombre = "Usuarios";
@@ -84,7 +74,9 @@ public class Login extends AppCompatActivity {
 
             icont = new iContenedor(path);
 
-            imgOnline.setBackgroundResource(new ionLine(path).all().equals("onLine") ? R.drawable.ic_wifi_on : R.drawable.ic_wifi_off);
+            imgOnline.setBackgroundResource(new ionLine(path).all().equals("onLine") ? ic_wifi_on : ic_wifi_off);
+
+            floatingServer.setCompoundDrawablesWithIntrinsicBounds(icont.pendientesCantidad() > 0 ? ic_cloud_noti : ic_cloud, 0, 0, 0);
 
 
         } catch (Exception ex) {
@@ -117,14 +109,14 @@ public class Login extends AppCompatActivity {
                 guardarUsuario(txt_user, txt_pass);
 
             } else if (m == null) {
-                txtUser.setBackgroundResource(R.drawable.bordercontainerred);
-                txtPass.setBackgroundResource(R.drawable.bordercontainerred);
+                txtUser.setBackgroundResource(bordercontainerred);
+                txtPass.setBackgroundResource(bordercontainerred);
                 txtError.setText("Identificaficación o contraseña incorrectas !!!");
             }
 
         } catch (NumberFormatException ex) {
-            txtUser.setBackgroundResource(R.drawable.bordercontainerred);
-            txtPass.setBackgroundResource(R.drawable.bordercontainerred);
+            txtUser.setBackgroundResource(bordercontainerred);
+            txtPass.setBackgroundResource(bordercontainerred);
             txtError.setText("No puedes dejar campos vacios !!!");
         }
     }

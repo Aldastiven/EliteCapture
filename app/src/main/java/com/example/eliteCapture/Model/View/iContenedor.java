@@ -343,4 +343,19 @@ public class iContenedor implements Contenedor {
         }
     }
 
+    public int pendientesCantidad(){
+        try {
+            int size = 0;
+            for (ContenedorTab c : all()) {
+                Log.i("ESTADO", c.getEstado() + "");
+                if (c.getEstado() < 1) {
+                    size++;
+                }
+            }
+            return size;
+        }catch (Exception e){
+            return 0;
+        }
+    }
+
 }
