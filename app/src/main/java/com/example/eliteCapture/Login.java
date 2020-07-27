@@ -38,7 +38,7 @@ public class Login extends AppCompatActivity {
     LinearLayout linearBox;
     TextView txtError, floatingServer;
     CheckBox checkusu;
-    ImageView imgOnline;
+    ImageView imgOnline, logo_port;
     iContenedor icont;
 
 
@@ -58,24 +58,23 @@ public class Login extends AppCompatActivity {
 
             txtUser = findViewById(id.txtUser);
             txtPass = findViewById(id.txtPass);
-            linearBox = findViewById(id.linearBox);
-            txtError = findViewById(id.txtError);
-            checkusu = findViewById(id.guardarUsuario);
+            //linearBox = findViewById(id.linearBox);
+            //txtError = findViewById(id.txtError);
+            //checkusu = findViewById(id.guardarUsuario);
             imgOnline = findViewById(id.imgOnline);
             floatingServer = findViewById(id.floatingServer);
 
             iUsuario iU = new iUsuario(null, path);
             iU.nombre = "Usuarios";
 
-            checkusu.setChecked(false);
+            //checkusu.setChecked(false);
 
             recibirUsuario();
-            PintarCheck();
+            //PintarCheck();
 
             icont = new iContenedor(path);
 
             imgOnline.setBackgroundResource(new ionLine(path).all().equals("onLine") ? ic_wifi_on : ic_wifi_off);
-
             floatingServer.setCompoundDrawablesWithIntrinsicBounds(icont.pendientesCantidad() > 0 ? ic_cloud_noti : ic_cloud, 0, 0, 0);
 
 
@@ -167,7 +166,7 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    public void PintarCheck() {
+    /*public void PintarCheck() {
         try {
             final SharedPreferences.Editor edit = sp.edit();
 
@@ -210,7 +209,7 @@ public class Login extends AppCompatActivity {
             });
         } catch (Exception ex) {
         }
-    }
+    }*/
 
     public void onActualizar(View v) {
         new modalServer(this, path).modal().show();

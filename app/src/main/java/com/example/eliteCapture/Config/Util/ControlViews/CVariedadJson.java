@@ -259,7 +259,6 @@ public class CVariedadJson {
     }
 
 
-
     // ITEMS PRODUCTO
     public List<String> getProducto(){
         try {

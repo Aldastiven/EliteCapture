@@ -62,30 +62,23 @@ public class genated extends AppCompatActivity {
     LinearLayout linearBodypop, linearPrinc;
     ScrollView scrollForm, scrollCalificacion;
     Dialog mypop, popcalificacion, popvalidar, popregla;
-    Admin adm = null;
-    iContenedor iCon = null;
-    ContenedorTab contenedor = null;
-    SharedPreferences sp = null;
     Button popSi, popNo;
 
-    String path = null;
-    String dataCamera;
-    boolean footer;
-
-    int contConsec = 0;
     ProcesoTab pro = null;
     UsuarioTab usu = null;
+    ContenedorTab contenedor = null;
+
+    iContenedor iCon = null;
     iContador contador = null;
-
-    boolean camera;
-    boolean inicial = false;
-
-    public boolean ok, temporal; //retorna la respuesta de un formulario pendiente
-
-    formAdmin formA;
-
     ionLine ion;
 
+    String path = null, dataCamera;
+    int contConsec = 0;
+    boolean camera, inicial = false, ok, temporal, footer;
+
+    formAdmin formA;
+    Admin adm = null;
+    SharedPreferences sp = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,7 +146,7 @@ public class genated extends AppCompatActivity {
 
     public void cargarContador() {
 
-        EncabTitulo.setText(pro.getNombre_proceso());//asigna el nombre del encabezado
+        EncabTitulo.setText(" "+pro.getNombre_proceso());//asigna el nombre del encabezado
         contConsec = contador.getCantidad(usu.getId_usuario(), pro.getCodigo_proceso()) + 1;
         contcc.setText(String.valueOf(contConsec));//inicializa el conteo de formularios guardados o enviados
         int regla = (pro.getPersonalizado5() != null) ? Integer.parseInt(pro.getPersonalizado5()) : 0;
@@ -161,10 +154,8 @@ public class genated extends AppCompatActivity {
     }
 
     public void validarFooter(int contador, int regla) {
-        Log.i("Footer", "Contador: " + contador + " Regla: " + regla);
         try {
             footer = (regla != 0 && (contador % regla) == 0);
-
         } catch (NumberFormatException en) {
             footer = false;
         }
@@ -181,17 +172,11 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    public void CrearEncabezado() throws Exception {
-        //CrearHeader(contenedor.getHeader());//crea los elemtos del header y pasa datos correspondientes
+    public void CrearEncabezado() {
         formA.CrearHeader("H");
     }
 
-    public void CrearCuerpo() throws Exception {
-        /*CrearForm(contenedor.getQuestions(), "Q");//crea los elemtos del body (formulario) y pasa datos correspondientes
-        if (footer) {
-            CrearForm(contenedor.getFooter(), "F");//crea los elemtos del body (formulario) y pasa datos correspondientes
-        }*/
-
+    public void CrearCuerpo(){
         formA.CrearForm("Q");
         if(footer) {
             formA.CrearForm("F");
@@ -296,81 +281,6 @@ public class genated extends AppCompatActivity {
         popvalidar.dismiss();
     }
 
-    //CREA LOS CONTROLES DEL HEADER EN EL POP
-    public void CrearHeader(List<RespuestasTab> header) {
-        try {
-            for (RespuestasTab r : header) {
-
-                switch (r.getTipo()) {
-                    case "TV":
-                        Ctextview ct = new Ctextview();
-                        linearBodypop.addView(ct.textview(genated.this, r.getId(), r.getPregunta()));
-                        break;
-                    case "ETN":
-                        linearBodypop.addView(new Cetnum(genated.this, path, "H", r, inicial).tnumerico());
-                        break;
-                    case "ETA":
-                        linearBodypop.addView(new Cetalf(genated.this, path, "H", r, inicial).talfanumerico());
-                        break;
-                    case "CBX":
-                        linearBodypop.addView(new Cdesplegable(genated.this, path, "H", r, inicial).desplegable());
-                        break;
-                    case "FIL":
-                        linearBodypop.addView(new Cfiltro(genated.this, path, "H", r, inicial).filtro());
-                        break;
-                    case "SCA":
-                        linearBodypop.addView(new Cscanner(genated.this, path, "H", r, inicial).scanner());
-                        break;
-                    case "AUT":
-                        linearBodypop.addView(new CfilAuto(genated.this, path, "H", r, inicial).autocompletado());
-                        break;
-                    default:
-                        Toast.makeText(this, "ocurrio un error al crear ", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-
-            }
-        } catch (Exception exception) {
-            Toast.makeText(this, "exception en generated \n \n" + exception.toString(), Toast.LENGTH_SHORT).show();
-            Log.i("Excepcreate", exception.toString());
-        }
-
-    }
-
-    //CREA CONTROLES DEL FORMULARIO
-    public void CrearForm(List<RespuestasTab> questions, String ubicacion) {
-        try {
-            scrollForm.fullScroll(View.FOCUS_UP); //funcion que sube el scroll al inicio
-
-            for (RespuestasTab r : questions) {
-
-                Log.i("Error_Crs", "" + new iRespuestas().json(r));
-
-                switch (r.getTipo()) {
-                    case "RS":
-                        linearPrinc.addView(new Cconteos(genated.this, path, ubicacion, r, inicial).Cconteo());
-                        break;
-                    case "RSE":
-                        linearPrinc.addView(new CconteosEditar(genated.this, path, ubicacion, r, inicial, popregla).CconteoEditar());
-                        break;
-                    case "RSC":
-                        linearPrinc.addView(new CconteosCheck(genated.this, path, ubicacion, r, inicial).Cconteo());
-                        break;
-                    case "RB":
-                        linearPrinc.addView(new CradioButton(genated.this, path, ubicacion, r, inicial).Tradiobtn());
-                        break;
-                    case "CBX":
-                        linearPrinc.addView(new CradioButton(genated.this, path, ubicacion, r, inicial).Tradiobtn());
-                        break;
-                    case "DES":
-                        linearPrinc.addView(new CdespelgableQ(genated.this, r, path, inicial, ubicacion, linearPrinc, contenedor).Cdesp());
-                        break;
-                }
-            }
-        } catch (Exception ex) {
-            Log.i("exc_crearForm", ex.toString());
-        }
-    }
 
     // metodo para extraer del SharedPreferences el id del proceso
     public void getcodProceso() {
@@ -550,6 +460,4 @@ public class genated extends AppCompatActivity {
             Log.i("Enviar_error", e.toString());
         }
     }
-
-
 }

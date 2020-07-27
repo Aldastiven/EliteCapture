@@ -74,6 +74,7 @@ public class modalServer {
 
 
     public View Line(){
+
         LinearLayout linearLayout = ca.container();
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
@@ -87,7 +88,7 @@ public class modalServer {
 
         LinearLayout lineDescarga = line();
 
-        TextView txtDescarga =(TextView) ta.textColor("Descargar datos.            ","gris",18,"l");
+        TextView txtDescarga =(TextView) ta.textColor("Descargar/Actualizar datos.            ","gris",18,"l");
         txtDescarga.setLayoutParams(params(2));
 
         lineDescarga.addView(txtDescarga);
