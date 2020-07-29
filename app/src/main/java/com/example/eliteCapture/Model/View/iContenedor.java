@@ -2,6 +2,8 @@ package com.example.eliteCapture.Model.View;
 
 
 import android.util.Log;
+import android.widget.Toast;
+
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.iDesplegable;
@@ -185,26 +187,30 @@ public class iContenedor implements Contenedor {
         }
     }
 
-    public void editarTemporal(String donde, int idPregunta, String respuesta, String valor, String causa, int regla) throws Exception {
-        Log.i("Footer", "Donde: " + donde + " id: " + idPregunta + " Rta: " + respuesta + " Valor: " + valor);
-        ContenedorTab conTemp = new Gson().fromJson(new JsonAdmin().ObtenerLista(path, "temp"),
-                new TypeToken<ContenedorTab>() {
-                }.getType());
+    public void editarTemporal(String donde, int idPregunta, String respuesta, String valor, String causa, int regla){
+        try {
+            Log.i("Footer", "Donde: " + donde + " id: " + idPregunta + " Rta: " + respuesta + " Valor: " + valor);
+            ContenedorTab conTemp = new Gson().fromJson(new JsonAdmin().ObtenerLista(path, "temp"),
+                    new TypeToken<ContenedorTab>() {
+                    }.getType());
 
-        switch (donde) {
-            case "H":
-                Log.i("reg_","llego aqui encab");
-                conTemp.setHeader(editar(conTemp.getHeader(), idPregunta, respuesta, valor, causa, regla));
-                break;
-            case "Q":
-                Log.i("reg_","llego aqui");
-                conTemp.setQuestions(editar(conTemp.getQuestions(), idPregunta, respuesta, valor, causa, regla));
-                break;
-            case "F":
-                conTemp.setFooter(editar(conTemp.getFooter(), idPregunta, respuesta, valor, causa, regla));
-                break;
+            switch (donde) {
+                case "H":
+                    Log.i("reg_", "llego aqui encab");
+                    conTemp.setHeader(editar(conTemp.getHeader(), idPregunta, respuesta, valor, causa, regla));
+                    break;
+                case "Q":
+                    Log.i("reg_", "llego aqui");
+                    conTemp.setQuestions(editar(conTemp.getQuestions(), idPregunta, respuesta, valor, causa, regla));
+                    break;
+                case "F":
+                    conTemp.setFooter(editar(conTemp.getFooter(), idPregunta, respuesta, valor, causa, regla));
+                    break;
+            }
+            Log.i("vcampo", "" + crearTemporal(conTemp));
+        }catch (Exception e){
+            Log.i("ERROR","No se pudo registrar el temporal : "+e.toString());
         }
-        Log.i("vcampo", "" + crearTemporal(conTemp));
     }
 
     public List<RespuestasTab> editar(List<RespuestasTab> editar, int idPregunta, String respuesta, String valor, String causa, int regla) {

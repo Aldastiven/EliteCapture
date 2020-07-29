@@ -15,26 +15,22 @@ import com.example.eliteCapture.Config.Util.ControlViews.CconteosCheck;
 import com.example.eliteCapture.Config.Util.ControlViews.CconteosEditar;
 import com.example.eliteCapture.Config.Util.ControlViews.CdespelgableQ;
 import com.example.eliteCapture.Config.Util.ControlViews.Cdesplegable;
-import com.example.eliteCapture.Config.Util.ControlViews.Cetalf;
-import com.example.eliteCapture.Config.Util.ControlViews.Cetnum;
 import com.example.eliteCapture.Config.Util.ControlViews.CfilAuto;
 import com.example.eliteCapture.Config.Util.ControlViews.Cfiltro;
 import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
 import com.example.eliteCapture.Config.Util.ControlViews.Cscanner;
 import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
+import com.example.eliteCapture.Config.Util.Controls.ETN_ETA;
+import com.example.eliteCapture.Config.Util.Controls.SCA;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
-import com.example.eliteCapture.Model.View.iRespuestas;
 import com.example.eliteCapture.R;
-import com.example.eliteCapture.genated;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import java.util.List;
 
 public class formAdmin {
 
@@ -101,8 +97,6 @@ public class formAdmin {
                         linearPrinc.addView(new CconteosCheck(context, path, ubicacion, r, inicial).Cconteo());
                         break;
                     case "RB":
-                        linearPrinc.addView(new CradioButton(context, path, ubicacion, r, inicial).Tradiobtn());
-                        break;
                     case "CBX":
                         linearPrinc.addView(new CradioButton(context, path, ubicacion, r, inicial).Tradiobtn());
                         break;
@@ -111,6 +105,14 @@ public class formAdmin {
                         break;
                     case "DPV":
                         linearPrinc.addView(new CVariedadJson(context, path, inicial, r, ubicacion).Cvariedad());
+                        break;
+                    case "ETN":
+                    case "ETA":
+                        linearPrinc.addView(new ETN_ETA(context, ubicacion, r, path, inicial).crear());
+                        break;
+                    case "SCA":
+                        //linearBodypop.addView(new Cscanner(context, path, "H", r, inicial).scanner());
+                        linearPrinc.addView(new SCA(context, ubicacion, r, path, inicial).crear());
                         break;
                 }
             }
@@ -131,10 +133,9 @@ public class formAdmin {
                         linearBodypop.addView(ct.textview(context, r.getId(), r.getPregunta()));
                         break;
                     case "ETN":
-                        linearBodypop.addView(new Cetnum(context, path, "H", r, inicial).tnumerico());
-                        break;
                     case "ETA":
-                        linearBodypop.addView(new Cetalf(context, path, "H", r, inicial).talfanumerico());
+                        //linearBodypop.addView(new Cetalf(context, path, "H", r, inicial).talfanumerico());
+                        linearBodypop.addView(new ETN_ETA(context, ubicacion, r, path, inicial).crear());
                         break;
                     case "CBX":
                         linearBodypop.addView(new Cdesplegable(context, path, "H", r, inicial).desplegable());
@@ -143,7 +144,8 @@ public class formAdmin {
                         linearBodypop.addView(new Cfiltro(context, path, "H", r, inicial).filtro());
                         break;
                     case "SCA":
-                        linearBodypop.addView(new Cscanner(context, path, "H", r, inicial).scanner());
+                        //linearBodypop.addView(new Cscanner(context, path, "H", r, inicial).scanner());
+                        linearBodypop.addView(new SCA(context, ubicacion, r, path, inicial).crear());
                         break;
                     case "AUT":
                         linearBodypop.addView(new CfilAuto(context, path, "H", r, inicial).autocompletado());

@@ -28,8 +28,11 @@ public class containerAdmin {
     }
 
     public LinearLayout container(){
-        LinearLayout.LayoutParams lcontainer = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lcontainer.setMargins(10, 10, 10, 5);
+        LinearLayout.LayoutParams lcontainer = new LinearLayout.LayoutParams(
+                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                LinearLayout.LayoutParams.WRAP_CONTENT
+                                                );
+        lcontainer.setMargins(1, 5, 1, 10);
 
         LinearLayout container = new LinearLayout(c);
         container.setOrientation(LinearLayout.VERTICAL);
@@ -39,7 +42,13 @@ public class containerAdmin {
     }
 
     public LinearLayout.LayoutParams params(){
-        return new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        return new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    public LinearLayout.LayoutParams params2(){
+        return new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.MATCH_PARENT);
     }
 
     public View scrollv(LinearLayout l){
