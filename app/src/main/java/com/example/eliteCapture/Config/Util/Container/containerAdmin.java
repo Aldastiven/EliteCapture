@@ -51,6 +51,11 @@ public class containerAdmin {
                                             LinearLayout.LayoutParams.MATCH_PARENT);
     }
 
+    public LinearLayout.LayoutParams params3(){
+        return new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
     public View scrollv(LinearLayout l){
         LinearLayout.LayoutParams lscv = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 

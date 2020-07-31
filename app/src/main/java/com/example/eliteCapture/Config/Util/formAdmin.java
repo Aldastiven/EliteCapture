@@ -20,6 +20,7 @@ import com.example.eliteCapture.Config.Util.ControlViews.Cfiltro;
 import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
 import com.example.eliteCapture.Config.Util.ControlViews.Cscanner;
 import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
+import com.example.eliteCapture.Config.Util.Controls.DPV;
 import com.example.eliteCapture.Config.Util.Controls.ETN_ETA;
 import com.example.eliteCapture.Config.Util.Controls.SCA;
 import com.example.eliteCapture.Model.Data.Admin;
@@ -104,14 +105,13 @@ public class formAdmin {
                         linearPrinc.addView(new CdespelgableQ(context, r, path, inicial, ubicacion, linearPrinc, contenedor).Cdesp());
                         break;
                     case "DPV":
-                        linearPrinc.addView(new CVariedadJson(context, path, inicial, r, ubicacion).Cvariedad());
+                        linearPrinc.addView(new DPV(context, ubicacion, r, path, inicial).crear());
                         break;
                     case "ETN":
                     case "ETA":
                         linearPrinc.addView(new ETN_ETA(context, ubicacion, r, path, inicial).crear());
                         break;
                     case "SCA":
-                        //linearBodypop.addView(new Cscanner(context, path, "H", r, inicial).scanner());
                         linearPrinc.addView(new SCA(context, ubicacion, r, path, inicial).crear());
                         break;
                 }
@@ -134,7 +134,6 @@ public class formAdmin {
                         break;
                     case "ETN":
                     case "ETA":
-                        //linearBodypop.addView(new Cetalf(context, path, "H", r, inicial).talfanumerico());
                         linearBodypop.addView(new ETN_ETA(context, ubicacion, r, path, inicial).crear());
                         break;
                     case "CBX":
@@ -144,14 +143,13 @@ public class formAdmin {
                         linearBodypop.addView(new Cfiltro(context, path, "H", r, inicial).filtro());
                         break;
                     case "SCA":
-                        //linearBodypop.addView(new Cscanner(context, path, "H", r, inicial).scanner());
                         linearBodypop.addView(new SCA(context, ubicacion, r, path, inicial).crear());
                         break;
                     case "AUT":
                         linearBodypop.addView(new CfilAuto(context, path, "H", r, inicial).autocompletado());
                         break;
                     case "DPV":
-                        linearBodypop.addView(new CVariedadJson(context, path, inicial, r, ubicacion).Cvariedad());
+                        linearBodypop.addView(new DPV(context, ubicacion, r, path, inicial).crear());
                         break;
                     default:
                         Toast.makeText(context, "ocurrio un error al crear ", Toast.LENGTH_SHORT).show();

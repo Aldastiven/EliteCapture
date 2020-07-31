@@ -44,7 +44,7 @@ public class ETN_ETA {
         pp = new preguntaPonderado(context, ubicacion, rt);
 
         respuestaPonderado = (TextView) pp.resultadoPonderado();
-        respuestaPonderado.setText(vacio ? "Resultado :\n"+rt.getPonderado() : "Resultado :");
+        respuestaPonderado.setText(vacio ? "Resultado : "+rt.getPonderado() : "Resultado :");
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM
@@ -61,7 +61,7 @@ public class ETN_ETA {
     }
 
     public EditText campo(){//CAMPO DE USUARIO
-        camp = pp.campoEdtable();
+        camp = (EditText) pp.campoEdtable("Edit");
 
         LinearLayout.LayoutParams llparams = ca.params();
         llparams.weight = 1;
@@ -90,7 +90,7 @@ public class ETN_ETA {
             public void afterTextChanged(Editable s) {
                     String rta = camp.getText().toString();
                     registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado()+"" : null);
-                    respuestaPonderado.setText(!rta.isEmpty() ? "Resultado :\n"+rt.getPonderado() : "Resultado :");
+                    respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
             }
         });

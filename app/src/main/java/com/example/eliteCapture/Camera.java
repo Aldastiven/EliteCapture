@@ -31,6 +31,8 @@ public class Camera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
+        Bundle();
+
         vbc = new ZBarScannerView(this);
         vbc.setResultHandler(new Camera.barcodeimp());
         setContentView(vbc);
@@ -58,6 +60,7 @@ public class Camera extends AppCompatActivity {
                     Intent i = new Intent(Camera.this, genated.class);
                     i.putExtra("codigo", bc);
                     i.putExtra("camera", true);
+                    i.putExtra("ubicacion", ubicacion);
 
                     registro(bc, null);
 

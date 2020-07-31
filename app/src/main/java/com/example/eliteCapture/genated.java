@@ -119,9 +119,11 @@ public class genated extends AppCompatActivity {
             if (bundle != null) {
                 camera = bundle.getBoolean("camera");
                 dataCamera = bundle.getString("codigo");
+                String ubicacion = bundle.getString("ubicacion");
+                Toast.makeText(this, ""+ubicacion, Toast.LENGTH_SHORT).show();
                 ok = true;
                 crearform();
-                mypop.show();
+                if(ubicacion.equals("H"))mypop.show();
             } else {
                 if (temporal) {
                     popvalidar.show();
@@ -260,6 +262,7 @@ public class genated extends AppCompatActivity {
     public void popSI(View v) {
         ok = true;
         try {
+            inicial = true;
             crearform();
             mypop.show();
         } catch (Exception ex) {
@@ -272,6 +275,7 @@ public class genated extends AppCompatActivity {
         ok = false;
 
         try {
+            inicial = true;
             contenedor = contenedorLimipio();
             iCon.crearTemporal(contenedor);
             crearform();
@@ -419,40 +423,36 @@ public class genated extends AppCompatActivity {
 
         boolean full = true;
         String[] area = {"\nEncabezado: ", "\n Preguntas: ", "\n Pie: "};
-        String vacios = "";
 
         try {
 
             for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
-                Log.i("Enviar_Array", "clave=" + entry.getKey() + ", valor=" + entry.getValue());
                 if (entry.getValue().size() > 0) {
-                    vacios += area[entry.getKey()] + entry.getValue().toString();
                     full = false;
                 }
             }
 
             if (full) {
-
                 iCon.insert(nuevo);
                 contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
                 cargarContador();
 
-                inicial = false;
-                killChildrens(nuevo);
-
                 if(ion.all().equals("onLine")) {
                     if (iCon.enviar()) {
-                        Toast.makeText(this, "Insertado con exito!" + vacios, Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Insertado con exito!", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(this, "Agregado a local" + vacios, Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Agregado a local", Toast.LENGTH_LONG).show();
                     }
                 }else{
-                    Toast.makeText(this, "Agregado a local" + vacios, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Agregado a local", Toast.LENGTH_LONG).show();
                 }
 
-            } else {
-                Toast.makeText(this, "¡tienes campos vacios! ", Toast.LENGTH_LONG).show();
                 inicial = true;
+                killChildrens(nuevo);
+
+            } else {
+                inicial = false;
+                Toast.makeText(this, "¡tienes campos vacios! ", Toast.LENGTH_LONG).show();
                 killChildrens2(nuevo);
             }
 

@@ -45,7 +45,7 @@ public class SCA {
         pp = new preguntaPonderado(context, ubicacion, rt);
 
         respuestaPonderado = (TextView) pp.resultadoPonderado();
-        respuestaPonderado.setText(vacio ? "Resultado :\n"+rt.getPonderado() : "Resultado :");
+        respuestaPonderado.setText(vacio ? "Resultado : "+rt.getPonderado() : "Resultado :");
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM
@@ -62,7 +62,7 @@ public class SCA {
     }
 
     public View campo(){
-        camp = pp.campoEdtable();
+        camp = (EditText) pp.campoEdtable("Edit");
         camp.setText((vacio ? rt.getRespuesta() : ""));
         camp.setLayoutParams(params((float) 0.5));
 
@@ -90,7 +90,7 @@ public class SCA {
 
         LinearLayout.LayoutParams params = ca.params2();
         params.weight = med;
-        params.setMargins(5, 10, 5, 5);
+        params.setMargins(5, 0, 5, 0);
 
         return params;
     }
@@ -122,7 +122,7 @@ public class SCA {
             public void afterTextChanged(Editable s) {
                 String rta = camp.getText().toString();
                 registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado()+"" : null);
-                respuestaPonderado.setText(!rta.isEmpty() ? "Resultado :\n"+rt.getPonderado() : "Resultado :");
+                respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");
                 contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
             }
         });
