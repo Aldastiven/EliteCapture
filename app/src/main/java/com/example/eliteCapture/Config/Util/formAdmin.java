@@ -112,6 +112,7 @@ public class formAdmin {
                         linearPrinc.addView(new ETN_ETA(context, ubicacion, r, path, inicial).crear());
                         break;
                     case "SCA":
+                    case "FIL":
                         linearPrinc.addView(new SCA(context, ubicacion, r, path, inicial).crear());
                         break;
                 }

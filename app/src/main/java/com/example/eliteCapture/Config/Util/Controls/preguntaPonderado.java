@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -16,6 +17,9 @@ import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
+import com.example.eliteCapture.Model.Data.Interfaz.Desplegable;
+import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
+import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.R;
 
@@ -24,19 +28,21 @@ import static com.example.eliteCapture.R.drawable.*;
 public class preguntaPonderado {
 
     Context context;
-    String ubicacion;
+    String ubicacion, path;
     RespuestasTab rt;
 
     textAdmin ta;
     containerAdmin ca;
+    iDesplegable iDesp;
 
-    public preguntaPonderado(Context context, String ubicacion, RespuestasTab rt) {
+    public preguntaPonderado(Context context, String ubicacion, RespuestasTab rt, String path) {
         this.context = context;
         this.ubicacion = ubicacion;
         this.rt = rt;
 
         ta = new textAdmin(context);
         ca = new containerAdmin(context);
+        iDesp = new iDesplegable(null, path);
     }
 
     public View pregunta(){
@@ -57,6 +63,15 @@ public class preguntaPonderado {
         TextView tv = (TextView) ta.textColor(txtResPonderado, "darkGray",13,"l");
         tv.setLayoutParams(params(1));
         return tv;
+    }
+
+    public View resultadoFiltro(){
+        LinearLayout.LayoutParams p = ca.params();
+        p.setMargins(0,-5,0,-5);
+        LinearLayout line = ca.container();
+        line.setLayoutParams(p);
+
+        return line;
     }
 
     public View Line(View resultadoPonderado){
@@ -91,7 +106,6 @@ public class preguntaPonderado {
     }
 
     public void validarColorContainer(LinearLayout contenedorCamp, boolean vacio, boolean inicial){
-        Log.i("INITIAL","ini : "+inicial+" vac : "+vacio);
         if(!inicial){
             contenedorCamp.setBackgroundResource(!vacio ? bordercontainerred : bordercontainer);
         }else{
@@ -124,5 +138,34 @@ public class preguntaPonderado {
                 break;
         }
         return v;
+    }
+
+    public View boton(String nombre){
+        Button btn = new Button(context);
+        btn.setBackgroundColor(Color.parseColor("#2ECC71"));
+        btn.setText(nombre);
+        btn.setTextColor(Color.WHITE);
+        btn.setAllCaps(false);
+        btn.setTypeface(null, Typeface.BOLD);
+
+        return btn;
+    }
+
+    public DesplegableTab busqueda(String data){
+        try {
+            iDesp.nombre = rt.getDesplegable();
+
+            DesplegableTab d = null;
+            for (DesplegableTab desp : iDesp.all()) {
+                if (desp.getCodigo().equals(data)) {
+                    d = desp;
+                    break;
+                }
+            }
+            return d;
+        }catch (Exception e){
+            Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
 }

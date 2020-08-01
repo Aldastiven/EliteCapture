@@ -115,14 +115,16 @@ public class genated extends AppCompatActivity {
 
             Bundle bundle = getIntent().getExtras();
 
-
             if (bundle != null) {
                 camera = bundle.getBoolean("camera");
                 dataCamera = bundle.getString("codigo");
                 String ubicacion = bundle.getString("ubicacion");
-                Toast.makeText(this, ""+ubicacion, Toast.LENGTH_SHORT).show();
                 ok = true;
+                inicial = true;
                 crearform();
+
+                Toast.makeText(this, ""+ubicacion, Toast.LENGTH_SHORT).show();
+
                 if(ubicacion.equals("H"))mypop.show();
             } else {
                 if (temporal) {

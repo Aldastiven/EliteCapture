@@ -41,7 +41,7 @@ public class ETN_ETA {
         this.initial = initial;
 
         ca = new containerAdmin(context);
-        pp = new preguntaPonderado(context, ubicacion, rt);
+        pp = new preguntaPonderado(context, ubicacion, rt, path);
 
         respuestaPonderado = (TextView) pp.resultadoPonderado();
         respuestaPonderado.setText(vacio ? "Resultado : "+rt.getPonderado() : "Resultado :");

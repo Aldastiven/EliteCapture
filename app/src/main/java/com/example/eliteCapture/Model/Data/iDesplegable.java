@@ -33,7 +33,7 @@ public class iDesplegable implements Desplegable {
     this.nombre = nombre;
   }
 
-  public iDesplegable(Connection cn, String path) throws Exception {
+  public iDesplegable(Connection cn, String path) {
     this.cn = cn;
     getPath(path);
   }
@@ -127,7 +127,7 @@ public class iDesplegable implements Desplegable {
   }
 
   @Override
-  public List<DesplegableTab> all() throws Exception {
+  public List<DesplegableTab> all()  throws Exception{
     Gson gson = new Gson();
     DT = gson.fromJson(ja.ObtenerLista(path, nombre), new TypeToken<List<DesplegableTab>>() {
     }.getType());

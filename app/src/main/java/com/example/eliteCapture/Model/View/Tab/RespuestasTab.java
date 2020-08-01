@@ -1,8 +1,10 @@
 package com.example.eliteCapture.Model.View.Tab;
 
 
-public class RespuestasTab {
-	private Long id;
+import java.io.Serializable;
+
+public class RespuestasTab implements Serializable {
+    private Long id;
 	private int codigo;
 	private int idProceso;
 	private Long idPregunta;

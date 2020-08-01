@@ -54,7 +54,7 @@ public class DPV {
         this.pregunta2 = "Variedad";
 
         ca = new containerAdmin(context);
-        pp = new preguntaPonderado(context, ubicacion, rt);
+        pp = new preguntaPonderado(context, ubicacion, rt, path);
         ta = new textAdmin(context);
 
         idv = new idespVariedades(path, null);
@@ -194,7 +194,6 @@ public class DPV {
             return null;
         }
     }
-
 
     //FUNCION DEL SPINNER DEL PRODUCTO
     public void FunAut(final AutoCompleteTextView etdauto, final int tipo) {
