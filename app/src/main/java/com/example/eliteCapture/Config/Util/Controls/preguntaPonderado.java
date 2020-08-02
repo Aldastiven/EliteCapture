@@ -58,10 +58,9 @@ public class preguntaPonderado {
     }
 
     public View resultadoPonderado(){
-
         String txtResPonderado = rt.getValor()!=null ? " Resultado : "+ rt.getValor() : " Resultado : ";
         TextView tv = (TextView) ta.textColor(txtResPonderado, "darkGray",13,"l");
-        tv.setLayoutParams(params(1));
+        tv.setLayoutParams(ca.params3());
         return tv;
     }
 
@@ -87,8 +86,13 @@ public class preguntaPonderado {
 
         lineContainer.addView(pregunta());
 
+        LinearLayout linePon = ca.container();
+        linePon.setLayoutParams(ca.params3());
+        linePon.setLayoutParams(params(1));
+        linePon.addView(resultadoPonderado);
+
         if(ubicacion.equals("Q")) line.addView(ponderado());
-        if(ubicacion.equals("Q")) line.addView(resultadoPonderado);
+        if(ubicacion.equals("Q")) line.addView(linePon);
 
         lineContainer.addView(line);
 
@@ -118,25 +122,21 @@ public class preguntaPonderado {
         switch (tipo){
             case "Edit":
                 EditText edit = new EditText(context);
-                edit.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 edit.setTextColor(Color.parseColor("#515A5A"));
-                edit.setBackgroundColor(Color.parseColor("#E5E7E9"));
                 edit.setTypeface(null, Typeface.BOLD);
-                edit.setBackgroundColor(Color.parseColor("#eeeeee"));
                 edit.setSingleLine(true);
                 v =  edit;
                 break;
             case "Auto":
                 AutoCompleteTextView auto = new AutoCompleteTextView(context);
-                auto.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 auto.setTextColor(Color.parseColor("#515A5A"));
-                auto.setBackgroundColor(Color.parseColor("#E5E7E9"));
                 auto.setTypeface(null, Typeface.BOLD);
-                auto.setBackgroundColor(Color.parseColor("#eeeeee"));
                 auto.setSingleLine(true);
                 v =  auto;
                 break;
         }
+        v.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        v.setBackgroundColor(Color.parseColor("#eeeeee"));
         return v;
     }
 

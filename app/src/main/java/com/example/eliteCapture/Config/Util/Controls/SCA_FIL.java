@@ -162,10 +162,7 @@ public class SCA_FIL implements Serializable{
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                rta = camp.getText().toString();
-                causa = "";
-
-                rta = filtroDesplegable(rta);
+                rta = filtroDesplegable(camp.getText().toString());
 
                 registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado()+"" : null, !causa.isEmpty() ? causa : null);
                 respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");
@@ -175,12 +172,9 @@ public class SCA_FIL implements Serializable{
         });
     }
 
-    public void registro(String rta, String valor, String causa) {//REGISTRO
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), String.valueOf(causa), rt.getReglas());
-    }
-
     public String filtroDesplegable(String rta){
         String data = "";
+        causa = "";
         if(rt.getDesplegable() != null){
             DesplegableTab des = pp.busqueda(rta);
             if(des != null) {
@@ -189,5 +183,9 @@ public class SCA_FIL implements Serializable{
             }
         }
         return data;
+    }
+
+    public void registro(String rta, String valor, String causa) {//REGISTRO
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), String.valueOf(causa), rt.getReglas());
     }
 }

@@ -11,7 +11,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.eliteCapture.Config.Util.formAdmin;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
@@ -88,7 +87,7 @@ public class CdespelgableQ {
     private View Cdespleg(LinearLayout.LayoutParams llparamsText, TextView tvpor) {
         ArrayList soloOpciones = soloOpciones(rt.getDesplegable());
 
-        ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.spinner_item_personal, soloOpciones);
+        ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.items_aut, soloOpciones);
         final Spinner spinner = new Spinner(context);
         spinner.setId(rt.getId().intValue());
         spinner.setAdapter(spinnerArray);

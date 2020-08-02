@@ -6,10 +6,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,10 +19,8 @@ import com.example.eliteCapture.Model.Data.idespVariedades;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
-import com.google.gson.internal.bind.ReflectiveTypeAdapterFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -114,7 +110,7 @@ public class DPV {
     }
 
     public ArrayAdapter<String> getAdapter(List<String> listaCargada){
-        ArrayAdapter<String> autoArray = new ArrayAdapter<>(context, R.layout.spinner_item_personal, listaCargada);
+        ArrayAdapter<String> autoArray = new ArrayAdapter<>(context, R.layout.items_aut, listaCargada);
         return autoArray;
     }
 

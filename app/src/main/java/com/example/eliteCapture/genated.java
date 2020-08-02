@@ -179,7 +179,8 @@ public class genated extends AppCompatActivity {
     }
 
     public void CrearEncabezado() {
-        formA.CrearHeader("H");
+        //formA.CrearHeader("H");
+        formA.CrearForm("H");
     }
 
     public void CrearCuerpo(){

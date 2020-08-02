@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.example.eliteCapture.R;
 
 public class textAdmin {
     Context context;
@@ -101,7 +100,7 @@ public class textAdmin {
                 C = Color.parseColor("#E74C3C");
                 break;
             case "darkGray":
-                C = Color.parseColor("#34495E");
+                C = Color.parseColor("#154360");
         }
         return C;
     }

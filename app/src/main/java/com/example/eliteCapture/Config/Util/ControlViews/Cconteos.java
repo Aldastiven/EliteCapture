@@ -129,7 +129,7 @@ public class Cconteos {
             line.addView(pp(tvp, tvpor));
 
         if(!splitS.isEmpty()) {
-            ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.spinner_item_personal, soloOpciones(rt.getDesplegable()));
+            ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.items_aut, soloOpciones(rt.getDesplegable()));
             final Spinner spinner = new Spinner(context);
             spinner.setId(rt.getId().intValue());
             spinner.setAdapter(spinnerArray);

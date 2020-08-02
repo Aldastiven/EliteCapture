@@ -60,7 +60,7 @@ public class CfilAuto {
 
 
         AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(context);
-        ArrayAdapter<String> autoArray = new ArrayAdapter<>(context, R.layout.auto_complete_personal, soloOpciones(rt.getDesplegable()));
+        ArrayAdapter<String> autoArray = new ArrayAdapter<>(context, R.layout.items_aut, soloOpciones(rt.getDesplegable()));
 
         autoCompleteTextView.setAdapter(autoArray);
         autoCompleteTextView.setHint(rt.getPregunta());

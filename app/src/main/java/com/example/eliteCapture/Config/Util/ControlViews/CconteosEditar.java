@@ -111,7 +111,7 @@ public class CconteosEditar {
 
             ArrayList soloOpciones = soloOpciones(rt.getDesplegable());
 
-            ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.spinner_item_personal, soloOpciones);
+            ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.items_aut, soloOpciones);
             final Spinner spinner = new Spinner(context);
             spinner.setId(rt.getId().intValue());
             spinner.setAdapter(spinnerArray);

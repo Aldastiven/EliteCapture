@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -12,13 +13,12 @@ import android.widget.Toast;
 import com.example.eliteCapture.Config.Util.ControlViews.Cconteos;
 import com.example.eliteCapture.Config.Util.ControlViews.CconteosCheck;
 import com.example.eliteCapture.Config.Util.ControlViews.CconteosEditar;
-import com.example.eliteCapture.Config.Util.ControlViews.CdespelgableQ;
 import com.example.eliteCapture.Config.Util.ControlViews.Cdesplegable;
 import com.example.eliteCapture.Config.Util.ControlViews.CfilAuto;
 import com.example.eliteCapture.Config.Util.ControlViews.Cfiltro;
 import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
 import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
-import com.example.eliteCapture.Config.Util.Controls.AUT;
+import com.example.eliteCapture.Config.Util.Controls.AUT_DES;
 import com.example.eliteCapture.Config.Util.Controls.DPV;
 import com.example.eliteCapture.Config.Util.Controls.ETN_ETA;
 import com.example.eliteCapture.Config.Util.Controls.SCA_FIL;
@@ -85,86 +85,45 @@ public class formAdmin {
     public void CrearForm(String ubicacion) {
         try {
             linearPrinc.removeAllViews();
-            for (RespuestasTab r : contenedor.getQuestions()) {
+            for (RespuestasTab r : !ubicacion.equals("H") ? contenedor.getQuestions() : contenedor.getHeader()) {
+                View v = null;
                 switch (r.getTipo()) {
                     case "RS":
-                        linearPrinc.addView(new Cconteos(context, path, ubicacion, r, inicial).Cconteo());
+                        v = new Cconteos(context, path, ubicacion, r, inicial).Cconteo();
                         break;
                     case "RSE":
-                        linearPrinc.addView(new CconteosEditar(context, path, ubicacion, r, inicial, popregla).CconteoEditar());
+                        v = new CconteosEditar(context, path, ubicacion, r, inicial, popregla).CconteoEditar();
                         break;
                     case "RSC":
-                        linearPrinc.addView(new CconteosCheck(context, path, ubicacion, r, inicial).Cconteo());
+                        v = new CconteosCheck(context, path, ubicacion, r, inicial).Cconteo();
                         break;
                     case "RB":
-                    case "CBX":
-                        linearPrinc.addView(new CradioButton(context, path, ubicacion, r, inicial).Tradiobtn());
-                        break;
-                    case "DES":
-                        linearPrinc.addView(new CdespelgableQ(context, r, path, inicial, ubicacion, linearPrinc, contenedor).Cdesp());
+                        v = new CradioButton(context, path, ubicacion, r, inicial).Tradiobtn();
                         break;
                     case "DPV":
-                        linearPrinc.addView(new DPV(context, ubicacion, r, path, inicial).crear());
+                        v = new DPV(context, ubicacion, r, path, inicial).crear();
                         break;
                     case "ETN":
                     case "ETA":
-                        linearPrinc.addView(new ETN_ETA(context, ubicacion, r, path, inicial).crear());
+                        v = new ETN_ETA(context, ubicacion, r, path, inicial).crear();
                         break;
-                    case "SCA":
                     case "FIL":
-                        linearPrinc.addView(new SCA_FIL(context, ubicacion, r, path, inicial).crear());
+                    case "SCA":
+                        v = new SCA_FIL(context, ubicacion, r, path, inicial).crear();
                         break;
                     case "AUT":
-                        linearPrinc.addView(new AUT(context, ubicacion, r, path, inicial).crear());
+                    case "DES":
+                    case "CBX":
+                        v = new AUT_DES(context, ubicacion, r, path, inicial).crear();
                         break;
                 }
+                if(ubicacion.equals("Q") || ubicacion.equals("F")) linearPrinc.addView(v);
+                else if(ubicacion.equals("H")) linearBodypop.addView(v);
+
             }
         } catch (Exception ex) {
             Log.i("ADMIN","Error : "+ex);
         }
-    }
-
-
-    //CREA LOS CONTROLES DEL HEADER EN EL POP
-    public void CrearHeader(String ubicacion) {
-        try {
-            for (RespuestasTab r : contenedor.getHeader()) {
-
-                switch (r.getTipo()) {
-                    case "TV":
-                        Ctextview ct = new Ctextview();
-                        linearBodypop.addView(ct.textview(context, r.getId(), r.getPregunta()));
-                        break;
-                    case "ETN":
-                    case "ETA":
-                        linearBodypop.addView(new ETN_ETA(context, ubicacion, r, path, inicial).crear());
-                        break;
-                    case "CBX":
-                        linearBodypop.addView(new Cdesplegable(context, path, "H", r, inicial).desplegable());
-                        break;
-                    case "FIL":
-                        linearBodypop.addView(new Cfiltro(context, path, "H", r, inicial).filtro());
-                        break;
-                    case "SCA":
-                        linearBodypop.addView(new SCA_FIL(context, ubicacion, r, path, inicial).crear());
-                        break;
-                    case "AUT":
-                        linearBodypop.addView(new CfilAuto(context, path, "H", r, inicial).autocompletado());
-                        break;
-                    case "DPV":
-                        linearBodypop.addView(new DPV(context, ubicacion, r, path, inicial).crear());
-                        break;
-                    default:
-                        Toast.makeText(context, "ocurrio un error al crear ", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-
-            }
-        } catch (Exception exception) {
-            Toast.makeText(context, "exception en generated \n \n" + exception.toString(), Toast.LENGTH_SHORT).show();
-            Log.i("Excepcreate", exception.toString());
-        }
-
     }
 
 

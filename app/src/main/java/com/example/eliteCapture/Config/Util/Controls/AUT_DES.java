@@ -5,16 +5,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
-import com.example.eliteCapture.Model.Data.Tab.despVariedadesTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
@@ -23,7 +24,7 @@ import com.example.eliteCapture.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AUT {
+public class AUT_DES {
     Context context;
     String ubicacion, path;
     RespuestasTab rt;
@@ -34,12 +35,13 @@ public class AUT {
     textAdmin ta;
 
     TextView respuestaPonderado;
-    LinearLayout contenedorCamp, LineRespuesta;
-    AutoCompleteTextView camp;
+    LinearLayout contenedorcampAut, LineRespuesta;
+    AutoCompleteTextView campAut;
+    Spinner campSpin;
 
     iDesplegable iDesp;
 
-    public AUT(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
+    public AUT_DES(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
         this.context = context;
         this.ubicacion = ubicacion;
         this.rt = rt;
@@ -60,36 +62,52 @@ public class AUT {
     }
 
     public View crear(){
-        contenedorCamp = ca.container();
-        contenedorCamp.setOrientation(LinearLayout.VERTICAL);
-        contenedorCamp.setPadding(10, 0, 10, 0);
-        contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
+        contenedorcampAut = ca.container();
+        contenedorcampAut.setOrientation(LinearLayout.VERTICAL);
+        contenedorcampAut.setPadding(10, 0, 10, 5);
+        contenedorcampAut.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
-        contenedorCamp.addView(pintarRespuesta(rt.getRespuesta()));
-        contenedorCamp.addView(campo());
-        pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
+        contenedorcampAut.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
+        contenedorcampAut.addView(pintarRespuesta(rt.getRespuesta()));
+        contenedorcampAut.addView(camp());
+        pp.validarColorContainer(contenedorcampAut, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
-        return contenedorCamp;
+        return contenedorcampAut;
     }
 
-    public View campo(){
-        LinearLayout.LayoutParams params = ca.params();
-        params.setMargins(5,2,5,10);
+    public View camp(){
+            LinearLayout.LayoutParams params = ca.params();
+            params.setMargins(5, 2, 5, 5);
 
-        camp = (AutoCompleteTextView) pp.campoEdtable("Auto");
-        camp.setText((vacio ? rt.getCausa() : ""));
-        camp.setAdapter(getAdapter(getDesp()));
-        camp.setLayoutParams(params);
-        FunAut(camp);
-
-        return camp;
+            View v = null;
+            switch (rt.getTipo()) {
+                case "AUT":
+                    campAut = (AutoCompleteTextView) pp.campoEdtable("Auto");
+                    campAut.setText((vacio ? rt.getCausa() : ""));
+                    campAut.setAdapter(getAdapter(getDesp()));
+                    campAut.setLayoutParams(params);
+                    FunAut(campAut);
+                    v = campAut;
+                    break;
+                case "DES":
+                case "CBX":
+                    campSpin = new Spinner(context);
+                    campSpin.setAdapter(getAdapter(getDesp()));
+                    campSpin.setSelection((vacio ? getDesp().indexOf(rt.getCausa()) : 0));
+                    campSpin.setLayoutParams(params);
+                    campSpin.setBackgroundResource(R.drawable.myspinner);
+                    FunsDesp(campSpin);
+                    v = campSpin;
+                    break;
+            }
+            return v;
     }
 
     public List<String> getDesp(){
         try {
             List<String> Loptions = new ArrayList<>();
             iDesp.nombre = rt.getDesplegable();
+            if(rt.getTipo().equals("DES") || rt.getTipo().equals("CBX")) Loptions.add("Selecciona");
             for (DesplegableTab desp : iDesp.all()) {
                 Loptions.add(desp.getOpcion());
             }
@@ -101,7 +119,8 @@ public class AUT {
     }
 
     public ArrayAdapter<String> getAdapter(List<String> listaCargada){
-        ArrayAdapter<String> autoArray = new ArrayAdapter<>(context, R.layout.spinner_item_personal, listaCargada);
+        int resource = rt.getTipo().equals("DES")  || rt.getTipo().equals("CBX") ? R.layout.items_des : R.layout.items_aut;
+        ArrayAdapter<String> autoArray = new ArrayAdapter<>(context,resource , listaCargada);
         return autoArray;
     }
 
@@ -111,11 +130,27 @@ public class AUT {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override public void afterTextChanged(Editable s) {
 
-                DesplegableTab dt = filtroDesplegable(camp.getText().toString());
+                DesplegableTab dt = filtroDesplegable(campAut.getText().toString());
                 registro(dt != null ? dt.getCodigo() : null, dt != null ? String.valueOf(rt.getPonderado()) : null, dt != null ? dt.getOpcion() + "" : null);
                 respuestaPonderado.setText(dt != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
-                contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
+                contenedorcampAut.setBackgroundResource(R.drawable.bordercontainer);
                 pintarRespuesta(dt != null ? dt.getCodigo() : null);
+            }
+        });
+    }
+
+    public void FunsDesp(final Spinner spn) {
+        spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                DesplegableTab dt = filtroDesplegable(spn.getItemAtPosition(position).toString());
+                registro(dt != null ? dt.getCodigo() : null, dt != null ? String.valueOf(rt.getPonderado()) : null, dt != null ? dt.getOpcion() + "" : null);
+                respuestaPonderado.setText(dt != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
+                pintarRespuesta(dt != null ? dt.getCodigo() : null);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
@@ -140,7 +175,9 @@ public class AUT {
         if (causa != null) {
             if (!causa.isEmpty())
                 LineRespuesta.addView(ta.textColor(causa, "verde", 15, "l"));
+                contenedorcampAut.setBackgroundResource(causa != null ? R.drawable.bordercontainer : R.drawable.bordercontainerred);
         }
+
         return LineRespuesta;
     }
 }

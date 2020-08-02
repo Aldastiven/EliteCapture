@@ -3,7 +3,6 @@ package com.example.eliteCapture.Config.Util.ControlViews;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,7 +18,6 @@ import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Cdesplegable {
     private Context context;
@@ -66,7 +64,7 @@ public class Cdesplegable {
         //este es el desplegable
         ArrayList soloOpciones = soloOpciones(rt.getDesplegable());
 
-        ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.spinner_item_personal, soloOpciones);
+        ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(context, R.layout.items_aut, soloOpciones);
         final Spinner spinner = new Spinner(context);
         spinner.setId(rt.getId().intValue());
         spinner.setAdapter(spinnerArray);

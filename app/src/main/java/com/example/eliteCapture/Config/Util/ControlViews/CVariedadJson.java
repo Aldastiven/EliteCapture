@@ -7,17 +7,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.Tab.despVariedadesTab;
-import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.Data.idespVariedades;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
@@ -145,7 +141,7 @@ public class CVariedadJson {
     }
 
     private View CdesplegProducto(LinearLayout.LayoutParams llparamsText) {
-        ArrayAdapter<String> autoArray = new ArrayAdapter<>(c, R.layout.spinner_item_personal, getProducto());
+        ArrayAdapter<String> autoArray = new ArrayAdapter<>(c, R.layout.items_aut, getProducto());
         AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(c);
 
         autoCompleteTextView.setAdapter(autoArray);
@@ -168,7 +164,7 @@ public class CVariedadJson {
         LinearLayout.LayoutParams llparamsText = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         llparamsText.weight = (float) 2.3;
 
-        ArrayAdapter<String> autoArray = new ArrayAdapter<String>(c, R.layout.spinner_item_personal, getVariedad());
+        ArrayAdapter<String> autoArray = new ArrayAdapter<String>(c, R.layout.items_aut, getVariedad());
         AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(c);
 
         autoCompleteTextView.setAdapter(autoArray);
