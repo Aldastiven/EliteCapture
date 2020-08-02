@@ -1,157 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".genated"
-    android:weightSum="10"
-    android:orientation="vertical"
-    android:windowSoftInputMode="adjustPan"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/EncabTitulo"
-            android:layout_width="0sp"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:textAlignment="gravity"
-            android:gravity="center_horizontal"
-            android:layout_weight="1.5"
-            android:background="@color/negro"/>
-
-        <TextView
-            android:id="@+id/contcc"
-            android:layout_weight="0.5"
-            android:layout_width="0sp"
-            android:layout_height="match_parent"
-            android:textSize="15sp"
-            android:textColor="#ffffff"
-            android:text=""
-            android:textAlignment="center"
-            android:textStyle="bold"
-            android:background="@color/negro"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:paddingHorizontal="10sp"
-        android:background="@color/negro"
-        android:paddingBottom="2sp"
-        android:weightSum="2"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_weight="1"
-            android:id="@+id/devolverform"
-            android:layout_width="0sp"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:text="Volver"
-            android:background="@color/negro"
-            android:paddingHorizontal="10sp"
-            android:onClick="onBackPressedform"
-            android:layout_margin="2sp"
-            android:paddingVertical="10sp"
-            android:textAllCaps="false"
-            android:drawableStart="@drawable/ic_row_back"
-            android:textAlignment="center"/>
-
-        <TextView
-            android:layout_weight="1"
-            android:id="@+id/editarEncab"
-            android:layout_width="0sp"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:text="Editar encabezado"
-            android:background="@color/negro"
-            android:paddingHorizontal="10sp"
-            android:onClick="Showpop"
-            android:layout_margin="2sp"
-            android:paddingVertical="10sp"
-            android:textAllCaps="false"
-            android:drawableStart="@drawable/ic_edit"
-            android:textAlignment="center"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_weight="9.3"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:background="#E5E7E9">
-
-        <ScrollView
-            android:id="@+id/scrollForm"
+        <!-- Header aligned to top -->
+        <LinearLayout
+            android:id="@+id/layoutTitulo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/EncabTitulo"
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:background="@color/negro"
+                android:gravity="center_horizontal"
+                android:textAlignment="gravity"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/contcc"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@color/negro"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutTitulo"
+            android:gravity="right">
 
             <LinearLayout
-                android:id="@+id/LinearCheck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingTop="5sp"
-                android:paddingHorizontal="11sp">
+                android:background="@color/negro"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10sp"
+                android:paddingBottom="2sp"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/devolverform"
+                    android:layout_width="0sp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2sp"
+                    android:layout_weight="1"
+                    android:background="@color/negro"
+                    android:drawableStart="@drawable/ic_row_back"
+                    android:onClick="onBackPressedform"
+                    android:paddingHorizontal="10sp"
+                    android:paddingVertical="10sp"
+                    android:text="Volver"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/editarEncab"
+                    android:layout_width="0sp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2sp"
+                    android:layout_weight="1"
+                    android:background="@color/negro"
+                    android:drawableStart="@drawable/ic_edit"
+                    android:onClick="Showpop"
+                    android:paddingHorizontal="10sp"
+                    android:paddingVertical="10sp"
+                    android:text="Editar encabezado"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- Content below header and above footer -->
+        <RelativeLayout
+            android:id="@+id/content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@id/footer"
+            android:layout_below="@id/header"
+            android:background="#ffffff"
+            android:gravity="center">
+
+            <LinearLayout
+                android:id="@+id/layoutQuestionDinamic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#E5E7E9"
+                android:orientation="vertical">
+
+                <ScrollView
+                    android:id="@+id/scrollForm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/LinearCheck"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="11sp"
+                        android:paddingTop="5sp">
+
+                    </LinearLayout>
+
+                </ScrollView>
 
             </LinearLayout>
 
-        </ScrollView>
+        </RelativeLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="0.7"
-        android:background="@color/negro"
-        android:weightSum="2"
-        android:orientation="horizontal"
-        android:paddingHorizontal="4sp">
-
-        <TextView
-            android:id="@+id/btnEnvioGuardar"
-            android:layout_weight="1"
-            android:layout_width="0sp"
-            android:layout_height="match_parent"
+        <!-- Footer aligned to bottom -->
+        <RelativeLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:background="@color/negro"
-            android:layout_marginHorizontal="2sp"
-            android:textStyle="bold"
-            android:textColor="#ffffff"
-            android:onClick="UpData"
-            android:gravity="center"
-            android:textSize="18dp"
-            android:paddingHorizontal="30dp"/>
+            android:layout_alignParentBottom="true"
+            android:fitsSystemWindows="false">
 
-        <TextView
-            android:id="@+id/btnCalificar"
-            android:layout_weight="1"
-            android:layout_width="0sp"
-            android:layout_height="match_parent"
-            android:background="@color/negro"
-            android:layout_margin="2sp"
-            android:text="calificar"
-            android:textStyle="bold"
-            android:textColor="#F1C40F"
-            android:onClick="onCalificar"
-            android:gravity="center"
-            android:textSize="18dp"
-            android:paddingHorizontal="30dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/btnEnvioGuardar"
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="2sp"
+                    android:layout_weight="1"
+                    android:background="@color/negro"
+                    android:gravity="center"
+                    android:onClick="UpData"
+                    android:paddingHorizontal="30dp"
+                    android:paddingVertical="15dp"
+                    android:textColor="#ffffff"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
-</LinearLayout>
+                <TextView
+                    android:id="@+id/btnCalificar"
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="2sp"
+                    android:layout_weight="1"
+                    android:background="@color/negro"
+                    android:gravity="center"
+                    android:onClick="onCalificar"
+                    android:paddingHorizontal="30dp"
+                    android:text="calificar"
+                    android:textColor="#F1C40F"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+
+</RelativeLayout>
 

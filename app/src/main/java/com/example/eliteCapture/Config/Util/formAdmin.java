@@ -9,7 +9,6 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.eliteCapture.Config.Util.ControlViews.CVariedadJson;
 import com.example.eliteCapture.Config.Util.ControlViews.Cconteos;
 import com.example.eliteCapture.Config.Util.ControlViews.CconteosCheck;
 import com.example.eliteCapture.Config.Util.ControlViews.CconteosEditar;
@@ -18,11 +17,11 @@ import com.example.eliteCapture.Config.Util.ControlViews.Cdesplegable;
 import com.example.eliteCapture.Config.Util.ControlViews.CfilAuto;
 import com.example.eliteCapture.Config.Util.ControlViews.Cfiltro;
 import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
-import com.example.eliteCapture.Config.Util.ControlViews.Cscanner;
 import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
+import com.example.eliteCapture.Config.Util.Controls.AUT;
 import com.example.eliteCapture.Config.Util.Controls.DPV;
 import com.example.eliteCapture.Config.Util.Controls.ETN_ETA;
-import com.example.eliteCapture.Config.Util.Controls.SCA;
+import com.example.eliteCapture.Config.Util.Controls.SCA_FIL;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -113,7 +112,10 @@ public class formAdmin {
                         break;
                     case "SCA":
                     case "FIL":
-                        linearPrinc.addView(new SCA(context, ubicacion, r, path, inicial).crear());
+                        linearPrinc.addView(new SCA_FIL(context, ubicacion, r, path, inicial).crear());
+                        break;
+                    case "AUT":
+                        linearPrinc.addView(new AUT(context, ubicacion, r, path, inicial).crear());
                         break;
                 }
             }
@@ -144,7 +146,7 @@ public class formAdmin {
                         linearBodypop.addView(new Cfiltro(context, path, "H", r, inicial).filtro());
                         break;
                     case "SCA":
-                        linearBodypop.addView(new SCA(context, ubicacion, r, path, inicial).crear());
+                        linearBodypop.addView(new SCA_FIL(context, ubicacion, r, path, inicial).crear());
                         break;
                     case "AUT":
                         linearBodypop.addView(new CfilAuto(context, path, "H", r, inicial).autocompletado());

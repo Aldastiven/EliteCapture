@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowId;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -58,10 +60,10 @@ import static java.lang.String.valueOf;
 
 public class genated extends AppCompatActivity {
 
-    TextView EncabTitulo, contcc, scrollcomplete, txtCalificacion, btnEnvioGuardar, btnCalificar;
+    TextView EncabTitulo, contcc, scrollcomplete, txtCalificacion, btnEnvioGuardar, btnCalificar, itemsLayout;
     LinearLayout linearBodypop, linearPrinc;
     ScrollView scrollForm, scrollCalificacion;
-    Dialog mypop, popcalificacion, popvalidar, popregla;
+    Dialog mypop, popcalificacion, popvalidar, popregla, itemLayout;
     Button popSi, popNo;
 
     ProcesoTab pro = null;
@@ -85,7 +87,6 @@ public class genated extends AppCompatActivity {
         setContentView(R.layout.activity_genated);
         getSupportActionBar().hide();
 
-
         sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
 
         try {
@@ -95,6 +96,7 @@ public class genated extends AppCompatActivity {
             popcalificacion = new Dialog(this);
             popvalidar = new Dialog(this);
             popregla = new Dialog(this);
+            itemLayout = new Dialog(this);
 
             insView(); //instancia los elementos del layout
 
@@ -205,6 +207,7 @@ public class genated extends AppCompatActivity {
         txtCalificacion = popcalificacion.findViewById(R.id.txtCalificacion);
         btnEnvioGuardar = findViewById(R.id.btnEnvioGuardar);
         btnCalificar = findViewById(R.id.btnCalificar);
+
 
         popvalidar.setCancelable(false);
         mypop.setCancelable(false);

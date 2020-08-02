@@ -23,7 +23,7 @@ import com.example.eliteCapture.R;
 
 import java.io.Serializable;
 
-public class SCA implements Serializable{
+public class SCA_FIL implements Serializable{
 
     Context context;
     RespuestasTab  rt;
@@ -42,7 +42,7 @@ public class SCA implements Serializable{
     String rta = "";
     String causa = "";
 
-    public SCA(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
+    public SCA_FIL(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
         this.context = context;
         this.rt = rt;
         this.ubicacion = ubicacion;

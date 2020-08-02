@@ -154,10 +154,12 @@ public class preguntaPonderado {
     public DesplegableTab busqueda(String data){
         try {
             iDesp.nombre = rt.getDesplegable();
-
             DesplegableTab d = null;
             for (DesplegableTab desp : iDesp.all()) {
                 if (desp.getCodigo().equals(data)) {
+                    d = desp;
+                    break;
+                }else if(desp.getOpcion().equals(data)) {
                     d = desp;
                     break;
                 }
