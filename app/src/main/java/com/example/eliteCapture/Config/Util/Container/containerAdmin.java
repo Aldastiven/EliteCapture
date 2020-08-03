@@ -14,25 +14,12 @@ public class containerAdmin {
         this.c = c;
     }
 
-    public LinearLayout containerV(View v[]){
-        LinearLayout c = container();
-        c.setOrientation(LinearLayout.VERTICAL);
-
-        if(v.length == 2){
-            c.addView(v[0]);
-            c.addView(v[1]);
-        }else if(v.length == 1){
-            c.addView(v[0]);
-        }
-        return c;
-    }
-
     public LinearLayout container(){
         LinearLayout.LayoutParams lcontainer = new LinearLayout.LayoutParams(
                                                 LinearLayout.LayoutParams.MATCH_PARENT,
                                                 LinearLayout.LayoutParams.WRAP_CONTENT
                                                 );
-        lcontainer.setMargins(1, 5, 1, 10);
+        lcontainer.setMargins(1, 5, 1, 5);
 
         LinearLayout container = new LinearLayout(c);
         container.setOrientation(LinearLayout.VERTICAL);

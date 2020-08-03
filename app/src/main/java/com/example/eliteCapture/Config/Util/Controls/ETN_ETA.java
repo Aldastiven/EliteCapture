@@ -2,8 +2,6 @@ package com.example.eliteCapture.Config.Util.Controls;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -12,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
@@ -30,7 +27,7 @@ public class ETN_ETA {
     EditText camp;
     LinearLayout contenedorCamp;
     containerAdmin ca;
-    preguntaPonderado pp;
+    GIDGET pp;
 
     public ETN_ETA(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {//CONSTRUCTOR
         this.context = context;
@@ -41,7 +38,7 @@ public class ETN_ETA {
         this.initial = initial;
 
         ca = new containerAdmin(context);
-        pp = new preguntaPonderado(context, ubicacion, rt, path);
+        pp = new GIDGET(context, ubicacion, rt, path);
 
         respuestaPonderado = (TextView) pp.resultadoPonderado();
         respuestaPonderado.setText(vacio ? "Resultado : "+rt.getPonderado() : "Resultado :");
@@ -61,7 +58,7 @@ public class ETN_ETA {
     }
 
     public EditText campo(){//CAMPO DE USUARIO
-        camp = (EditText) pp.campoEdtable("Edit");
+        camp = (EditText) pp.campoEdtable("Edit", "grisClear");
 
         LinearLayout.LayoutParams llparams = ca.params();
         llparams.weight = 1;

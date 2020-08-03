@@ -25,7 +25,7 @@ import com.example.eliteCapture.R;
 
 import static com.example.eliteCapture.R.drawable.*;
 
-public class preguntaPonderado {
+public class GIDGET {
 
     Context context;
     String ubicacion, path;
@@ -35,7 +35,7 @@ public class preguntaPonderado {
     containerAdmin ca;
     iDesplegable iDesp;
 
-    public preguntaPonderado(Context context, String ubicacion, RespuestasTab rt, String path) {
+    public GIDGET(Context context, String ubicacion, RespuestasTab rt, String path) {
         this.context = context;
         this.ubicacion = ubicacion;
         this.rt = rt;
@@ -117,7 +117,7 @@ public class preguntaPonderado {
         }
     }
 
-    public View campoEdtable(String tipo){
+    public View campoEdtable(String tipo, String color){
         View v = null;
         switch (tipo){
             case "Edit":
@@ -134,21 +134,54 @@ public class preguntaPonderado {
                 auto.setSingleLine(true);
                 v =  auto;
                 break;
+            case "TextView":
+                TextView textV = new TextView(context);
+                textV.setTextColor(Color.parseColor("#515A5A"));
+                textV.setTypeface(null, Typeface.BOLD);
+                textV.setSingleLine(true);
+                textV.setGravity(Gravity.CENTER);
+                v =  textV;
+                break;
         }
         v.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        v.setBackgroundColor(Color.parseColor("#eeeeee"));
+        v.setBackgroundColor(colorBack(color));
         return v;
     }
 
-    public View boton(String nombre){
+    public View boton(String nombre, String color){
         Button btn = new Button(context);
-        btn.setBackgroundColor(Color.parseColor("#2ECC71"));
+        btn.setBackgroundColor(colorBack(color));
         btn.setText(nombre);
         btn.setTextColor(Color.WHITE);
-        btn.setAllCaps(false);
         btn.setTypeface(null, Typeface.BOLD);
+        btn.setAllCaps(false);
 
         return btn;
+    }
+
+    public int colorBack(String color){
+        int C = 0;
+        switch (color){
+            case "verde":
+                C = Color.parseColor("#2ecc71");
+                break;
+            case "gris":
+                C = Color.parseColor("#85929E");
+                break;
+            case "negro":
+                C = Color.parseColor("#17202A");
+                break;
+            case "rojo":
+                C = Color.parseColor("#E74C3C");
+                break;
+            case "darkGray":
+                C = Color.parseColor("#154360");
+                break;
+            case "grisClear":
+                C = Color.parseColor("#eeeeee");
+                break;
+        }
+        return C;
     }
 
     public DesplegableTab busqueda(String data){

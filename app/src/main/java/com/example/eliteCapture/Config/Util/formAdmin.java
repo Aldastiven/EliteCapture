@@ -21,6 +21,8 @@ import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
 import com.example.eliteCapture.Config.Util.Controls.AUT_DES;
 import com.example.eliteCapture.Config.Util.Controls.DPV;
 import com.example.eliteCapture.Config.Util.Controls.ETN_ETA;
+import com.example.eliteCapture.Config.Util.Controls.RB_CBX;
+import com.example.eliteCapture.Config.Util.Controls.RS_RSE_RSC;
 import com.example.eliteCapture.Config.Util.Controls.SCA_FIL;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
@@ -81,6 +83,10 @@ public class formAdmin {
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
+    //v = new CconteosCheck(context, path, ubicacion, r, inicial).Cconteo();
+    //v = new CconteosEditar(context, path, ubicacion, r, inicial, popregla).CconteoEditar();
+    //v = new Cconteos(context, path, ubicacion, r, inicial).Cconteo();
+
     //CREA CONTROLES DEL FORMULARIO
     public void CrearForm(String ubicacion) {
         try {
@@ -88,17 +94,9 @@ public class formAdmin {
             for (RespuestasTab r : !ubicacion.equals("H") ? contenedor.getQuestions() : contenedor.getHeader()) {
                 View v = null;
                 switch (r.getTipo()) {
-                    case "RS":
-                        v = new Cconteos(context, path, ubicacion, r, inicial).Cconteo();
-                        break;
-                    case "RSE":
-                        v = new CconteosEditar(context, path, ubicacion, r, inicial, popregla).CconteoEditar();
-                        break;
-                    case "RSC":
-                        v = new CconteosCheck(context, path, ubicacion, r, inicial).Cconteo();
-                        break;
                     case "RB":
-                        v = new CradioButton(context, path, ubicacion, r, inicial).Tradiobtn();
+                    case "CBX":
+                        v = new RB_CBX(context, ubicacion, r, path, inicial).crear();
                         break;
                     case "DPV":
                         v = new DPV(context, ubicacion, r, path, inicial).crear();
@@ -113,8 +111,12 @@ public class formAdmin {
                         break;
                     case "AUT":
                     case "DES":
-                    case "CBX":
                         v = new AUT_DES(context, ubicacion, r, path, inicial).crear();
+                        break;
+                    case "RS":
+                    case "RSE":
+                    case "RSC":
+                        v = new RS_RSE_RSC(context, ubicacion, r, path, inicial).crear();
                         break;
                 }
                 if(ubicacion.equals("Q") || ubicacion.equals("F")) linearPrinc.addView(v);

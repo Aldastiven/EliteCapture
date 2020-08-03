@@ -34,7 +34,7 @@ public class SCA_FIL implements Serializable{
     TextView respuestaPonderado;
     LinearLayout contenedorCamp, LineRespuesta;
     containerAdmin ca;
-    preguntaPonderado pp;
+    GIDGET pp;
     textAdmin ta;
 
     SharedPreferences sp;
@@ -53,7 +53,7 @@ public class SCA_FIL implements Serializable{
         sp = context.getSharedPreferences("shareResultados", context.MODE_PRIVATE);
 
         ca = new containerAdmin(context);
-        pp = new preguntaPonderado(context, ubicacion, rt, path);
+        pp = new GIDGET(context, ubicacion, rt, path);
         ta = new textAdmin(context);
 
         LineRespuesta = (LinearLayout) pp.resultadoFiltro();
@@ -88,7 +88,7 @@ public class SCA_FIL implements Serializable{
     }
 
     public View campo(){
-        camp = (EditText) pp.campoEdtable("Edit");
+        camp = (EditText) pp.campoEdtable("Edit", "grisClear");
         camp.setText((vacio ? rt.getRespuesta() : ""));
         camp.setLayoutParams(params((float) 0.5));
 
@@ -109,11 +109,11 @@ public class SCA_FIL implements Serializable{
         Button btn = null;
         switch (rt.getTipo()){
             case "SCA" :
-                btn = (Button) pp.boton("scanner");
+                btn = (Button) pp.boton("scanner", "verde");
                 BtnStarCamera(btn);
                 break;
             case "FIL" :
-                btn = (Button) pp.boton("buscar");
+                btn = (Button) pp.boton("buscar", "verde");
                 BtnBuscar(btn);
                 break;
         }

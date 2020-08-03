@@ -2,23 +2,19 @@ package com.example.eliteCapture;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.eliteCapture.Config.Util.ControlViews.Cconteos;
 import com.example.eliteCapture.Config.Util.ControlViews.Cscanner;
-import com.example.eliteCapture.Config.Util.Controls.preguntaPonderado;
+import com.example.eliteCapture.Config.Util.Controls.GIDGET;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
@@ -29,7 +25,7 @@ public class Camera extends AppCompatActivity implements Serializable {
 
     int id, regla;
     String ubicacion, path, desplegable;
-    preguntaPonderado pp;
+    GIDGET pp;
     RespuestasTab rt;
 
     SharedPreferences sp;
@@ -48,7 +44,7 @@ public class Camera extends AppCompatActivity implements Serializable {
         this.regla = rt.getReglas();
         this.desplegable = rt.getDesplegable() != null ? rt.getDesplegable() : "";
 
-        pp = new preguntaPonderado(this,ubicacion,rt,path);
+        pp = new GIDGET(this,ubicacion,rt,path);
 
         vbc = new ZBarScannerView(this);
         vbc.setResultHandler(new Camera.barcodeimp());

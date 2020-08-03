@@ -31,7 +31,7 @@ public class AUT_DES {
     boolean vacio, initial;
 
     containerAdmin ca;
-    preguntaPonderado pp;
+    GIDGET pp;
     textAdmin ta;
 
     TextView respuestaPonderado;
@@ -50,7 +50,7 @@ public class AUT_DES {
         this.vacio = rt.getRespuesta() != null;
 
         ca = new containerAdmin(context);
-        pp = new preguntaPonderado(context, ubicacion, rt, path);
+        pp = new GIDGET(context, ubicacion, rt, path);
         ta = new textAdmin(context);
 
         iDesp = new iDesplegable(null, path);
@@ -82,24 +82,22 @@ public class AUT_DES {
             View v = null;
             switch (rt.getTipo()) {
                 case "AUT":
-                    campAut = (AutoCompleteTextView) pp.campoEdtable("Auto");
+                    campAut = (AutoCompleteTextView) pp.campoEdtable("Auto", "grisClear");
                     campAut.setText((vacio ? rt.getCausa() : ""));
                     campAut.setAdapter(getAdapter(getDesp()));
-                    campAut.setLayoutParams(params);
                     FunAut(campAut);
                     v = campAut;
                     break;
                 case "DES":
-                case "CBX":
                     campSpin = new Spinner(context);
                     campSpin.setAdapter(getAdapter(getDesp()));
                     campSpin.setSelection((vacio ? getDesp().indexOf(rt.getCausa()) : 0));
-                    campSpin.setLayoutParams(params);
                     campSpin.setBackgroundResource(R.drawable.myspinner);
                     FunsDesp(campSpin);
                     v = campSpin;
                     break;
             }
+            v.setLayoutParams(params);
             return v;
     }
 
@@ -107,7 +105,7 @@ public class AUT_DES {
         try {
             List<String> Loptions = new ArrayList<>();
             iDesp.nombre = rt.getDesplegable();
-            if(rt.getTipo().equals("DES") || rt.getTipo().equals("CBX")) Loptions.add("Selecciona");
+            if(rt.getTipo().equals("DES")) Loptions.add("Selecciona");
             for (DesplegableTab desp : iDesp.all()) {
                 Loptions.add(desp.getOpcion());
             }
@@ -119,7 +117,7 @@ public class AUT_DES {
     }
 
     public ArrayAdapter<String> getAdapter(List<String> listaCargada){
-        int resource = rt.getTipo().equals("DES")  || rt.getTipo().equals("CBX") ? R.layout.items_des : R.layout.items_aut;
+        int resource = rt.getTipo().equals("DES") ? R.layout.items_des : R.layout.items_aut;
         ArrayAdapter<String> autoArray = new ArrayAdapter<>(context,resource , listaCargada);
         return autoArray;
     }

@@ -31,7 +31,7 @@ public class DPV {
     boolean vacio, initial;
 
     containerAdmin ca;
-    preguntaPonderado pp;
+    GIDGET pp;
     textAdmin ta;
 
     idespVariedades idv;
@@ -50,7 +50,7 @@ public class DPV {
         this.pregunta2 = "Variedad";
 
         ca = new containerAdmin(context);
-        pp = new preguntaPonderado(context, ubicacion, rt, path);
+        pp = new GIDGET(context, ubicacion, rt, path);
         ta = new textAdmin(context);
 
         idv = new idespVariedades(path, null);
@@ -74,7 +74,7 @@ public class DPV {
     }
 
     public View campo1(){
-        camp1 = (AutoCompleteTextView) pp.campoEdtable("Auto");
+        camp1 = (AutoCompleteTextView) pp.campoEdtable("Auto", "grisClear");
         camp1.setText((vacio ? rt.getCausa() : ""));
         camp1.setAdapter(getAdapter(getProducto()));
         FunAut(camp1, 1);
@@ -96,7 +96,7 @@ public class DPV {
             lineVariedad = new LinearLayout(context);
             lineVariedad.setOrientation(LinearLayout.VERTICAL);
 
-            AutoCompleteTextView camp2 = (AutoCompleteTextView) pp.campoEdtable("Auto");
+            AutoCompleteTextView camp2 = (AutoCompleteTextView) pp.campoEdtable("Auto", "grisClear");
             camp2.setText((vacio ? rt.getRespuesta() : ""));
             camp2.setAdapter(getAdapter(getVariedad()));
             FunAut(camp2, 2);
