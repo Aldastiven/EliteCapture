@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.core.widget.CompoundButtonCompat;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
+import com.example.eliteCapture.Config.Util.Modal.modal_editar_regla_conteo;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
@@ -51,7 +52,9 @@ public class RS_RSE_RSC {
     String ubicacion, path, valor = "", rta = "", causa = "";
     boolean vacio, initial;
     List<String> checkList = new ArrayList<>();
-    int n;
+    int n, regla;
+
+    modal_editar_regla_conteo modalEditarRegla;
 
     public RS_RSE_RSC(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
         this.context = context;
@@ -63,7 +66,10 @@ public class RS_RSE_RSC {
         this.valor = rt.getValor();
         this.rta = rt.getRespuesta();
         this.causa = rt.getCausa();
-        this.n = rta != null ? Integer.parseInt(rta) : 0;
+        this.n = rta != null ? Integer.parseInt(rta) : -1;
+        this.regla = rt.getReglas();
+
+        Log.i("VACIOS",""+vacio);
 
         iDesp = new iDesplegable(null, path);
 
@@ -76,6 +82,7 @@ public class RS_RSE_RSC {
 
         noti = new LinearLayout(context);
         noti.setOrientation(LinearLayout.VERTICAL);
+
 
     }
 
@@ -97,9 +104,11 @@ public class RS_RSE_RSC {
         line.setOrientation(LinearLayout.VERTICAL);
         if(rt.getTipo().equals("RSC")) line.addView(multiSelect());
         if(rt.getTipo().equals("RS") && rt.getDesplegable() != null) line.addView(despSelect());
-        if(rt.getReglas() == 0) line.addView(ta.textColor("No hay asignado limite de conteo (REGLA)","rojo",15,"l"));
+        if(regla == 0) line.addView(ta.textColor("No hay asignado limite de conteo (REGLA)","rojo",15,"l"));
         line.addView(noti);
         line.addView(conteos());
+
+        modalEditarRegla = new modal_editar_regla_conteo(context, path, regla, n, ubicacion, rt, campConteo, respuestaPonderado, pp);
         return line;
     }
 
@@ -112,7 +121,7 @@ public class RS_RSE_RSC {
 
         campConteo = (TextView) pp.campoEdtable("TextView", "grisClear");
         campConteo.setLayoutParams(params( rt.getTipo().equals("RSE") ? (float) 0.7 : (float) 1));
-        campConteo.setText(rt.getRespuesta() != null  ? rt.getRespuesta() : "");
+        campConteo.setText(vacio ? rt.getRespuesta() : "");
         campConteo.setTextSize(25);
 
         TextView btnRes = (Button) pp.boton("-", "rojo");
@@ -141,19 +150,19 @@ public class RS_RSE_RSC {
                         rta = n+"";
                         campConteo.setText(n+"");
                         valor = valor(n);
-
+                        contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
                     }else{
                         n = causa.isEmpty() ? -1 : contar(tipo);
                         rta = causa.isEmpty() ? null : n+"";
                         campConteo.setText(causa.isEmpty() ? "" : n+"");
                         valor = causa.isEmpty() ? "" : valor(n);
+                        if(!causa.isEmpty()) contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
 
                         if(causa.isEmpty() && noti.getChildCount() < 1) {
                             noti.addView(ta.textColor("!Debes seleccionar al menos una opción¡", "rojo", 15, "l"));
                             temporizador(5000);
                         }
                     }
-
                     respuestaPonderado.setText(valor.equals("-1") ? "Resultado : N/A" : "Resultado : "+valor);
                     registro(rta, valor, causa);
                 }catch (Exception e){
@@ -164,7 +173,7 @@ public class RS_RSE_RSC {
     }
     public int contar(String tipo){
         if(tipo.equals("s")) {
-            if (n < rt.getReglas()) n++;
+            if (n < modalEditarRegla.getRegla()) n++;
         }else{
             if (n >= 0) n--;
         }
@@ -176,7 +185,7 @@ public class RS_RSE_RSC {
             separator.setDecimalSeparator('.');
 
             DecimalFormat decimalFormat = new DecimalFormat("#.##",separator);
-            float operacion = Float.parseFloat((rta < 0) ? "-1" : String.valueOf((rt.getPonderado() / rt.getReglas()) * (rt.getReglas() - rta)));
+            float operacion = Float.parseFloat((rta < 0) ? "-1" : String.valueOf((rt.getPonderado() / modalEditarRegla.getRegla()) * (modalEditarRegla.getRegla() - rta)));
 
             return ""+decimalFormat.format(operacion);
         }catch (Exception ex){
@@ -188,9 +197,10 @@ public class RS_RSE_RSC {
 
     //CONTROL Y FUNCION DE RS CON DESPLEGABLE
     public Spinner despSelect(){
+
         Spinner campSpin = new Spinner(context);
         campSpin.setAdapter(getAdapter(getDesp()));
-        campSpin.setSelection((rt.getCausa() != null ? getDesp().indexOf(rt.getCausa()) : 0));
+        campSpin.setSelection(vacio ? getDesp().indexOf(rt.getCausa()) : 0);
         campSpin.setBackgroundResource(R.drawable.myspinner);
 
         Funspinner(campSpin);
@@ -237,6 +247,17 @@ public class RS_RSE_RSC {
         btnRegla.setPadding(10, 10, 10, 10);
         btnRegla.setLayoutParams(params((float) 0.9));
 
+        btnRegla.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    modalEditarRegla.showModal();
+                }catch (Exception e){
+                    Toast.makeText(context, ""+e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         return btnRegla;
     }
 
@@ -275,7 +296,7 @@ public class RS_RSE_RSC {
                 CheckBox cB = new CheckBox(context);
                 cB.setText(desp.getOpcion());
                 cB.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                if(rt.getCausa() != null)recorrerSeleccion(cB);
+                if(rt.getCausa() != null && vacio)recorrerSeleccion(cB);
 
                 int states[][] = {{android.R.attr.state_checked}, {}};
                 int colors[] = {Color.rgb(88, 214, 141),

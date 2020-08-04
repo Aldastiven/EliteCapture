@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -36,6 +37,8 @@ public class ETN_ETA {
         this.path = path;
         this.vacio = rt.getRespuesta() != null;
         this.initial = initial;
+
+        Log.i("VACIOS",""+vacio);
 
         ca = new containerAdmin(context);
         pp = new GIDGET(context, ubicacion, rt, path);
