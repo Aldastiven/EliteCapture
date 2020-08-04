@@ -1,5 +1,7 @@
 package com.example.eliteCapture.Model.Data;
 
+import android.util.Log;
+
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.Data.Interfaz.Detalle;
 import com.example.eliteCapture.Model.Data.Tab.DetalleTab;
@@ -37,7 +39,7 @@ public class iDetalle implements Detalle {
 			"      ,[reglas]\n" +
 			"      ,[tip]\n" +
 			"  FROM [Formularios].[dbo].[Procesos_Detalle]\n" +
-			"  ORDER BY [id_proceso], [capitulo] , [item]";
+			"  ORDER BY [codigo_detalle], [id_proceso], [capitulo] , [item]";
 
 
 	public iDetalle(Connection cn, String path) throws Exception {
@@ -111,6 +113,7 @@ public class iDetalle implements Detalle {
 	}
 
 	private DetalleTab gift(ResultSet rs) throws Exception {
+		Log.i("REGLA",rs.getInt("reglas")+"");
 		return new DetalleTab(
 				rs.getLong("id_detalle"),
 				rs.getInt("id_proceso"),

@@ -33,12 +33,10 @@ import static com.example.eliteCapture.R.drawable.*;
 public class Login extends AppCompatActivity {
     SharedPreferences sp;
 
-    public String path = null, datacheck;
+    public String path = null;
     EditText txtUser, txtPass;
-    LinearLayout linearBox;
     TextView txtError, floatingServer;
-    CheckBox checkusu;
-    ImageView imgOnline, logo_port;
+    ImageView imgOnline;
     iContenedor icont;
 
 
@@ -58,19 +56,13 @@ public class Login extends AppCompatActivity {
 
             txtUser = findViewById(id.txtUser);
             txtPass = findViewById(id.txtPass);
-            //linearBox = findViewById(id.linearBox);
-            //txtError = findViewById(id.txtError);
-            //checkusu = findViewById(id.guardarUsuario);
             imgOnline = findViewById(id.imgOnline);
             floatingServer = findViewById(id.floatingServer);
 
             iUsuario iU = new iUsuario(null, path);
             iU.nombre = "Usuarios";
 
-            //checkusu.setChecked(false);
-
             recibirUsuario();
-            //PintarCheck();
 
             icont = new iContenedor(path);
 
@@ -166,50 +158,6 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    /*public void PintarCheck() {
-        try {
-            final SharedPreferences.Editor edit = sp.edit();
-
-            if (sp != null) {
-
-                datacheck = sp.getString("check", "");
-
-                if (datacheck.equals("ok")) {
-                    checkusu.setChecked(true);
-                } else if (datacheck.equals("bad")) {
-                    checkusu.setChecked(false);
-                }
-            }
-
-            checkusu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-                    if (!isChecked) {
-                        edit.putString("check", "bad");
-                        edit.commit();
-                        edit.apply();
-
-                        SharedPreferences.Editor edit = sp.edit();
-                        edit.clear().commit();
-                        edit.apply();
-
-                        txtError.setText("");
-                    }else {
-                        if(txtUser.getText().toString().isEmpty() || txtPass.getText().toString().isEmpty()){
-                            txtError.setText("¡ No se puede guardar tu usuario. \n asegurate de no tener campos vacios !");
-                            checkusu.setChecked(false);
-                            checkusu.setSelected(false);
-                            checkusu.setEnabled(true);
-                        }else{
-                            txtError.setText("");
-                        }
-                    }
-                }
-            });
-        } catch (Exception ex) {
-        }
-    }*/
 
     public void onActualizar(View v) {
         new modalServer(this, path).modal().show();

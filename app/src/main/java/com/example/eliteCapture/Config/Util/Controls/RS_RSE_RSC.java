@@ -3,13 +3,16 @@ package com.example.eliteCapture.Config.Util.Controls;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,26 +28,30 @@ import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
+import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RS_RSE_RSC {
     Context context;
-    RespuestasTab rt;
-    String ubicacion, path;
-    boolean vacio, initial;
-
     TextView respuestaPonderado, campConteo;
-    LinearLayout contenedorCamp;
+    LinearLayout contenedorCamp, noti;
     containerAdmin ca;
     textAdmin ta;
     GIDGET pp;
 
-    int n = 0;
+    RespuestasTab rt;
 
     iDesplegable iDesp;
+
+    String ubicacion, path, valor = "", rta = "", causa = "";
+    boolean vacio, initial;
+    List<String> checkList = new ArrayList<>();
+    int n;
 
     public RS_RSE_RSC(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
         this.context = context;
@@ -53,6 +60,10 @@ public class RS_RSE_RSC {
         this.path = path;
         this.vacio = rt.getRespuesta() != null;
         this.initial = initial;
+        this.valor = rt.getValor();
+        this.rta = rt.getRespuesta();
+        this.causa = rt.getCausa();
+        this.n = rta != null ? Integer.parseInt(rta) : 0;
 
         iDesp = new iDesplegable(null, path);
 
@@ -61,7 +72,10 @@ public class RS_RSE_RSC {
         ta = new textAdmin(context);
 
         respuestaPonderado = (TextView) pp.resultadoPonderado();
-        respuestaPonderado.setText(vacio ? "Resultado : "+rt.getPonderado() : "Resultado :");
+        respuestaPonderado.setText(vacio ? "Resultado : "+rt.getValor() : "Resultado :");
+
+        noti = new LinearLayout(context);
+        noti.setOrientation(LinearLayout.VERTICAL);
 
     }
 
@@ -84,6 +98,7 @@ public class RS_RSE_RSC {
         if(rt.getTipo().equals("RSC")) line.addView(multiSelect());
         if(rt.getTipo().equals("RS") && rt.getDesplegable() != null) line.addView(despSelect());
         if(rt.getReglas() == 0) line.addView(ta.textColor("No hay asignado limite de conteo (REGLA)","rojo",15,"l"));
+        line.addView(noti);
         line.addView(conteos());
         return line;
     }
@@ -97,6 +112,7 @@ public class RS_RSE_RSC {
 
         campConteo = (TextView) pp.campoEdtable("TextView", "grisClear");
         campConteo.setLayoutParams(params( rt.getTipo().equals("RSE") ? (float) 0.7 : (float) 1));
+        campConteo.setText(rt.getRespuesta() != null  ? rt.getRespuesta() : "");
         campConteo.setTextSize(25);
 
         TextView btnRes = (Button) pp.boton("-", "rojo");
@@ -120,20 +136,53 @@ public class RS_RSE_RSC {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 try {
+                    if(rt.getDesplegable() == null){
+                        n =  contar(tipo);
+                        rta = n+"";
+                        campConteo.setText(n+"");
+                        valor = valor(n);
 
-                    if(tipo.equals("s")) {
-                        if (n < rt.getReglas()) n++;
-                    }else {
-                        if (n >= 0) n--;
+                    }else{
+                        n = causa.isEmpty() ? -1 : contar(tipo);
+                        rta = causa.isEmpty() ? null : n+"";
+                        campConteo.setText(causa.isEmpty() ? "" : n+"");
+                        valor = causa.isEmpty() ? "" : valor(n);
+
+                        if(causa.isEmpty() && noti.getChildCount() < 1) {
+                            noti.addView(ta.textColor("!Debes seleccionar al menos una opción¡", "rojo", 15, "l"));
+                            temporizador(5000);
+                        }
                     }
 
-                    campConteo.setText(String.valueOf(n));
-
+                    respuestaPonderado.setText(valor.equals("-1") ? "Resultado : N/A" : "Resultado : "+valor);
+                    registro(rta, valor, causa);
                 }catch (Exception e){
                     Log.i("CONTEO",e.toString());
                 }
             }
         });
+    }
+    public int contar(String tipo){
+        if(tipo.equals("s")) {
+            if (n < rt.getReglas()) n++;
+        }else{
+            if (n >= 0) n--;
+        }
+        return  n;
+    }
+    public String valor(int rta) {//CALCULA VALOR SEGUN LA CANTIDAD
+        try {
+            DecimalFormatSymbols separator = new DecimalFormatSymbols();
+            separator.setDecimalSeparator('.');
+
+            DecimalFormat decimalFormat = new DecimalFormat("#.##",separator);
+            float operacion = Float.parseFloat((rta < 0) ? "-1" : String.valueOf((rt.getPonderado() / rt.getReglas()) * (rt.getReglas() - rta)));
+
+            return ""+decimalFormat.format(operacion);
+        }catch (Exception ex){
+            Toast.makeText(context, ""+ex.toString(), Toast.LENGTH_SHORT).show();
+            return "";
+        }
     }
 
 
@@ -141,9 +190,10 @@ public class RS_RSE_RSC {
     public Spinner despSelect(){
         Spinner campSpin = new Spinner(context);
         campSpin.setAdapter(getAdapter(getDesp()));
-        campSpin.setSelection((vacio ? getDesp().indexOf(rt.getCausa()) : 0));
+        campSpin.setSelection((rt.getCausa() != null ? getDesp().indexOf(rt.getCausa()) : 0));
         campSpin.setBackgroundResource(R.drawable.myspinner);
 
+        Funspinner(campSpin);
         return campSpin;
     }
     public ArrayAdapter<String> getAdapter(List<String> listaCargada){
@@ -164,6 +214,17 @@ public class RS_RSE_RSC {
             Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
             return null;
         }
+    }
+    public void Funspinner(final Spinner spn){//FUNCION DEL SPINNER
+        spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String data = spn.getItemAtPosition(position).toString();
+                    causa = !data.equals("Selecciona") ? data : "";
+                    registro(rta,valor,causa);
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent) { }
+        });
     }
 
 
@@ -186,7 +247,7 @@ public class RS_RSE_RSC {
         line.setOrientation(LinearLayout.VERTICAL);
 
         TextView btnDesp = (TextView) pp.campoEdtable("TextView","grisClear");
-        btnDesp.setText("Elige una opción");
+        btnDesp.setText("Elige varias opciones");
         btnDesp.setTextSize(15);
         btnDesp.setPadding(0, 25, 0, 25);
 
@@ -214,17 +275,58 @@ public class RS_RSE_RSC {
                 CheckBox cB = new CheckBox(context);
                 cB.setText(desp.getOpcion());
                 cB.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                if(rt.getCausa() != null)recorrerSeleccion(cB);
 
                 int states[][] = {{android.R.attr.state_checked}, {}};
                 int colors[] = {Color.rgb(88, 214, 141),
                         Color.rgb(39, 55, 70)};
                 CompoundButtonCompat.setButtonTintList(cB, new ColorStateList(states, colors));
 
+                FunmultiSelect(cB);
                 lineDespliegue.addView(cB);
             }
+
+            causa = respuestaLimpia();
+            registro(rta,valor,causa);
         }catch (Exception e){
             Toast.makeText(context, "Error desplegable : "+e.toString(), Toast.LENGTH_LONG).show();
         }
+    }
+    public void FunmultiSelect(final CheckBox cb){
+        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(cb.isChecked()){
+                    checkList.add(cb.getText().toString());
+                }if(!cb.isChecked()){
+                    deleteObjList(cb.getText().toString());
+                }
+                causa = respuestaLimpia();
+                registro(rta,valor,causa);
+            }
+        });
+    }
+    public void deleteObjList(String obj){
+        for(int i = 0; i < checkList.size(); i++){
+            if(checkList.get(i).equals(obj)){
+                checkList.remove(obj);
+            }
+        }
+    }
+    public String respuestaLimpia(){
+        String d = checkList.toString().replace("[", "").replace("]", "");
+        return d;
+    }
+    public void recorrerSeleccion(CheckBox cB){
+        String[] causaL = rt.getCausa().split(",");
+        for (String c : causaL) {
+            if(c.trim().equals(cB.getText().toString().trim())) {
+                cB.setChecked(true);
+                checkList.add(cB.getText().toString());
+                break;
+            }
+        }
+
     }
 
 
@@ -234,6 +336,26 @@ public class RS_RSE_RSC {
         params.weight = i;
 
         return params;
+    }
+
+    public void temporizador(int duracion){
+        if(duracion > 0 ) {
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    noti.removeAllViews();
+                }
+            }, duracion);
+        }
+    }
+
+    public void registro(String rta, String valor, String causa) {//REGISTRO
+        new iContenedor(path).editarTemporal(
+                ubicacion,
+                rt.getId().intValue(),
+                rta,
+                String.valueOf(valor),
+                causa,
+                rt.getReglas());
     }
 
 }

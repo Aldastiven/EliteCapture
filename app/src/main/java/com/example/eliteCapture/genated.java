@@ -76,7 +76,7 @@ public class genated extends AppCompatActivity {
 
     String path = null, dataCamera;
     int contConsec = 0;
-    boolean camera, inicial = false, ok, temporal, footer;
+    boolean camera, inicial = true, ok, temporal, footer;
 
     formAdmin formA;
     Admin adm = null;
@@ -122,7 +122,6 @@ public class genated extends AppCompatActivity {
                 dataCamera = bundle.getString("codigo");
                 String ubicacion = bundle.getString("ubicacion");
                 ok = true;
-                inicial = true;
                 crearform();
 
                 Toast.makeText(this, ""+ubicacion, Toast.LENGTH_SHORT).show();
@@ -179,7 +178,6 @@ public class genated extends AppCompatActivity {
     }
 
     public void CrearEncabezado() {
-        //formA.CrearHeader("H");
         formA.CrearForm("H");
     }
 

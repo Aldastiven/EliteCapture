@@ -9,11 +9,13 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -32,10 +34,13 @@ public class splash_activity extends AppCompatActivity {
     private long delayed;
     long ini, fin;
     SharedPreferences sp = null;
-
     TextView txtStatus;
-
+    LinearLayout noti;
     String path = null, carga;
+
+    int intance = 0000;
+
+    textAdmin ta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,7 @@ public class splash_activity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_activity);
 
         txtStatus = (TextView) findViewById(R.id.idStatus);
+        noti = findViewById(R.id.noti);
 
         delayed = 5000;
         path = getExternalFilesDir(null) + File.separator;
@@ -57,26 +63,47 @@ public class splash_activity extends AppCompatActivity {
             sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
             getActivity();
 
-            new CargaDeDatos(path, this, txtStatus);
+            ta = new textAdmin(this);
 
-            fin = Calendar.getInstance().getTimeInMillis();
-            if ((fin - ini) > 5000) {
-                delayed = 0;
-            } else {
-                delayed = delayed - (fin - ini);
-            }
-
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    redirecion();
-                }
-            }, delayed);
-
+            String intent = screen() == 0 ? "intent" : "conexion";
+            if(intent.equals("conexion"))  noti.addView(ta.textColor(carga.equals("BajarDatos") ? "Descargando datos, espera un momento ..." : "Enviando datos, espera un momento ...","negro",15, "c"));
+            temporizador(intent, 3000, screen());
 
         } catch (Exception e) {
             Toast.makeText(this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
-
         }
+    }
+
+    public int screen(){
+        Bundle b = getIntent().getExtras();
+        int s = b != null ? b.getInt("redireccion",0) : 0;
+        String enviDes = b != null ? b.getString("carga","") : "";
+        return s;
+    }
+
+    public void temporizador(final String tipo, int duracion, final int intent){
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                if(tipo.equals("conexion")) {
+                    new CargaDeDatos(path, splash_activity.this, txtStatus);
+                }else if(tipo.equals("intent")) {
+                    intent(intent);
+                }
+            }
+        }, duracion);
+    }
+
+    public void intent(int s){
+        Intent i = null;
+        switch (s){
+            case 0 :
+                i = new Intent(this, Login.class);
+                break;
+            case 1 :
+                i = new Intent(this, Login.class);
+                break;
+        }
+        startActivity(i);
     }
 
     public void onActualizar() {
@@ -92,20 +119,6 @@ public class splash_activity extends AppCompatActivity {
         edit.apply();
     }
 
-    public void redirecion() {
-        try {
-            Intent i;
-            if (getActivity() != null) {
-                i = new Intent(splash_activity.this, getActivity());
-            } else {
-                i = new Intent(splash_activity.this, Login.class);
-            }
-            startActivity(i);
-            finish();
-        } catch (Exception ex) {
-            Toast.makeText(this, "Exception al redirecionar a la clase \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
-        }
-    }
 
     public Class getActivity() {
         Class act = Login.class;
@@ -130,35 +143,43 @@ public class splash_activity extends AppCompatActivity {
 
     protected class CargaDeDatos extends sqlConect {
 
-        Connection cn = null;
-        String path = null;
-        Admin admin = null;
+        Connection cn;
+        String path;
+        Admin admin;
 
         Context context;
         TextView Status;
 
 
-        public CargaDeDatos(String path, Context context, TextView status) throws Exception{
-            Connection cn = getConexion();
-            this.path = path;
-            admin = new Admin(cn, this.path);
-            this.context = context;
-            Status = status;
+        public CargaDeDatos(String path, Context context, TextView status) {
+            try {
+                cn = getConexion();
+                this.path = path;
+                admin = new Admin(cn, this.path);
+                this.context = context;
+                Status = status;
 
-            String onLine = admin.getOnline().all();
-            if(onLine.isEmpty() || onLine.equals("no existe")){
-                admin.getOnline().local("offLine");
-            }
-
-            if(admin.getOnline().all().equals("onLine")) {
-                // Validando conexion
-                if (cn != null) {
-                    txtStatus.setText("Conectado...");
-                    CargeInicial();
-                } else {
-                    txtStatus.setText("No hay Conexion a la BD");
+                String onLine = admin.getOnline().all();
+                if (onLine.isEmpty() || onLine.equals("no existe")) {
+                    admin.getOnline().local("offLine");
                 }
-            }else{}
+
+                if (admin.getOnline().all().equals("onLine")) {
+                    // Validando conexion
+                    if (cn != null) {
+                        CargeInicial();
+                        if(noti.getChildCount() > 0) noti.removeAllViews();
+                        noti.addView(ta.textColor(carga.equals("BajarDatos") ? "Datos descargados con exito" : "Datos enviados con exito","verde",15, "c"));
+                    } else {
+                        if(noti.getChildCount() > 0) noti.removeAllViews();
+                        noti.addView(ta.textColor("No hay conexión","rojo",15, "c"));
+                        temporizador(screen(), 3000);
+                    }
+                } else {
+                }
+            }catch (Exception e){
+                Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+            }
         }
 
 
@@ -175,7 +196,7 @@ public class splash_activity extends AppCompatActivity {
                     recargarSession();
                 }
                 onActualizar();
-
+                temporizador(screen(), 3000);
             } catch (Exception ex) {
                 Log.i("Error Splash Carge", ex.toString());
             }
@@ -183,9 +204,7 @@ public class splash_activity extends AppCompatActivity {
 
         private void obtenerUsuarios() {
             try {
-                txtStatus.setText("Cargando Usuarios...");
                 admin.getUsuario().local();
-                msgStatus("Cargando...", "Datos de usuarios Cargado", 500);
             } catch (Exception ex) {
                 Log.i("ErrorSplash_Usuario", ex.toString());
             }
@@ -193,9 +212,7 @@ public class splash_activity extends AppCompatActivity {
 
         private void obtenerProcesos() {
             try {
-                txtStatus.setText("Cargando Procesos...");
                 admin.getProceso().local();
-                msgStatus("Cargando...", "Datos de procesos Cargado", 500);
             } catch (Exception ex) {
                 Log.i("ErrorSplash", ex.toString());
             }
@@ -203,9 +220,7 @@ public class splash_activity extends AppCompatActivity {
 
         private void obtenerDetalles() {
             try {
-                txtStatus.setText("Cargando Detalles...");
                 admin.getDetalles().local();
-                msgStatus("Cargando...", "Datos de Detalles Cargado", 1000);
             } catch (Exception ex) {
                 Log.i("ErrorSplashDetalle", ex.toString());
             }
@@ -217,7 +232,6 @@ public class splash_activity extends AppCompatActivity {
                 for (String e : admin.getDesplegable().group()) {
                     admin.getDesplegable().setNombre(e);
                     admin.getDesplegable().traerDesplegable(e);
-                    msgStatus("Cargando...", "Datos de Detalles: " + e, 200);
                 }
                 admin.getProductos().local();
             } catch (Exception ex) {
@@ -229,9 +243,6 @@ public class splash_activity extends AppCompatActivity {
         private void enviarPendientes() {
             try {
                 boolean enviado = new iContenedor(path).enviar();
-                msgStatus("Cargando...", "Enviando pendientes.", 200);
-                Log.i("Envio", (enviado) ? "Envio exitoso" : "Error de envio");
-
             } catch (Exception ex) {
                 Log.i("ErrorSplash_Envio", ex.toString());
             }
@@ -251,9 +262,7 @@ public class splash_activity extends AppCompatActivity {
                     SharedPreferences.Editor edit = sp.edit();
                     Session = admin.getUsuario().json(sess);
 
-                    Log.i("Envio_Session", Session);
                     edit.putString("usuario", Session);
-                    msgStatus("Cargando...", "Recargando Sesión.", 200);
 
                 }
 
@@ -264,45 +273,13 @@ public class splash_activity extends AppCompatActivity {
 
         }
 
-        private void msgStatus(final String msgCarga, final String msgCompletado, final int tiempoSalteado) {
-            try {
-                final int totalProgressTime = 100;
-                final Thread t = new Thread() {
-                    @Override
-                    public void run() {
-                        int jumpTime = 0;
-
-                        while (jumpTime < totalProgressTime) {
-                            try {
-                                jumpTime += tiempoSalteado;
-                                txtStatus.setText(msgCarga);
-                                sleep(200);
-                            } catch (InterruptedException e) {
-                                Toast.makeText(splash_activity.this, "Progress Bar \n" + e.toString(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                int dur = 500;
-                                new Handler().postDelayed(new Runnable() {
-                                    public void run() {
-                                        txtStatus.setText(msgCompletado);
-                                    }
-                                }, dur);
-
-                            }
-                        });
-
-                    }
-                };
-                t.start();
-            } catch (Exception ex) {
-                Toast.makeText(context, "error " + ex.toString(), Toast.LENGTH_SHORT).show();
-            }
+        public void temporizador(final int intent, final int duracion){
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                        intent(intent);
+                }
+            }, duracion);
         }
-
 
     }
 

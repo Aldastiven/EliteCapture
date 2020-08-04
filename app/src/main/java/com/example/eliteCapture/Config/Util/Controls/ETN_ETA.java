@@ -62,7 +62,7 @@ public class ETN_ETA {
 
         LinearLayout.LayoutParams llparams = ca.params();
         llparams.weight = 1;
-        llparams.setMargins(5,2,5,10);
+        llparams.setMargins(5 ,2, 5 ,10);
 
         //para limitar cantidad de digitos segun la regla
         if (rt.getReglas() != 0) camp.setFilters(
@@ -71,9 +71,9 @@ public class ETN_ETA {
                 });
 
         camp.setText(vacio ? rt.getRespuesta() : "");
-        camp.setLayoutParams(llparams);
-
         if(rt.getTipo().equals("ETN")) camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
+
+        camp.setLayoutParams(llparams);
 
         funCamp();
         return camp;

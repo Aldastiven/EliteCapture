@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,158 +27,116 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="40dp">
+        android:paddingVertical="20dp"
+        android:paddingHorizontal="10dp"
+        android:layout_centerVertical="true">
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            app:srcCompat="@drawable/flor"
-            android:layout_gravity="center_horizontal"
-            tools:ignore="VectorDrawableCompat" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_gray"
+            android:orientation="vertical">
 
-        <ImageView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LOGIN"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingVertical="10dp"
+                android:background="@drawable/border_gray"
+                android:textColor="#17202A"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/border_gray_horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Digita el usuario y contraseña."
+                    android:layout_margin="2dp"
+                    android:textColor="#17202A"
+                    android:paddingHorizontal="10dp"/>
+
+                <EditText
+                    android:id="@+id/txtUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10sp"
+                    android:hint="usuario"
+                    android:inputType="number"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:background="@drawable/camp_gray"
+                    android:paddingVertical="10dp"
+                    android:text="1"/>
+
+                <EditText
+                    android:id="@+id/txtPass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10sp"
+                    android:hint="contraseña"
+                    android:inputType="numberPassword"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:background="@drawable/camp_gray"
+                    android:paddingVertical="10dp"
+                    android:text="1"/>
+
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/verde"
+                android:text="Ingresar"
+                android:textSize="20dp"
+                android:layout_margin="1dp"
+                android:paddingVertical="20dp"
+                android:onClick="ingresar"
+                android:textColor="#FFFFFF"
+                android:textAllCaps="false"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/floatingServer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_logo_elite_capture"
-            android:layout_gravity="center_horizontal"
-            tools:ignore="VectorDrawableCompat" />
+            android:layout_alignParentRight="true"
+            android:backgroundTint="#ECEFF1"
+            android:clickable="true"
+            android:tint="#000000"
+            android:onClick="onActualizar"
+            android:background="@drawable/circle"
+            android:paddingStart="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="250dp"/>
 
-    </LinearLayout>
-
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <LinearLayout
-        android:id="@+id/notification"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"/>
+        android:paddingVertical="10dp">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="20dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/intro"
+            android:textAlignment="center"
+            android:layout_marginBottom="10sp" />
 
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             android:layout_marginTop="10dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="20dp"
-                    android:paddingBottom="50dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/border_gray"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="LOGIN"
-                            android:textSize="30dp"
-                            android:textStyle="bold"
-                            android:gravity="center"
-                            android:paddingVertical="10dp"
-                            android:background="@drawable/border_gray"
-                            android:textColor="#17202A"/>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:background="@drawable/border_gray_horizontal">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Digita el usuario y contraseña."
-                                android:layout_margin="2dp"
-                                android:textColor="#17202A"
-                                android:paddingLeft="10dp"/>
-
-                            <EditText
-                                android:id="@+id/txtUser"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10sp"
-                                android:hint="usuario"
-                                android:inputType="number"
-                                android:textSize="20dp"
-                                android:gravity="center"
-                                android:background="@drawable/camp_gray"
-                                android:paddingVertical="10dp"
-                                android:text="1"/>
-
-                            <EditText
-                                android:id="@+id/txtPass"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10sp"
-                                android:hint="contraseña"
-                                android:inputType="numberPassword"
-                                android:textSize="20dp"
-                                android:gravity="center"
-                                android:background="@drawable/camp_gray"
-                                android:paddingVertical="10dp"
-                                android:text="1"/>
-
-                        </LinearLayout>
-
-                        <Button
-                            android:id="@+id/btnIngresar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#17202A"
-                            android:text="Ingresar"
-                            android:textSize="20dp"
-                            android:layout_margin="1dp"
-                            android:paddingVertical="20dp"
-                            android:onClick="ingresar"
-                            android:textColor="#FFFFFF"
-                            android:textAllCaps="false"/>
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/floatingServer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:backgroundTint="#ECEFF1"
-                        android:clickable="true"
-                        android:tint="#000000"
-                        android:onClick="onActualizar"
-                        android:background="@drawable/circle"
-                        android:paddingStart="15dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="250dp"/>
-
-                </RelativeLayout>
-
-         </LinearLayout>
-    </ScrollView>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="@string/intro"
-        android:textAlignment="center"
-        android:layout_marginBottom="10sp"/>
     </RelativeLayout>
 
-</LinearLayout>
+
+</RelativeLayout>

@@ -141,7 +141,7 @@ public class modalServer {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                i.putExtra("class", "Login");
+                i.putExtra("redireccion", 1);
                 i.putExtra("carga", "BajarDatos");
                 if(io.all().equals("onLine")) {
                     context.startActivity(i);
@@ -157,7 +157,7 @@ public class modalServer {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                i.putExtra("class", "Login");
+                i.putExtra("redireccion", 1);
                 i.putExtra("carga", "Pendientes");
                 if(io.all().equals("onLine")) {
                     context.startActivity(i);
