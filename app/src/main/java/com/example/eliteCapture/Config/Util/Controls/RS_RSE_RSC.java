@@ -69,8 +69,6 @@ public class RS_RSE_RSC {
         this.n = rta != null ? Integer.parseInt(rta) : -1;
         this.regla = rt.getReglas();
 
-        Log.i("VACIOS",""+vacio);
-
         iDesp = new iDesplegable(null, path);
 
         ca = new containerAdmin(context);
@@ -78,12 +76,10 @@ public class RS_RSE_RSC {
         ta = new textAdmin(context);
 
         respuestaPonderado = (TextView) pp.resultadoPonderado();
-        respuestaPonderado.setText(vacio ? "Resultado : "+rt.getValor() : "Resultado :");
+        respuestaPonderado.setText(vacio ? "Resultado : "+ (rt.getValor().equals("-1") ? "N/A" : rt.getValor()) : "Resultado :");
 
         noti = new LinearLayout(context);
         noti.setOrientation(LinearLayout.VERTICAL);
-
-
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM
@@ -159,7 +155,7 @@ public class RS_RSE_RSC {
                         if(!causa.isEmpty()) contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
 
                         if(causa.isEmpty() && noti.getChildCount() < 1) {
-                            noti.addView(ta.textColor("!Debes seleccionar al menos una opción¡", "rojo", 15, "l"));
+                            noti.addView(ta.textColor("¡Debes seleccionar al menos una opción!", "rojo", 15, "l"));
                             temporizador(5000);
                         }
                     }
@@ -172,6 +168,8 @@ public class RS_RSE_RSC {
         });
     }
     public int contar(String tipo){
+        String data = campConteo.getText().toString();
+        n = data.isEmpty() ?  -1 : n;
         if(tipo.equals("s")) {
             if (n < modalEditarRegla.getRegla()) n++;
         }else{
@@ -370,13 +368,8 @@ public class RS_RSE_RSC {
     }
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
-        new iContenedor(path).editarTemporal(
-                ubicacion,
-                rt.getId().intValue(),
-                rta,
-                String.valueOf(valor),
-                causa,
-                rt.getReglas());
+        int regla = rt.getTipo().equals("RSE") ? modalEditarRegla.getRegla() : rt.getReglas();
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), causa, regla);
     }
 
 }

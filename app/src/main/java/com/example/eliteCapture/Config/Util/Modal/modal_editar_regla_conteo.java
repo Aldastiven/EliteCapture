@@ -43,7 +43,7 @@ public class modal_editar_regla_conteo {
         this.tvr = tvr;
         this.tvporc = tvporc;
         this.pp = pp;
-        
+
         ca = new containerAdmin(context);
         ta = new textAdmin(context);
     }
@@ -99,19 +99,14 @@ public class modal_editar_regla_conteo {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 try {
-
                     switch (tipo) {
                         case "aceptar":
-                            int nuevaRegla;
-                            tvr.setText("-1");
-                            n = -1;
+                            int nuevaRegla = Integer.parseInt(edt.getText().toString());
+                            tvr.setText("");
                             tvporc.setText("Resultado: ");
-                            nuevaRegla = Integer.parseInt(edt.getText().toString());
                             regla = nuevaRegla;
                             setRegla(nuevaRegla);
-                            registro(nuevaRegla);
                             break;
                         case "cancelar":
                             break;
@@ -142,16 +137,6 @@ public class modal_editar_regla_conteo {
     public void bajarTeclado() {
         InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(edt.getWindowToken(),0);
-    }
-
-    public void registro(int regla) {//REGISTRO
-        new iContenedor(path).editarTemporal(
-                ubicacion,
-                rt.getId().intValue(),
-                rt.getRespuesta(),
-                rt.getValor(),
-                rt.getCausa(),
-                regla);
     }
 
     public int getRegla() {
