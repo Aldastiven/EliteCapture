@@ -162,7 +162,11 @@ public class SCA_FIL implements Serializable{
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                rta = filtroDesplegable(camp.getText().toString());
+                if(rt.getDesplegable() != null) {
+                    rta = filtroDesplegable(camp.getText().toString());
+                }else {
+                    rta = camp.getText().toString();
+                }
 
                 registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado()+"" : null, !causa.isEmpty() ? causa : null);
                 respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");

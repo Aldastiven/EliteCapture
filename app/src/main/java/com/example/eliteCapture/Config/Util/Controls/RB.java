@@ -22,7 +22,7 @@ import com.example.eliteCapture.Model.View.iContenedor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RB_CBX {
+public class RB {
 
     Context context;
     RespuestasTab rt;
@@ -35,7 +35,7 @@ public class RB_CBX {
     GIDGET pp;
     iDesplegable iDesp;
 
-    public RB_CBX(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
+    public RB(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
         this.context = context;
         this.rt = rt;
         this.ubicacion = ubicacion;

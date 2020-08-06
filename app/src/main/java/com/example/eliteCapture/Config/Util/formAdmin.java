@@ -8,20 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.example.eliteCapture.Config.Util.ControlViews.Cconteos;
-import com.example.eliteCapture.Config.Util.ControlViews.CconteosCheck;
-import com.example.eliteCapture.Config.Util.ControlViews.CconteosEditar;
-import com.example.eliteCapture.Config.Util.ControlViews.Cdesplegable;
-import com.example.eliteCapture.Config.Util.ControlViews.CfilAuto;
-import com.example.eliteCapture.Config.Util.ControlViews.Cfiltro;
-import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
-import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
-import com.example.eliteCapture.Config.Util.Controls.AUT_DES;
+import com.example.eliteCapture.Config.Util.Controls.AUT_DES_CBX;
 import com.example.eliteCapture.Config.Util.Controls.DPV;
 import com.example.eliteCapture.Config.Util.Controls.ETN_ETA;
-import com.example.eliteCapture.Config.Util.Controls.RB_CBX;
+import com.example.eliteCapture.Config.Util.Controls.RB;
 import com.example.eliteCapture.Config.Util.Controls.RS_RSE_RSC;
 import com.example.eliteCapture.Config.Util.Controls.SCA_FIL;
 import com.example.eliteCapture.Model.Data.Admin;
@@ -83,10 +74,6 @@ public class formAdmin {
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
-    //v = new CconteosCheck(context, path, ubicacion, r, inicial).Cconteo();
-    //v = new CconteosEditar(context, path, ubicacion, r, inicial, popregla).CconteoEditar();
-    //v = new Cconteos(context, path, ubicacion, r, inicial).Cconteo();
-
     //CREA CONTROLES DEL FORMULARIO
     public void CrearForm(String ubicacion) {
         try {
@@ -95,8 +82,7 @@ public class formAdmin {
                 View v = null;
                 switch (r.getTipo()) {
                     case "RB":
-                    case "CBX":
-                        v = new RB_CBX(context, ubicacion, r, path, inicial).crear();
+                        v = new RB(context, ubicacion, r, path, inicial).crear();
                         break;
                     case "DPV":
                         v = new DPV(context, ubicacion, r, path, inicial).crear();
@@ -111,7 +97,8 @@ public class formAdmin {
                         break;
                     case "AUT":
                     case "DES":
-                        v = new AUT_DES(context, ubicacion, r, path, inicial).crear();
+                    case "CBX":
+                        v = new AUT_DES_CBX(context, ubicacion, r, path, inicial).crear();
                         break;
                     case "RS":
                     case "RSE":
@@ -121,7 +108,6 @@ public class formAdmin {
                 }
                 if(ubicacion.equals("Q") || ubicacion.equals("F")) linearPrinc.addView(v);
                 else if(ubicacion.equals("H")) linearBodypop.addView(v);
-
             }
         } catch (Exception ex) {
             Log.i("ADMIN","Error : "+ex);

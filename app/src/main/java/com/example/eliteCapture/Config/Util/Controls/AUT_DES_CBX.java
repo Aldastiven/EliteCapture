@@ -24,7 +24,7 @@ import com.example.eliteCapture.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AUT_DES {
+public class AUT_DES_CBX {
     Context context;
     String ubicacion, path;
     RespuestasTab rt;
@@ -41,7 +41,7 @@ public class AUT_DES {
 
     iDesplegable iDesp;
 
-    public AUT_DES(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
+    public AUT_DES_CBX(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
         this.context = context;
         this.ubicacion = ubicacion;
         this.rt = rt;
@@ -89,6 +89,7 @@ public class AUT_DES {
                     v = campAut;
                     break;
                 case "DES":
+                case "CBX":
                     campSpin = new Spinner(context);
                     campSpin.setAdapter(getAdapter(getDesp()));
                     campSpin.setSelection((vacio ? getDesp().indexOf(rt.getCausa()) : 0));
@@ -105,7 +106,7 @@ public class AUT_DES {
         try {
             List<String> Loptions = new ArrayList<>();
             iDesp.nombre = rt.getDesplegable();
-            if(rt.getTipo().equals("DES")) Loptions.add("Selecciona");
+            if(rt.getTipo().equals("DES") || rt.getTipo().equals("CBX")) Loptions.add("Selecciona");
             for (DesplegableTab desp : iDesp.all()) {
                 Loptions.add(desp.getOpcion());
             }
@@ -117,7 +118,7 @@ public class AUT_DES {
     }
 
     public ArrayAdapter<String> getAdapter(List<String> listaCargada){
-        int resource = rt.getTipo().equals("DES") ? R.layout.items_des : R.layout.items_aut;
+        int resource = rt.getTipo().equals("DES") || rt.getTipo().equals("CBX") ? R.layout.items_des : R.layout.items_aut;
         ArrayAdapter<String> autoArray = new ArrayAdapter<>(context,resource , listaCargada);
         return autoArray;
     }
