@@ -167,4 +167,7 @@ public class Login extends AppCompatActivity {
         new modalSetting(this, path, imgOnline).modal().show();
     }
 
+    public void onBackPressed() {
+    }
+
 }
