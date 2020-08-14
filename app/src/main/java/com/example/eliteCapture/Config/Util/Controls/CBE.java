@@ -1,15 +1,16 @@
+
 package com.example.eliteCapture.Config.Util.Controls;
 
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -29,98 +30,80 @@ import java.util.List;
 
 public class CBE {
     Context context;
-    String ubicacion, path;
     RespuestasTab rt;
+    String ubicacion, path, datoDesplegable;
     boolean vacio, initial;
-    String idDespUsu = "";
 
+    TextView respuestaPonderado;
     EditText edt;
-
     containerAdmin ca;
+    LinearLayout contenedorCamp, noti;
     GIDGET pp;
     textAdmin ta;
 
-    TextView respuestaPonderado;
-    LinearLayout contenedorcampAut, LineRespuesta;
-    Spinner campSpin;
-
     iDesplegable iDesp;
 
-    public CBE(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
+    public CBE(Context context, String ubicacion, RespuestasTab rt, String path , boolean initial) {
         this.context = context;
-        this.ubicacion = ubicacion;
         this.rt = rt;
+        this.ubicacion = ubicacion;
         this.path = path;
+        this.vacio = rt.getRespuesta() == null || rt.getRespuesta().isEmpty();
         this.initial = initial;
-        this.vacio = rt.getRespuesta() != null;
 
+        iDesp = new iDesplegable(null, path);
         ca = new containerAdmin(context);
         pp = new GIDGET(context, ubicacion, rt, path);
         ta = new textAdmin(context);
 
-        iDesp = new iDesplegable(null, path);
-
-        LineRespuesta = (LinearLayout) pp.resultadoFiltro();
-
         respuestaPonderado = (TextView) pp.resultadoPonderado();
-        respuestaPonderado.setText(vacio ? " Resultado : "+rt.getPonderado() : " Resultado : ");
+        respuestaPonderado.setText(!vacio ? "Resultado : "+rt.getPonderado() : "Resultado :");
+
+        noti = new LinearLayout(context);
+        noti.setOrientation(LinearLayout.VERTICAL);
     }
 
-    public View crear(){
-        contenedorcampAut = ca.container();
-        contenedorcampAut.setOrientation(LinearLayout.VERTICAL);
-        contenedorcampAut.setPadding(10, 0, 10, 5);
-        contenedorcampAut.setGravity(Gravity.CENTER_HORIZONTAL);
+    public View crear(){//GENERA EL CONTENEDOR DEL ITEM
+        contenedorCamp = ca.container();
+        contenedorCamp.setOrientation(LinearLayout.VERTICAL);
+        contenedorCamp.setPadding(10, 0, 10, 0);
+        contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        contenedorcampAut.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
-        contenedorcampAut.addView(LineRespuesta);
-        contenedorcampAut.addView(camp());
-        pp.validarColorContainer(contenedorcampAut, vacio, initial);//pinta el contenedor del item si esta vacio o no
+        contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
+        contenedorCamp.addView(campo());
+        pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
-        return contenedorcampAut;
+        return contenedorCamp;
     }
 
-    public View pintarRespuesta(String causa){//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
-        if (LineRespuesta.getChildCount() > 0) LineRespuesta.removeAllViews();
-        if (causa != null) {
-            if (!causa.isEmpty())
-
-            contenedorcampAut.setBackgroundResource(causa != null ? R.drawable.bordercontainer : R.drawable.bordercontainerred);
-        }
-
-        return LineRespuesta;
-    }
-
-    public View camp(){
+    public View campo(){
         LinearLayout line = ca.container();
-        line.setWeightSum(2);
-        line.setOrientation(LinearLayout.HORIZONTAL);
+        line.setOrientation(LinearLayout.VERTICAL);
 
-        LinearLayout.LayoutParams ll = ca.params();
-        ll.setMargins(5,0,5,0);
-        ll.weight = 1;
-
-        campSpin = new Spinner(context);
-        campSpin.setAdapter(getAdapter(getDesp()));
-        campSpin.setSelection((vacio ? getDesp().indexOf(rt.getCausa()) : 0));
-        campSpin.setBackgroundResource(R.drawable.myspinner);
-        campSpin.setLayoutParams(ll);
-
-
-        FunsDesp(campSpin);
+        LinearLayout.LayoutParams llparams = ca.params();
+        llparams.weight = 1;
+        llparams.setMargins(200 ,10, 200 ,5);
 
         edt = (EditText) pp.campoEdtable("Edit","grisClear");
-        edt.setText((vacio ? rt.getValor() : ""));
-        edt.setLayoutParams(ll);
+        edt.setText(!vacio ? rt.getRespuesta() : "");
         edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        funCamp();
+        edt.setLayoutParams(llparams);
+        FunCamp(edt);
 
-        line.addView(campSpin);
+        Spinner spin = new Spinner(context);
+        spin.setBackgroundResource(R.drawable.myspinner);
+        spin.setAdapter(getAdapter(getDesp()));
+        spin.setSelection(!vacio ? getDesp().indexOf( filtroDesplegable( rt.getValor() ).getOpcion() ) : 0);
+        FunsDesp(spin);
+
+        line.addView(spin);
+        line.addView(noti);
         line.addView(edt);
 
         return line;
     }
 
+    //COMPLEMENTOS DEL SPINNER
     public List<String> getDesp(){
         try {
             List<String> Loptions = new ArrayList<>();
@@ -135,58 +118,54 @@ public class CBE {
             return null;
         }
     }
-
     public ArrayAdapter<String> getAdapter(List<String> listaCargada){
-        int resource =  R.layout.items_des;
-        ArrayAdapter<String> autoArray = new ArrayAdapter<>(context,resource , listaCargada);
+        ArrayAdapter<String> autoArray = new ArrayAdapter<>(context, R.layout.items_des , listaCargada);
         return autoArray;
     }
 
     //FUNCIONES
 
-    public void funCamp(){//FUNCION DEL CAMPO
-        edt.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
-            @Override
-            public void afterTextChanged(Editable s) {
-                try {
-                    if (idDespUsu.isEmpty()) {
-                        if (!edt.getText().toString().isEmpty()) edt.setText("");
-                        if(LineRespuesta.getChildCount() < 1) LineRespuesta.addView(ta.textColor("Tienes seleccionar al menos una opcion", "rojo", 15, "l"));
-                        temporizador(3000);
-                    } else {
-                        respuestaPonderado.setText(!edt.getText().toString().isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
-                        registro(idDespUsu, edt.getText().toString());
-                        contenedorcampAut.setBackgroundResource(R.drawable.bordercontainer);
-                    }
-                }catch (Exception e){
-                    Toast.makeText(context, "SCA : "+e.toString(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    public void FunsDesp(final Spinner spn) {
+    public void FunsDesp(final Spinner spn) {//FUNCION DEL CAMPO EDITABLE
         spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    if(!spn.getItemAtPosition(position).toString().equals("Selecciona")){
-                        DesplegableTab dt = filtroDesplegable(spn.getItemAtPosition(position).toString());
-                        idDespUsu = dt.getCodigo();
-                    }else {
-                        idDespUsu = "";
+                    String rta = spn.getItemAtPosition(position).toString();
+                    datoDesplegable = !rta.equals("Selecciona") ? filtroDesplegable(rta).getCodigo() : "";
+                    if (rta.equals("Selecciona") && !edt.getText().toString().isEmpty()) {
                         edt.setText("");
-                        registro(null, null);
-                        respuestaPonderado.setText(" Resultado : ");
+                        registro(null, filtroDesplegable(rta).getCodigo());
+                    } else {
+                        registro(edt.getText().toString(), filtroDesplegable(rta).getCodigo());
                     }
-                }catch (Exception e){
-                    Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
-                }
+                }catch (Exception e){}
             }
+            @Override public void onNothingSelected(AdapterView<?> parent) { }
+        });
+    }
+
+
+    public void FunCamp( final EditText edt ){//FUNCION DEL CAMPO EDÍTTEXT
+        edt.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void afterTextChanged(Editable s) {
+                try {
+                    if (datoDesplegable.isEmpty()) {
+                        if (noti.getChildCount() < 1) {
+                            noti.addView(ta.textColor("¡Debes seleccionar al menos una opción!", "rojo", 15, "l"));
+                            temporizador(5000);
+                            registro(null, null);
+                        }
+                        if(!edt.getText().toString().isEmpty()) {
+                            edt.setText("");
+                        }
+                    } else {
+                        String rtaEdt = edt.getText().toString();
+                        registro(!rtaEdt.isEmpty() ? rtaEdt : null, datoDesplegable);
+                    }
+                }catch (Exception e){}
             }
         });
     }
@@ -202,18 +181,17 @@ public class CBE {
         return dt;
     }
 
-
-    public void temporizador(final int duracion){
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                if (LineRespuesta.getChildCount() > 0){
-                    LineRespuesta.removeAllViews();
-                }
-            }
-        }, duracion);
+    public void registro(String rta, String valor) {//REGISTRO AL JSON TEMPORAL
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null, rt.getReglas());
     }
 
-    public void registro(String rta, String valor) {//REGISTRO
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), null, rt.getReglas());
+    public void temporizador(int duracion){
+        if(duracion > 0 ) {
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    noti.removeAllViews();
+                }
+            }, duracion);
+        }
     }
 }
