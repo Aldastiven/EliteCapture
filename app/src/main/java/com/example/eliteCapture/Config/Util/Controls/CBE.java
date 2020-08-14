@@ -1,9 +1,10 @@
 package com.example.eliteCapture.Config.Util.Controls;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,6 +21,7 @@ import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
+import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class CBE {
     String ubicacion, path;
     RespuestasTab rt;
     boolean vacio, initial;
-    String idDespUsu;
+    String idDespUsu = "";
 
     EditText edt;
 
@@ -40,7 +42,6 @@ public class CBE {
 
     TextView respuestaPonderado;
     LinearLayout contenedorcampAut, LineRespuesta;
-    AutoCompleteTextView campAut;
     Spinner campSpin;
 
     iDesplegable iDesp;
@@ -72,7 +73,7 @@ public class CBE {
         contenedorcampAut.setGravity(Gravity.CENTER_HORIZONTAL);
 
         contenedorcampAut.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
-        //contenedorcampAut.addView(pintarRespuesta(rt.getRespuesta()));
+        contenedorcampAut.addView(LineRespuesta);
         contenedorcampAut.addView(camp());
         pp.validarColorContainer(contenedorcampAut, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
@@ -83,7 +84,7 @@ public class CBE {
         if (LineRespuesta.getChildCount() > 0) LineRespuesta.removeAllViews();
         if (causa != null) {
             if (!causa.isEmpty())
-                LineRespuesta.addView(ta.textColor(causa, "rojo", 15, "l"));
+
             contenedorcampAut.setBackgroundResource(causa != null ? R.drawable.bordercontainer : R.drawable.bordercontainerred);
         }
 
@@ -105,11 +106,13 @@ public class CBE {
         campSpin.setBackgroundResource(R.drawable.myspinner);
         campSpin.setLayoutParams(ll);
 
+
         FunsDesp(campSpin);
 
         edt = (EditText) pp.campoEdtable("Edit","grisClear");
         edt.setText((vacio ? rt.getValor() : ""));
         edt.setLayoutParams(ll);
+        edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
         funCamp();
 
         line.addView(campSpin);
@@ -147,11 +150,19 @@ public class CBE {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                if(idDespUsu.isEmpty()){
-                    if(!edt.getText().toString().isEmpty()) edt.setText("");
+                try {
+                    if (idDespUsu.isEmpty()) {
+                        if (!edt.getText().toString().isEmpty()) edt.setText("");
+                        if(LineRespuesta.getChildCount() < 1) LineRespuesta.addView(ta.textColor("Tienes seleccionar al menos una opcion", "rojo", 15, "l"));
+                        temporizador(3000);
+                    } else {
+                        respuestaPonderado.setText(!edt.getText().toString().isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
+                        registro(idDespUsu, edt.getText().toString());
+                        contenedorcampAut.setBackgroundResource(R.drawable.bordercontainer);
+                    }
+                }catch (Exception e){
+                    Toast.makeText(context, "SCA : "+e.toString(), Toast.LENGTH_SHORT).show();
                 }
-
-                respuestaPonderado.setText(!edt.getText().toString().isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");
             }
         });
     }
@@ -160,11 +171,18 @@ public class CBE {
         spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                DesplegableTab dt = filtroDesplegable(spn.getItemAtPosition(position).toString());
-                if(dt != null || !filtroDesplegable(spn.getItemAtPosition(position).toString()).equals("Selecciona")){
-                    idDespUsu = dt.getCodigo();
-                }else {
-                    idDespUsu = "";
+                try {
+                    if(!spn.getItemAtPosition(position).toString().equals("Selecciona")){
+                        DesplegableTab dt = filtroDesplegable(spn.getItemAtPosition(position).toString());
+                        idDespUsu = dt.getCodigo();
+                    }else {
+                        idDespUsu = "";
+                        edt.setText("");
+                        registro(null, null);
+                        respuestaPonderado.setText(" Resultado : ");
+                    }
+                }catch (Exception e){
+                    Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -184,4 +202,18 @@ public class CBE {
         return dt;
     }
 
+
+    public void temporizador(final int duracion){
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                if (LineRespuesta.getChildCount() > 0){
+                    LineRespuesta.removeAllViews();
+                }
+            }
+        }, duracion);
+    }
+
+    public void registro(String rta, String valor) {//REGISTRO
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), null, rt.getReglas());
+    }
 }

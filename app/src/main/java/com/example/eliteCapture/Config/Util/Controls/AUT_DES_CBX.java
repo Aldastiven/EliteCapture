@@ -155,7 +155,7 @@ public class AUT_DES_CBX {
     }
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), causa, rt.getReglas());
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(),  causa,   String.valueOf(valor), rta, rt.getReglas());
     }
 
         public DesplegableTab  filtroDesplegable(String rta){
