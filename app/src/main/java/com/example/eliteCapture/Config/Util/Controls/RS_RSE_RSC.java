@@ -99,7 +99,7 @@ public class RS_RSE_RSC {
         LinearLayout line = ca.container();
         line.setOrientation(LinearLayout.VERTICAL);
         if(rt.getTipo().equals("RSC")) line.addView(multiSelect());
-        if(rt.getTipo().equals("RS") && rt.getDesplegable() != null) line.addView(despSelect());
+        if(rt.getTipo().equals("RS") && !rt.getDesplegable().isEmpty()) line.addView(despSelect());
         if(regla == 0) line.addView(ta.textColor("No hay asignado limite de conteo (REGLA)","rojo",15,"l"));
         line.addView(noti);
         line.addView(conteos());
@@ -141,7 +141,7 @@ public class RS_RSE_RSC {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 try {
-                    if(rt.getDesplegable() == null){
+                    if(rt.getDesplegable().isEmpty()){
                         n =  contar(tipo);
                         rta = n+"";
                         campConteo.setText(n+"");

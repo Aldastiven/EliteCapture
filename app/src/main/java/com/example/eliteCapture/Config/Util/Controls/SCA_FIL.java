@@ -3,6 +3,7 @@ package com.example.eliteCapture.Config.Util.Controls;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -91,6 +92,7 @@ public class SCA_FIL implements Serializable{
         camp = (EditText) pp.campoEdtable("Edit", "grisClear");
         camp.setText((vacio ? rt.getRespuesta() : ""));
         camp.setLayoutParams(params((float) 0.5));
+        if(rt.getTipo().equals("SCN")) camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
 
         Button btn = btnTipo();
         btn.setLayoutParams(params((float) 1.5));
@@ -109,6 +111,7 @@ public class SCA_FIL implements Serializable{
         Button btn = null;
         switch (rt.getTipo()){
             case "SCA" :
+            case "SCN" :
                 btn = (Button) pp.boton("scanner", "verde");
                 BtnStarCamera(btn);
                 break;
@@ -162,16 +165,22 @@ public class SCA_FIL implements Serializable{
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                if(rt.getDesplegable() != null) {
-                    rta = filtroDesplegable(camp.getText().toString());
-                }else {
-                    rta = camp.getText().toString();
-                }
+                try {
+                    if (rt.getDesplegable() == null) {
+                        //rta = filtroDesplegable(camp.getText().toString());
+                        rta = camp.getText().toString();
+                    } else {
+                        rta = filtroDesplegable(camp.getText().toString());
+                        //causa = filtroDesplegable(camp.getText().toString());
+                    }
 
-                registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado()+"" : null, !causa.isEmpty() ? causa : null);
-                respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");
-                contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
-                pintarRespuesta(causa);
+                    registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado() + "" : null, !causa.isEmpty() ? causa : null);
+                    respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
+                    contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
+                    pintarRespuesta(causa);
+                }catch (Exception e){
+                    Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -179,7 +188,7 @@ public class SCA_FIL implements Serializable{
     public String filtroDesplegable(String rta){
         String data = "";
         causa = "";
-        if(rt.getDesplegable() != null){
+        if(!rt.getDesplegable().isEmpty()){
             DesplegableTab des = pp.busqueda(rta);
             if(des != null) {
                 causa = des.getOpcion();

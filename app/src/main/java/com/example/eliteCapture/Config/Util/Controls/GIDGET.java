@@ -199,7 +199,7 @@ public class GIDGET {
             }
             return d;
         }catch (Exception e){
-            Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "DESPLEGABLE : "+e.toString(), Toast.LENGTH_SHORT).show();
             return null;
         }
     }
