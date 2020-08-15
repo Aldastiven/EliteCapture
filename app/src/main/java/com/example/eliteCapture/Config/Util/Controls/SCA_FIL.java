@@ -166,13 +166,14 @@ public class SCA_FIL implements Serializable{
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    if(rt.getDesplegable() != null) {
+
+                    if(rt.getDesplegable() != null){
                         rta = filtroDesplegable(camp.getText().toString());
                     }else {
                         rta = camp.getText().toString();
                     }
+                    registro( !causa.isEmpty() ? causa : "  ",!rta.isEmpty() ? rt.getPonderado() + "" : null, !rta.isEmpty() ? rta : null);
 
-                    registro( !causa.isEmpty() ? causa : null,!rta.isEmpty() ? rt.getPonderado() + "" : null, !rta.isEmpty() ? rta : null);
                     respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
                     pintarRespuesta(causa);
@@ -182,6 +183,7 @@ public class SCA_FIL implements Serializable{
             }
         });
     }
+
 
     public String filtroDesplegable(String rta){
         String data = "";

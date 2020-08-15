@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
@@ -70,34 +69,39 @@ public class CBE {
         contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
 
         contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
-        contenedorCamp.addView(campo());
+        contenedorCamp.addView(noti);
+        contenedorCamp.addView(camp());
         pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
         return contenedorCamp;
     }
 
-    public View campo(){
+    public View camp(){
         LinearLayout line = ca.container();
-        line.setOrientation(LinearLayout.VERTICAL);
+        line.setWeightSum(2);
+        line.setOrientation(LinearLayout.HORIZONTAL);
 
-        LinearLayout.LayoutParams llparams = ca.params();
-        llparams.weight = 1;
-        llparams.setMargins(200 ,10, 200 ,5);
+        LinearLayout.LayoutParams llcamp = ca.params();
+        llcamp.setMargins(5,0,5,0);
+        llcamp.weight = 1;
+
+        LinearLayout.LayoutParams llspn = ca.params2();
+        llspn.weight = 1;
+
+        Spinner campSpin = new Spinner(context);
+        campSpin.setAdapter(getAdapter(getDesp()));
+        campSpin.setSelection((vacio ? getDesp().indexOf(rt.getCausa()) : 0));
+        campSpin.setBackgroundResource(R.drawable.myspinner);
+        campSpin.setLayoutParams(llspn);
+
+        FunsDesp(campSpin);
 
         edt = (EditText) pp.campoEdtable("Edit","grisClear");
-        edt.setText(!vacio ? rt.getRespuesta() : "");
-        edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        edt.setLayoutParams(llparams);
+        edt.setText((vacio ? rt.getValor() : ""));
+        edt.setLayoutParams(llcamp);
         FunCamp(edt);
 
-        Spinner spin = new Spinner(context);
-        spin.setBackgroundResource(R.drawable.myspinner);
-        spin.setAdapter(getAdapter(getDesp()));
-        spin.setSelection(!vacio ? getDesp().indexOf( filtroDesplegable( rt.getValor() ).getOpcion() ) : 0);
-        FunsDesp(spin);
-
-        line.addView(spin);
-        line.addView(noti);
+        line.addView(campSpin);
         line.addView(edt);
 
         return line;
