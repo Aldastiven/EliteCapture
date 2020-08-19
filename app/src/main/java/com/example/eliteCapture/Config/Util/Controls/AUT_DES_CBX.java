@@ -68,7 +68,7 @@ public class AUT_DES_CBX {
         contenedorcampAut.setGravity(Gravity.CENTER_HORIZONTAL);
 
         contenedorcampAut.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
-        contenedorcampAut.addView(pintarRespuesta(rt.getRespuesta()));
+        contenedorcampAut.addView(pintarRespuesta(rt.getCausa() != null ? rt.getCausa() : ""));
         contenedorcampAut.addView(camp());
         pp.validarColorContainer(contenedorcampAut, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
@@ -83,7 +83,7 @@ public class AUT_DES_CBX {
             switch (rt.getTipo()) {
                 case "AUT":
                     campAut = (AutoCompleteTextView) pp.campoEdtable("Auto", "grisClear");
-                    campAut.setText((vacio ? rt.getCausa() : ""));
+                    campAut.setText((vacio ? rt.getRespuesta() : ""));
                     campAut.setAdapter(getAdapter(getDesp()));
                     FunAut(campAut);
                     v = campAut;
@@ -92,7 +92,7 @@ public class AUT_DES_CBX {
                 case "CBX":
                     campSpin = new Spinner(context);
                     campSpin.setAdapter(getAdapter(getDesp()));
-                    campSpin.setSelection((vacio ? getDesp().indexOf(rt.getCausa()) : 0));
+                    campSpin.setSelection((vacio ? getDesp().indexOf(rt.getRespuesta()) : 0));
                     campSpin.setBackgroundResource(R.drawable.myspinner);
                     FunsDesp(campSpin);
                     v = campSpin;
@@ -171,7 +171,7 @@ public class AUT_DES_CBX {
 
     public View pintarRespuesta(String causa){//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
         if (LineRespuesta.getChildCount() > 0 || causa == null) LineRespuesta.removeAllViews();
-        if (causa != null) {
+        if (causa != null && rt.getDesplegable() != null) {
             if (!causa.isEmpty())
                 LineRespuesta.addView(ta.textColor(causa, "verde", 15, "l"));
                 contenedorcampAut.setBackgroundResource(causa != null ? R.drawable.bordercontainer : R.drawable.bordercontainerred);

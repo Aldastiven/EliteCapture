@@ -165,10 +165,10 @@ public class Cscanner {
                             tv.setText(!res.equals("NO DATA SCAN") ? "Resultado : " + res : "Escanea el codigo de barras activando la camara");
                             tv.setTextColor(!res.equals("NO DATA SCAN") ? Color.parseColor("#58d68d") : Color.parseColor("#979A9A"));
 
-                            noDataScan(edt.getText().toString(), res);
+                            noDataScan(res, edt.getText().toString());
 
                         } else {
-                            registro(edt.getText().toString(), null);
+                            registro(null, edt.getText().toString());
                         }
 
                     } else {

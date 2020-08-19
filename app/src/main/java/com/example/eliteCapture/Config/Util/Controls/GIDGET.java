@@ -110,6 +110,7 @@ public class GIDGET {
     }
 
     public void validarColorContainer(LinearLayout contenedorCamp, boolean vacio, boolean inicial){
+        Log.i("VACIOS","vacio : "+vacio+" inicial : "+inicial);
         if(!inicial){
             contenedorCamp.setBackgroundResource(!vacio ? bordercontainerred : bordercontainer);
         }else{

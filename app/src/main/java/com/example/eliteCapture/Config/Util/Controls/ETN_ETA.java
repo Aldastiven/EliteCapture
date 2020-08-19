@@ -89,7 +89,6 @@ public class ETN_ETA {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                Toast.makeText(context, ""+camp.getText().toString(), Toast.LENGTH_SHORT).show();
                     String rta = camp.getText().toString();
                     registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado()+"" : null);
                     respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");

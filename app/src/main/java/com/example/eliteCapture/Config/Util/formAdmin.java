@@ -81,7 +81,6 @@ public class formAdmin {
             linearPrinc.removeAllViews();
             for (RespuestasTab r : !ubicacion.equals("H") ? contenedor.getQuestions() : contenedor.getHeader()) {
                 View v = null;
-                Log.i("CAMPOSFORM", r.getTipo());
                 switch (r.getTipo()) {
                     case "CBE":
                         v = new CBE(context, ubicacion, r, path, inicial).crear();

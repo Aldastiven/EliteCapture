@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.QwertyKeyListener;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -47,7 +48,7 @@ public class CBE {
         this.rt = rt;
         this.ubicacion = ubicacion;
         this.path = path;
-        this.vacio = rt.getRespuesta() == null || rt.getRespuesta().isEmpty();
+        this.vacio = rt.getRespuesta() != null;
         this.initial = initial;
 
         iDesp = new iDesplegable(null, path);
@@ -56,7 +57,7 @@ public class CBE {
         ta = new textAdmin(context);
 
         respuestaPonderado = (TextView) pp.resultadoPonderado();
-        respuestaPonderado.setText(!vacio ? "Resultado : "+rt.getPonderado() : "Resultado :");
+        respuestaPonderado.setText("Resultado :");
 
         noti = new LinearLayout(context);
         noti.setOrientation(LinearLayout.VERTICAL);
@@ -90,7 +91,7 @@ public class CBE {
 
         Spinner campSpin = new Spinner(context);
         campSpin.setAdapter(getAdapter(getDesp()));
-        campSpin.setSelection((vacio ? getDesp().indexOf(rt.getCausa()) : 0));
+        campSpin.setSelection((vacio ? getDesp().indexOf(getNameDesp(Integer.parseInt(rt.getValor()))) : 0));
         campSpin.setBackgroundResource(R.drawable.myspinner);
         campSpin.setLayoutParams(llspn);
 
@@ -99,6 +100,7 @@ public class CBE {
         edt = (EditText) pp.campoEdtable("Edit","grisClear");
         edt.setText((vacio ? rt.getValor() : ""));
         edt.setLayoutParams(llcamp);
+        edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
         FunCamp(edt);
 
         line.addView(campSpin);
@@ -156,6 +158,8 @@ public class CBE {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
+                    Toast.makeText(context, ""+edt.getText().toString(), Toast.LENGTH_SHORT).show();
+                    respuestaPonderado.setText(edt.getText().toString().isEmpty() ? "Resultado : " : "Resultado : "+rt.getPonderado());
                     if (datoDesplegable.isEmpty()) {
                         if (noti.getChildCount() < 1) {
                             noti.addView(ta.textColor("¡Debes seleccionar al menos una opción!", "rojo", 15, "l"));
@@ -167,6 +171,7 @@ public class CBE {
                         }
                     } else {
                         String rtaEdt = edt.getText().toString();
+                        respuestaPonderado.setText("Resultado : "+rt.getPonderado());
                         registro(!rtaEdt.isEmpty() ? rtaEdt : null, datoDesplegable);
                     }
                 }catch (Exception e){}
@@ -183,6 +188,17 @@ public class CBE {
             }
         }
         return dt;
+    }
+
+    public String getNameDesp(int idDesp){
+        String data = "";
+        if(rt.getDesplegable() != null){
+            DesplegableTab des = pp.busqueda(idDesp+"");
+            if(des != null) {
+                data = des.getOpcion();
+            }
+        }
+        return data;
     }
 
     public void registro(String rta, String valor) {//REGISTRO AL JSON TEMPORAL

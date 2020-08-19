@@ -97,7 +97,7 @@ public class Camera extends AppCompatActivity implements Serializable {
         Cscanner cscanner = new Cscanner(path);
         iContenedor conTemp = new iContenedor(path);
         String valor = "";
-        if (!desplegable.isEmpty()) {
+        if (rt.getDesplegable() != null) {
 
             Log.i("DESPLEGABLE","entro al if");
 
@@ -117,11 +117,11 @@ public class Camera extends AppCompatActivity implements Serializable {
                 edit.putString( "resDesp",res.isEmpty() ? "" : res);
                 edit.apply();
             }
-            conTemp.editarTemporal(ubicacion, id, !cadena.isEmpty() ? cadena : null, null , !valor.isEmpty() ? valor : null,regla);
+            conTemp.editarTemporal(ubicacion, id, !valor.isEmpty() ? valor : null , null ,!cadena.isEmpty() ? cadena : null,regla);
 
         }else{
             Log.i("DESPLEGABLE","no entro");
-            conTemp.editarTemporal(ubicacion, id, rta, valor, null, regla);
+            conTemp.editarTemporal(ubicacion, id, valor, rta, null, regla);
         }
     }
 

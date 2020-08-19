@@ -124,8 +124,6 @@ public class genated extends AppCompatActivity {
                 ok = true;
                 crearform();
 
-                Toast.makeText(this, ""+ubicacion, Toast.LENGTH_SHORT).show();
-
                 if(ubicacion.equals("H"))mypop.show();
             } else {
                 if (temporal) {

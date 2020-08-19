@@ -70,7 +70,7 @@ public class SCA_FIL implements Serializable{
         contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
 
         contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado4
-        contenedorCamp.addView(pintarRespuesta(rt.getCausa()));
+        contenedorCamp.addView(pintarRespuesta(rt.getRespuesta()));
         contenedorCamp.addView(campo());
         pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
@@ -90,7 +90,9 @@ public class SCA_FIL implements Serializable{
 
     public View campo(){
         camp = (EditText) pp.campoEdtable("Edit", "grisClear");
-        camp.setText((vacio ? rt.getRespuesta() : ""));
+        Toast.makeText(context, "valor : "+rt.getCausa()+"  respuesta : "+rt.getRespuesta(), Toast.LENGTH_SHORT).show();
+        if(rt.getDesplegable() != null) camp.setText(vacio ? rt.getCausa() : "");
+        else camp.setText(vacio ? rt.getValor() : "");
         camp.setLayoutParams(params((float) 0.5));
         if(rt.getTipo().equals("SCN")) camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
 
@@ -169,10 +171,12 @@ public class SCA_FIL implements Serializable{
 
                     if(rt.getDesplegable() != null){
                         rta = filtroDesplegable(camp.getText().toString());
+                        Toast.makeText(context, ""+rta, Toast.LENGTH_SHORT).show();
+                        registro(!causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null, !rta.isEmpty() ? rta : null);
                     }else {
                         rta = camp.getText().toString();
+                        registro(!causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null, !rta.isEmpty() ? rta : null);
                     }
-                    registro( !causa.isEmpty() ? causa : "  ",!rta.isEmpty() ? rt.getPonderado() + "" : null, !rta.isEmpty() ? rta : null);
 
                     respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
