@@ -90,7 +90,6 @@ public class SCA_FIL implements Serializable{
 
     public View campo(){
         camp = (EditText) pp.campoEdtable("Edit", "grisClear");
-        Toast.makeText(context, "valor : "+rt.getCausa()+"  respuesta : "+rt.getRespuesta(), Toast.LENGTH_SHORT).show();
         if(rt.getDesplegable() != null) camp.setText(vacio ? rt.getCausa() : "");
         else camp.setText(vacio ? rt.getValor() : "");
         camp.setLayoutParams(params((float) 0.5));
@@ -171,7 +170,6 @@ public class SCA_FIL implements Serializable{
 
                     if(rt.getDesplegable() != null){
                         rta = filtroDesplegable(camp.getText().toString());
-                        Toast.makeText(context, ""+rta, Toast.LENGTH_SHORT).show();
                         registro(!causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null, !rta.isEmpty() ? rta : null);
                     }else {
                         rta = camp.getText().toString();

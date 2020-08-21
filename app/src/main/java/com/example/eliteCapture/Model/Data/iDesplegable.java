@@ -73,7 +73,7 @@ public class iDesplegable implements Desplegable {
         ",[Opcion]\n" +
         ",[condicional]"+
         "FROM [dbo].[Desplegables] \n" +
-        "ORDER BY Codigo");
+        "ORDER BY Opcion ASC");
     rs = ps.executeQuery();
 
     while (rs.next()) {
@@ -112,7 +112,7 @@ public class iDesplegable implements Desplegable {
       ResultSet rs;
       PreparedStatement ps = cn.prepareStatement("SELECT id_Desplegable, Filtro, Codigo, Opcion, condicional\n" +
           "FROM  Desplegables\n" +
-          "WHERE [Filtro]='" + nombreD + "' ORDER BY Codigo");
+          "WHERE [Filtro]='" + nombreD + "' ORDER BY Opcion ASC");
       rs = ps.executeQuery();
 
       while (rs.next()) {

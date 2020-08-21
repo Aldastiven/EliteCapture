@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,8 @@ public class iContador implements Contador {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         this.nombre = "contado-" + sdf.format(new Date());
+
+
 
         this.path = path;
         try {

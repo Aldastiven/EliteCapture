@@ -23,6 +23,7 @@ import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 
 import com.example.eliteCapture.Model.View.Tab.ContadorTab;
 import com.example.eliteCapture.Model.View.iContador;
+import com.example.eliteCapture.Model.View.iContenedor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -65,6 +66,8 @@ public class Index extends AppCompatActivity {
             traerDataUser();
             traerFechaUpDate();
             CargaMenu();
+
+            new iContenedor(path).limpiarXfecha();
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), "Error \n" + ex, Toast.LENGTH_SHORT).show();
         }

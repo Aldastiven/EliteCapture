@@ -1,8 +1,11 @@
 package com.example.eliteCapture.Model.View;
 
 
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Config.sqlConect;
@@ -20,7 +23,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +34,11 @@ import java.util.Map;
 
 public class iContenedor implements Contenedor {
     private String nombre = "pendientes_envio", path;
+    Calendar calendar;
+
 
     public static List<ContenedorTab> ct = new ArrayList<>();
+    public static List<ContenedorTab> newct = new ArrayList<>();
 
     public String getNombre() {
         return nombre;
@@ -44,6 +53,7 @@ public class iContenedor implements Contenedor {
         try {
             if (!exist()){local();}
             ct = all();
+            calendar = Calendar.getInstance();
         } catch (Exception e) {
             Log.i("Error_onCreate", e.toString());
         }
@@ -364,4 +374,61 @@ public class iContenedor implements Contenedor {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void limpiarXfecha(){
+        try {
+            ct = all();
+            int conteo = 0;
+            newct.clear();
+            for (ContenedorTab tab : ct) {
+
+                Instant after= Instant.now().minus(Duration.ofDays(15));
+
+                String fechaJson = tab.getFecha().split(" ")[0];
+                String fechaRetrocedida = after.toString().split("T")[0];
+
+                int añoJson = Integer.parseInt(splitdate(fechaJson)[0]);
+                int mesJson = Integer.parseInt(splitdate(fechaJson)[1]);
+                int diaJson = Integer.parseInt(splitdate(fechaJson)[2]);
+
+                int año15 = Integer.parseInt(splitdate(fechaRetrocedida)[0]);
+                int mes15 = Integer.parseInt(splitdate(fechaRetrocedida)[1]);
+                int dia15 = Integer.parseInt(splitdate(fechaRetrocedida)[2]);
+
+                Log.i("GETFECHA", "=============VAIDACION "+(conteo++)+" ===============");
+                Log.i("GETFECHA", "fecha obtenida : " + fechaJson + " fecha parceada : " + fechaRetrocedida);
+                boolean validado = false;
+                if(añoJson <= año15){
+                    if(mesJson < mes15){
+                        validado = getEstado(tab.getEstado());
+                    }else if(mesJson == mes15){
+                        if(diaJson <= dia15){
+                            validado = getEstado(tab.getEstado());
+                        }
+                    }
+                    Log.i("GETFECHA", "validando mes : json --> " + mesJson +" VS hace 15 dias --> "+mes15);
+                    Log.i("GETFECHA", "validando dia : json --> " + diaJson +" VS hace 15 dias --> "+dia15);
+                    Log.i("GETFECHA", "validando año : json --> " + añoJson +" VS hace 15 dias --> "+año15);
+                    Log.i("GETFECHA", "Estado json : " +tab.getEstado());
+                }
+                Log.i("GETFECHA", "validacion : " + validado);
+                if(!validado) newct.add(tab);
+                Log.i("GETFECHA", "=====================================");
+            }
+            ct.clear();
+            ct = newct;
+            Log.i("GETFECHA", "crea json "+local());
+        }catch (Exception ex){
+            Log.i("GETFECHA",ex.toString());
+        }
+    }
+
+    public String[] splitdate(String d){
+        String[] i = d.split("-");
+        return i;
+    }
+
+    public boolean getEstado(int estado){
+        return estado == 1;
+    }
 }
