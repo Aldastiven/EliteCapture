@@ -19,12 +19,15 @@ import android.widget.Toast;
 import com.example.eliteCapture.Config.Util.Modal.modalServer;
 import com.example.eliteCapture.Config.Util.Modal.modalSetting;
 import com.example.eliteCapture.Model.Data.Admin;
+import com.example.eliteCapture.Model.Data.iSesion;
 import com.example.eliteCapture.Model.Data.iUsuario;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.Data.ionLine;
+import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 
 import java.io.File;
+import java.util.List;
 
 import static com.example.eliteCapture.R.*;
 import static com.example.eliteCapture.R.drawable.*;
@@ -38,6 +41,8 @@ public class Login extends AppCompatActivity {
     TextView txtError, floatingServer;
     ImageView imgOnline;
     iContenedor icont;
+
+    iSesion is;
 
 
     @Override
@@ -65,6 +70,7 @@ public class Login extends AppCompatActivity {
             recibirUsuario();
 
             icont = new iContenedor(path);
+            is = new iSesion(path);
 
             imgOnline.setBackgroundResource(new ionLine(path).all().equals("onLine") ? ic_wifi_on : ic_wifi_off);
             floatingServer.setCompoundDrawablesWithIntrinsicBounds(icont.pendientesCantidad() > 0 ? ic_cloud_noti : ic_cloud, 0, 0, 0);
@@ -99,16 +105,31 @@ public class Login extends AppCompatActivity {
 
                 guardarUsuario(txt_user, txt_pass);
 
+                borrarTemp(m.getId_usuario());
+                new iSesion(path).local(m.getId_usuario());
+
             } else if (m == null) {
                 txtUser.setBackgroundResource(bordercontainerred);
                 txtPass.setBackgroundResource(bordercontainerred);
                 txtError.setText("Identificaficación o contraseña incorrectas !!!");
+                new iSesion(path).local(0000);
             }
 
         } catch (NumberFormatException ex) {
             txtUser.setBackgroundResource(bordercontainerred);
             txtPass.setBackgroundResource(bordercontainerred);
             txtError.setText("No puedes dejar campos vacios !!!");
+            new iSesion(path).local(0000);
+        }
+    }
+
+    public void borrarTemp(int usuIngreso){
+        try {
+            if (is.all() != usuIngreso) {
+                icont.crearTemporal(null);
+            }
+        }catch (Exception e){
+            Toast.makeText(this, ""+e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 

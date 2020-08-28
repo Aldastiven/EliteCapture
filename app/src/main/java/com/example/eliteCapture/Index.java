@@ -66,8 +66,6 @@ public class Index extends AppCompatActivity {
             traerDataUser();
             traerFechaUpDate();
             CargaMenu();
-
-            new iContenedor(path).limpiarXfecha();
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), "Error \n" + ex, Toast.LENGTH_SHORT).show();
         }

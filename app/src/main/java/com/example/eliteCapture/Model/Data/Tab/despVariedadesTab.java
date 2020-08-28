@@ -4,16 +4,21 @@ import java.util.List;
 
 public class despVariedadesTab {
 
+    String filtro;
     int idProducto;
     String producto;
     List<variedades> variedades;
 
-    public despVariedadesTab(int idProducto, String producto, List<despVariedadesTab.variedades> variedades) {
+    public despVariedadesTab(String filtro, int idProducto, String producto, List<despVariedadesTab.variedades> variedades) {
+        this.filtro = filtro;
         this.idProducto = idProducto;
         this.producto = producto;
         this.variedades = variedades;
     }
 
+    public String getFiltro() {
+        return filtro;
+    }
 
     public int getIdProducto() {
         return idProducto;

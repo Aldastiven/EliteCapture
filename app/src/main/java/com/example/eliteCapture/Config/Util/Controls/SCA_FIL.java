@@ -91,7 +91,7 @@ public class SCA_FIL implements Serializable{
     public View campo(){
         camp = (EditText) pp.campoEdtable("Edit", "grisClear");
         if(rt.getDesplegable() != null) camp.setText(vacio ? rt.getCausa() : "");
-        else camp.setText(vacio ? rt.getValor() : "");
+        else camp.setText(vacio && !rt.getValor().equals("0.0") ? rt.getValor() : rt.getCausa());
         camp.setLayoutParams(params((float) 0.5));
         if(rt.getTipo().equals("SCN")) camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
 

@@ -98,9 +98,10 @@ public class CBE {
         FunsDesp(campSpin);
 
         edt = (EditText) pp.campoEdtable("Edit","grisClear");
-        edt.setText((vacio ? rt.getValor() : ""));
+        edt.setText((vacio ? rt.getRespuesta() : ""));
         edt.setLayoutParams(llcamp);
         edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
+        respuestaPonderado.setText(edt.getText().toString().isEmpty() ? "Resultado : " : "Resultado : "+rt.getPonderado());
         FunCamp(edt);
 
         line.addView(campSpin);
@@ -114,7 +115,7 @@ public class CBE {
         try {
             List<String> Loptions = new ArrayList<>();
             iDesp.nombre = rt.getDesplegable();
-            Loptions.add("Selecciona");
+            //Loptions.add("Selecciona");
             for (DesplegableTab desp : iDesp.all()) {
                 Loptions.add(desp.getOpcion());
             }
@@ -158,7 +159,6 @@ public class CBE {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    Toast.makeText(context, ""+edt.getText().toString(), Toast.LENGTH_SHORT).show();
                     respuestaPonderado.setText(edt.getText().toString().isEmpty() ? "Resultado : " : "Resultado : "+rt.getPonderado());
                     if (datoDesplegable.isEmpty()) {
                         if (noti.getChildCount() < 1) {

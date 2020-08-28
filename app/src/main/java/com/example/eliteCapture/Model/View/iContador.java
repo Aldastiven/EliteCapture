@@ -25,15 +25,12 @@ public class iContador implements Contador {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         this.nombre = "contado-" + sdf.format(new Date());
 
-
-
         this.path = path;
         try {
             ct = all();
         } catch (Exception e) {
             Log.i("Error_onCreate", e.toString());
         }
-
     }
 
     @Override

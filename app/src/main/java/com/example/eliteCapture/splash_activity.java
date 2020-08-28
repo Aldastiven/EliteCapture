@@ -233,7 +233,8 @@ public class splash_activity extends AppCompatActivity {
                     admin.getDesplegable().setNombre(e);
                     admin.getDesplegable().traerDesplegable(e);
                 }
-                admin.getProductos().local();
+                //admin.getProductos().local();
+                admin.getProductos().consultarSql();
             } catch (Exception ex) {
                 Log.i("ErrorSplash", ex.toString());
             }

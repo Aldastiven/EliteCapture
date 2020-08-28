@@ -52,7 +52,6 @@ public class iContenedor implements Contenedor {
         this.path = path;
         try {
             if (!exist()){local();}
-            ct = all();
             calendar = Calendar.getInstance();
         } catch (Exception e) {
             Log.i("Error_onCreate", e.toString());
@@ -87,7 +86,7 @@ public class iContenedor implements Contenedor {
     }
 
     @Override
-    public boolean local() throws Exception {
+    public boolean local() {
         Log.i("Enviar_local", "Ingreso");
         return new JsonAdmin()
                 .WriteJson(
@@ -98,11 +97,13 @@ public class iContenedor implements Contenedor {
 
     @Override
     public List<ContenedorTab> all() throws Exception {
+        Log.i("ALLConsulta","llego a consultar");
         return new Gson()
                 .fromJson(
                         new JsonAdmin().ObtenerLista(path, nombre),
                         new TypeToken<List<ContenedorTab>>() {
                         }.getType());
+
     }
 
     @Override
@@ -199,7 +200,6 @@ public class iContenedor implements Contenedor {
 
     public void editarTemporal(String donde, int idPregunta, String respuesta, String valor, String causa, int regla){
         try {
-            Log.i("Footer", "Donde: " + donde + " id: " + idPregunta + " Rta: " + respuesta + " Valor: " + valor);
             ContenedorTab conTemp = new Gson().fromJson(new JsonAdmin().ObtenerLista(path, "temp"),
                     new TypeToken<ContenedorTab>() {
                     }.getType());

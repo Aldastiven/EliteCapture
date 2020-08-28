@@ -16,6 +16,7 @@ import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Tab.despVariedadesTab;
 import com.example.eliteCapture.Model.Data.idespVariedades;
+import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
@@ -26,7 +27,7 @@ import java.util.List;
 
 public class DPV {
     Context context;
-    String ubicacion, path, pregunta2, producto;
+    String ubicacion, path, producto;
     RespuestasTab rt;
     boolean vacio, initial;
 
@@ -35,10 +36,13 @@ public class DPV {
     textAdmin ta;
 
     idespVariedades idv;
+    iContenedor icont;
 
     TextView respuestaPonderado;
     LinearLayout contenedorCamp, contenedorCampos, lineVariedad;
     AutoCompleteTextView camp1;
+
+    int idDPV;
 
     public DPV(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
         this.context = context;
@@ -47,13 +51,13 @@ public class DPV {
         this.path = path;
         this.initial = initial;
         this.vacio = rt.getRespuesta() != null;
-        this.pregunta2 = "Variedad";
 
         ca = new containerAdmin(context);
         pp = new GIDGET(context, ubicacion, rt, path);
         ta = new textAdmin(context);
 
         idv = new idespVariedades(path, null);
+        icont = new iContenedor(path);
 
         respuestaPonderado = (TextView) pp.resultadoPonderado();
         respuestaPonderado.setText(vacio ? " Resultado : "+rt.getPonderado() : " Resultado : ");
@@ -67,38 +71,21 @@ public class DPV {
         contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
 
         contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
-        contenedorCamp.addView(campo1());
+        contenedorCamp.addView(campo2());
         pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
         return contenedorCamp;
     }
 
-    public View campo1(){
-        camp1 = (AutoCompleteTextView) pp.campoEdtable("Auto", "grisClear");
-        camp1.setText((vacio ? rt.getCausa() : ""));
-        camp1.setAdapter(getAdapter(getProducto()));
-        FunAut(camp1, 1);
-
-        TextView pregSecond = (TextView) ta.textColor(pregunta2, "negro",15,"l");
-
-        contenedorCampos = ca.container();
-        contenedorCampos.setOrientation(LinearLayout.VERTICAL);
-
-        contenedorCampos.addView(camp1);
-        contenedorCampos.addView(pregSecond);
-        contenedorCampos.addView(campo2());
-
-        return contenedorCampos;
-    }
 
     public View campo2(){
         try {
             lineVariedad = new LinearLayout(context);
             lineVariedad.setOrientation(LinearLayout.VERTICAL);
+            lineVariedad.setPadding(0,0,0,10);
 
             AutoCompleteTextView camp2 = (AutoCompleteTextView) pp.campoEdtable("Auto", "grisClear");
             camp2.setText((vacio ? rt.getRespuesta() : ""));
-            camp2.setAdapter(getAdapter(getVariedad()));
             FunAut(camp2, 2);
 
             lineVariedad.addView(camp2);
@@ -114,31 +101,31 @@ public class DPV {
         return autoArray;
     }
 
-    public List<String> getProducto(){// ITEMS PRODUCTO
-        try {
-            List<String> Lproducto = new ArrayList<>();
-            for (despVariedadesTab dt : idv.all()) {
-                Lproducto.add(dt.getProducto());
-            }
-
-            HashSet sh = new HashSet();
-            sh.addAll(Lproducto);
-            Lproducto.clear();
-            Lproducto.addAll(sh);
-
-            return Lproducto;
-        }catch (Exception e){
-            Log.i("ERORPRODUCTO",e.toString());
-            return null;
-        }
-    }
-
     public List<String> getVariedad(){// ITEMS VARIEDAD
         try {
             List<String> Lvariedad = new ArrayList<>();
+            List<ContenedorTab> Ltemporal = new ArrayList<>();
+            Ltemporal.add(icont.optenerTemporal());
 
-            for (despVariedadesTab dt : idv.all()) {
-                if(dt.getProducto().equals(producto)){
+
+            for(ContenedorTab cont : Ltemporal){
+                for(RespuestasTab resH : cont.getHeader()){
+                    if(resH.getCodigo() == rt.getReglas()){
+                        idDPV = Integer.parseInt(resH.getCausa());
+                        break;
+                    }
+                }
+
+                for(RespuestasTab resH : cont.getQuestions()){
+                    if(resH.getCodigo() == rt.getReglas()){
+                        idDPV = Integer.parseInt(resH.getCausa());
+                        break;
+                    }
+                }
+            }
+
+            for (despVariedadesTab dt : idv.all(rt.getDesplegable())) {
+                if(dt.getIdProducto() == idDPV){
                     for(despVariedadesTab.variedades variedades : dt.getVariedades()){
                         Lvariedad.add(variedades.getVariedad());
                     }
@@ -157,7 +144,7 @@ public class DPV {
     public String Buscar(String data) {
         try {
             String producto = "";
-            for (despVariedadesTab desp : idv.all()) {
+            for (despVariedadesTab desp : idv.all(rt.getDesplegable())) {
                 if (desp.getProducto().equals(data)) {
                     producto = desp.getProducto();
                     break;
@@ -174,8 +161,9 @@ public class DPV {
     public despVariedadesTab.variedades BuscarVariedad(String data) {
         try {
             despVariedadesTab.variedades variedad = null;
-            for (despVariedadesTab dt : idv.all()) {
-                if(dt.getProducto().equals(producto)){
+            for (despVariedadesTab dt : idv.all(rt.getDesplegable())) {
+                Log.i("BUSCADOR","idPadre : "+idDPV);
+                if(dt.getIdProducto() == idDPV){
                     for(despVariedadesTab.variedades variedades : dt.getVariedades()){
                         if (variedades.getVariedad().equals(data)) {
                             variedad = variedades;
@@ -199,27 +187,18 @@ public class DPV {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
 
-                    switch (tipo){
-                        case 1:
-                                producto = Buscar(etdauto.getText().toString());
-                                if (!producto.isEmpty()) {
-                                    if(lineVariedad.getChildCount()>0)lineVariedad.removeAllViews();
-                                    contenedorCampos.addView(campo2());
-                                }
-                            break;
-                        case 2:
-                                despVariedadesTab.variedades variedad = BuscarVariedad(etdauto.getText().toString());
-                                if(variedad != null) {
-                                    String var = variedad.getVariedad();
-                                    String resPond = var.isEmpty() ? "Resultado: " : "Resultado: " + rt.getPonderado();
-                                    respuestaPonderado.setText(resPond);
-                                    registro(var.isEmpty() ? null : var, var.isEmpty() ? null : String.valueOf(variedad.getIdVariedad()),var.isEmpty() ? null : producto);
-                                    contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
-                                }else {
-                                    respuestaPonderado.setText("Resultado: ");
-                                    registro(null, null, null);
-                                }
-                            break;
+                    etdauto.setAdapter(getAdapter(getVariedad()));
+
+                    despVariedadesTab.variedades variedad = BuscarVariedad(etdauto.getText().toString());
+                    if(variedad != null) {
+                        String var = variedad.getVariedad();
+                        String resPond = var.isEmpty() ? "Resultado: " : "Resultado: " + rt.getPonderado();
+                        respuestaPonderado.setText(resPond);
+                        registro(var.isEmpty() ? null : var, var.isEmpty() ? null : String.valueOf(variedad.getIdVariedad()),var.isEmpty() ? null : producto);
+                        contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
+                    }else {
+                        respuestaPonderado.setText("Resultado: ");
+                        registro(null, null, null);
                     }
                 } catch (Exception ex) {
                     Toast.makeText(context, "" + ex.toString(), Toast.LENGTH_LONG).show();

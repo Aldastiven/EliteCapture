@@ -47,7 +47,7 @@ public abstract class sqlConect {
             //return DriverManager.getConnection(ConnectionURL);
             return DriverManager.getConnection(url,user,pass);
         } catch (Exception e) {
-            Log.i("CONEXION ERROR", "error de conexion \n" + e);
+            Log.i("CONEXION_ERROR", "error de conexion \n" + e);
             return null;
         }
 

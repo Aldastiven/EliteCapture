@@ -259,7 +259,7 @@ public class CVariedadJson {
     public List<String> getProducto(){
         try {
             List<String> Lproducto = new ArrayList<>();
-            for (despVariedadesTab dt : idv.all()) {
+            for (despVariedadesTab dt : idv.all(rt.getDesplegable())) {
                 Lproducto.add(dt.getProducto());
             }
 
@@ -280,7 +280,7 @@ public class CVariedadJson {
         try {
             List<String> Lvariedad = new ArrayList<>();
 
-            for (despVariedadesTab dt : idv.all()) {
+            for (despVariedadesTab dt : idv.all(rt.getDesplegable())) {
                 if(dt.getProducto().equals(producto)){
                     for(despVariedadesTab.variedades variedades : dt.getVariedades()){
                         Lvariedad.add(variedades.getVariedad());
@@ -301,7 +301,7 @@ public class CVariedadJson {
     public String Buscar(String data, String desplegable) {
         try {
             String producto = "";
-            for (despVariedadesTab desp : idv.all()) {
+            for (despVariedadesTab desp : idv.all(rt.getDesplegable())) {
                 if (desp.getProducto().equals(data)) {
                     producto = desp.getProducto();
                     break;
@@ -318,7 +318,7 @@ public class CVariedadJson {
     public despVariedadesTab.variedades BuscarVariedad(String data) {
         try {
             despVariedadesTab.variedades variedad = null;
-            for (despVariedadesTab dt : idv.all()) {
+            for (despVariedadesTab dt : idv.all(rt.getDesplegable())) {
                 if(dt.getProducto().equals(producto)){
                     for(despVariedadesTab.variedades variedades : dt.getVariedades()){
                         if (variedades.getVariedad().equals(data)) {

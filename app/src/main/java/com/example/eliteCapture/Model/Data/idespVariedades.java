@@ -1,6 +1,6 @@
 package com.example.eliteCapture.Model.Data;
 
-import android.widget.Toast;
+import android.util.Log;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.Data.Tab.despVariedadesTab;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class idespVariedades {
-    String path, nombre = "VariedadJson";
+    String path, nombre = "Dependiente_";
     Connection cn;
 
     List<despVariedadesTab> Lproductos = new ArrayList<>();
@@ -24,45 +24,71 @@ public class idespVariedades {
         this.cn = cn;
     }
 
-    public boolean local() throws Exception{
+    public void consultarSql() throws Exception{
         ResultSet rs;
-        PreparedStatement ps = cn.prepareStatement("SELECT idproducto, Producto\n" +
-                                                        "FROM  Desp_variedades\n" +
-                                                        "GROUP BY idproducto, Producto\n" +
-                                                        "ORDER BY Producto ASC");
+        PreparedStatement ps = cn.prepareStatement("SELECT filtro FROM  Desp_Dependiente GROUP BY filtro");
+
         rs = ps.executeQuery();
 
         while (rs.next()){
-            Lproductos.add(new despVariedadesTab(rs.getInt("idproducto"),
-                                    rs.getString("Producto"),
-                                    getVariedades(rs.getInt("idproducto"))
-            ));
+            local(rs.getString("filtro"));
         }
-        return new JsonAdmin().WriteJson(path, nombre, new Gson().toJson(Lproductos));
     }
 
-    public List<despVariedadesTab.variedades> getVariedades(int idProducto) throws Exception{
-
-        List<despVariedadesTab.variedades> Lvariedades = new ArrayList<>();
+    public boolean local(String filtroName) throws Exception{
+        Lproductos.clear();
 
         ResultSet rs;
-        PreparedStatement ps = cn.prepareStatement("SELECT IDVariedad, variedad\n" +
-                                                        "FROM   Desp_variedades\n" +
-                                                        "WHERE idproducto = '"+idProducto+"' \n"+
-                                                        "ORDER BY variedad ASC");
+        PreparedStatement ps = cn.prepareStatement("SELECT filtro, Id_p, Des_p\n" +
+                                                        "FROM  Desp_Dependiente\n" +
+                                                        "WHERE filtro = '"+filtroName+"'"+
+                                                        "GROUP BY filtro, Id_p, Des_p\n" +
+                                                        "ORDER BY Des_p ASC");
         rs = ps.executeQuery();
 
+        Log.i("CONSULTAS", "==============================="+filtroName+"===========================================");
+
         while (rs.next()){
-            Lvariedades.add(new despVariedadesTab.variedades(rs.getInt("IDVariedad"),
-                                                             rs.getString("variedad"))
-            );
+            Lproductos.add(new despVariedadesTab(
+                                    rs.getString("filtro"),
+                                    rs.getInt("Id_p"),
+                                    rs.getString("Des_p"),
+                                    getHijo(rs.getInt("Id_p"), rs.getString("filtro"))
+            ));
         }
+
+        Log.i("CONSULTAS", "===============================TERMINO===========================================");
+        Log.i("CONSULTAS", "_");
+        return new JsonAdmin().WriteJson(path, nombre+filtroName, new Gson().toJson(Lproductos));
+    }
+
+    public List<despVariedadesTab.variedades> getHijo(int idPadre, String filtro) throws Exception{
+        List<despVariedadesTab.variedades> Lvariedades = new ArrayList<>();
+        ResultSet rs;
+        String q = "SELECT id_d, Des_d FROM Desp_Dependiente WHERE filtro = '"+filtro+"' AND Id_p = '"+idPadre+"' ";
+
+        Log.i("CONSULTAS", q);
+
+        PreparedStatement ps = cn.prepareStatement(q);
+
+        rs = ps.executeQuery();
+
+        int contador = 0;
+
+        while (rs.next()){
+            contador ++;
+            Log.i("CONSULTAS", "Resultado : hijo ---> "+rs.getString("Des_d"));
+            Lvariedades.add(new despVariedadesTab.variedades(rs.getInt("id_d"),
+                                                             rs.getString("Des_d")));
+        }
+
+        Log.i("CONSULTAS", "Resultado : hijos Contados ---> "+contador);
 
         return Lvariedades;
     }
 
-    public List<despVariedadesTab> all() throws Exception{
-            Lproductos = new Gson().fromJson(new JsonAdmin().ObtenerLista(path, nombre),
+    public List<despVariedadesTab> all(String filtroName) throws Exception{
+            Lproductos = new Gson().fromJson(new JsonAdmin().ObtenerLista(path, nombre+filtroName),
                     new TypeToken<List<despVariedadesTab>>() {
                     }.getType());
 
