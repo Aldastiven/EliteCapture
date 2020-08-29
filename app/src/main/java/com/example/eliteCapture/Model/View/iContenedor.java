@@ -35,6 +35,7 @@ import java.util.Map;
 public class iContenedor implements Contenedor {
     private String nombre = "pendientes_envio", path;
     Calendar calendar;
+    iContador contador = null;
 
 
     public static List<ContenedorTab> ct = new ArrayList<>();
@@ -53,6 +54,7 @@ public class iContenedor implements Contenedor {
         try {
             if (!exist()){local();}
             calendar = Calendar.getInstance();
+            contador = new iContador(path);
         } catch (Exception e) {
             Log.i("Error_onCreate", e.toString());
         }
@@ -60,21 +62,19 @@ public class iContenedor implements Contenedor {
 
     @Override
     public String insert(ContenedorTab o) throws Exception {
-        o.setConsecutivo(ct.size());
+        all();
+        o.setConsecutivo( contador.getCantidad(o.getIdUsuario(), o.getIdProceso()) );
         o.setFecha(o.fechaString());
         ct.add(o);
-
-        Log.i("Enviar_ins", "Inserto y siguio :D");
         local();
-        Log.i("Error_onCreate", "Registros en json: " + ct.size());
 
         return "Ok";
     }
 
     @Override
     public String delete(Long id) throws Exception {
-        ct.remove(id);
-        local();
+        //ct.remove(id);
+        //local();
         return "Ok";
     }
 
@@ -96,14 +96,17 @@ public class iContenedor implements Contenedor {
     }
 
     @Override
-    public List<ContenedorTab> all() throws Exception {
-        Log.i("ALLConsulta","llego a consultar");
-        return new Gson()
-                .fromJson(
-                        new JsonAdmin().ObtenerLista(path, nombre),
-                        new TypeToken<List<ContenedorTab>>() {
-                        }.getType());
-
+    public List<ContenedorTab> all() {
+        try {
+            Log.i("ALLConsulta", "llego a consultar");
+            return ct = new Gson()
+                    .fromJson(
+                            new JsonAdmin().ObtenerLista(path, nombre),
+                            new TypeToken<List<ContenedorTab>>() {
+                            }.getType());
+        }catch (Exception e){
+            return null;
+        }
     }
 
     @Override

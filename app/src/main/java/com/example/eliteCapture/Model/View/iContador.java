@@ -28,6 +28,7 @@ public class iContador implements Contador {
         this.path = path;
         try {
             ct = all();
+
         } catch (Exception e) {
             Log.i("Error_onCreate", e.toString());
         }
