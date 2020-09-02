@@ -252,6 +252,7 @@ public class genated extends AppCompatActivity {
     public ContenedorTab contenedorEncabezado(ContenedorTab temporal) {
         return new ContenedorTab(
                 pro.getCodigo_proceso(),
+                contador.getCantidad(temporal.getIdUsuario(), temporal.getIdProceso()),
                 temporal.getHeader(),
                 contenedor.getQuestions(),
                 contenedor.getFooter(),

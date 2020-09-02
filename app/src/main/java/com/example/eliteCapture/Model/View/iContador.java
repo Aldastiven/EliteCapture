@@ -1,6 +1,7 @@
 package com.example.eliteCapture.Model.View;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.View.Interfaz.Contador;
@@ -19,16 +20,21 @@ public class iContador implements Contador {
     String path = "";
     String nombre = "";
 
-
     public iContador(String path) {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        this.nombre = "contado-" + sdf.format(new Date());
+        String fechaNombre = sdf.format(new Date());
+        this.nombre = "contado-" + fechaNombre;
 
         this.path = path;
         try {
             ct = all();
-
+            for(ContadorTab cc : ct){
+                if(!cc.getFecha().equals(fechaNombre)){
+                   ct.clear();
+                   break;
+                }
+            }
         } catch (Exception e) {
             Log.i("Error_onCreate", e.toString());
         }

@@ -16,9 +16,10 @@ public class ContenedorTab {
     private int idUsuario;
     private int estado;
 
-    public ContenedorTab(int idProceso, List<RespuestasTab> header, List<RespuestasTab> questions, List<RespuestasTab> footer, int idUsuario, String terminal) {
+    public ContenedorTab(int idProceso, int consecutivo, List<RespuestasTab> header, List<RespuestasTab> questions, List<RespuestasTab> footer, int idUsuario, String terminal) {
         this.idProceso = idProceso;
-        this.fecha = "";
+        this.consecutivo = consecutivo;
+        this.fecha = fechaString();
         this.header = header;
         this.questions = questions;
         this.footer = footer;

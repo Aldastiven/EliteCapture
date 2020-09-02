@@ -170,6 +170,7 @@ public class iContenedor implements Contenedor {
 
         return new ContenedorTab(
                 formulario.get(0).getId_proceso(),
+                contador.getCantidad(usuario, formulario.get(0).getId_proceso()),
                 header,
                 questions,
                 footers,
