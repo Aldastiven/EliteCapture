@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Controls.AUT_DES_CBX;
 import com.example.eliteCapture.Config.Util.Controls.CBE;
@@ -25,6 +26,8 @@ import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
 
 public class formAdmin {
 
@@ -79,7 +82,19 @@ public class formAdmin {
     public void CrearForm(String ubicacion) {
         try {
             linearPrinc.removeAllViews();
-            for (RespuestasTab r : !ubicacion.equals("H") ? contenedor.getQuestions() : contenedor.getHeader()) {
+
+            List<RespuestasTab> lista;
+
+            if(ubicacion.equals("H")){
+                lista = contenedor.getHeader();
+            }else if(ubicacion.equals("Q")){
+                lista = contenedor.getQuestions();
+            }else{
+                Toast.makeText(context, "llego", Toast.LENGTH_SHORT).show();
+                lista = contenedor.getFooter();
+            }
+
+            for (RespuestasTab r : lista) {
                 View v = null;
                 switch (r.getTipo()) {
                     case "CBE":
@@ -111,7 +126,7 @@ public class formAdmin {
                         v = new RS_RSE_RSC(context, ubicacion, r, path, inicial).crear();
                         break;
                 }
-                if(ubicacion.equals("Q") || ubicacion.equals("F")) linearPrinc.addView(v);
+                if(!ubicacion.equals("H")) linearPrinc.addView(v);
                 else if(ubicacion.equals("H")) linearBodypop.addView(v);
             }
         } catch (Exception ex) {
