@@ -98,7 +98,7 @@ public class CBE {
         FunsDesp(campSpin);
 
         edt = (EditText) pp.campoEdtable("Edit","grisClear");
-        edt.setText((vacio ? rt.getRespuesta() : ""));
+        edt.setText("");
         edt.setLayoutParams(llcamp);
         edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
         respuestaPonderado.setText(edt.getText().toString().isEmpty() ? "Resultado : " : "Resultado : "+rt.getPonderado());

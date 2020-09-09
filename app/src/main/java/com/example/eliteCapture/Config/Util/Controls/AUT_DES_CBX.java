@@ -147,6 +147,7 @@ public class AUT_DES_CBX {
                 registro(dt != null ? dt.getCodigo() : null, dt != null ? String.valueOf(rt.getPonderado()) : null, dt != null ? dt.getOpcion() + "" : null);
                 respuestaPonderado.setText(dt != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
                 pintarRespuesta(dt != null ? dt.getCodigo() : null);
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
