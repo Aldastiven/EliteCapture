@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -89,9 +90,10 @@ public class SCA_FIL implements Serializable{
     }
 
     public View campo(){
+        String res = rt.getValor()+"causa";
+
         camp = (EditText) pp.campoEdtable("Edit", "grisClear");
-        if(rt.getDesplegable() != null) camp.setText(vacio ? rt.getCausa() : "");
-        else camp.setText(vacio && !rt.getValor().equals("0.0") ? rt.getValor() : rt.getCausa());
+        camp.setText(!res.equals("causanull") ? rt.getValor() : "");
         camp.setLayoutParams(params((float) 0.5));
         if(rt.getTipo().equals("SCN")) camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
 
@@ -104,7 +106,6 @@ public class SCA_FIL implements Serializable{
         line.addView(btn);
 
         funCamp();
-
         return line;
     }
 
@@ -167,14 +168,13 @@ public class SCA_FIL implements Serializable{
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-
-                    if(rt.getDesplegable() != null){
+                    String desplegable = "DESPLEGABLE"+rt.getDesplegable();
+                    if(!desplegable.equals("DESPLEGABLE") && !desplegable.equals("DESPLEGABLEnull")){
                         rta = filtroDesplegable(camp.getText().toString());
-                        registro(!causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null, !rta.isEmpty() ? rta : null);
                     }else {
                         rta = camp.getText().toString();
-                        registro(!causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null, !rta.isEmpty() ? rta : null);
                     }
+                    registro(!causa.isEmpty() ? causa : "", !rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado() + "" : null);
 
                     respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
@@ -201,6 +201,6 @@ public class SCA_FIL implements Serializable{
     }
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), String.valueOf(causa), rt.getReglas());
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, causa, rt.getReglas());
     }
 }

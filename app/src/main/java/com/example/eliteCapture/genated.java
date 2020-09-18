@@ -166,7 +166,7 @@ public class genated extends AppCompatActivity {
 
     public void crearform() {
         try {
-            formA = new formAdmin(linearPrinc, linearBodypop,this, path, inicial, 0);
+            formA = new formAdmin(linearPrinc, linearBodypop,this, path, inicial, 0, 0);
             CrearEncabezado();
             CrearCuerpo();
         } catch (Exception ex) {
@@ -180,6 +180,7 @@ public class genated extends AppCompatActivity {
     }
 
     public void CrearCuerpo(){
+        scrollForm.fullScroll(0);
         formA.CrearForm("Q");
         if(footer) {
             formA.CrearForm("F");
@@ -223,7 +224,6 @@ public class genated extends AppCompatActivity {
         try {
             if (conTemp != null) {
                 if (conTemp.getIdProceso() == pro.getCodigo_proceso()) {
-
                     temporal = true;
                     return conTemp;
 

@@ -92,15 +92,16 @@ public class Camera extends AppCompatActivity implements Serializable {
     }
 
     //funcion de registro en el tempóral
-    public void registro(String rta) {
+    public void registro(String rta) throws Exception{
 
         Cscanner cscanner = new Cscanner(path);
         iContenedor conTemp = new iContenedor(path);
         String valor = "";
-        if (rt.getDesplegable() != null) {
 
-            Log.i("DESPLEGABLE","entro al if");
+        String desplegable = "DESPLEGABLE"+rt.getDesplegable();
+        Log.i("DESPLEGABLE","validando : "+desplegable);
 
+        if (!desplegable.equals("DESPLEGABLE") && !desplegable.equals("DESPLEGABLEnull")) {
             String cadena = "";
             String res = "";
 
@@ -117,10 +118,9 @@ public class Camera extends AppCompatActivity implements Serializable {
                 edit.putString( "resDesp",res.isEmpty() ? "" : res);
                 edit.apply();
             }
-            conTemp.editarTemporal(ubicacion, id, !valor.isEmpty() ? valor : null , null ,!cadena.isEmpty() ? cadena : null,regla);
+            conTemp.editarTemporal(ubicacion, id, !valor.isEmpty() ? valor : null , !cadena.isEmpty() ? cadena : null,null ,regla);
 
         }else{
-            Log.i("DESPLEGABLE","no entro");
             conTemp.editarTemporal(ubicacion, id, valor, rta, null, regla);
         }
     }

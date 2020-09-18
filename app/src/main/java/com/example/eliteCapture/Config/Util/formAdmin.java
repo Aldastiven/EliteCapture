@@ -47,9 +47,9 @@ public class formAdmin {
     Admin adm = null;
 
     boolean temporal;
-    int estado = 1;
+    int estado = 1, consecutivo;
 
-    public formAdmin(LinearLayout linearPrinc,LinearLayout linearBodypop, Context context, String path, Boolean inicial, int estado) {
+    public formAdmin(LinearLayout linearPrinc,LinearLayout linearBodypop, Context context, String path, Boolean inicial, int estado, int consecutivo) {
         try {
             this.linearPrinc = linearPrinc;
             this.linearBodypop = linearBodypop;
@@ -57,6 +57,7 @@ public class formAdmin {
             this.path = path;
             this.inicial = inicial;
             this.estado = estado;
+            this.consecutivo = consecutivo;
             sp = context.getSharedPreferences("share", context.MODE_PRIVATE);
             adm = new Admin(null, path);//administra la conexion de las entidades
 
@@ -81,20 +82,21 @@ public class formAdmin {
     //CREA CONTROLES DEL FORMULARIO
     public void CrearForm(String ubicacion) {
         try {
-            linearPrinc.removeAllViews();
-
-            List<RespuestasTab> lista;
-
-            if(ubicacion.equals("H")){
-                lista = contenedor.getHeader();
-            }else if(ubicacion.equals("Q")){
-                lista = contenedor.getQuestions();
-            }else{
-                Toast.makeText(context, "llego", Toast.LENGTH_SHORT).show();
-                lista = contenedor.getFooter();
+            List<RespuestasTab> lista = null;
+            switch (ubicacion) {
+                case "H":
+                    lista = contenedor.getHeader();
+                    break;
+                case "Q":
+                    lista = contenedor.getQuestions();
+                    break;
+                case "F":
+                    lista = contenedor.getFooter();
+                    break;
             }
 
             for (RespuestasTab r : lista) {
+                Log.i("FORMULARIO","ubicacion : "+ubicacion+" tipo : "+r.getTipo());
                 View v = null;
                 switch (r.getTipo()) {
                     case "CBE":
@@ -126,11 +128,17 @@ public class formAdmin {
                         v = new RS_RSE_RSC(context, ubicacion, r, path, inicial).crear();
                         break;
                 }
-                if(!ubicacion.equals("H")) linearPrinc.addView(v);
-                else if(ubicacion.equals("H")) linearBodypop.addView(v);
+
+                if(ubicacion.equals("H")){
+                    linearBodypop.addView(v);
+                }else if (ubicacion.equals("Q")){
+                    linearPrinc.addView(v);
+                }else{
+                    linearPrinc.addView(v);
+                }
             }
         } catch (Exception ex) {
-            Log.i("ADMIN","Error : "+ex);
+            Log.i("FORMULARIO","Error : "+ex);
         }
     }
 

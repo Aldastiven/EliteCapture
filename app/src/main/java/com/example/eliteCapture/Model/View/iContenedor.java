@@ -38,6 +38,7 @@ public class iContenedor implements Contenedor {
     iContador contador = null;
 
 
+
     public static List<ContenedorTab> ct = new ArrayList<>();
     public static List<ContenedorTab> newct = new ArrayList<>();
 
@@ -382,11 +383,9 @@ public class iContenedor implements Contenedor {
     public void limpiarXfecha(){
         try {
             ct = all();
-            int conteo = 0;
             newct.clear();
             for (ContenedorTab tab : ct) {
-
-                Instant after= Instant.now().minus(Duration.ofDays(15));
+                Instant after= Instant.now().minus(Duration.ofDays(8));
 
                 String fechaJson = tab.getFecha().split(" ")[0];
                 String fechaRetrocedida = after.toString().split("T")[0];
@@ -399,8 +398,6 @@ public class iContenedor implements Contenedor {
                 int mes15 = Integer.parseInt(splitdate(fechaRetrocedida)[1]);
                 int dia15 = Integer.parseInt(splitdate(fechaRetrocedida)[2]);
 
-                Log.i("GETFECHA", "=============VAIDACION "+(conteo++)+" ===============");
-                Log.i("GETFECHA", "fecha obtenida : " + fechaJson + " fecha parceada : " + fechaRetrocedida);
                 boolean validado = false;
                 if(añoJson <= año15){
                     if(mesJson < mes15){
@@ -410,18 +407,16 @@ public class iContenedor implements Contenedor {
                             validado = getEstado(tab.getEstado());
                         }
                     }
-                    Log.i("GETFECHA", "validando mes : json --> " + mesJson +" VS hace 15 dias --> "+mes15);
-                    Log.i("GETFECHA", "validando dia : json --> " + diaJson +" VS hace 15 dias --> "+dia15);
-                    Log.i("GETFECHA", "validando año : json --> " + añoJson +" VS hace 15 dias --> "+año15);
-                    Log.i("GETFECHA", "Estado json : " +tab.getEstado());
                 }
-                Log.i("GETFECHA", "validacion : " + validado);
-                if(!validado) newct.add(tab);
-                Log.i("GETFECHA", "=====================================");
+                if(!validado) {
+                    newct.add(tab);
+                    Log.i("GETFECHA","se ha borrado");
+                }
             }
+
             ct.clear();
             ct = newct;
-            Log.i("GETFECHA", "crea json "+local());
+            local();
         }catch (Exception ex){
             Log.i("GETFECHA",ex.toString());
         }

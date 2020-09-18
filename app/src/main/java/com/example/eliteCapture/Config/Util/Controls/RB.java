@@ -3,6 +3,7 @@ package com.example.eliteCapture.Config.Util.Controls;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -50,6 +51,7 @@ public class RB {
 
         respuestaPonderado = (TextView) pp.resultadoPonderado();
         respuestaPonderado.setText(vacio ? "Resultado : "+(rt.getValor().equals("-1") ? "N/A" : rt.getValor()) : "Resultado :");
+        Log.i("UBICACION","Ubicacion : "+ubicacion);
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM

@@ -1,5 +1,6 @@
 package com.example.eliteCapture;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +45,9 @@ public class Index extends AppCompatActivity {
     UsuarioTab usu;
 
     Admin admin = null;
+    iContenedor contenedor = null;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,10 +66,13 @@ public class Index extends AppCompatActivity {
         try {
 
             admin = new Admin(null, path);
+            contenedor = new iContenedor(path);
 
             traerDataUser();
             traerFechaUpDate();
             CargaMenu();
+
+            contenedor.limpiarXfecha();
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), "Error \n" + ex, Toast.LENGTH_SHORT).show();
         }
