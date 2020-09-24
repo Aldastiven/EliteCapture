@@ -30,7 +30,7 @@ public class SCA_FIL implements Serializable{
     Context context;
     RespuestasTab  rt;
     String ubicacion, path;
-    boolean vacio, initial;
+    boolean vacio, initial, pintada = false;
 
     EditText camp;
     TextView respuestaPonderado;
@@ -71,7 +71,7 @@ public class SCA_FIL implements Serializable{
         contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
 
         contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado4
-        contenedorCamp.addView(pintarRespuesta(rt.getRespuesta()));
+        contenedorCamp.addView(pintarRespuesta(rt.getRespuesta(), false));
         contenedorCamp.addView(campo());
         pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
@@ -80,7 +80,7 @@ public class SCA_FIL implements Serializable{
         return contenedorCamp;
     }
 
-    public View pintarRespuesta(String causa){//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
+    public View pintarRespuesta(String causa, Boolean b){//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
             if (LineRespuesta.getChildCount() > 0 || causa == null) LineRespuesta.removeAllViews();
             if (causa != null) {
                 if (!causa.isEmpty()) {
@@ -89,13 +89,21 @@ public class SCA_FIL implements Serializable{
                     switch (rt.getTipo()){
                         case  "SCN" :
                         case  "SCA" :
-                            LineRespuesta.addView(ta.textColor("No se encontro resultados", "rojo", 15, "l"));
+                            if(b) {
+                                LineRespuesta.addView(ta.textColor("No se encontro resultados", "rojo", 15, "l"));
+                                pintada = true;
+                            }
                             break;
                     }
                 }
             }else{
             }
             return LineRespuesta;
+    }
+
+    public boolean pintarTextoResultado(){
+
+        return pintada;
     }
 
     public View campo(){
@@ -177,17 +185,24 @@ public class SCA_FIL implements Serializable{
             @Override
             public void afterTextChanged(Editable s) {
                 try {
+                    Boolean b = true;
                     String desplegable = "DESPLEGABLE"+rt.getDesplegable();
                     if(!desplegable.equals("DESPLEGABLE") && !desplegable.equals("DESPLEGABLEnull")){
                         rta = filtroDesplegable(camp.getText().toString());
                     }else {
+                        b = false;
                         rta = camp.getText().toString();
                     }
-                    registro(rta, !causa.isEmpty() ? causa : ""  , !rta.isEmpty() ? rt.getPonderado() + "" : null);
+                    pintarRespuesta(causa, b);
+                    if(pintada) {
+                        registro(null, null ,null);
+                        pintada = false;
+                    }else {
+                        registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
+                    }
 
                     respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
-                    pintarRespuesta(causa);
                 }catch (Exception e){
                     Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
                 }
