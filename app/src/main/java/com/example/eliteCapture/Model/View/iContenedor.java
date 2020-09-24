@@ -1,6 +1,7 @@
 package com.example.eliteCapture.Model.View;
 
 
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -344,7 +345,7 @@ public class iContenedor implements Contenedor {
             ps.setInt(3, r.getCodigo());
             ps.setLong(4, r.getIdPregunta());
             ps.setString(5, r.getRespuesta());
-            ps.setString(6, (r.getCausa()!=null ? r.getCausa() : r.getValor()));
+            ps.setString(6, r.getValor());
             ps.setFloat(7, r.getPonderado());
             ps.setString(8, c.getTerminal());
             ps.setInt(9, c.getIdUsuario());
@@ -380,12 +381,14 @@ public class iContenedor implements Contenedor {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void limpiarXfecha(){
+    public void limpiarXfecha(Context c){
         try {
             ct = all();
             newct.clear();
+
+            Instant after= Instant.now().minus(Duration.ofDays(3));
+            int d = 0;
             for (ContenedorTab tab : ct) {
-                Instant after= Instant.now().minus(Duration.ofDays(8));
 
                 String fechaJson = tab.getFecha().split(" ")[0];
                 String fechaRetrocedida = after.toString().split("T")[0];
@@ -411,8 +414,12 @@ public class iContenedor implements Contenedor {
                 if(!validado) {
                     newct.add(tab);
                     Log.i("GETFECHA","se ha borrado");
+                    d = 1;
                 }
             }
+
+            Toast.makeText(c, d == 1 ? "Se limpiaron registros" : "No se encontraron registros", Toast.LENGTH_LONG).show();
+
 
             ct.clear();
             ct = newct;

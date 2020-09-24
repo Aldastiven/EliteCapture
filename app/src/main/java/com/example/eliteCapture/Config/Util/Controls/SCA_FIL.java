@@ -83,8 +83,17 @@ public class SCA_FIL implements Serializable{
     public View pintarRespuesta(String causa){//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
             if (LineRespuesta.getChildCount() > 0 || causa == null) LineRespuesta.removeAllViews();
             if (causa != null) {
-                if (!causa.isEmpty())
+                if (!causa.isEmpty()) {
                     LineRespuesta.addView(ta.textColor(causa, "verde", 15, "l"));
+                }else{
+                    switch (rt.getTipo()){
+                        case  "SCN" :
+                        case  "SCA" :
+                            LineRespuesta.addView(ta.textColor("No se encontro resultados", "rojo", 15, "l"));
+                            break;
+                    }
+                }
+            }else{
             }
             return LineRespuesta;
     }
@@ -174,7 +183,7 @@ public class SCA_FIL implements Serializable{
                     }else {
                         rta = camp.getText().toString();
                     }
-                    registro(!causa.isEmpty() ? causa : "", !rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado() + "" : null);
+                    registro(rta, !causa.isEmpty() ? causa : ""  , !rta.isEmpty() ? rt.getPonderado() + "" : null);
 
                     respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
@@ -201,6 +210,6 @@ public class SCA_FIL implements Serializable{
     }
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, causa, rt.getReglas());
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), valor, rta, causa, rt.getReglas());
     }
 }

@@ -71,11 +71,14 @@ public class Index extends AppCompatActivity {
             traerDataUser();
             traerFechaUpDate();
             CargaMenu();
-
-            contenedor.limpiarXfecha();
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), "Error \n" + ex, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void clearHistory(View v){
+        contenedor.limpiarXfecha(this);
     }
 
     private void traerFechaUpDate() {

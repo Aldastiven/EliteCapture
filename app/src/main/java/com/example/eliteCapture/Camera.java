@@ -111,17 +111,17 @@ public class Camera extends AppCompatActivity implements Serializable {
                 cadena = quitCadena(rta, regla);
 
                 DesplegableTab desp = pp.busqueda(cadena);
-                res =  desp.getOpcion();
-                valor = desp.getOpcion();
+                res = desp != null ?  desp.getOpcion() : "No se encontro el resultado";
+                valor = desp != null ?  desp.getOpcion() : "No se encontro el resultado";
 
                 SharedPreferences.Editor edit = sp.edit();
                 edit.putString( "resDesp",res.isEmpty() ? "" : res);
                 edit.apply();
             }
-            conTemp.editarTemporal(ubicacion, id, !valor.isEmpty() ? valor : null , !cadena.isEmpty() ? cadena : null,null ,regla);
+        conTemp.editarTemporal(ubicacion, id, !valor.isEmpty() ? valor : null , !cadena.isEmpty() ? cadena : null,null ,regla);
 
         }else{
-            conTemp.editarTemporal(ubicacion, id, valor, rta, null, regla);
+            conTemp.editarTemporal(ubicacion, id, valor, new Integer(regla) == null ? rta : quitCadena(rta, regla), null, regla);
         }
     }
 
