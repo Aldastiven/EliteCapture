@@ -23,6 +23,8 @@ import com.example.eliteCapture.Model.View.iContenedor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.eliteCapture.R.drawable.bordercontainer;
+
 public class RB {
 
     Context context;
@@ -147,6 +149,7 @@ public class RB {
                         vlr = ""+rt.getPonderado();
                         break;
                 }
+                contenedorCamp.setBackgroundResource(bordercontainer);
                 respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+ vlr : "Resultado :");
                 registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? (vlr.equals("N/A") ? "-1" : vlr) : null);
             }

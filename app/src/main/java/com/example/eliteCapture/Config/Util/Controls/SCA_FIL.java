@@ -198,9 +198,14 @@ public class SCA_FIL implements Serializable{
                         registro(null, null ,null);
                         pintada = false;
                     }else {
-                        registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
+                        switch (rt.getTipo()){
+                            case "SCN":
+                            case "SCA":
+                                registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
+                            case "FIL":
+                            registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
+                        }
                     }
-
                     respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
                 }catch (Exception e){

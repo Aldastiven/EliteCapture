@@ -130,7 +130,7 @@ public class AUT_DES_CBX {
             @Override public void afterTextChanged(Editable s) {
 
                 DesplegableTab dt = filtroDesplegable(campAut.getText().toString());
-                registro(dt != null ? dt.getCodigo() : null, dt != null ? String.valueOf(rt.getPonderado()) : null, dt != null ? dt.getOpcion() + "" : null);
+                registro(dt != null ? dt.getOpcion() + "" : null, dt != null ? dt.getCodigo() : null, dt != null ? String.valueOf(rt.getPonderado()) : null);
                 respuestaPonderado.setText(dt != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
                 contenedorcampAut.setBackgroundResource(R.drawable.bordercontainer);
                 pintarRespuesta(dt != null ? dt.getCodigo() : null);
@@ -144,10 +144,9 @@ public class AUT_DES_CBX {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 DesplegableTab dt = filtroDesplegable(spn.getItemAtPosition(position).toString());
-                registro(dt != null ? dt.getCodigo() : null, dt != null ? String.valueOf(rt.getPonderado()) : null, dt != null ? dt.getOpcion() + "" : null);
+                registro(dt != null ? dt.getOpcion() + "" : null, dt != null ? dt.getCodigo() : null, dt != null ? String.valueOf(rt.getPonderado()) : null);
                 respuestaPonderado.setText(dt != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
                 pintarRespuesta(dt != null ? dt.getCodigo() : null);
-
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -156,7 +155,7 @@ public class AUT_DES_CBX {
     }
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(),  causa,   String.valueOf(valor), rta, rt.getReglas());
+     new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, causa, rt.getReglas());
     }
 
         public DesplegableTab  filtroDesplegable(String rta){
