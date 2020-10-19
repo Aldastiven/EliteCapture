@@ -36,7 +36,7 @@ import java.util.Map;
 public class iContenedor implements Contenedor {
     private String nombre = "pendientes_envio", path;
     Calendar calendar;
-    iContador contador = null;
+    iContador contador;
 
 
 
@@ -55,6 +55,7 @@ public class iContenedor implements Contenedor {
         this.path = path;
         try {
             if (!exist()){local();}
+            if (all() == null){local();}
             calendar = Calendar.getInstance();
             contador = new iContador(path);
         } catch (Exception e) {
@@ -63,7 +64,7 @@ public class iContenedor implements Contenedor {
     }
 
     @Override
-    public String insert(ContenedorTab o) throws Exception {
+    public String insert(ContenedorTab o) {
         all();
         o.setConsecutivo( contador.getCantidad(o.getIdUsuario(), o.getIdProceso()) );
         o.setFecha(o.fechaString());
@@ -74,7 +75,7 @@ public class iContenedor implements Contenedor {
     }
 
     @Override
-    public String delete(Long id) throws Exception {
+    public String delete(Long id) {
         //ct.remove(id);
         //local();
         return "Ok";
@@ -89,7 +90,6 @@ public class iContenedor implements Contenedor {
 
     @Override
     public boolean local() {
-        Log.i("Enviar_local", "Ingreso");
         return new JsonAdmin()
                 .WriteJson(
                         path,
@@ -100,13 +100,13 @@ public class iContenedor implements Contenedor {
     @Override
     public List<ContenedorTab> all() {
         try {
-            Log.i("ALLConsulta", "llego a consultar");
             return ct = new Gson()
                     .fromJson(
                             new JsonAdmin().ObtenerLista(path, nombre),
                             new TypeToken<List<ContenedorTab>>() {
                             }.getType());
         }catch (Exception e){
+            Log.i("ERRORLIST",e.toString());
             return null;
         }
     }
@@ -147,12 +147,23 @@ public class iContenedor implements Contenedor {
         return Float.parseFloat(format.format(calificacion / ponderado * 100));
     }
 
-    public ContenedorTab generarContenedor(int usuario, String terminal, List<DetalleTab> formulario) throws Exception {
+    public boolean crearTemporal(ContenedorTab formTemporal) throws Exception {
+        try {
+            return new JsonAdmin().WriteJson(
+                    path,
+                    "temp",
+                    new Gson().toJson(formTemporal));
+        } catch (Exception e) {
+            Log.i("ProContenedor:", "Temporal Error" + e);
+            return false;
+        }
+    }
+
+    public ContenedorTab generarContenedor(int usuario, String terminal, List<DetalleTab> formulario)  {
         List<RespuestasTab> header = new ArrayList<>();
         List<RespuestasTab> questions = new ArrayList<>();
         List<RespuestasTab> footers = new ArrayList<>();
 
-        Log.i("Error_onCreate", "Entro a la generar");
         for (DetalleTab detalle : formulario) {
             switch (detalle.getTipo_M()) {
                 case "H":
@@ -181,18 +192,6 @@ public class iContenedor implements Contenedor {
         );
     }
 
-    public boolean crearTemporal(ContenedorTab formTemporal) throws Exception {
-        try {
-            return new JsonAdmin().WriteJson(
-                    path,
-                    "temp",
-                    new Gson().toJson(formTemporal));
-        } catch (Exception e) {
-            Log.i("ProContenedor:", "Temporal Error" + e);
-            return false;
-        }
-    }
-
     public ContenedorTab optenerTemporal() {
         try {
             return new Gson().fromJson(
@@ -200,6 +199,7 @@ public class iContenedor implements Contenedor {
                     new TypeToken<ContenedorTab>() {
                     }.getType());
         } catch (Exception e) {
+            Log.i("Enviar_error_1", e.toString());
             return null;
         }
     }
@@ -212,18 +212,16 @@ public class iContenedor implements Contenedor {
 
             switch (donde) {
                 case "H":
-                    Log.i("reg_", "llego aqui encab");
                     conTemp.setHeader(editar(conTemp.getHeader(), idPregunta, respuesta, valor, causa, regla));
                     break;
                 case "Q":
-                    Log.i("reg_", "llego aqui");
                     conTemp.setQuestions(editar(conTemp.getQuestions(), idPregunta, respuesta, valor, causa, regla));
                     break;
                 case "F":
                     conTemp.setFooter(editar(conTemp.getFooter(), idPregunta, respuesta, valor, causa, regla));
                     break;
             }
-            Log.i("vcampo", "" + crearTemporal(conTemp));
+            crearTemporal(conTemp);
         }catch (Exception e){
             Log.i("ERROR","No se pudo registrar el temporal : "+e.toString());
         }
@@ -237,9 +235,7 @@ public class iContenedor implements Contenedor {
         return editar;
     }
 
-    public RespuestasTab convertirDetallaRespuesta(Long id, DetalleTab detalle) throws Exception {
-
-        Log.i("Error_onCreate", "a convertir " + detalle.getLista_desp());
+    public RespuestasTab convertirDetallaRespuesta(Long id, DetalleTab detalle) {
         return new RespuestasTab(
                 id,
                 detalle.getCodigo_detalle(),
@@ -255,16 +251,6 @@ public class iContenedor implements Contenedor {
                 detalle.getReglas(),
                 detalle.getTip()
         );
-    }
-
-    public List<DesplegableTab> opciones(String desplegable) throws Exception {
-
-        iDesplegable desp = new iDesplegable(null, path);
-
-        Log.i("Error_onCreate", "generando opciones " + desplegable);
-        desp.nombre = desplegable;
-
-        return desp.all();
     }
 
     public Map<Integer, List<Long>> validarVacios(ContenedorTab c, boolean footer) {
@@ -296,7 +282,6 @@ public class iContenedor implements Contenedor {
 
     public boolean enviar() throws Exception {
 
-        Log.i("Enviar_env", "Ingreso.");
         Connection cn = new Conexion().getConexion();
 
         if (cn != null) {
@@ -317,40 +302,98 @@ public class iContenedor implements Contenedor {
 
 
             int load = 0;
+            int index = 0;
 
             PreparedStatement ps = cn.prepareStatement(ins);
-            for (ContenedorTab c : ct) {
-                if (c.getEstado() == 0) {
+            for (ContenedorTab c : all()) {
+                Log.i("Enviar_env", "Recorriendo: " + c.getEstado());
+                if (c.getEstado() != 1) {
                     bloque(ps, c, c.getHeader());
                     bloque(ps, c, c.getQuestions());
-                    bloque(ps, c, c.getFooter());
+                    if (c.getFooter() != null) {
+                        bloque(ps, c, c.getFooter());
+                    }
                     ps.executeBatch();
                     c.setEstado(1);
-                    update((long) c.getConsecutivo(), c);
+                    update((long) index, c);
+                    index++;
                     load++;
+                } else {
+                    Log.i("Enviar_env", "Recorriendo: ocurrio un error");
+                    index++;
                 }
             }
             Log.i("Enviar_env", "Registros actualizados: " + load);
             return true;
         } else {
+            Log.i("Enviar_env", "Registros actualizados: ");
             return false;
         }
 
     }
 
+    public boolean enviarInmediato(ContenedorTab c) throws Exception {
+        try {
+            Connection cn = new Conexion().getConexion();
+            if (cn != null) {
+                String ins = "" +
+                        "     INSERT INTO [dbo].[datos_procesos_detalle]\n" +
+                        "           ([fecha]\n" +
+                        "           ,[id_procesos]\n" +
+                        "           ,[id_codigo]\n" +
+                        "           ,[id_procesos_detalle]\n" +
+                        "           ,[rUsu_resp_d]\n" +
+                        "           ,[valor_resp_d]\n" +
+                        "           ,[porc_resp_d]\n" +
+                        "           ,[id_terminal]\n" +
+                        "           ,[id_usuario]\n" +
+                        "           ,[consec_json])\n" +
+                        "     VALUES\n" +
+                        "           (?,?,?,?,?,?,?,?,?,?);";
+                int load = 0;
+
+                PreparedStatement ps = cn.prepareStatement(ins);
+                if (c.getEstado() != 1) {
+                    bloque(ps, c, c.getHeader());
+                    bloque(ps, c, c.getQuestions());
+                    if (c.getFooter() != null) {
+                        bloque(ps, c, c.getFooter());
+                    }
+                    ps.executeBatch();
+                    c.setEstado(1);
+                    update((long) c.getConsecutivo(), c);
+                    load++;
+                } else {
+                }
+                Log.i("Enviar_env", "Registros actualizados: " + load);
+                return true;
+            } else {
+                Log.i("Enviar_env", "Registros no han sido actualizados");
+                return false;
+            }
+        }catch (Exception e){
+            Log.i("Enviar_env", "Problema de insercion : "+e.toString());
+            return false;
+        }
+    }
+
     public void bloque(PreparedStatement ps, ContenedorTab c, List<RespuestasTab> rtas) throws SQLException {
-        for (RespuestasTab r : rtas) {
-            ps.setString(1, c.getFecha());
-            ps.setInt(2, c.getIdProceso());
-            ps.setInt(3, r.getCodigo());
-            ps.setLong(4, r.getIdPregunta());
-            ps.setString(5, r.getRespuesta());
-            ps.setString(6, r.getValor());
-            ps.setFloat(7, r.getPonderado());
-            ps.setString(8, c.getTerminal());
-            ps.setInt(9, c.getIdUsuario());
-            ps.setInt(10, c.getConsecutivo());
-            ps.addBatch();
+        try {
+            for (RespuestasTab r : rtas) {
+                ps.setString(1, c.getFecha());
+                ps.setInt(2, c.getIdProceso());
+                ps.setInt(3, r.getCodigo());
+                ps.setLong(4, r.getIdPregunta());
+                ps.setString(5, r.getRespuesta());
+                ps.setString(6, r.getValor());
+                ps.setFloat(7, r.getPonderado());
+                ps.setString(8, c.getTerminal());
+                ps.setInt(9, c.getIdUsuario());
+                ps.setInt(10, c.getConsecutivo());
+                ps.addBatch();
+            }
+        }catch (Exception e){
+            Log.i("Envio", e.toString());
         }
     }
 
@@ -384,8 +427,6 @@ public class iContenedor implements Contenedor {
     public void limpiarXfecha(Context c){
         try {
             ct = all();
-            newct.clear();
-
             Instant after= Instant.now().minus(Duration.ofDays(3));
             int d = 0;
             for (ContenedorTab tab : ct) {
@@ -413,16 +454,11 @@ public class iContenedor implements Contenedor {
                 }
                 if(!validado) {
                     newct.add(tab);
-                    Log.i("GETFECHA","se ha borrado");
-                    d = 1;
+                    //Log.i("GETFECHA","se ha borrado : "+d);
                 }
             }
-
-            Toast.makeText(c, d == 1 ? "Se limpiaron registros" : "No se encontraron registros", Toast.LENGTH_LONG).show();
-
-
-            ct.clear();
-            ct = newct;
+            ct = newct != null ? newct : all();
+            Toast.makeText(c, d >= 1 ? "Se limpiaron los registros" : "No se encontraron registros por limpiar", Toast.LENGTH_LONG).show();
             local();
         }catch (Exception ex){
             Log.i("GETFECHA",ex.toString());

@@ -82,6 +82,7 @@ public class formAdmin {
     //CREA CONTROLES DEL FORMULARIO
     public void CrearForm(String ubicacion) {
         try {
+            linearPrinc.removeAllViews();
             List<RespuestasTab> lista = null;
             switch (ubicacion) {
                 case "H":

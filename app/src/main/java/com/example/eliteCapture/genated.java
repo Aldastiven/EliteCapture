@@ -4,44 +4,26 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowId;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.eliteCapture.Config.Util.ControlViews.CconteosCheck;
-import com.example.eliteCapture.Config.Util.ControlViews.CconteosEditar;
-import com.example.eliteCapture.Config.Util.ControlViews.CdespelgableQ;
-import com.example.eliteCapture.Config.Util.ControlViews.Cdesplegable;
-import com.example.eliteCapture.Config.Util.ControlViews.Cetalf;
-import com.example.eliteCapture.Config.Util.ControlViews.Cetnum;
-import com.example.eliteCapture.Config.Util.ControlViews.CfilAuto;
-import com.example.eliteCapture.Config.Util.ControlViews.Cfiltro;
-import com.example.eliteCapture.Config.Util.ControlViews.Cscanner;
-import com.example.eliteCapture.Config.Util.ControlViews.Ctextview;
-import com.example.eliteCapture.Config.Util.ControlViews.Cconteos;
-import com.example.eliteCapture.Config.Util.ControlViews.CradioButton;
 import com.example.eliteCapture.Config.Util.formAdmin;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.Data.ionLine;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
-import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContador;
 import com.example.eliteCapture.Model.View.iContenedor;
-import com.example.eliteCapture.Model.View.iRespuestas;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -50,10 +32,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.eliteCapture.R.drawable.ic_cloud;
-import static com.example.eliteCapture.R.drawable.ic_cloud_noti;
 import static com.example.eliteCapture.R.drawable.ic_cloud_upload;
-import static com.example.eliteCapture.R.drawable.ic_cloud_upload_white_18dp;
 import static com.example.eliteCapture.R.drawable.ic_save;
 import static com.example.eliteCapture.R.drawable.ic_star;
 import static java.lang.String.valueOf;
@@ -321,16 +300,14 @@ public class genated extends AppCompatActivity {
 
     //OCULTA EL POP CON LOS CAMPOS DEL HEADER
     public void ocultarPop(View v) {
-
+        mypop.getWindow().getDecorView().clearFocus();//limpia el foco de la ventana
         String splitS = obtenerNulos(0);
-        Log.i("vaciosDD", splitS);
 
         if (splitS.isEmpty()) {
             mypop.dismiss();
         } else {
             Toast.makeText(this, "¡No puedes dejar campos vacios!", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void regresarMenu(View v) {
@@ -389,7 +366,6 @@ public class genated extends AppCompatActivity {
         startActivity(i);
     }
 
-
     public void killChildrens(ContenedorTab temporal) {
         if (linearPrinc.getChildCount() > 0) {
             linearPrinc.removeAllViews();
@@ -421,13 +397,11 @@ public class genated extends AppCompatActivity {
 
     //SUBIR DATOS DEL FORMULARIO
     public void UpData(View v) {
+        try {
         ContenedorTab nuevo = iCon.optenerTemporal();
         Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo, footer);
 
         boolean full = true;
-        String[] area = {"\nEncabezado: ", "\n Preguntas: ", "\n Pie: "};
-
-        try {
 
             for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
                 if (entry.getValue().size() > 0) {
@@ -436,29 +410,28 @@ public class genated extends AppCompatActivity {
             }
 
             if (full) {
-                iCon.insert(nuevo);
-                contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
-                cargarContador();
-
                 if(ion.all().equals("onLine")) {
-                    if (iCon.enviar()) {
+                    if (iCon.enviarInmediato(nuevo)) {
+                        iCon.insert(nuevo);
                         Toast.makeText(this, "Insertado con exito!", Toast.LENGTH_LONG).show();
                     } else {
+                        iCon.insert(nuevo);
                         Toast.makeText(this, "Agregado a local", Toast.LENGTH_LONG).show();
                     }
                 }else{
+                    iCon.insert(nuevo);
                     Toast.makeText(this, "Agregado a local", Toast.LENGTH_LONG).show();
                 }
-
                 inicial = true;
                 killChildrens(nuevo);
 
+                contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
+                cargarContador();
             } else {
                 inicial = false;
                 Toast.makeText(this, "¡tienes campos vacios! ", Toast.LENGTH_LONG).show();
                 killChildrens2(nuevo);
             }
-
         } catch (Exception e) {
             Log.i("Enviar_error", e.toString());
         }

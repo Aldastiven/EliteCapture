@@ -24,7 +24,7 @@ public class ETN_ETA {
     RespuestasTab rt;
     String ubicacion, path;
     boolean vacio, initial;
-    
+
     TextView respuestaPonderado;
     EditText camp;
     LinearLayout contenedorCamp;
@@ -84,18 +84,36 @@ public class ETN_ETA {
     }
 
     public void funCamp(){//FUNCION DEL CAMPO
+
+        camp.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    String rta = camp.getText().toString();
+                    registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado()+"" : null);
+                    respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");
+                    contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
+
+                    Toast.makeText(context, "se cambio el foco", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         camp.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
             @Override
             public void afterTextChanged(Editable s) {
-                String rta = camp.getText().toString();
-                registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado()+"" : null);
-                respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");
-                contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
+
             }
         });
     }
+
+
 
     public void registro(String rta, String valor) {//REGISTRO
         try{

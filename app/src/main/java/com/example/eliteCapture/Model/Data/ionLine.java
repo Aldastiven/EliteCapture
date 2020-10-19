@@ -54,5 +54,4 @@ public class ionLine {
             return false;
         }
     }
-
 }
