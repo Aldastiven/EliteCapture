@@ -37,8 +37,7 @@ public class iContenedor implements Contenedor {
     private String nombre = "pendientes_envio", path;
     Calendar calendar;
     iContador contador;
-
-
+    iHistorico ih;
 
     public static List<ContenedorTab> ct = new ArrayList<>();
     public static List<ContenedorTab> newct = new ArrayList<>();
@@ -58,6 +57,7 @@ public class iContenedor implements Contenedor {
             if (all() == null){local();}
             calendar = Calendar.getInstance();
             contador = new iContador(path);
+            ih = new iHistorico(path);
         } catch (Exception e) {
             Log.i("Error_onCreate", e.toString());
         }
@@ -314,8 +314,11 @@ public class iContenedor implements Contenedor {
                         bloque(ps, c, c.getFooter());
                     }
                     ps.executeBatch();
-                    c.setEstado(1);
-                    update((long) index, c);
+                    //c.setEstado(1);
+                    //update((long) index, c);
+
+                    ih.insert(c);//agrega el formulario enviado al json historico
+
                     index++;
                     load++;
                 } else {
@@ -360,8 +363,9 @@ public class iContenedor implements Contenedor {
                         bloque(ps, c, c.getFooter());
                     }
                     ps.executeBatch();
-                    c.setEstado(1);
-                    update((long) c.getConsecutivo(), c);
+                    //c.setEstado(1);
+                    //update((long) c.getConsecutivo(), c);
+                    ih.insert(c);//agrega el formulario enviado al json historico
                     load++;
                 } else {
                 }
