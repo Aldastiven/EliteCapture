@@ -26,6 +26,7 @@ import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.View.Tab.ContadorTab;
 import com.example.eliteCapture.Model.View.iContador;
 import com.example.eliteCapture.Model.View.iContenedor;
+import com.example.eliteCapture.Model.View.iHistorico;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -47,6 +48,8 @@ public class Index extends AppCompatActivity {
     Admin admin = null;
     iContenedor contenedor = null;
 
+    iHistorico historico = null;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,7 @@ public class Index extends AppCompatActivity {
 
             admin = new Admin(null, path);
             contenedor = new iContenedor(path);
+            historico = new iHistorico(path);
 
             traerDataUser();
             traerFechaUpDate();
@@ -78,7 +82,7 @@ public class Index extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void clearHistory(View v){
-        contenedor.limpiarXfecha(this);
+        historico.limpiarXfecha(this);
     }
 
     private void traerFechaUpDate() {

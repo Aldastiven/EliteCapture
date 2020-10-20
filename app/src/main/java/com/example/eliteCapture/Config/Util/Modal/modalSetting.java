@@ -158,6 +158,7 @@ public class modalSetting {
         sw.setChecked(new Conexion().getConexion() != null ? false : true);
         txtR.setText(new Conexion().getConexion() != null ? "onLine" : "offLine");
         imgOnline.setBackgroundResource(sw.isChecked() ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
+        ionLine.local(sw.isChecked() ? "offLine" : "onLine");
     }
 
     protected class Conexion extends sqlConect {}

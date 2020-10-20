@@ -409,10 +409,11 @@ public class genated extends AppCompatActivity {
                 }
             }
 
+            nuevo.setConsecutivo(contConsec);
+
             if (full) {
                 if(ion.all().equals("onLine")) {
-                    if (iCon.enviarInmediato(nuevo)) {
-                        iCon.insert(nuevo);
+                    if (iCon.enviarInmediato(nuevo, contConsec)) {
                         Toast.makeText(this, "Insertado con exito!", Toast.LENGTH_LONG).show();
                     } else {
                         iCon.insert(nuevo);

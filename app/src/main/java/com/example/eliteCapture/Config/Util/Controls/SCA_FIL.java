@@ -203,7 +203,7 @@ public class SCA_FIL implements Serializable{
                             case "SCA":
                                 registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
                             case "FIL":
-                            registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
+                                registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
                         }
                     }
                     respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
@@ -214,7 +214,6 @@ public class SCA_FIL implements Serializable{
             }
         });
     }
-
 
     public String filtroDesplegable(String rta){
         String data = "";

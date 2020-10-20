@@ -28,6 +28,7 @@ import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 
 import java.io.File;
+import java.sql.Connection;
 import java.util.List;
 
 import static com.example.eliteCapture.R.*;
@@ -41,9 +42,10 @@ public class Login extends AppCompatActivity {
     EditText txtUser, txtPass;
     TextView txtError, floatingServer;
     ImageView imgOnline;
-    iContenedor icont;
 
+    iContenedor icont;
     iSesion is;
+    ionLine ionLine;
 
 
     @Override
@@ -55,9 +57,7 @@ public class Login extends AppCompatActivity {
         Screen();
 
         path = getExternalFilesDir(null) + File.separator;
-
         try {
-
             sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
 
             txtUser = findViewById(id.txtUser);
@@ -72,15 +72,16 @@ public class Login extends AppCompatActivity {
 
             icont = new iContenedor(path);
             is = new iSesion(path);
+            ionLine = new ionLine(path);
 
             imgOnline.setBackgroundResource(new ionLine(path).all().equals("onLine") ? ic_wifi_on : ic_wifi_off);
             floatingServer.setCompoundDrawablesWithIntrinsicBounds(icont.pendientesCantidad() > 0 ? ic_cloud_noti : ic_cloud, 0, 0, 0);
 
-
-            if(new Conexion().getConexion() == null){
+            if(new Conexion().getConexion() == null) {
                 imgOnline.setBackgroundResource(ic_wifi_off);
+                ionLine.local("offLine");
+                new ionLine(path).local("offLine");
             }
-
         } catch (Exception ex) {
             Toast.makeText(this, "Se genero un Error al traer los datos de Usuario \n \n" + ex.toString(), Toast.LENGTH_LONG).show();
         }

@@ -66,7 +66,7 @@ public class iContenedor implements Contenedor {
     @Override
     public String insert(ContenedorTab o) {
         all();
-        o.setConsecutivo( contador.getCantidad(o.getIdUsuario(), o.getIdProceso()) );
+        //o.setConsecutivo( contador.getCantidad(o.getIdUsuario(), o.getIdProceso()) );
         o.setFecha(o.fechaString());
         ct.add(o);
         local();
@@ -314,8 +314,6 @@ public class iContenedor implements Contenedor {
                         bloque(ps, c, c.getFooter());
                     }
                     ps.executeBatch();
-                    //c.setEstado(1);
-                    //update((long) index, c);
 
                     ih.insert(c);//agrega el formulario enviado al json historico
 
@@ -326,16 +324,20 @@ public class iContenedor implements Contenedor {
                     index++;
                 }
             }
+            if(load > 0){
+                ct.clear();
+                local();
+            }
             Log.i("Enviar_env", "Registros actualizados: " + load);
             return true;
         } else {
-            Log.i("Enviar_env", "Registros actualizados: ");
+            Log.i("id_usuario", "Registros actualizados: ");
             return false;
         }
 
     }
 
-    public boolean enviarInmediato(ContenedorTab c) throws Exception {
+    public boolean enviarInmediato(ContenedorTab c, int consecutivo) throws Exception {
         try {
             Connection cn = new Conexion().getConexion();
             if (cn != null) {
@@ -355,6 +357,8 @@ public class iContenedor implements Contenedor {
                         "           (?,?,?,?,?,?,?,?,?,?);";
                 int load = 0;
 
+                c.setConsecutivo(consecutivo);
+
                 PreparedStatement ps = cn.prepareStatement(ins);
                 if (c.getEstado() != 1) {
                     bloque(ps, c, c.getHeader());
@@ -363,8 +367,7 @@ public class iContenedor implements Contenedor {
                         bloque(ps, c, c.getFooter());
                     }
                     ps.executeBatch();
-                    //c.setEstado(1);
-                    //update((long) c.getConsecutivo(), c);
+                    Log.i("CONSECUTIVO", c.getConsecutivo()+"");
                     ih.insert(c);//agrega el formulario enviado al json historico
                     load++;
                 } else {
@@ -427,54 +430,4 @@ public class iContenedor implements Contenedor {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void limpiarXfecha(Context c){
-        try {
-            ct = all();
-            Instant after= Instant.now().minus(Duration.ofDays(3));
-            int d = 0;
-            for (ContenedorTab tab : ct) {
-
-                String fechaJson = tab.getFecha().split(" ")[0];
-                String fechaRetrocedida = after.toString().split("T")[0];
-
-                int añoJson = Integer.parseInt(splitdate(fechaJson)[0]);
-                int mesJson = Integer.parseInt(splitdate(fechaJson)[1]);
-                int diaJson = Integer.parseInt(splitdate(fechaJson)[2]);
-
-                int año15 = Integer.parseInt(splitdate(fechaRetrocedida)[0]);
-                int mes15 = Integer.parseInt(splitdate(fechaRetrocedida)[1]);
-                int dia15 = Integer.parseInt(splitdate(fechaRetrocedida)[2]);
-
-                boolean validado = false;
-                if(añoJson <= año15){
-                    if(mesJson < mes15){
-                        validado = getEstado(tab.getEstado());
-                    }else if(mesJson == mes15){
-                        if(diaJson <= dia15){
-                            validado = getEstado(tab.getEstado());
-                        }
-                    }
-                }
-                if(!validado) {
-                    newct.add(tab);
-                    //Log.i("GETFECHA","se ha borrado : "+d);
-                }
-            }
-            ct = newct != null ? newct : all();
-            Toast.makeText(c, d >= 1 ? "Se limpiaron los registros" : "No se encontraron registros por limpiar", Toast.LENGTH_LONG).show();
-            local();
-        }catch (Exception ex){
-            Log.i("GETFECHA",ex.toString());
-        }
-    }
-
-    public String[] splitdate(String d){
-        String[] i = d.split("-");
-        return i;
-    }
-
-    public boolean getEstado(int estado){
-        return estado == 1;
-    }
 }
