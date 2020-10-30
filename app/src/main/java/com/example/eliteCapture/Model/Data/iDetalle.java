@@ -41,8 +41,7 @@ public class iDetalle implements Detalle {
 			"  FROM [Formularios].[dbo].[Procesos_Detalle]\n" +
 			"  ORDER BY [id_proceso], [codigo_detalle]";
 
-
-	public iDetalle(Connection cn, String path) throws Exception {
+	public iDetalle(Connection cn, String path) {
 		this.cn = cn;
 		getPath(path);
 	}
@@ -82,6 +81,7 @@ public class iDetalle implements Detalle {
 
 	@Override
 	public boolean local() throws Exception {
+
 		ResultSet rs;
 		PreparedStatement ps = cn.prepareStatement(all);
 		rs = ps.executeQuery();
@@ -113,7 +113,8 @@ public class iDetalle implements Detalle {
 	}
 
 	private DetalleTab gift(ResultSet rs) throws Exception {
-		Log.i("REGLA",rs.getInt("reglas")+"");
+		Log.i("ErrorSplashDetalle",rs.getInt("id_proceso")+" COD. DETALLE : "+rs.getString("codigo_detalle"));
+
 		return new DetalleTab(
 				rs.getLong("id_detalle"),
 				rs.getInt("id_proceso"),

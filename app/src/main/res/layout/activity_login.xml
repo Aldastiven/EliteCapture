@@ -75,8 +75,7 @@
                     android:textSize="20dp"
                     android:gravity="center"
                     android:background="@drawable/camp_gray"
-                    android:paddingVertical="10dp"
-                    android:text="1"/>
+                    android:paddingVertical="10dp"/>
 
                 <EditText
                     android:id="@+id/txtPass"
@@ -88,8 +87,7 @@
                     android:textSize="20dp"
                     android:gravity="center"
                     android:background="@drawable/camp_gray"
-                    android:paddingVertical="10dp"
-                    android:text="1"/>
+                    android:paddingVertical="10dp"/>
 
             </LinearLayout>
 

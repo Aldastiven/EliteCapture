@@ -1,8 +1,10 @@
 package com.example.eliteCapture.Config.Util.Controls;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,6 +31,7 @@ public class AUT_DES_CBX {
     String ubicacion, path;
     RespuestasTab rt;
     boolean vacio, initial;
+    SharedPreferences sp;
 
     containerAdmin ca;
     GIDGET pp;
@@ -52,6 +55,8 @@ public class AUT_DES_CBX {
         ca = new containerAdmin(context);
         pp = new GIDGET(context, ubicacion, rt, path);
         ta = new textAdmin(context);
+
+        sp = context.getSharedPreferences("share", context.MODE_PRIVATE);
 
         iDesp = new iDesplegable(null, path);
 
@@ -92,7 +97,14 @@ public class AUT_DES_CBX {
                 case "CBX":
                     campSpin = new Spinner(context);
                     campSpin.setAdapter(getAdapter(getDesp()));
-                    campSpin.setSelection((vacio ? getDesp().indexOf(rt.getRespuesta()) : 0));
+
+                    if(vacio){
+                        campSpin.setSelection(getDesp().indexOf(rt.getRespuesta()));
+                    }else if(rt.getTip().trim().equals("asignado")){
+                        campSpin.setSelection(getFinca() == null || getFinca().equals("Todas") ? 0 : getDesp().indexOf(filtroDesplegable(getFinca()).getOpcion()));
+                    }else{
+                        campSpin.setSelection(getDesp().indexOf(0));
+                    }
                     campSpin.setBackgroundResource(R.drawable.myspinner);
                     FunsDesp(campSpin);
                     v = campSpin;
@@ -158,16 +170,16 @@ public class AUT_DES_CBX {
      new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, causa, rt.getReglas());
     }
 
-        public DesplegableTab  filtroDesplegable(String rta){
-            DesplegableTab dt = null;
-            if(rt.getDesplegable() != null){
-                DesplegableTab des = pp.busqueda(rta);
-                if(des != null) {
-                    dt = des;
-                }
+    public DesplegableTab  filtroDesplegable(String rta){
+        DesplegableTab dt = null;
+        if(rt.getDesplegable() != null){
+            DesplegableTab des = pp.busqueda(rta);
+            if(des != null) {
+                dt = des;
             }
-            return dt;
         }
+        return dt;
+    }
 
     public View pintarRespuesta(String causa){//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
         if (LineRespuesta.getChildCount() > 0 || causa == null) LineRespuesta.removeAllViews();
@@ -178,5 +190,14 @@ public class AUT_DES_CBX {
         }
 
         return LineRespuesta;
+    }
+
+    public String getFinca(){
+        String finca = null;
+        if(sp != null) {
+            finca = sp.getString("fincaAsignada", "");
+            Log.i("fincaAsignada", finca);
+        }
+        return finca;
     }
 }

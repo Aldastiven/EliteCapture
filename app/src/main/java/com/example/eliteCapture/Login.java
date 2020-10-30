@@ -109,7 +109,7 @@ public class Login extends AppCompatActivity {
                 Intent intent = new Intent(this, Index.class);
                 startActivity(intent);
 
-                guardarUsuario(txt_user, txt_pass);
+                guardarUsuario(txt_user, txt_pass, m.getGrupo2());
 
                 borrarTemp(m.getId_usuario());
                 new iSesion(path).local(m.getId_usuario());
@@ -151,12 +151,13 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    public void guardarUsuario(int id, int pass) {
+    public void guardarUsuario(int id, int pass, String fincaAsignada) {
         try {
 
             SharedPreferences.Editor edit = sp.edit();
             edit.putInt("codigoLogin", id);
             edit.putInt("passwordLogin", pass);
+            edit.putString("fincaAsignada", fincaAsignada);
             edit.commit();
             edit.apply();
 

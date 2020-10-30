@@ -19,6 +19,7 @@ import com.example.eliteCapture.Camera;
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
+import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
@@ -99,11 +100,6 @@ public class SCA_FIL implements Serializable{
             }else{
             }
             return LineRespuesta;
-    }
-
-    public boolean pintarTextoResultado(){
-
-        return pintada;
     }
 
     public View campo(){
@@ -227,6 +223,7 @@ public class SCA_FIL implements Serializable{
         }
         return data;
     }
+
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
         new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), valor, rta, causa, rt.getReglas());

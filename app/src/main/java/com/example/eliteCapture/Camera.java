@@ -8,9 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.eliteCapture.Config.Util.ControlViews.Cscanner;
 import com.example.eliteCapture.Config.Util.Controls.GIDGET;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
+import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 
@@ -94,7 +94,6 @@ public class Camera extends AppCompatActivity implements Serializable {
     //funcion de registro en el tempóral
     public void registro(String rta) throws Exception{
 
-        Cscanner cscanner = new Cscanner(path);
         iContenedor conTemp = new iContenedor(path);
         String valor = "";
 
@@ -106,7 +105,7 @@ public class Camera extends AppCompatActivity implements Serializable {
             String res = "";
 
             if (new Integer(regla) == null) {
-                valor = cscanner.Buscar(rta, desplegable);
+                valor = Buscar(rta, desplegable);
             } else {
                 cadena = quitCadena(rta, regla);
 
@@ -122,6 +121,22 @@ public class Camera extends AppCompatActivity implements Serializable {
 
         }else{
             conTemp.editarTemporal(ubicacion, id, valor, new Integer(regla) == null ? rta : quitCadena(rta, regla), null, regla);
+        }
+    }
+
+    public String Buscar(String data, String desplegable) {
+        try {
+            iDesplegable iDesp = new iDesplegable(null, path);
+            iDesp.nombre = desplegable;
+
+            for (DesplegableTab desp : iDesp.all()) {
+                if (desp.getCodigo().equals(data)) {
+                    return desp.getOpcion();
+                }
+            }
+            return "NO DATA SCAN";
+        } catch (Exception ex) {
+            return "NO DATA SCAN";
         }
     }
 

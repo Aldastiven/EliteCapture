@@ -28,6 +28,11 @@ public class iContador implements Contador {
 
         this.path = path;
         try {
+
+            if (!new JsonAdmin().ExitsJson(path, nombre) || all() == null) {
+                local();
+            }
+
             ct = all();
             for(ContadorTab cc : ct){
                 if(!cc.getFecha().equals(fechaNombre)){
