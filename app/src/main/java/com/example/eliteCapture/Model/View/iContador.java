@@ -29,17 +29,18 @@ public class iContador implements Contador {
         this.path = path;
         try {
 
-            if (!new JsonAdmin().ExitsJson(path, nombre) || all() == null) {
+            if (!new JsonAdmin().ExitsJson(path, nombre)) {
                 local();
-            }
 
-            ct = all();
-            for(ContadorTab cc : ct){
-                if(!cc.getFecha().equals(fechaNombre)){
-                   ct.clear();
-                   break;
+                ct = all();
+                for(ContadorTab cc : ct){
+                    if(!cc.getFecha().equals(fechaNombre)){
+                       ct.clear();
+                       break;
+                    }
                 }
             }
+
         } catch (Exception e) {
             Log.i("Error_onCreate", e.toString());
         }

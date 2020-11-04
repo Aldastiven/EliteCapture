@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -90,6 +91,7 @@ public class AUT_DES_CBX {
                     campAut = (AutoCompleteTextView) pp.campoEdtable("Auto", "grisClear");
                     campAut.setText((vacio ? rt.getRespuesta() : ""));
                     campAut.setAdapter(getAdapter(getDesp()));
+                    campAut.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                     FunAut(campAut);
                     v = campAut;
                     break;
