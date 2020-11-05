@@ -85,6 +85,8 @@ public class AUT_DES_CBX {
             LinearLayout.LayoutParams params = ca.params();
             params.setMargins(5, 2, 5, 5);
 
+            Log.i("ITEM", rt.getCodigo()+"");
+
             View v = null;
             switch (rt.getTipo()) {
                 case "AUT":
@@ -102,7 +104,7 @@ public class AUT_DES_CBX {
 
                     if(vacio){
                         campSpin.setSelection(getDesp().indexOf(rt.getRespuesta()));
-                    }else if(rt.getTip().trim().equals("asignado")){
+                    }else if(rt.getCodigo() == 1){
                         campSpin.setSelection(getFinca() == null || getFinca().equals("Todas") ? 0 : getDesp().indexOf(filtroDesplegable(getFinca()).getOpcion()));
                     }else{
                         campSpin.setSelection(getDesp().indexOf(0));

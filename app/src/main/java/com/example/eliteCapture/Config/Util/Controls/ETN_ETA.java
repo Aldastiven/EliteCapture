@@ -92,8 +92,6 @@ public class ETN_ETA {
                     registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado()+"" : null);
                     respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
-
-                    Toast.makeText(context, "se cambio el foco", Toast.LENGTH_SHORT).show();
                 }
             }
         });

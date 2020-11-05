@@ -182,30 +182,38 @@ public class SCA_FIL implements Serializable{
             public void afterTextChanged(Editable s) {
                 try {
                     Boolean b = true;
-                    String desplegable = "DESPLEGABLE"+rt.getDesplegable();
-                    if(!desplegable.equals("DESPLEGABLE") && !desplegable.equals("DESPLEGABLEnull")){
+                    String desplegable = "d"+rt.getDesplegable();
+                    if(!desplegable.equals("d") && !desplegable.equals("dnull")){
                         rta = filtroDesplegable(camp.getText().toString());
                     }else {
                         b = false;
                         rta = camp.getText().toString();
                     }
                     pintarRespuesta(causa, b);
-                    if(pintada) {
-                        registro(null, null ,null);
-                        pintada = false;
-                    }else {
-                        switch (rt.getTipo()){
-                            case "SCN":
-                            case "SCA":
-                                registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
-                            case "FIL":
-                                registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
-                        }
-                    }
+
                     respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
                 }catch (Exception e){
                     Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        camp.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(pintada) {
+                    registro(null, null ,null);
+                    pintada = false;
+                }else {
+                    switch (rt.getTipo()){
+                        case "SCN":
+                        case "SCA":
+                            registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
+                        case "FIL":
+                            registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
+                    }
                 }
             }
         });

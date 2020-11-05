@@ -139,7 +139,7 @@ public class formAdmin {
                 }
             }
         } catch (Exception ex) {
-            Log.i("FORMULARIO","Error : "+ex);
+            Log.i("FORMULARIO","Error creacion : "+ex);
         }
     }
 
