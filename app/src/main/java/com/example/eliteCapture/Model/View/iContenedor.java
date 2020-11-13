@@ -59,7 +59,7 @@ public class iContenedor implements Contenedor {
             contador = new iContador(path);
             ih = new iHistorico(path);
         } catch (Exception e) {
-            Log.i("Error_onCreate", e.toString());
+            Log.i("Error_iContenedor", e.toString());
         }
     }
 

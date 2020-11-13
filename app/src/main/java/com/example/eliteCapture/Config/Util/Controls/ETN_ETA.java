@@ -89,6 +89,7 @@ public class ETN_ETA {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     String rta = camp.getText().toString();
+                    rta = rta.replace(" ", "");
                     registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado()+"" : null);
                     respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
