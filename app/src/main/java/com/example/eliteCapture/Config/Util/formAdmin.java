@@ -4,12 +4,15 @@ import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.AUT_DES_CBX;
 import com.example.eliteCapture.Config.Util.Controls.CBE;
 import com.example.eliteCapture.Config.Util.Controls.DPV;
@@ -45,6 +48,7 @@ public class formAdmin {
 
     SharedPreferences sp;
     Admin adm = null;
+    containerAdmin contAdmin;
 
     boolean temporal;
     int estado = 1, consecutivo;
@@ -60,6 +64,8 @@ public class formAdmin {
             this.consecutivo = consecutivo;
             sp = context.getSharedPreferences("share", context.MODE_PRIVATE);
             adm = new Admin(null, path);//administra la conexion de las entidades
+
+            contAdmin = new containerAdmin(context);
 
             inicializarPopRegla(); //inicicaliza el Dialog para el campo de RSE que edita la regla del conteo
             iCon = new iContenedor(path);
@@ -97,7 +103,6 @@ public class formAdmin {
             }
 
             for (RespuestasTab r : lista) {
-                Log.i("FORMULARIO","ubicacion : "+ubicacion+" tipo : "+r.getTipo());
                 View v = null;
                 switch (r.getTipo()) {
                     case "CBE":
@@ -127,6 +132,9 @@ public class formAdmin {
                     case "RSE":
                     case "RSC":
                         v = new RS_RSE_RSC(context, ubicacion, r, path, inicial).crear();
+                        break;
+                    default:
+                        v = noCreate(r.getTipo());
                         break;
                 }
 
@@ -175,6 +183,17 @@ public class formAdmin {
                 getPhoneName(),
                 adm.getDetalles()
                         .forDetalle(pro.getCodigo_proceso()));
+    }
+
+    public View noCreate(String campo){
+        LinearLayout line = contAdmin.container();
+        TextView txt = new TextView(context);
+        txt.setText("No se pudo crear el campo : "+campo);
+        txt.setTextSize(15);
+        txt.setTextColor(Color.parseColor("#F1948A"));
+
+        line.addView(txt);
+        return line;
     }
 
 

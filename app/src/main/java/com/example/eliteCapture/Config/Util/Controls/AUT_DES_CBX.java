@@ -82,10 +82,9 @@ public class AUT_DES_CBX {
     }
 
     public View camp(){
+        try {
             LinearLayout.LayoutParams params = ca.params();
             params.setMargins(5, 2, 5, 5);
-
-            Log.i("ITEM", rt.getCodigo()+"");
 
             View v = null;
             switch (rt.getTipo()) {
@@ -101,14 +100,7 @@ public class AUT_DES_CBX {
                 case "CBX":
                     campSpin = new Spinner(context);
                     campSpin.setAdapter(getAdapter(getDesp()));
-
-                    if(vacio){
-                        campSpin.setSelection(getDesp().indexOf(rt.getRespuesta()));
-                    }else if(rt.getCodigo() == 1){
-                        campSpin.setSelection(getFinca() == null || getFinca().equals("Todas") ? 0 : getDesp().indexOf(filtroDesplegable(getFinca()).getOpcion()));
-                    }else{
-                        campSpin.setSelection(getDesp().indexOf(0));
-                    }
+                    campSpin.setSelection(vacio ? 0 : getDesp().indexOf(rt.getRespuesta()));
                     campSpin.setBackgroundResource(R.drawable.myspinner);
                     FunsDesp(campSpin);
                     v = campSpin;
@@ -116,6 +108,10 @@ public class AUT_DES_CBX {
             }
             v.setLayoutParams(params);
             return v;
+        }catch (Exception e){
+            Log.i("ERRORCBX", e.toString());
+            return null;
+        }
     }
 
     public List<String> getDesp(){
