@@ -20,6 +20,7 @@ import com.example.eliteCapture.Config.Util.Controls.ETN_ETA;
 import com.example.eliteCapture.Config.Util.Controls.RB;
 import com.example.eliteCapture.Config.Util.Controls.RS_RSE_RSC;
 import com.example.eliteCapture.Config.Util.Controls.SCA_FIL;
+import com.example.eliteCapture.Config.Util.Controls.TIM_FEC;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -132,6 +133,10 @@ public class formAdmin {
                     case "RSE":
                     case "RSC":
                         v = new RS_RSE_RSC(context, ubicacion, r, path, inicial).crear();
+                        break;
+                    case "TIM":
+                    case "FEC":
+                        v = new TIM_FEC(context, ubicacion, r, path, inicial).crear();
                         break;
                     default:
                         v = noCreate(r.getTipo());

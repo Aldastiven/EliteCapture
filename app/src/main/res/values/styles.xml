@@ -28,5 +28,9 @@
     <style name="TransparentDialog" parent="Theme.AppCompat.Light.Dialog">
     </style>
 
+    <style name="DialogPickerDate" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/verde</item>
+    </style>
+
 
 </resources>
