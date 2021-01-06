@@ -105,40 +105,42 @@ public class formAdmin {
             for (RespuestasTab r : lista) {
                 View v;
                 switch (r.getTipo()) {
-                    case "CBE":
+                    case "CBE":// desplegable con editor de texto numerico
                         v = new CBE(context, ubicacion, r, path, inicial).crear();
                         break;
-                    case "RB":
+                    case "RB":// radio buttons
                         v = new RB(context, ubicacion, r, path, inicial).crear();
                         break;
-                    case "DPV":
+                    case "DPV":// campo que dependiente
                         v = new DPV(context, ubicacion, r, path, inicial).crear();
                         break;
-                    case "ETN":
-                    case "ETA":
+                    case "ETN":// campo de texto numerico
+                    case "ETA":// campo de texto alfanumerico
                         v = new ETN_ETA(context, ubicacion, r, path, inicial).crear();
                         break;
-                    case "FIL":
-                    case "SCA":
-                    case "SCN":
+                    case "FIL":// campo busqueda con teclado alfanumerico
+                    case "FIN":// campo busqueda con teclado numerico
+                    case "SCA":// scanner busqueda con teclado alfanumerico
+                    case "SCN":// scanner busqueda con teclado numerico
                         v = new SCA_FIL(context, ubicacion, r, path, inicial).crear();
                         break;
-                    case "AUT":
-                    case "DES":
-                    case "CBX":
+                    case "AUT":// autocompletable con teclado alfanumerico
+                    case "AUN":// autocompletable con teclado numerico
+                    case "DES":// combobox
+                    case "CBX":// combobox
                         v = new AUT_DES_CBX(context, ubicacion, r, path, inicial).crear();
                         break;
-                    case "RS":
-                    case "RSE":
-                    case "RSC":
+                    case "RS"://campo de conteo suma resta
+                    case "RSE"://campo de conteo suma resta (con editor de longitud)
+                    case "RSC"://campo de conteo suma resta con multiseleccion
                         v = new RS_RSE_RSC(context, ubicacion, r, path, inicial).crear();
                         break;
-                    case "TIM":
-                    case "FEC":
+                    case "TIM"://timepcker
+                    case "FEC"://datepcker
                         v = new TIM_FEC(context, ubicacion, r, path, inicial).crear();
                         break;
                     default:
-                        v = noCreate(r.getTipo());
+                        v = noCreate(r.getTipo());// El campo asignado en la base no existe
                         break;
                 }
 

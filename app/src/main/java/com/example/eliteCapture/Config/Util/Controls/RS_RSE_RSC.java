@@ -80,23 +80,27 @@ public class RS_RSE_RSC {
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM
-        contenedorCamp = ca.container();
-        contenedorCamp.setOrientation(LinearLayout.VERTICAL);
-        contenedorCamp.setPadding(10, 0, 10, 0);
-        contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
+        try {
+            contenedorCamp = ca.container();
+            contenedorCamp.setOrientation(LinearLayout.VERTICAL);
+            contenedorCamp.setPadding(10, 0, 10, 0);
+            contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
-        contenedorCamp.addView(campo());
-        pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
+            contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
+            contenedorCamp.addView(campo());
+            pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
-        return contenedorCamp;
+            return contenedorCamp;
+        }catch (Exception e){
+            return new GIDGET(context, "", null, path).problemCamp(rt.getTipo(), e.toString());
+        }
     }
 
     public LinearLayout campo() {//CAMPO DE USUARIO
         LinearLayout line = ca.container();
         line.setOrientation(LinearLayout.VERTICAL);
         if(rt.getTipo().equals("RSC")) line.addView(multiSelect());
-        if(rt.getTipo().equals("RS") && !rt.getDesplegable().isEmpty()) line.addView(despSelect());
+        if(rt.getTipo().equals("RS") && rt.getDesplegable() != null) line.addView(despSelect());
         if(regla == 0) line.addView(ta.textColor("No hay asignado limite de conteo (REGLA)","rojo",15,"l"));
         line.addView(noti);
         line.addView(conteos());
@@ -135,27 +139,32 @@ public class RS_RSE_RSC {
         return line;
     }
     public void FunContador(View btn, final String tipo){
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 try {
-                    if(rt.getDesplegable().isEmpty()){
+                    if(rt.getDesplegable() == null){
+                        Log.i("CONTEO","Entro 1");
                         n =  contar(tipo);
                         rta = n+"";
-                        campConteo.setText(n+"");
-                        valor = valor(n);
                         contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
+                        campConteo.setText(n+"");
                     }else{
-                        n = causa.isEmpty() ? -1 : contar(tipo);
-                        rta = causa.isEmpty() ? null : n+"";
-                        campConteo.setText(causa.isEmpty() ? "" : n+"");
-                        valor = causa.isEmpty() ? "" : valor(n);
-                        if(!causa.isEmpty()) contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
-
-                        if(causa.isEmpty() && noti.getChildCount() < 1) {
+                        if(causa.isEmpty()) {
+                            noti.removeAllViews();
                             noti.addView(ta.textColor("¡Debes seleccionar al menos una opción!", "rojo", 15, "l"));
                             temporizador(5000);
+                            n = -1;
+                            campConteo.setText("");
+                        }else {
+                            Log.i("CONTEO", "Entro 2"+tipo);
+                            n = contar(tipo);
+                            rta = causa != null ? "" : n + "";
+                            contenedorCamp.setBackgroundResource(causa != null ? R.drawable.bordercontainer : R.drawable.bordercontainerred);
+                            campConteo.setText(""+n);
                         }
                     }
+                    valor = valor(n);
                     respuestaPonderado.setText(valor.equals("-1") ? "Resultado : N/A" : "Resultado : "+valor);
                     registro(rta, valor, causa);
                 }catch (Exception e){

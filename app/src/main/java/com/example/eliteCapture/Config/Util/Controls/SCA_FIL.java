@@ -64,19 +64,23 @@ public class SCA_FIL implements Serializable{
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM
-        contenedorCamp = ca.container();
-        contenedorCamp.setOrientation(LinearLayout.VERTICAL);
-        contenedorCamp.setPadding(10, 0, 10, 0);
-        contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
+        try {
+            contenedorCamp = ca.container();
+            contenedorCamp.setOrientation(LinearLayout.VERTICAL);
+            contenedorCamp.setPadding(10, 0, 10, 0);
+            contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado4
-        contenedorCamp.addView(pintarRespuesta(rt.getRespuesta(), false));
-        contenedorCamp.addView(campo());
-        pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
+            contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado4
+            contenedorCamp.addView(pintarRespuesta(rt.getRespuesta(), false));
+            contenedorCamp.addView(campo());
+            pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
-        sp.edit().clear().apply();
+            sp.edit().clear().apply();
 
-        return contenedorCamp;
+            return contenedorCamp;
+        }catch (Exception e){
+            return new GIDGET(context, "", null, path).problemCamp(rt.getTipo(), e.toString());
+        }
     }
 
     public View pintarRespuesta(String causa, Boolean b){//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
@@ -106,7 +110,7 @@ public class SCA_FIL implements Serializable{
         camp = (EditText) pp.campoEdtable("Edit", "grisClear");
         camp.setText(!res.equals("causanull") ? rt.getValor() : "");
         camp.setLayoutParams(params((float) 0.5));
-        if(rt.getTipo().equals("SCN")) camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
+        if(rt.getTipo().equals("SCN") || rt.getTipo().equals("FIN")) camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
 
         Button btn = btnTipo();
         btn.setLayoutParams(params((float) 1.5));
@@ -125,11 +129,12 @@ public class SCA_FIL implements Serializable{
         switch (rt.getTipo()){
             case "SCA" :
             case "SCN" :
-                btn = (Button) pp.boton("scanner", "verde");
+                btn = (Button) pp.boton("Escanear", "verde");
                 BtnStarCamera(btn);
                 break;
             case "FIL" :
-                btn = (Button) pp.boton("buscar", "verde");
+            case "FIN" :
+                btn = (Button) pp.boton("Buscar", "verde");
                 BtnBuscar(btn);
                 break;
         }

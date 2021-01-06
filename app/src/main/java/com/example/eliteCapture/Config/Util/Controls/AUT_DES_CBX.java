@@ -2,6 +2,7 @@ package com.example.eliteCapture.Config.Util.Controls;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -68,17 +69,21 @@ public class AUT_DES_CBX {
     }
 
     public View crear(){
-        contenedorcampAut = ca.container();
-        contenedorcampAut.setOrientation(LinearLayout.VERTICAL);
-        contenedorcampAut.setPadding(10, 0, 10, 5);
-        contenedorcampAut.setGravity(Gravity.CENTER_HORIZONTAL);
+        try {
+            contenedorcampAut = ca.container();
+            contenedorcampAut.setOrientation(LinearLayout.VERTICAL);
+            contenedorcampAut.setPadding(10, 0, 10, 5);
+            contenedorcampAut.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        contenedorcampAut.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
-        contenedorcampAut.addView(pintarRespuesta(rt.getCausa() != null ? rt.getCausa() : ""));
-        contenedorcampAut.addView(camp());
-        pp.validarColorContainer(contenedorcampAut, vacio, initial);//pinta el contenedor del item si esta vacio o no
+            contenedorcampAut.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
+            contenedorcampAut.addView(pintarRespuesta(rt.getCausa() != null ? rt.getCausa() : ""));
+            contenedorcampAut.addView(camp());
+            pp.validarColorContainer(contenedorcampAut, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
-        return contenedorcampAut;
+            return contenedorcampAut;
+        }catch (Exception e){
+            return new GIDGET(context, "", null, path).problemCamp(rt.getTipo(), e.toString());
+        }
     }
 
     public View camp(){
@@ -89,10 +94,12 @@ public class AUT_DES_CBX {
             View v = null;
             switch (rt.getTipo()) {
                 case "AUT":
+                case "AUN":
                     campAut = (AutoCompleteTextView) pp.campoEdtable("Auto", "grisClear");
                     campAut.setText((vacio ? rt.getRespuesta() : ""));
                     campAut.setAdapter(getAdapter(getDesp()));
                     campAut.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                    if(rt.getTipo().equals("AUN")) campAut.setRawInputType(Configuration.KEYBOARD_QWERTY);
                     FunAut(campAut);
                     v = campAut;
                     break;

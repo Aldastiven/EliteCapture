@@ -201,4 +201,15 @@ public class GIDGET {
             return null;
         }
     }
+
+    public LinearLayout problemCamp(String campo, String error){
+        LinearLayout line = new containerAdmin(context).container();
+        TextView txt = new TextView(context);
+        txt.setText("Problemas campo : "+campo+"\nError : "+error);
+        txt.setTextSize(15);
+        txt.setTextColor(Color.parseColor("#F1948A"));
+
+        line.addView(txt);
+        return line;
+    }
 }

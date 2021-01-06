@@ -47,16 +47,20 @@ public class ETN_ETA {
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM
-        contenedorCamp = ca.container();
-        contenedorCamp.setOrientation(LinearLayout.VERTICAL);
-        contenedorCamp.setPadding(10, 0, 10, 0);
-        contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
+        try {
+            contenedorCamp = ca.container();
+            contenedorCamp.setOrientation(LinearLayout.VERTICAL);
+            contenedorCamp.setPadding(10, 0, 10, 0);
+            contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
-        contenedorCamp.addView(campo());
-        pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
+            contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
+            contenedorCamp.addView(campo());
+            pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
-        return contenedorCamp;
+            return contenedorCamp;
+        }catch (Exception e){
+            return new GIDGET(context, "", null, path).problemCamp(rt.getTipo(), e.toString());
+        }
     }
 
     public EditText campo(){//CAMPO DE USUARIO

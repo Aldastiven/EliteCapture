@@ -77,36 +77,40 @@ public class CBE {
     }
 
     public View camp(){
-        LinearLayout line = ca.container();
-        line.setWeightSum(2);
-        line.setOrientation(LinearLayout.HORIZONTAL);
+        try {
+            LinearLayout line = ca.container();
+            line.setWeightSum(2);
+            line.setOrientation(LinearLayout.HORIZONTAL);
 
-        LinearLayout.LayoutParams llcamp = ca.params();
-        llcamp.setMargins(5,0,5,0);
-        llcamp.weight = 1;
+            LinearLayout.LayoutParams llcamp = ca.params();
+            llcamp.setMargins(5, 0, 5, 0);
+            llcamp.weight = 1;
 
-        LinearLayout.LayoutParams llspn = ca.params2();
-        llspn.weight = 1;
+            LinearLayout.LayoutParams llspn = ca.params2();
+            llspn.weight = 1;
 
-        Spinner campSpin = new Spinner(context);
-        campSpin.setAdapter(getAdapter(getDesp()));
-        campSpin.setSelection((vacio ? getDesp().indexOf(getNameDesp(Integer.parseInt(rt.getValor()))) : 0));
-        campSpin.setBackgroundResource(R.drawable.myspinner);
-        campSpin.setLayoutParams(llspn);
+            Spinner campSpin = new Spinner(context);
+            campSpin.setAdapter(getAdapter(getDesp()));
+            campSpin.setSelection((vacio ? getDesp().indexOf(getNameDesp(Integer.parseInt(rt.getValor()))) : 0));
+            campSpin.setBackgroundResource(R.drawable.myspinner);
+            campSpin.setLayoutParams(llspn);
 
-        FunsDesp(campSpin);
+            FunsDesp(campSpin);
 
-        edt = (EditText) pp.campoEdtable("Edit","grisClear");
-        edt.setText("");
-        edt.setLayoutParams(llcamp);
-        edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        respuestaPonderado.setText(edt.getText().toString().isEmpty() ? "Resultado : " : "Resultado : "+rt.getPonderado());
-        FunCamp(edt);
+            edt = (EditText) pp.campoEdtable("Edit", "grisClear");
+            edt.setText("");
+            edt.setLayoutParams(llcamp);
+            edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
+            respuestaPonderado.setText(edt.getText().toString().isEmpty() ? "Resultado : " : "Resultado : " + rt.getPonderado());
+            FunCamp(edt);
 
-        line.addView(campSpin);
-        line.addView(edt);
+            line.addView(campSpin);
+            line.addView(edt);
 
-        return line;
+            return line;
+        }catch (Exception e){
+            return new GIDGET(context, "", null, path).problemCamp(rt.getTipo(), e.toString());
+        }
     }
 
     //COMPLEMENTOS DEL SPINNER
