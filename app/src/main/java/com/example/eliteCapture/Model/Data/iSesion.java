@@ -3,7 +3,6 @@ package com.example.eliteCapture.Model.Data;
 import android.util.Log;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
-import com.example.eliteCapture.Model.Data.Tab.onLineTab;
 import com.example.eliteCapture.Model.Data.Tab.sesionTab;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

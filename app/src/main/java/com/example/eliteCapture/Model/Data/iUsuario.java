@@ -1,7 +1,6 @@
 package com.example.eliteCapture.Model.Data;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
-import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Interfaz.Usuario;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.google.gson.Gson;

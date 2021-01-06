@@ -6,24 +6,21 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
-import com.example.eliteCapture.Model.Data.Interfaz.Desplegable;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
-import com.example.eliteCapture.R;
 
-import static com.example.eliteCapture.R.drawable.*;
+import static com.example.eliteCapture.R.drawable.bordercontainer;
+import static com.example.eliteCapture.R.drawable.bordercontainerred;
 
 public class GIDGET {
 

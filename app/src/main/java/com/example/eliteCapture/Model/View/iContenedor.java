@@ -1,20 +1,14 @@
 package com.example.eliteCapture.Model.View;
 
 
-import android.content.Context;
-import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
-
-import androidx.annotation.RequiresApi;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Config.sqlConect;
-import com.example.eliteCapture.Model.Data.iDesplegable;
-import com.example.eliteCapture.Model.View.Interfaz.Contenedor;
-import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.Tab.DetalleTab;
+import com.example.eliteCapture.Model.View.Interfaz.Contenedor;
+import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,8 +18,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;

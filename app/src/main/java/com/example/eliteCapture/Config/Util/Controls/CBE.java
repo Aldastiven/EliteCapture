@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.QwertyKeyListener;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;

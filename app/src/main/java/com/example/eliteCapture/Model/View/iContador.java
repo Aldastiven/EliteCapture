@@ -1,7 +1,6 @@
 package com.example.eliteCapture.Model.View;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.View.Interfaz.Contador;
@@ -11,7 +10,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 

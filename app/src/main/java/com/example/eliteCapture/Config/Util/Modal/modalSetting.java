@@ -16,14 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.widget.CompoundButtonCompat;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Config.sqlConect;
-import com.example.eliteCapture.Model.Data.Tab.onLineTab;
 import com.example.eliteCapture.Model.Data.ionLine;
-import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
 public class modalSetting {

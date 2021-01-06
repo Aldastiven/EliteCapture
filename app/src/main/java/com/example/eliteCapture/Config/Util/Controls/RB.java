@@ -6,11 +6,9 @@ import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,9 +17,6 @@ import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.eliteCapture.R.drawable.bordercontainer;
 

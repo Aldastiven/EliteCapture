@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
-import com.example.eliteCapture.Model.View.Interfaz.Contenedor;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;

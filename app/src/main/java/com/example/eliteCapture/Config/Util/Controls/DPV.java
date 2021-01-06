@@ -22,7 +22,6 @@ import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class DPV {

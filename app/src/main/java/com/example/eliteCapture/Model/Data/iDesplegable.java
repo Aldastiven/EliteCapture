@@ -1,9 +1,7 @@
 package com.example.eliteCapture.Model.Data;
 
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.Data.Interfaz.Desplegable;
@@ -11,10 +9,11 @@ import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.sql.*;
 
 public class iDesplegable implements Desplegable {
 

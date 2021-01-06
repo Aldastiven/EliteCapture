@@ -1,29 +1,24 @@
 package com.example.eliteCapture;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
-
-import com.example.eliteCapture.Model.View.Tab.ContadorTab;
 import com.example.eliteCapture.Model.View.iContador;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.Model.View.iHistorico;
@@ -31,9 +26,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
-import java.sql.Connection;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Index extends AppCompatActivity {
     LinearLayout linearCheck, titulodata;

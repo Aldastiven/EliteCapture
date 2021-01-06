@@ -5,7 +5,6 @@ import android.util.Log;
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.Data.Interfaz.Detalle;
 import com.example.eliteCapture.Model.Data.Tab.DetalleTab;
-import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

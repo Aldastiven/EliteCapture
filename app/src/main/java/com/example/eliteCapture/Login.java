@@ -1,38 +1,38 @@
 package com.example.eliteCapture;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.eliteCapture.Config.Util.Modal.modalServer;
 import com.example.eliteCapture.Config.Util.Modal.modalSetting;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
+import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.Data.iSesion;
 import com.example.eliteCapture.Model.Data.iUsuario;
-import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.Data.ionLine;
-import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 
 import java.io.File;
-import java.sql.Connection;
-import java.util.List;
 
-import static com.example.eliteCapture.R.*;
-import static com.example.eliteCapture.R.drawable.*;
+import static com.example.eliteCapture.R.drawable.bordercontainerred;
+import static com.example.eliteCapture.R.drawable.ic_cloud;
+import static com.example.eliteCapture.R.drawable.ic_cloud_noti;
+import static com.example.eliteCapture.R.drawable.ic_wifi_off;
+import static com.example.eliteCapture.R.drawable.ic_wifi_on;
+import static com.example.eliteCapture.R.id;
+import static com.example.eliteCapture.R.layout;
 
 
 public class Login extends AppCompatActivity {

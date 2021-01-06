@@ -15,7 +15,6 @@ import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.GIDGET;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
-import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
 public class modal_editar_regla_conteo {

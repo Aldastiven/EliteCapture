@@ -1,7 +1,5 @@
 package com.example.eliteCapture;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -16,6 +14,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.eliteCapture.Config.Util.formAdmin;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
@@ -24,7 +24,6 @@ import com.example.eliteCapture.Model.Data.ionLine;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.iContador;
 import com.example.eliteCapture.Model.View.iContenedor;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -35,7 +34,6 @@ import java.util.Map;
 import static com.example.eliteCapture.R.drawable.ic_cloud_upload;
 import static com.example.eliteCapture.R.drawable.ic_save;
 import static com.example.eliteCapture.R.drawable.ic_star;
-import static java.lang.String.valueOf;
 
 public class genated extends AppCompatActivity {
 

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.AUT_DES_CBX;
@@ -104,7 +103,7 @@ public class formAdmin {
             }
 
             for (RespuestasTab r : lista) {
-                View v = null;
+                View v;
                 switch (r.getTipo()) {
                     case "CBE":
                         v = new CBE(context, ubicacion, r, path, inicial).crear();
