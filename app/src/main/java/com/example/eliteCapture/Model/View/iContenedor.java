@@ -258,12 +258,12 @@ public class iContenedor implements Contenedor {
 
     public List<Long> vacios(List<RespuestasTab> lista) {
         List<Long> v = new ArrayList<>();
-
         for (RespuestasTab respuesta : lista) {
-            if (respuesta.getRespuesta() == null) {
+            if (respuesta.getRespuesta() == null || respuesta.getRespuesta().isEmpty()) {
                 v.add(respuesta.getId());
             }
         }
+        Log.i("vacios", v.toString());
         return v;
     }
 

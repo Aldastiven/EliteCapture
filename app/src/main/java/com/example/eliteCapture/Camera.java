@@ -3,7 +3,6 @@ package com.example.eliteCapture;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,7 +41,7 @@ public class Camera extends AppCompatActivity implements Serializable {
         this.rt = (RespuestasTab) getIntent().getSerializableExtra("respuestaTab");
         this.id = rt.getId().intValue();
         this.regla = rt.getReglas();
-        this.desplegable = rt.getDesplegable() != null ? rt.getDesplegable() : "";
+        this.desplegable = rt.getDesplegable();
 
         pp = new GIDGET(this,ubicacion,rt,path);
 
@@ -92,15 +91,11 @@ public class Camera extends AppCompatActivity implements Serializable {
     }
 
     //funcion de registro en el tempóral
-    public void registro(String rta) throws Exception{
-
+    public void registro(String rta) {
         iContenedor conTemp = new iContenedor(path);
         String valor = "";
 
-        String desplegable = "DESPLEGABLE"+rt.getDesplegable();
-        Log.i("DESPLEGABLE","validando : "+desplegable);
-
-        if (!desplegable.equals("DESPLEGABLE") && !desplegable.equals("DESPLEGABLEnull")) {
+        if (desplegable != null) {
             String cadena = "";
             String res = "";
 
@@ -110,7 +105,7 @@ public class Camera extends AppCompatActivity implements Serializable {
                 cadena = quitCadena(rta, regla);
 
                 DesplegableTab desp = pp.busqueda(cadena);
-                res = desp != null ?  desp.getOpcion() : "No se encontro el resultado";
+                res = desp != null ? desp.getOpcion() : "No se encontro el resultado";
                 valor = desp != null ?  desp.getOpcion() : "No se encontro el resultado";
 
                 SharedPreferences.Editor edit = sp.edit();
@@ -120,7 +115,7 @@ public class Camera extends AppCompatActivity implements Serializable {
         conTemp.editarTemporal(ubicacion, id, !valor.isEmpty() ? valor : null , !cadena.isEmpty() ? cadena : null,null ,regla);
 
         }else{
-            conTemp.editarTemporal(ubicacion, id, valor, new Integer(regla) == null ? rta : quitCadena(rta, regla), null, regla);
+            conTemp.editarTemporal(ubicacion, id, "sin desplegable", new Integer(regla) == null ? rta : quitCadena(rta, regla), null, regla);
         }
     }
 

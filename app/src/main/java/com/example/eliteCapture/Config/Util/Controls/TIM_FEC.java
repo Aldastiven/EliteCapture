@@ -29,7 +29,7 @@ import java.util.Calendar;
 public class TIM_FEC {
     Context context;
     RespuestasTab rt;
-    String ubicacion, path;
+    String ubicacion, path, rta;
     boolean vacio, initial;
 
     TextView respuestaPonderado;
@@ -105,6 +105,7 @@ public class TIM_FEC {
             }
         });
 
+        obtenerRespuesta();
         funEdt();
         return camp;
     }
@@ -114,10 +115,9 @@ public class TIM_FEC {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String rta = camp.getText().toString();
-                rta = rta.replace(" ", "");
-                registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado()+"" : null);
-                respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : "+rt.getPonderado() : "Resultado :");
+                rta = camp.getText().toString();
+
+                respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
                 contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
             }
             @Override public void afterTextChanged(Editable s) { }
@@ -139,7 +139,8 @@ public class TIM_FEC {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hora, int minuto) {
                         try {
-                            camp.setText(String.format("%02d" , hora) + ":" + String.format("%02d" , minuto));
+                            camp.setText(String.format("%02d", hora) + ":" + String.format("%02d", minuto));
+                            obtenerRespuesta();
                         }catch (Exception e){
                             Toast.makeText(context, "Error conversion : "+e.toString(), Toast.LENGTH_SHORT).show();
                             Log.i("TIMEDATE", e.toString());
@@ -155,14 +156,21 @@ public class TIM_FEC {
             public void onDateSet(DatePicker view, int yearS, int monthS, int dayS) {
                 String dateElegido = yearS + "-" + (monthS+1) + "-" + dayS;
                 camp.setText(dateElegido);
+                obtenerRespuesta();
             }
         };
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(context, R.style.DialogPickerDate ,on , year, (month-1), day);
-        datePickerDialog.updateDate(year, (month-1), day);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, R.style.DialogPickerDate, on, year, (month - 1), day);
+        datePickerDialog.updateDate(year, (month - 1), day);
         Window w = datePickerDialog.getWindow();
         w.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         datePickerDialog.show();
+    }
+
+    public void obtenerRespuesta() {
+        rta = camp.getText().toString();
+        rta = rta.replace(" ", "");
+        registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado() + "" : null);
     }
 }

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -24,11 +25,11 @@ import com.example.eliteCapture.R;
 
 import java.io.Serializable;
 
-public class SCA_FIL implements Serializable{
+public class SCA_FIL implements Serializable {
 
     Context context;
-    RespuestasTab  rt;
-    String ubicacion, path;
+    RespuestasTab rt;
+    String ubicacion, path, causa = null, rta = null;
     boolean vacio, initial, pintada = false;
 
     EditText camp;
@@ -39,9 +40,6 @@ public class SCA_FIL implements Serializable{
     textAdmin ta;
 
     SharedPreferences sp;
-
-    String rta = "";
-    String causa = "";
 
     public SCA_FIL(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
         this.context = context;
@@ -83,25 +81,26 @@ public class SCA_FIL implements Serializable{
         }
     }
 
-    public View pintarRespuesta(String causa, Boolean b){//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
-            if (LineRespuesta.getChildCount() > 0 || causa == null) LineRespuesta.removeAllViews();
-            if (causa != null) {
-                if (!causa.isEmpty()) {
-                    LineRespuesta.addView(ta.textColor(causa, "verde", 15, "l"));
-                }else{
-                    switch (rt.getTipo()){
-                        case  "SCN" :
-                        case  "SCA" :
-                            if(b) {
-                                LineRespuesta.addView(ta.textColor("No se encontro resultados", "rojo", 15, "l"));
-                                pintada = true;
-                            }
-                            break;
-                    }
-                }
-            }else{
+    public View pintarRespuesta(String causa, Boolean b) {//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
+
+        if (LineRespuesta.getChildCount() > 0 || causa == null) LineRespuesta.removeAllViews();
+
+        if (causa != null) {
+            if (!causa.equals("sin desplegable")) {
+                LineRespuesta.addView(ta.textColor(causa, "verde", 15, "l"));
             }
-            return LineRespuesta;
+        } else {
+            switch (rt.getTipo()) {
+                case "SCN":
+                case "SCA":
+                    if (b) {
+                        LineRespuesta.addView(ta.textColor("No se encontro resultados", "gris", 15, "l"));
+                        pintada = true;
+                    }
+                    break;
+            }
+        }
+        return LineRespuesta;
     }
 
     public View campo(){
@@ -169,8 +168,9 @@ public class SCA_FIL implements Serializable{
             @Override
             public void onClick(View v) {
                 String valida = filtroDesplegable(camp.getText().toString());
-                if(valida.isEmpty()){
-                    if (LineRespuesta.getChildCount() > 0 || causa == null) LineRespuesta.removeAllViews();
+                if (valida != null) {
+                    if (LineRespuesta.getChildCount() > 0 || causa == null)
+                        LineRespuesta.removeAllViews();
                     LineRespuesta.addView(ta.textColor("No se encontraron resultados", "rojo", 15, "l"));
                 }
             }
@@ -179,55 +179,36 @@ public class SCA_FIL implements Serializable{
 
     public void funCamp(){//FUNCION DEL CAMPO
         camp.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
-            public void afterTextChanged(Editable s) {
-                try {
-                    Boolean b = true;
-                    String desplegable = "d"+rt.getDesplegable();
-                    if(!desplegable.equals("d") && !desplegable.equals("dnull")){
-                        rta = filtroDesplegable(camp.getText().toString());
-                    }else {
-                        b = false;
-                        rta = camp.getText().toString();
-                    }
-                    pintarRespuesta(causa, b);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-                    respuestaPonderado.setText(!rta.isEmpty() ? "Resultado : " + rt.getPonderado() : "Resultado :");
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    Boolean b = rt.getDesplegable() != null;
+                    rta = b ? filtroDesplegable(camp.getText().toString()) : camp.getText().toString();
+                    respuestaPonderado.setText(rta != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
-                }catch (Exception e){
-                    Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+                    registro(rta, causa, rta != null ? rt.getPonderado() + "" : null);
+                    pintarRespuesta(causa, b);
+                } catch (Exception e) {
+                    Toast.makeText(context, "" + e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
-        });
 
-
-        camp.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(pintada) {
-                    registro(null, null ,null);
-                    pintada = false;
-                }else {
-                    switch (rt.getTipo()){
-                        case "SCN":
-                        case "SCA":
-                            registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
-                        case "FIL":
-                            registro(rta, !causa.isEmpty() ? causa : "", !rta.isEmpty() ? rt.getPonderado() + "" : null);
-                    }
-                }
+            public void afterTextChanged(Editable s) {
             }
         });
     }
 
-    public String filtroDesplegable(String rta){
+    public String filtroDesplegable(String rta) {
         String data = "";
-        causa = "";
-        if(!rt.getDesplegable().isEmpty()){
+        causa = null;
+        if (rt.getDesplegable() != null) {
             DesplegableTab des = pp.busqueda(rta);
-            if(des != null) {
+            if (des != null) {
                 causa = des.getOpcion();
                 data = des.getCodigo();
             }
@@ -237,6 +218,7 @@ public class SCA_FIL implements Serializable{
 
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), valor, rta, causa, rt.getReglas());
+        Log.i("registro", "respuesta sca : " + valor);
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), valor == null ? "sin desplegable" : valor, rta, causa, rt.getReglas());
     }
 }

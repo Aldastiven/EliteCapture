@@ -144,7 +144,6 @@ public class RS_RSE_RSC {
             @Override public void onClick(View v) {
                 try {
                     if(rt.getDesplegable() == null){
-                        Log.i("CONTEO","Entro 1");
                         n =  contar(tipo);
                         rta = n+"";
                         contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
@@ -155,11 +154,11 @@ public class RS_RSE_RSC {
                             noti.addView(ta.textColor("¡Debes seleccionar al menos una opción!", "rojo", 15, "l"));
                             temporizador(5000);
                             n = -1;
+                            rta = n + "";
                             campConteo.setText("");
                         }else {
-                            Log.i("CONTEO", "Entro 2"+tipo);
                             n = contar(tipo);
-                            rta = causa != null ? "" : n + "";
+                            rta = n + "";
                             contenedorCamp.setBackgroundResource(causa != null ? R.drawable.bordercontainer : R.drawable.bordercontainerred);
                             campConteo.setText(""+n);
                         }
@@ -374,8 +373,11 @@ public class RS_RSE_RSC {
     }
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
+
+        Toast.makeText(context, "conteos : " + rta, Toast.LENGTH_SHORT).show();
+
         int regla = rt.getTipo().equals("RSE") ? modalEditarRegla.getRegla() : rt.getReglas();
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, String.valueOf(valor), causa, regla);
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, causa, regla);
     }
 
 }

@@ -91,24 +91,42 @@ public class AUT_DES_CBX {
             LinearLayout.LayoutParams params = ca.params();
             params.setMargins(5, 2, 5, 5);
 
+            String dataCamp;
+
+            if (vacio) {
+                dataCamp = rt.getRespuesta();
+            } else {
+                dataCamp = getFinca().isEmpty() ? "" : getFinca();
+            }
+
             View v = null;
             switch (rt.getTipo()) {
                 case "AUT":
                 case "AUN":
                     campAut = (AutoCompleteTextView) pp.campoEdtable("Auto", "grisClear");
-                    campAut.setText((vacio ? rt.getRespuesta() : ""));
+                    campAut.setText(dataCamp);
                     campAut.setAdapter(getAdapter(getDesp()));
                     campAut.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-                    if(rt.getTipo().equals("AUN")) campAut.setRawInputType(Configuration.KEYBOARD_QWERTY);
+                    if (rt.getTipo().equals("AUN"))
+                        campAut.setRawInputType(Configuration.KEYBOARD_QWERTY);
                     FunAut(campAut);
                     v = campAut;
                     break;
                 case "DES":
                 case "CBX":
+
                     campSpin = new Spinner(context);
                     campSpin.setAdapter(getAdapter(getDesp()));
-                    campSpin.setSelection(vacio ? 0 : getDesp().indexOf(rt.getRespuesta()));
+                    campSpin.setSelection(getDesp().indexOf(dataCamp));
                     campSpin.setBackgroundResource(R.drawable.myspinner);
+
+                    if (rt.getId() == 0 && getFinca() != null) {
+                        String opcion = filtroDesplegable(getFinca()).getOpcion();
+                        campSpin.setSelection(getDesp().indexOf(opcion != null ? opcion : dataCamp));
+                    } else {
+                        campSpin.setSelection(getDesp().indexOf(dataCamp));
+                    }
+
                     FunsDesp(campSpin);
                     v = campSpin;
                     break;

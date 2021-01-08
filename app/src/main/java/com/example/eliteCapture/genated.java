@@ -37,7 +37,7 @@ import static com.example.eliteCapture.R.drawable.ic_star;
 
 public class genated extends AppCompatActivity {
 
-    TextView EncabTitulo, contcc, scrollcomplete, txtCalificacion, btnEnvioGuardar, btnCalificar, itemsLayout;
+    TextView EncabTitulo, contcc, scrollcomplete, txtCalificacion, btnEnvioGuardar, btnCalificar;
     LinearLayout linearBodypop, linearPrinc;
     ScrollView scrollForm, scrollCalificacion;
     Dialog mypop, popcalificacion, popvalidar, popregla, itemLayout;
@@ -304,7 +304,7 @@ public class genated extends AppCompatActivity {
         if (splitS.isEmpty()) {
             mypop.dismiss();
         } else {
-            Toast.makeText(this, "¡No puedes dejar campos vacios!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "¡No puedes dejar campos vacios! :" + splitS, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -339,9 +339,7 @@ public class genated extends AppCompatActivity {
     public String obtenerNulos(int ubicacion) {
         ContenedorTab nuevo = iCon.optenerTemporal();
         Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo, footer);
-
         String encabezado = "";
-
         for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
             if (entry.getKey() == ubicacion) {
                 encabezado += entry.getValue().toString();

@@ -27,8 +27,8 @@
         android:layout_below="@+id/progress"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:text="Version 2.0"
-        android:textSize="30sp"
+        android:text="@string/version"
+        android:textSize="15sp"
         android:textStyle="bold" />
 
     <ImageView
