@@ -25,6 +25,8 @@ import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +98,7 @@ public class AUT_DES_CBX {
             if (vacio) {
                 dataCamp = rt.getRespuesta();
             } else {
-                dataCamp = getFinca().isEmpty() ? "" : getFinca();
+                dataCamp = StringUtils.isEmpty(getFinca()) ? "" : getFinca();
             }
 
             View v = null;
@@ -120,11 +122,13 @@ public class AUT_DES_CBX {
                     campSpin.setSelection(getDesp().indexOf(dataCamp));
                     campSpin.setBackgroundResource(R.drawable.myspinner);
 
-                    if (rt.getId() == 0 && getFinca() != null) {
-                        String opcion = filtroDesplegable(getFinca()).getOpcion();
-                        campSpin.setSelection(getDesp().indexOf(opcion != null ? opcion : dataCamp));
+                    if (rt.getId() == 0 && !dataCamp.isEmpty()) {
+                        Log.i("ERRORCBX", "entro a validar con asignacion de finca : "+dataCamp);
+                        String opcion = filtroDesplegable(dataCamp).getOpcion();
+                        campSpin.setSelection(getDesp().indexOf(opcion == null ? 0 : opcion));
                     } else {
-                        campSpin.setSelection(getDesp().indexOf(dataCamp));
+                        Log.i("ERRORCBX", "entro a validar sin asignacion de finca");
+                        campSpin.setSelection(getDesp().indexOf(0));
                     }
 
                     FunsDesp(campSpin);

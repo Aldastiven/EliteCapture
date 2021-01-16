@@ -3,6 +3,7 @@ package com.example.eliteCapture.Config.Util.Controls;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.icu.text.StringSearch;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,6 +29,8 @@ import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -99,9 +102,12 @@ public class RS_RSE_RSC {
     public LinearLayout campo() {//CAMPO DE USUARIO
         LinearLayout line = ca.container();
         line.setOrientation(LinearLayout.VERTICAL);
-        if(rt.getTipo().equals("RSC")) line.addView(multiSelect());
-        if(rt.getTipo().equals("RS") && rt.getDesplegable() != null) line.addView(despSelect());
-        if(regla == 0) line.addView(ta.textColor("No hay asignado limite de conteo (REGLA)","rojo",15,"l"));
+        if (rt.getTipo().equals("RSC")) {
+            line.addView(multiSelect());
+        }
+        if (regla == 0) {
+            line.addView(ta.textColor("No hay asignado limite de conteo (REGLA)","rojo",15,"l"));
+        }
         line.addView(noti);
         line.addView(conteos());
 
@@ -143,10 +149,9 @@ public class RS_RSE_RSC {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 try {
-                    if(rt.getDesplegable() == null){
+                    if(StringUtils.isEmpty(rt.getDesplegable())){
                         n =  contar(tipo);
                         rta = n+"";
-                        contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
                         campConteo.setText(n+"");
                     }else{
                         if(causa.isEmpty()) {
@@ -159,7 +164,6 @@ public class RS_RSE_RSC {
                         }else {
                             n = contar(tipo);
                             rta = n + "";
-                            contenedorCamp.setBackgroundResource(causa != null ? R.drawable.bordercontainer : R.drawable.bordercontainerred);
                             campConteo.setText(""+n);
                         }
                     }
@@ -173,8 +177,8 @@ public class RS_RSE_RSC {
         });
     }
     public int contar(String tipo){
-        String data = campConteo.getText().toString();
-        n = data.isEmpty() ?  -1 : n;
+        Log.i("countcamp","paso a contar");
+        n = campConteo.getText().toString() == null ?  -1 : n;
         if(tipo.equals("s")) {
             if (n < modalEditarRegla.getRegla()) n++;
         }else{
@@ -287,8 +291,8 @@ public class RS_RSE_RSC {
         });
 
         line.addView(btnDesp);
-        if(rt.getDesplegable() != null) getMultiOption(lineDespliegue);
-        else line.addView(ta.textColor("¡El campo no tiene desplegable asignada!", "rojo", 15, "l"));
+        if(rt.getDesplegable() != null) {getMultiOption(lineDespliegue);}
+        else {line.addView(ta.textColor("¡El campo no tiene desplegable asignada!", "rojo", 15, "l"));}
         line.addView(lineDespliegue);
         return line;
     }
@@ -321,8 +325,9 @@ public class RS_RSE_RSC {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(cb.isChecked()){
+                    Toast.makeText(context, ""+cb.getText().toString(), Toast.LENGTH_SHORT).show();
                     checkList.add(cb.getText().toString());
-                }if(!cb.isChecked()){
+                }if(!cb.isChecked()) {
                     deleteObjList(cb.getText().toString());
                 }
                 causa = respuestaLimpia();
@@ -373,9 +378,6 @@ public class RS_RSE_RSC {
     }
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
-
-        Toast.makeText(context, "conteos : " + rta, Toast.LENGTH_SHORT).show();
-
         int regla = rt.getTipo().equals("RSE") ? modalEditarRegla.getRegla() : rt.getReglas();
         new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, causa, regla);
     }
