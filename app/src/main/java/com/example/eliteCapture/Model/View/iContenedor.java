@@ -241,7 +241,9 @@ public class iContenedor implements Contenedor {
                 null,
                 detalle.getLista_desp(),
                 detalle.getReglas(),
-                detalle.getTip()
+                detalle.getTip(),
+                detalle.getDesdeHasta(),
+                detalle.getDecimales()
         );
     }
 

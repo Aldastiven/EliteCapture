@@ -23,6 +23,8 @@ import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 
 public class SCA_FIL implements Serializable {
@@ -83,12 +85,11 @@ public class SCA_FIL implements Serializable {
 
     public View pintarRespuesta(String causa, Boolean b) {//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
 
-        if (LineRespuesta.getChildCount() > 0 || causa == null) LineRespuesta.removeAllViews();
+        if (LineRespuesta.getChildCount() > 0 || StringUtils.isEmpty(causa)) LineRespuesta.removeAllViews();
 
-        if (causa != null) {
-            if (!causa.equals("sin desplegable")) {
-                LineRespuesta.addView(ta.textColor(causa, "verde", 15, "l"));
-            }
+        if (!StringUtils.isEmpty(causa)) {
+            LineRespuesta.addView(ta.textColor(causa, "verde", 15, "l"));
+
         } else {
             switch (rt.getTipo()) {
                 case "SCN":
@@ -186,7 +187,7 @@ public class SCA_FIL implements Serializable {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    Boolean b = rt.getDesplegable() != null;
+                    Boolean b = !StringUtils.isEmpty(rt.getDesplegable());
                     rta = b ? filtroDesplegable(camp.getText().toString()) : camp.getText().toString();
                     respuestaPonderado.setText(rta != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
                     contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);

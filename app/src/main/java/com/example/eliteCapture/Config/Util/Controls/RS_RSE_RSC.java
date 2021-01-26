@@ -325,7 +325,6 @@ public class RS_RSE_RSC {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(cb.isChecked()){
-                    Toast.makeText(context, ""+cb.getText().toString(), Toast.LENGTH_SHORT).show();
                     checkList.add(cb.getText().toString());
                 }if(!cb.isChecked()) {
                     deleteObjList(cb.getText().toString());

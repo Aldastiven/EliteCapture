@@ -37,6 +37,8 @@ public class iDetalle implements Detalle {
 			"      ,[grupo1]\n" +
 			"      ,[reglas]\n" +
 			"      ,[tip]\n" +
+			"      ,[desde_hasta]\n" +
+			"      ,[decimales]" +
 			"  FROM [Formularios].[dbo].[Procesos_Detalle]\n" +
 			"  ORDER BY [id_proceso], [codigo_detalle]";
 
@@ -128,6 +130,9 @@ public class iDetalle implements Detalle {
 				rs.getString("Capitulo_Nombre"),
 				rs.getString("grupo1"),
 				rs.getInt("reglas"),
-				rs.getString("tip"));
+				rs.getString("tip"),
+				rs.getString("desde_hasta"),
+				rs.getInt("decimales")
+				);
 	}
 }

@@ -13,6 +13,8 @@ import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 
 import me.dm7.barcodescanner.zbar.Result;
@@ -95,7 +97,7 @@ public class Camera extends AppCompatActivity implements Serializable {
         iContenedor conTemp = new iContenedor(path);
         String valor = "";
 
-        if (desplegable != null) {
+        if (!StringUtils.isEmpty(desplegable)) {
             String cadena = "";
             String res = "";
 
@@ -112,10 +114,9 @@ public class Camera extends AppCompatActivity implements Serializable {
                 edit.putString( "resDesp",res.isEmpty() ? "" : res);
                 edit.apply();
             }
-        conTemp.editarTemporal(ubicacion, id, !valor.isEmpty() ? valor : null , !cadena.isEmpty() ? cadena : null,null ,regla);
-
+        conTemp.editarTemporal(ubicacion, id,  valor , !cadena.isEmpty() ? cadena : null,null ,regla);
         }else{
-            conTemp.editarTemporal(ubicacion, id, "sin desplegable", new Integer(regla) == null ? rta : quitCadena(rta, regla), null, regla);
+            conTemp.editarTemporal(ubicacion, id, "Sin desplegable", new Integer(regla) == null ? rta : quitCadena(rta, regla), null, regla);
         }
     }
 

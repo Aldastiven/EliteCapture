@@ -54,7 +54,7 @@ public class AUT_DES_CBX {
         this.rt = rt;
         this.path = path;
         this.initial = initial;
-        this.vacio = rt.getRespuesta() != null;
+        this.vacio = StringUtils.isEmpty(rt.getRespuesta());
 
         ca = new containerAdmin(context);
         pp = new GIDGET(context, ubicacion, rt, path);
@@ -95,7 +95,7 @@ public class AUT_DES_CBX {
 
             String dataCamp;
 
-            if (vacio) {
+            if (!vacio) {
                 dataCamp = rt.getRespuesta();
             } else {
                 dataCamp = StringUtils.isEmpty(getFinca()) ? "" : getFinca();
@@ -106,7 +106,7 @@ public class AUT_DES_CBX {
                 case "AUT":
                 case "AUN":
                     campAut = (AutoCompleteTextView) pp.campoEdtable("Auto", "grisClear");
-                    campAut.setText(dataCamp);
+                    campAut.setText(StringUtils.isEmpty(rt.getRespuesta()) ? "" : rt.getRespuesta());
                     campAut.setAdapter(getAdapter(getDesp()));
                     campAut.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                     if (rt.getTipo().equals("AUN"))
@@ -116,21 +116,23 @@ public class AUT_DES_CBX {
                     break;
                 case "DES":
                 case "CBX":
-
                     campSpin = new Spinner(context);
                     campSpin.setAdapter(getAdapter(getDesp()));
                     campSpin.setSelection(getDesp().indexOf(dataCamp));
                     campSpin.setBackgroundResource(R.drawable.myspinner);
 
-                    if (rt.getId() == 0 && !dataCamp.isEmpty()) {
-                        Log.i("ERRORCBX", "entro a validar con asignacion de finca : "+dataCamp);
-                        String opcion = filtroDesplegable(dataCamp).getOpcion();
-                        campSpin.setSelection(getDesp().indexOf(opcion == null ? 0 : opcion));
-                    } else {
-                        Log.i("ERRORCBX", "entro a validar sin asignacion de finca");
-                        campSpin.setSelection(getDesp().indexOf(0));
-                    }
+                    Log.i("ERRORCBX", "desplegable: "+dataCamp);
 
+                    if (rt.getId() == 0 && !StringUtils.isEmpty(dataCamp)) {
+                        DesplegableTab opcion = filtroDesplegable(dataCamp);
+                        if(opcion == null){
+                            campSpin.setSelection(getDesp().indexOf(0));
+                        }else{
+                            campSpin.setSelection(getDesp().indexOf(opcion.getOpcion()));
+                        }
+                    } else {
+                        campSpin.setSelection(getDesp().indexOf(StringUtils.isEmpty(dataCamp) ? 0 : dataCamp));
+                    }
                     FunsDesp(campSpin);
                     v = campSpin;
                     break;
@@ -202,9 +204,8 @@ public class AUT_DES_CBX {
     public DesplegableTab  filtroDesplegable(String rta){
         DesplegableTab dt = null;
         if(rt.getDesplegable() != null){
-            DesplegableTab des = pp.busqueda(rta);
-            if(des != null) {
-                dt = des;
+            if(pp.busqueda(rta) != null) {
+                dt = pp.busqueda(rta);
             }
         }
         return dt;

@@ -8,39 +8,25 @@ import com.example.eliteCapture.Model.View.Tab.ContadorTab;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class iContador implements Contador {
-    public static List<ContadorTab> ct = new ArrayList<>();
-    String path = "";
-    String nombre = "";
+    List<ContadorTab> ct = new ArrayList<>();
+    String path;
+    String nombre;
 
     public iContador(String path) {
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String fechaNombre = sdf.format(new Date());
         this.nombre = "contado-" + fechaNombre;
-
         this.path = path;
-        try {
-
-            ct = all();
-            if(ct.size() > 0) {
-                local();
-                for (ContadorTab cc : ct) {
-                    if (!cc.getFecha().equals(fechaNombre)) {
-                        ct.clear();
-                        break;
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            Log.i("Error_iContador", e.toString());
-        }
+        ct =  all();
+        local();
     }
 
     @Override
@@ -104,12 +90,14 @@ public class iContador implements Contador {
     }
 
     public ContadorTab contUsuario(int usuario) {
+        ContadorTab cc = null;
         for (ContadorTab c : ct) {
             if (c.getUsuario() == usuario) {
-                return c;
+                cc = c;
+                break;
             }
         }
-        return null;
+        return cc;
     }
 
     @Override
@@ -122,7 +110,7 @@ public class iContador implements Contador {
     }
 
     @Override
-    public List<ContadorTab> all() throws Exception {
+    public List<ContadorTab> all() {
         return new Gson()
                 .fromJson(
                         new JsonAdmin().ObtenerLista(path, nombre),
@@ -131,7 +119,7 @@ public class iContador implements Contador {
     }
 
     @Override
-    public String json(ContadorTab o) throws Exception {
+    public String json(ContadorTab o) {
         return new Gson().toJson(o);
     }
 }

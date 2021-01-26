@@ -1,12 +1,14 @@
 package com.example.eliteCapture.Config.Util.Controls;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Configuration;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,8 +20,11 @@ import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
+import com.example.eliteCapture.genated;
 
-public class ETN_ETA {
+import org.apache.commons.lang3.StringUtils;
+
+public class ETN_ETA extends ContextWrapper {
 
     Context context;
     RespuestasTab rt;
@@ -32,7 +37,8 @@ public class ETN_ETA {
     containerAdmin ca;
     GIDGET pp;
 
-    public ETN_ETA(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {//CONSTRUCTOR
+    public ETN_ETA(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
+        super(context);//CONSTRUCTOR
         this.context = context;
         this.rt = rt;
         this.ubicacion = ubicacion;
@@ -47,6 +53,8 @@ public class ETN_ETA {
 
         noti = new LinearLayout(context);
         noti.setOrientation(LinearLayout.VERTICAL);
+
+
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM
@@ -68,25 +76,32 @@ public class ETN_ETA {
     }
 
     public EditText campo(){//CAMPO DE USUARIO
-        camp = (EditText) pp.campoEdtable("Edit", "grisClear");
+        try {
+            camp = (EditText) pp.campoEdtable("Edit", "grisClear");
 
-        LinearLayout.LayoutParams llparams = ca.params();
-        llparams.weight = 1;
-        llparams.setMargins(5, 2, 5, 10);
+            LinearLayout.LayoutParams llparams = ca.params();
+            llparams.weight = 1;
+            llparams.setMargins(5, 2, 5, 10);
 
-        //para limitar cantidad de digitos segun la regla
-        if (rt.getReglas() != 0) camp.setFilters(
-                new InputFilter[]{
-                        new InputFilter.LengthFilter(rt.getReglas())
-                });
+            //para limitar cantidad de digitos segun la regla
+            if (rt.getReglas() != 0) {
+                camp.setFilters(
+                        new InputFilter[]{
+                                new InputFilter.LengthFilter(rt.getReglas())
+                        });
+            }
 
-        camp.setText(vacio ? rt.getRespuesta() : "");
-        if (rt.getTipo().equals("ETN")) {
-            camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
-            funLimit();
+            camp.setText(vacio ? rt.getRespuesta() : "");
+            if (rt.getTipo().equals("ETN")) {
+                camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
+                funLimit();
+            }
+            funCamp();
+            return camp;
+        }catch (Exception e){
+            Log.i("llegadaRespuesta", e.toString());
+            return null;
         }
-        funCamp();
-        return camp;
     }
 
     public void funCamp(){//FUNCION DEL CAMPO
@@ -98,6 +113,7 @@ public class ETN_ETA {
                         if (rt.getTipo().equals("ETA")) {
                             respuestaCampo = camp.getText().toString();
                         }
+
                         registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
                         respuestaPonderado.setText(respuestaCampo != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
                         contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
@@ -119,31 +135,32 @@ public class ETN_ETA {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
+                    if (rt.getTipo().equals("ETN")) {
+                        String r = reemplazarDecimal();
+                        if (rt.getDesdeHasta() != null) {
 
-                    if (rt.getTip() != null) {
-                        String data[] = rt.getTip().split("-");
-                        int from = Integer.parseInt(data[0].trim()),
-                                to = Integer.parseInt(data[1].trim());
-                        int rta = 0;
-                        if (!camp.getText().toString().isEmpty()) {
-                            rta = Integer.parseInt(camp.getText().toString());
-                        }
-                        noti.removeAllViews();
-                        if (rta > to || rta < from) {
-                            noti.addView(new textAdmin(context).textColor("No se encuentra dentro del rango requerido (" + from + " a " + to + ")", "rojo", 15, "l"));
-                            respuestaCampo = null;
+                            String data[] = rt.getDesdeHasta().split("-");
+                            int from = Integer.parseInt(data[0].trim()),
+                                    to = Integer.parseInt(data[1].trim());
+                            double rta = 0;
+                            if (!camp.getText().toString().isEmpty()) {
+                                rta = Double.parseDouble(r);
+                            }
+                            noti.removeAllViews();
+                            if (rta > to || rta < from) {
+                                noti.addView(new textAdmin(context).textColor("No se encuentra dentro del rango requerido (" + from + " a " + to + ")", "rojo", 15, "l"));
+                                respuestaCampo = null;
+                            } else {
+                                respuestaCampo = r;
+                            }
                         } else {
                             respuestaCampo = camp.getText().toString();
                         }
-                    } else {
-                        respuestaCampo = camp.getText().toString();
-                    }
-                    if (rt.getTipo().equals("ETN")) {
                         respuestaCampo = respuestaCampo != null ? respuestaCampo.replaceAll("\\W+", "") : "";
                     }
                     registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
                 } catch (Exception e) {
-                    Toast.makeText(context, "limit : " + e.toString(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "limit : " + e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -152,6 +169,50 @@ public class ETN_ETA {
 
             }
         });
+    }
+
+    public String reemplazarDecimal(){
+        String d = camp.getText().toString();
+
+        if(d.contains(",")){
+            d = d.replaceAll(",", "");
+        }else if(d.contains(" ")){
+            d = d.replaceAll(" ", "");
+        }else if(d.contains("-")){
+            d = d.replaceAll("-", "");
+        }else if(d.contains(".") && rt.getDecimales() == 0){
+            d = d.replaceAll("\\.", "");
+        }
+
+        /*
+        if(getNumerCountCharacter(d) > 1 && rt.getDecimales() > 0){
+            d = d.substring(0, d.length() - 1);
+        }
+         */
+
+        if(d.contains(".")) {
+            String[] r = d.split("\\.");
+            d = r[0] + "." + r[1].substring(0, r[1].length() == rt.getDecimales() ? r[1].length() : r[1].length() - (r[1].length() - rt.getDecimales()));
+        }
+
+        if(d.length() < camp.getText().length()) {
+            camp.setText(d);
+        }
+        camp.setSelection(camp.getText().length());
+
+        return d;
+    }
+
+    public int getNumerCountCharacter(String txt){
+        int c = 0;
+        char _toCompare = '.';
+        char []caracteres = txt.toCharArray();
+        for(int i = 0; i <= caracteres.length - 1; i++){
+            if(_toCompare == caracteres[i]){
+                c++;
+            }
+        }
+        return c;
     }
 
     public void registro(String rta, String valor) {//REGISTRO

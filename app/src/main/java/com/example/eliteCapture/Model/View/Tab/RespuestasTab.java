@@ -17,8 +17,10 @@ public class RespuestasTab implements Serializable {
 	private String desplegable;
 	private int reglas;
 	private String tip;
+	private String desdeHasta;
+	private int decimales;
 
-	public RespuestasTab(Long id, int codigo, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, String valor, String causa, String desplegable, int reglas, String tip) {
+	public RespuestasTab(Long id, int codigo, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, String valor, String causa, String desplegable, int reglas, String tip, String desdeHasta, int decimales) {
 		this.id = id;
 		this.codigo = codigo;
 		this.idProceso = idProceso;
@@ -32,6 +34,8 @@ public class RespuestasTab implements Serializable {
 		this.desplegable = desplegable;
 		this.reglas = reglas;
 		this.tip = tip;
+		this.desdeHasta = desdeHasta;
+		this.decimales = decimales;
 	}
 
 	public Long getId() {
@@ -136,5 +140,21 @@ public class RespuestasTab implements Serializable {
 
 	public void setCausa(String causa) {
 		this.causa = causa;
+	}
+
+	public String getDesdeHasta() {
+		return desdeHasta;
+	}
+
+	public void setDesdeHasta(String desdeHasta) {
+		this.desdeHasta = desdeHasta;
+	}
+
+	public int getDecimales() {
+		return decimales;
+	}
+
+	public void setDecimales(int decimales) {
+		this.decimales = decimales;
 	}
 }

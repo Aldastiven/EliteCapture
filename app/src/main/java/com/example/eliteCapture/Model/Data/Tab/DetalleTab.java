@@ -16,8 +16,11 @@ public class DetalleTab {
 	private String grupo1;
 	private int reglas;
 	private String tip;
+	private String desdeHasta;
+	private  int decimales;
 
-	public DetalleTab(Long id_detalle, int id_proceso, int codigo_detalle, String nombre_detalle, String tipo, String lista_desp, String tipo_M, Float porcentaje, String capitulo, String item, String capitulo_Nombre, String grupo1, int reglas, String tip) {
+
+	public DetalleTab(Long id_detalle, int id_proceso, int codigo_detalle, String nombre_detalle, String tipo, String lista_desp, String tipo_M, Float porcentaje, String capitulo, String item, String capitulo_Nombre, String grupo1, int reglas, String tip, String desdeHasta, int decimales) {
 		this.setId_detalle(id_detalle);
 		this.setId_proceso(id_proceso);
 		this.setCodigo_detalle(codigo_detalle);
@@ -32,6 +35,8 @@ public class DetalleTab {
 		this.setGrupo1(grupo1);
 		this.setReglas(reglas);
 		this.setTip(tip);
+		this.setDesdeHasta(desdeHasta);
+		this.setDecimales(decimales);
 	}
 
 
@@ -145,5 +150,21 @@ public class DetalleTab {
 
 	public void setTip(String tip) {
 		this.tip = tip;
+	}
+
+	public String getDesdeHasta() {
+		return desdeHasta;
+	}
+
+	public void setDesdeHasta(String desdeHasta) {
+		this.desdeHasta = desdeHasta;
+	}
+
+	public int getDecimales() {
+		return decimales;
+	}
+
+	public void setDecimales(int decimales) {
+		this.decimales = decimales;
 	}
 }

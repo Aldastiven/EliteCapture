@@ -26,6 +26,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Index extends AppCompatActivity {
     LinearLayout linearCheck, titulodata;
@@ -101,8 +110,7 @@ public class Index extends AppCompatActivity {
 
         try {
             iContador contar = new iContador(path);
-
-            for (final ProcesoTab c : admin.getProceso().procesosUsuario(usu.getProcesos())) {
+            for (final ProcesoTab c : orderMenu()) {
 
                 LinearLayout.LayoutParams layoutParamsbtn = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -145,6 +153,22 @@ public class Index extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    public List<ProcesoTab> orderMenu(){
+        try {
+            List<ProcesoTab> listProceso = admin.getProceso().procesosUsuario(usu.getProcesos());
+            Collections.sort(listProceso, new Comparator<ProcesoTab>() {
+                @Override
+                public int compare(ProcesoTab o1, ProcesoTab o2) {
+                    return o1.getNombre_proceso().compareTo(o2.getNombre_proceso());
+                }
+            });
+            return listProceso;
+        }catch (Exception e){
+            Toast.makeText(this, ""+e.toString(), Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
 
     public void Salir(View v) {

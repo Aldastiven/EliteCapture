@@ -125,7 +125,6 @@ public class genated extends AppCompatActivity {
     }
 
     public void cargarContador() {
-
         EncabTitulo.setText(" "+pro.getNombre_proceso());//asigna el nombre del encabezado
         contConsec = contador.getCantidad(usu.getId_usuario(), pro.getCodigo_proceso()) + 1;
         contcc.setText(String.valueOf(contConsec));//inicializa el conteo de formularios guardados o enviados
@@ -304,7 +303,7 @@ public class genated extends AppCompatActivity {
         if (splitS.isEmpty()) {
             mypop.dismiss();
         } else {
-            Toast.makeText(this, "¡No puedes dejar campos vacios! :" + splitS, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "¡No puedes dejar campos vacios!", Toast.LENGTH_SHORT).show();
         }
     }
 
