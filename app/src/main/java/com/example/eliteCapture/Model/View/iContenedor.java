@@ -269,12 +269,21 @@ public class iContenedor implements Contenedor {
         return v;
     }
 
-    public String json(DesplegableTab o) throws Exception {
+    public String json(DesplegableTab o){
         Gson gson = new Gson();
         return gson.toJson(o);
     }
 
-    public boolean enviar() throws Exception {
+    public boolean enviar()throws Exception{
+        Connection cn = new Conexion().getConexion();
+
+        PreparedStatement ps = cn.prepareCall("EXEC recibir_json ?");
+        ps.setString(1, new JsonAdmin().ObtenerLista(path, nombre));
+        ps.execute();
+        return true;
+    }
+
+    public boolean enviar2() throws Exception {
 
         Connection cn = new Conexion().getConexion();
 
@@ -291,8 +300,7 @@ public class iContenedor implements Contenedor {
                     "           ,[id_terminal]\n" +
                     "           ,[id_usuario]\n" +
                     "           ,[consec_json])\n" +
-                    "     VALUES\n" +
-                    "           (?,?,?,?,?,?,?,?,?,?);";
+                    "     VALUES (?,?,?,?,?,?,?,?,?,?);";
 
 
             int load = 0;
@@ -331,7 +339,7 @@ public class iContenedor implements Contenedor {
 
     }
 
-    public boolean enviarInmediato(ContenedorTab c, int consecutivo) throws Exception {
+    public boolean enviarInmediato(ContenedorTab c, int consecutivo){
         try {
             Connection cn = new Conexion().getConexion();
             if (cn != null) {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebSettings;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -83,7 +84,12 @@ public class modalServer {
 
     public LinearLayout descarga(){
 
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        params.setMargins(0, 10, 0, 20);
         LinearLayout lineDescarga = line();
+        lineDescarga.setBackgroundResource(R.drawable.camp_gray);
+        lineDescarga.setPadding(0, 20, 0, 20);
+        lineDescarga.setLayoutParams(params);
 
         TextView txtDescarga =(TextView) ta.textColor("Descargar/Actualizar datos.            ","gris",18,"l");
         txtDescarga.setLayoutParams(params(2));
@@ -99,6 +105,8 @@ public class modalServer {
     public LinearLayout subida(){
 
         LinearLayout lineSubida = line();
+        lineSubida.setBackgroundResource(R.drawable.camp_gray);
+        lineSubida.setPadding(0, 20, 0, 20);
 
         TextView txtDescarga =(TextView) ta.textColor("Tienes pendendientes ("+icont.pendientesCantidad()+") registros por enviar.","rojo",18,"l");
         txtDescarga.setLayoutParams(params(2));

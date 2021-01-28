@@ -110,7 +110,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:backgroundTint="#ECEFF1"
             android:clickable="true"
             android:tint="#000000"
             android:onClick="onActualizar"
