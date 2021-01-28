@@ -17,18 +17,18 @@ import java.util.Date;
 import java.util.List;
 
 public class iContador implements Contador {
-    List<ContadorTab> ct = new ArrayList<>();
+    List<ContadorTab> ct;
     String path;
     String nombre;
 
     public iContador(String path) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaNombre = sdf.format(new Date());
-        Log.i("fechajson", ""+fechaNombre);
-        this.nombre = "contado-" + fechaNombre;
+        this.nombre = "contado-" + sdf.format(new Date());
         this.path = path;
-        all();
-        local();
+        ct = new ArrayList<>();
+
+        if (!exist()){local();}
+        if (all() == null){local();}
     }
 
     @Override
@@ -126,5 +126,13 @@ public class iContador implements Contador {
     @Override
     public String json(ContadorTab o) {
         return new Gson().toJson(o);
+    }
+
+    public boolean exist(){
+        try {
+            return new JsonAdmin().ExitsJson(path, nombre);
+        }catch (Exception e){
+            return false;
+        }
     }
 }

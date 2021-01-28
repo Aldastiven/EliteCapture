@@ -277,9 +277,13 @@ public class iContenedor implements Contenedor {
     public boolean enviar()throws Exception{
         Connection cn = new Conexion().getConexion();
 
-        PreparedStatement ps = cn.prepareCall("EXEC recibir_json ?");
+        PreparedStatement ps = cn.prepareCall("EXEC recibir_json_ec ?");
         ps.setString(1, new JsonAdmin().ObtenerLista(path, nombre));
         ps.execute();
+
+        ct.clear();
+        local();
+
         return true;
     }
 
