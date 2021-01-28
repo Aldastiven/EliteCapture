@@ -116,14 +116,11 @@ public class Index extends AppCompatActivity {
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
                 int cuenta = contar.getCantidad(usu.getId_usuario(), c.getCodigo_proceso());
-                String cuenText = (cuenta > 0) ? " (" + cuenta + ")" : "";
-                Log.i("Procesos:", c.getNombre_proceso());
                 Button btn = new Button(getApplicationContext());
-                btn.setText(c.getNombre_proceso() + cuenText);
+                btn.setText(c.getNombre_proceso() + (cuenta == 0 ? "" : " (" + cuenta + ")"));
                 btn.setId(c.getCodigo_proceso());
                 btn.setTextColor(Color.parseColor("#ffffff"));
-                btn.setTextSize(16);
-                //btn.setBackgroundColor(Color.parseColor("#27ae60"));
+                btn.setTextSize(13);
                 btn.setBackgroundColor(Color.parseColor("#2e2d33"));
                 btn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 btn.setLayoutParams(layoutParamsbtn);
@@ -131,20 +128,17 @@ public class Index extends AppCompatActivity {
                 //agregando check dinamicos
                 linearCheck.addView(btn, layoutParams);
 
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        SharedPreferences.Editor edit = sp.edit();
-                        try {
-                            edit.putString("proceso", admin.getProceso().json(c));
-                            edit.apply();
-                        } catch (Exception e) {
-                            Log.i("Error onClick, Index", e.toString());
-                        }
-
-                        Intent intent = new Intent(getApplicationContext(), genated.class);
-                        startActivity(intent);
+                btn.setOnClickListener(view -> {
+                    SharedPreferences.Editor edit = sp.edit();
+                    try {
+                        edit.putString("proceso", admin.getProceso().json(c));
+                        edit.apply();
+                    } catch (Exception e) {
+                        Log.i("Error onClick, Index", e.toString());
                     }
+
+                    Intent intent = new Intent(getApplicationContext(), genated.class);
+                    startActivity(intent);
                 });
             }
         } catch (Exception e) {

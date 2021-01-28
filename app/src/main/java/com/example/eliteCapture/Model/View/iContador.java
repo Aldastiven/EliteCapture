@@ -1,6 +1,7 @@
 package com.example.eliteCapture.Model.View;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.View.Interfaz.Contador;
@@ -23,14 +24,15 @@ public class iContador implements Contador {
     public iContador(String path) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String fechaNombre = sdf.format(new Date());
+        Log.i("fechajson", ""+fechaNombre);
         this.nombre = "contado-" + fechaNombre;
         this.path = path;
-        ct =  all();
+        all();
         local();
     }
 
     @Override
-    public String insert(ContadorTab o) throws Exception {
+    public String insert(ContadorTab o){
         o.setId((ct != null) ? ct.size() : 0);
         ct.add(o);
         local();
@@ -76,21 +78,23 @@ public class iContador implements Contador {
 
     public int getCantidad(int usuario, int proceso) {
         try {
+            int cantidad = 0;
             ContadorTab c = contUsuario(usuario);
             for (ContadorTab.procesoTab p : c.getProcesos()) {
                 if (p.getProceso() == proceso) {
-                    return p.getCantidad();
+                   cantidad = p.getCantidad();
+                   break;
                 }
             }
+            return cantidad;
         } catch (Exception e) {
             return 0;
         }
-
-        return 0;
     }
 
     public ContadorTab contUsuario(int usuario) {
         ContadorTab cc = null;
+        all();
         for (ContadorTab c : ct) {
             if (c.getUsuario() == usuario) {
                 cc = c;
@@ -111,11 +115,12 @@ public class iContador implements Contador {
 
     @Override
     public List<ContadorTab> all() {
-        return new Gson()
+        ct = new Gson()
                 .fromJson(
                         new JsonAdmin().ObtenerLista(path, nombre),
                         new TypeToken<List<ContadorTab>>() {
                         }.getType());
+        return ct;
     }
 
     @Override
