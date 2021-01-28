@@ -120,7 +120,7 @@ public class Index extends AppCompatActivity {
                 btn.setText(c.getNombre_proceso() + (cuenta == 0 ? "" : " (" + cuenta + ")"));
                 btn.setId(c.getCodigo_proceso());
                 btn.setTextColor(Color.parseColor("#ffffff"));
-                btn.setTextSize(13);
+                btn.setTextSize(15);
                 btn.setBackgroundColor(Color.parseColor("#2e2d33"));
                 btn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 btn.setLayoutParams(layoutParamsbtn);
