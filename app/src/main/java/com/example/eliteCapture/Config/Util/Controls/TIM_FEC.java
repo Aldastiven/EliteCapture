@@ -91,22 +91,18 @@ public class TIM_FEC {
         camp.setText(vacio ? rt.getRespuesta() : TIMDte);
         camp.setLayoutParams(llparams);
 
-        camp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (rt.getTipo()) {
-                    case "TIM":
-                        timePickerView();
-                        break;
-                    case "FEC":
-                        datePickerView();
-                        break;
-                }
+        camp.setOnClickListener(v -> {
+            switch (rt.getTipo()) {
+                case "TIM":
+                    timePickerView();
+                    break;
+                case "FEC":
+                    datePickerView();
+                    break;
             }
         });
-
-        obtenerRespuesta();
         funEdt();
+        obtenerRespuesta();
         return camp;
     }
 
@@ -152,12 +148,10 @@ public class TIM_FEC {
 
     public void datePickerView(){
 
-        DatePickerDialog.OnDateSetListener on = new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int yearS, int monthS, int dayS) {
-                String dateElegido = yearS + "-" + (monthS+1) + "-" + dayS;
-                camp.setText(dateElegido);
-                obtenerRespuesta();
-            }
+        DatePickerDialog.OnDateSetListener on = (view, yearS, monthS, dayS) -> {
+            String dateElegido = yearS + "-" + (monthS+1) + "-" + dayS;
+            camp.setText(dateElegido);
+            obtenerRespuesta();
         };
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(context, R.style.DialogPickerDate, on, year, (month - 1), day);

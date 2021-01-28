@@ -156,7 +156,7 @@ public class ETN_ETA extends ContextWrapper {
                         } else {
                             respuestaCampo = camp.getText().toString();
                         }
-                        respuestaCampo = respuestaCampo != null ? respuestaCampo.replaceAll("\\W+", "") : "";
+                        //respuestaCampo = respuestaCampo != null ? respuestaCampo.replaceAll("\\W+", "") : "";
                     }
                     registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
                 } catch (Exception e) {
