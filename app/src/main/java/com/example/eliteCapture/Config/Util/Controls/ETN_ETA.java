@@ -184,16 +184,13 @@ public class ETN_ETA extends ContextWrapper {
             d = d.replaceAll("\\.", "");
         }
 
-        /*
-        if(getNumerCountCharacter(d) > 1 && rt.getDecimales() > 0){
+        if(getNumerCountCharacter(d) == 2 && rt.getDecimales() > 0){
             d = d.substring(0, d.length() - 1);
         }
-         */
-
-        if(d.contains(".")) {
+        /*if(d.contains(".")) {
             String[] r = d.split("\\.");
             d = r[0] + "." + r[1].substring(0, r[1].length() == rt.getDecimales() ? r[1].length() : r[1].length() - (r[1].length() - rt.getDecimales()));
-        }
+        }*/
 
         if(d.length() < camp.getText().length()) {
             camp.setText(d);
