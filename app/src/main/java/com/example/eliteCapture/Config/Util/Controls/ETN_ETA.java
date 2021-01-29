@@ -185,9 +185,13 @@ public class ETN_ETA extends ContextWrapper {
             d = d.replaceAll("\\.", "");
         }
 
+
         //valida si digita mas de un punto
-        if(getNumerCountCharacter(d) == 2 && rt.getDecimales() > 0){
+        if(getNumerCountCharacter(d) == 2){
             d = d.substring(0, d.length() - 1);
+            camp.setText(d);
+            camp.setSelection(camp.getText().length());
+            Toast.makeText(context, "es igual a 2 --> "+d, Toast.LENGTH_SHORT).show();
         }
 
         //valida cantidad de digitos despues del punto
@@ -199,8 +203,8 @@ public class ETN_ETA extends ContextWrapper {
         if(d.length() < camp.getText().length()) {
             camp.setText(d);
         }
-        camp.setSelection(camp.getText().length());
 
+        camp.setSelection(camp.getText().length());
         return d;
     }
 
