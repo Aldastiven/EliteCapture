@@ -108,25 +108,22 @@ public class modalSetting {
 
     public void estadoOnline(){
 
-        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                try {
+        sw.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            try {
 
-                    if(new Conexion().getConexion() == null){
-                        sw.setChecked(true);
-                        sw.setButtonDrawable(sw.isChecked() ? R.color.verde : R.color.rojo);
-                        imgOnline.setBackgroundResource(sw.isChecked() ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
-                        Toast.makeText(context, "No hay conexión con el servidor", Toast.LENGTH_SHORT).show();
-                    }else {
-                        ionLine.local(sw.isChecked() ? "offLine" : "onLine");
-                        sw.setButtonDrawable(sw.isChecked() ? R.color.verde : R.color.rojo);
-                        txtR.setText(sw.isChecked() ? "offLine" : "onLine");
-                        imgOnline.setBackgroundResource(sw.isChecked() ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
-                    }
-                }catch (Exception e){
-                    Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+                if(new Conexion().excecutePing() > 0){
+                    sw.setChecked(true);
+                    sw.setButtonDrawable(sw.isChecked() ? R.color.verde : R.color.rojo);
+                    imgOnline.setBackgroundResource(sw.isChecked() ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
+                    Toast.makeText(context, "No hay conexión con el servidor", Toast.LENGTH_SHORT).show();
+                }else {
+                    ionLine.local(sw.isChecked() ? "offLine" : "onLine");
+                    sw.setButtonDrawable(sw.isChecked() ? R.color.verde : R.color.rojo);
+                    txtR.setText(sw.isChecked() ? "offLine" : "onLine");
+                    imgOnline.setBackgroundResource(sw.isChecked() ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
                 }
+            }catch (Exception e){
+                Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -152,9 +149,9 @@ public class modalSetting {
     }
 
     public void validarConexion(){
-        sw.setChecked(new Conexion().getConexion() != null ? false : true);
-        txtR.setText(new Conexion().getConexion() != null ? "onLine" : "offLine");
-        imgOnline.setBackgroundResource(sw.isChecked() ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
+        sw.setChecked(new sqlConect().excecutePing() > 0);
+        txtR.setText(new sqlConect().excecutePing() > 0 ? "offLine" : "onLine");
+        imgOnline.setBackgroundResource(new sqlConect().excecutePing() > 0 ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
         ionLine.local(sw.isChecked() ? "offLine" : "onLine");
     }
 

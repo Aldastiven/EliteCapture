@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eliteCapture.Config.Util.formAdmin;
+import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -408,7 +409,7 @@ public class genated extends AppCompatActivity {
 
             if (full) {
                 if(ion.all().equals("onLine")) {
-                    if (iCon.enviarInmediato(nuevo, contConsec)) {
+                    if (new sqlConect().excecutePing() == 0 && iCon.enviarInmediato(nuevo, contConsec)) {
                         Toast.makeText(this, "Insertado con exito!", Toast.LENGTH_LONG).show();
                     } else {
                         iCon.insert(nuevo);

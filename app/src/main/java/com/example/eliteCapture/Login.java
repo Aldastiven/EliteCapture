@@ -74,14 +74,9 @@ public class Login extends AppCompatActivity {
             is = new iSesion(path);
             ionLine = new ionLine(path);
 
-            imgOnline.setBackgroundResource(new ionLine(path).all().equals("onLine") ? ic_wifi_on : ic_wifi_off);
+            imgOnline.setBackgroundResource(new sqlConect().excecutePing() == 0 ? ic_wifi_on : ic_wifi_off);
             floatingServer.setCompoundDrawablesWithIntrinsicBounds(icont.pendientesCantidad() > 0 ? ic_cloud_noti : ic_cloud, 0, 0, 0);
 
-            if(new Conexion().getConexion() == null) {
-                imgOnline.setBackgroundResource(ic_wifi_off);
-                ionLine.local("offLine");
-                new ionLine(path).local("offLine");
-            }
         } catch (Exception ex) {
             Toast.makeText(this, "Se genero un Error al traer los datos de Usuario \n \n" + ex.toString(), Toast.LENGTH_LONG).show();
         }
@@ -197,8 +192,4 @@ public class Login extends AppCompatActivity {
 
     public void onBackPressed() {
     }
-
-    protected class Conexion extends sqlConect {
-    }
-
 }

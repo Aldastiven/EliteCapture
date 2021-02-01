@@ -65,7 +65,10 @@ public class splash_activity extends AppCompatActivity {
       ta = new textAdmin(this);
 
       String intent = screen() == 0 ? "intent" : "conexion";
-      if(intent.equals("conexion"))  noti.addView(ta.textColor(carga.equals("BajarDatos") ? "Descargando datos, espera un momento ..." : "Enviando datos, espera un momento ...","negro",15, "c"));
+
+      if(intent.equals("conexion")) {
+        noti.addView(ta.textColor(carga.equals("BajarDatos") ? "Descargando datos, espera un momento ..." : "Enviando datos, espera un momento ...", "negro", 15, "c"));
+      }
       temporizador(intent, 3000, screen());
 
     } catch (Exception e) {
@@ -75,9 +78,7 @@ public class splash_activity extends AppCompatActivity {
 
   public int screen(){
     Bundle b = getIntent().getExtras();
-    int s = b != null ? b.getInt("redireccion",0) : 0;
-    String enviDes = b != null ? b.getString("carga","") : "";
-    return s;
+    return b != null ? b.getInt("redireccion",0) : 0;
   }
 
   public void temporizador(final String tipo, int duracion, final int intent){
@@ -93,15 +94,7 @@ public class splash_activity extends AppCompatActivity {
   }
 
   public void intent(int s){
-    Intent i = null;
-    switch (s){
-      case 0 :
-        i = new Intent(this, Login.class);
-        break;
-      case 1 :
-        i = new Intent(this, Login.class);
-        break;
-    }
+    Intent i = new Intent(this, Login.class);
     startActivity(i);
   }
 

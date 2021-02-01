@@ -166,7 +166,8 @@ public class ETN_ETA extends ContextWrapper {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                respuestaCampo = camp.getText().toString();
+                registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
             }
         });
     }
@@ -191,7 +192,6 @@ public class ETN_ETA extends ContextWrapper {
             d = d.substring(0, d.length() - 1);
             camp.setText(d);
             camp.setSelection(camp.getText().length());
-            Toast.makeText(context, "es igual a 2 --> "+d, Toast.LENGTH_SHORT).show();
         }
 
         //valida cantidad de digitos despues del punto
@@ -205,6 +205,7 @@ public class ETN_ETA extends ContextWrapper {
         }
 
         camp.setSelection(camp.getText().length());
+        respuestaCampo = d;
         return d;
     }
 
