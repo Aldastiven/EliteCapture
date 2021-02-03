@@ -1,9 +1,12 @@
 package com.example.eliteCapture;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.eliteCapture.Config.Util.formAdmin;
 import com.example.eliteCapture.Config.sqlConect;
@@ -29,6 +34,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.net.NetworkInterface;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +61,7 @@ public class genated extends AppCompatActivity {
 
     String path = null, dataCamera;
     int contConsec = 0;
+    final private int REQUEST_READ_PHONE_STATE = 1;
     boolean camera, inicial = true, ok, temporal, footer;
 
     formAdmin formA;
@@ -77,6 +85,8 @@ public class genated extends AppCompatActivity {
             itemLayout = new Dialog(this);
 
             insView(); //instancia los elementos del layout
+
+            //Toast.makeText(this, "MAC : "+getMacAddress(), Toast.LENGTH_SHORT).show();
 
 
             path = getExternalFilesDir(null) + File.separator; //path
@@ -118,7 +128,6 @@ public class genated extends AppCompatActivity {
             btnEnvioGuardar.setText(ion.all().equals("onLine") ?"Enviar":"Guardar");
             btnEnvioGuardar.setCompoundDrawablesWithIntrinsicBounds( 0, 0, ion.all().equals("onLine") ? ic_cloud_upload : ic_save, 0);
             btnCalificar.setCompoundDrawablesWithIntrinsicBounds( 0, 0, ic_star, 0);
-
         } catch (Exception ex) {
             Log.i("Error_onCreate", ex.toString());
         }
@@ -221,7 +230,7 @@ public class genated extends AppCompatActivity {
     public ContenedorTab contenedorLimipio() throws Exception {
         return iCon.generarContenedor(
                 usu.getId_usuario(),
-                getPhoneName(),
+                getMacAddress(),
                 adm.getDetalles()
                         .forDetalle(pro.getCodigo_proceso()));
     }
@@ -284,11 +293,36 @@ public class genated extends AppCompatActivity {
     public String getPhoneName() {
         try {
             BluetoothAdapter myDevice = BluetoothAdapter.getDefaultAdapter();
-            String deviceName = myDevice.getName();
-            return deviceName;
+            return myDevice.getName();
         } catch (Exception e) {
             return "Neron_Navarrete";
         }
+    }
+
+    public String getMacAddress() {
+            try {
+                List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+                for (NetworkInterface nif : all) {
+                    if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                    byte[] macBytes = nif.getHardwareAddress();
+                    if (macBytes == null) {
+                        return "";
+                    }
+
+                    StringBuilder res1 = new StringBuilder();
+                    for (byte b : macBytes) {
+                        res1.append(String.format("%02X:",b));
+                    }
+
+                    if (res1.length() > 0) {
+                        res1.deleteCharAt(res1.length() - 1);
+                    }
+                    return res1.toString();
+                }
+            } catch (Exception ex) {
+            }
+            return "02:00:00:00:00:00";
     }
 
     //MUESTRA EL POP CON LOS CAMPOS DEL HEADER
@@ -409,7 +443,7 @@ public class genated extends AppCompatActivity {
 
             if (full) {
                 if(ion.all().equals("onLine")) {
-                    if (new sqlConect().excecutePing() == 0 && iCon.enviarInmediato(nuevo, contConsec)) {
+                    if (iCon.enviarInmediato(nuevo, contConsec)) {
                         Toast.makeText(this, "Insertado con exito!", Toast.LENGTH_LONG).show();
                     } else {
                         iCon.insert(nuevo);

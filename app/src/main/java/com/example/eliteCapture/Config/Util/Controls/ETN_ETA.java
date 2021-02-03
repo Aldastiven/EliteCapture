@@ -8,7 +8,6 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -20,9 +19,6 @@ import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
-import com.example.eliteCapture.genated;
-
-import org.apache.commons.lang3.StringUtils;
 
 public class ETN_ETA extends ContextWrapper {
 
@@ -97,6 +93,7 @@ public class ETN_ETA extends ContextWrapper {
                 funLimit();
             }
             funCamp();
+            validateHasFocus();
             return camp;
         }catch (Exception e){
             Log.i("llegadaRespuesta", e.toString());
@@ -104,23 +101,40 @@ public class ETN_ETA extends ContextWrapper {
         }
     }
 
-    public void funCamp(){//FUNCION DEL CAMPO
-        camp.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                try {
-                    if (!hasFocus) {
-                        if (rt.getTipo().equals("ETA")) {
-                            respuestaCampo = camp.getText().toString();
-                        }
-
-                        registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
-                        respuestaPonderado.setText(respuestaCampo != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
-                        contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(context, "Funcamp : " + e.toString(), Toast.LENGTH_SHORT).show();
+    public void validateHasFocus(){
+        camp.setOnFocusChangeListener((View.OnFocusChangeListener) (v, hasFocus) -> {
+            try {
+                if (!hasFocus) {
+                    int i = camp.getText().toString().length();
+                    String res = camp.getText().toString();
+                    //valida si exite un punto como ultimo caracter y lo elimina
+                    camp.setText(res.charAt(i-1) == (char) 46 ? res.substring(0, i - 1) : res);
+                    respuestaCampo = camp.getText().toString();
+                    registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
+                    respuestaPonderado.setText(respuestaCampo != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
+                    contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
                 }
+            }catch (Exception e){
+                Log.i("etnres", "respuesta : " + e.toString());
+            }
+        });
+
+    }
+
+    public void funCamp(){//FUNCION DEL CAMPO
+        camp.setOnFocusChangeListener((v, hasFocus) -> {
+            try {
+                if (!hasFocus) {
+                    if (rt.getTipo().equals("ETA")) {
+                        respuestaCampo = camp.getText().toString();
+                    }
+
+                    registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
+                    respuestaPonderado.setText(respuestaCampo != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
+                    contenedorCamp.setBackgroundResource(R.drawable.bordercontainer);
+                }
+            } catch (Exception e) {
+                Toast.makeText(context, "Funcamp : " + e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -175,20 +189,34 @@ public class ETN_ETA extends ContextWrapper {
     public String reemplazarDecimal(){
         String d = camp.getText().toString();
 
-        //valida caacteres no permitidos
-        if(d.contains(",")){
-            d = d.replaceAll(",", "");
-        }else if(d.contains(" ")){
-            d = d.replaceAll(" ", "");
-        }else if(d.contains("-")){
-            d = d.replaceAll("-", "");
-        }else if(d.contains(".") && rt.getDecimales() == 0){
+        //elimina punto si el campo es un entero
+        if(d.contains(".") && rt.getDecimales() == 0 || camp.getText().length() == 1){
             d = d.replaceAll("\\.", "");
         }
 
-
         //valida si digita mas de un punto
-        if(getNumerCountCharacter(d) == 2){
+        if(getNumerCountCharacter(d, (char)46) == 2){
+            d = d.substring(0, d.length() - 1);
+            camp.setText(d);
+            camp.setSelection(camp.getText().length());
+        }
+
+        //valida si digita mas de un coma
+        if(getNumerCountCharacter(d, (char)44) > 0){
+            d = d.substring(0, d.length() - 1);
+            camp.setText(d);
+            camp.setSelection(camp.getText().length());
+        }
+
+        //valida si digita mas de un espacio
+        if(getNumerCountCharacter(d, (char)32) > 0){
+            d = d.substring(0, d.length() - 1);
+            camp.setText(d);
+            camp.setSelection(camp.getText().length());
+        }
+
+        //valida si digita mas de un quion
+        if(getNumerCountCharacter(d, (char)45) > 0){
             d = d.substring(0, d.length() - 1);
             camp.setText(d);
             camp.setSelection(camp.getText().length());
@@ -200,7 +228,8 @@ public class ETN_ETA extends ContextWrapper {
             d = r[0] + "." + r[1].substring(0, r[1].length() == rt.getDecimales() ? r[1].length() : r[1].length() - (r[1].length() - rt.getDecimales()));
         }
 
-        if(d.length() < camp.getText().length()) {
+        //imprime en el campo si el dato registrado es diferente al inicial
+        if(d.length() != camp.getText().length()) {
             camp.setText(d);
         }
 
@@ -209,9 +238,8 @@ public class ETN_ETA extends ContextWrapper {
         return d;
     }
 
-    public int getNumerCountCharacter(String txt){
+    public int getNumerCountCharacter(String txt, char _toCompare){
         int c = 0;
-        char _toCompare = '.';
         char []caracteres = txt.toCharArray();
         for(int i = 0; i <= caracteres.length - 1; i++){
             if(_toCompare == caracteres[i]){

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,12 @@ import android.widget.Toast;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
+import com.example.eliteCapture.Config.Util.Container.notificationAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.ionLine;
 import com.example.eliteCapture.R;
+import com.example.eliteCapture.splash_activity;
 
 public class modalSetting {
 
@@ -34,13 +37,16 @@ public class modalSetting {
 
     Switch sw;
     TextView txtR;
+    LinearLayout notifications;
 
     ionLine ionLine;
 
-    public modalSetting(Context context, String path, ImageView imgOnline) {
+    public modalSetting(Context context, String path, ImageView imgOnline, LinearLayout notifications) {
         this.context = context;
         this.path = path;
         this.imgOnline = imgOnline;
+        this.notifications = notifications;
+
 
         ionLine = new ionLine(path);
         ta = new textAdmin(context);
@@ -102,25 +108,35 @@ public class modalSetting {
         linearLayout.addView(txt);
         linearLayout.addView(linearLayout1);
 
-        validarConexion();
+        //validarConexion();
+        sw.setChecked(ionLine.all().equals("onLine"));
+
         return linearLayout;
     }
 
     public void estadoOnline(){
-
         sw.setOnCheckedChangeListener((buttonView, isChecked) -> {
             try {
+                if(sw.isChecked() && ionLine.all().equals("offLine")){
+                    sw.setChecked(ionLine.all().equals("onLine"));
+                    new notificationAdmin(context, "Comprobando servidor disponible", "dark", 2000, notifications).crear();
+                    new Handler().postDelayed((Runnable) () -> {
 
-                if(new Conexion().excecutePing() > 0){
-                    sw.setChecked(true);
-                    sw.setButtonDrawable(sw.isChecked() ? R.color.verde : R.color.rojo);
-                    imgOnline.setBackgroundResource(sw.isChecked() ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
-                    Toast.makeText(context, "No hay conexión con el servidor", Toast.LENGTH_SHORT).show();
-                }else {
-                    ionLine.local(sw.isChecked() ? "offLine" : "onLine");
-                    sw.setButtonDrawable(sw.isChecked() ? R.color.verde : R.color.rojo);
-                    txtR.setText(sw.isChecked() ? "offLine" : "onLine");
-                    imgOnline.setBackgroundResource(sw.isChecked() ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
+                        int conexion = new Conexion().excecutePing(context);
+
+                        new notificationAdmin(context, conexion == 0 ? "obtuvo Conexión" : "Conexión perdida, cod. : "+conexion, conexion == 0 ? "good" : "bad", 3000, notifications).crear();
+                        ionLine.local(conexion == 0 ? "onLine" : "offLine");
+                        sw.setButtonDrawable(conexion == 0 ? R.color.verde : R.color.rojo);
+                        sw.setChecked(conexion == 0);
+                        txtR.setText(conexion == 0 ? "onLine" : "offLine");
+                        imgOnline.setBackgroundResource(conexion == 0 ? R.drawable.ic_wifi_on : R.drawable.ic_wifi_off);
+
+                    }, 2000);
+                }else if(!sw.isChecked()){
+                    ionLine.local("offLine");
+                    sw.setButtonDrawable(R.color.rojo);
+                    txtR.setText("offLine");
+                    imgOnline.setBackgroundResource(R.drawable.ic_wifi_off);
                 }
             }catch (Exception e){
                 Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
@@ -134,14 +150,15 @@ public class modalSetting {
         };
 
         int[] thumbColors = new int[] {
-                Color.rgb(88, 214, 141),
-                Color.rgb(236, 112, 99)
+                Color.rgb(236, 112, 99),
+                Color.rgb(88, 214, 141)
 
         };
 
         int[] trackColors = new int[] {
-                Color.rgb(88, 214, 141),
-                Color.rgb(236, 112, 99)
+                Color.rgb(236, 112, 99),
+                Color.rgb(88, 214, 141)
+
         };
         sw.setButtonTintList(new ColorStateList(states, thumbColors));
         DrawableCompat.setTintList(DrawableCompat.wrap(sw.getThumbDrawable()), new ColorStateList(states, thumbColors));
@@ -149,10 +166,10 @@ public class modalSetting {
     }
 
     public void validarConexion(){
-        sw.setChecked(new sqlConect().excecutePing() > 0);
-        txtR.setText(new sqlConect().excecutePing() > 0 ? "offLine" : "onLine");
-        imgOnline.setBackgroundResource(new sqlConect().excecutePing() > 0 ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
-        ionLine.local(sw.isChecked() ? "offLine" : "onLine");
+        sw.setChecked(ionLine.all().equals("onLine"));
+        txtR.setText(ionLine.all());
+        imgOnline.setBackgroundResource(ionLine.all().equals("offLine") ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
+        ionLine.local(!sw.isChecked() ? "offLine" : "onLine");
     }
 
     protected class Conexion extends sqlConect {}

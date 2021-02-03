@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eliteCapture.Config.Util.Modal.modalServer;
 import com.example.eliteCapture.Config.Util.Modal.modalSetting;
-import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.Data.iSesion;
@@ -42,11 +41,11 @@ public class Login extends AppCompatActivity {
     EditText txtUser, txtPass;
     TextView txtError, floatingServer;
     ImageView imgOnline;
+    LinearLayout notification;
 
     iContenedor icont;
     iSesion is;
     ionLine ionLine;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +61,10 @@ public class Login extends AppCompatActivity {
 
             txtUser = findViewById(id.txtUser);
             txtPass = findViewById(id.txtPass);
+            txtError = findViewById(id.txtError);
             imgOnline = findViewById(id.imgOnline);
             floatingServer = findViewById(id.floatingServer);
+            notification = findViewById(id.lineNotication);
 
             iUsuario iU = new iUsuario(null, path);
             iU.nombre = "Usuarios";
@@ -74,7 +75,7 @@ public class Login extends AppCompatActivity {
             is = new iSesion(path);
             ionLine = new ionLine(path);
 
-            imgOnline.setBackgroundResource(new sqlConect().excecutePing() == 0 ? ic_wifi_on : ic_wifi_off);
+            imgOnline.setBackgroundResource(ionLine.all().equals("onLine") ? ic_wifi_on : ic_wifi_off);
             floatingServer.setCompoundDrawablesWithIntrinsicBounds(icont.pendientesCantidad() > 0 ? ic_cloud_noti : ic_cloud, 0, 0, 0);
 
         } catch (Exception ex) {
@@ -112,7 +113,7 @@ public class Login extends AppCompatActivity {
             } else if (m == null) {
                 txtUser.setBackgroundResource(bordercontainerred);
                 txtPass.setBackgroundResource(bordercontainerred);
-                txtError.setText("Identificaficación o contraseña incorrectas !!!");
+                txtError.setText("Identificación o contraseña incorrectas !!!");
                 new iSesion(path).local(0000);
             }
 
@@ -187,7 +188,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void Settings(View v){
-        new modalSetting(this, path, imgOnline).modal().show();
+        new modalSetting(this, path, imgOnline, notification).modal().show();
     }
 
     public void onBackPressed() {
