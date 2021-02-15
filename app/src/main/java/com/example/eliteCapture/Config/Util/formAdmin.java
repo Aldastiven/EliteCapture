@@ -160,27 +160,8 @@ public class formAdmin {
 
     //VALIDA SI HAY FORMULARIOS PENDIENTES DESDE EL JSON TEMP
     public ContenedorTab validarTemporal() throws Exception {
-
         ContenedorTab conTemp = iCon.optenerTemporal();
-        try {
-            if (conTemp != null) {
-                if (conTemp.getIdProceso() == pro.getCodigo_proceso()) {
-
-                    temporal = true;
-                    return conTemp;
-
-                } else {
-                    temporal = false;
-                    return contenedorLimipio();
-                }
-            }
-
-            return contenedorLimipio();
-        } catch (Exception e) {
-            Log.i("Contenedor_Error", e.toString());
-            temporal = false;
-        }
-        return contenedorLimipio();
+        return  conTemp.getIdProceso() == pro.getCodigo_proceso() ? conTemp : contenedorLimipio();
     }
 
     public ContenedorTab contenedorLimipio() throws Exception {

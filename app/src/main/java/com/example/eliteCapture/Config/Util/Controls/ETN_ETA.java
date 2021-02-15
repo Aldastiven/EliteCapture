@@ -107,6 +107,7 @@ public class ETN_ETA extends ContextWrapper {
                 if (!hasFocus) {
                     int i = camp.getText().toString().length();
                     String res = camp.getText().toString();
+
                     //valida si exite un punto como ultimo caracter y lo elimina
                     camp.setText(res.charAt(i-1) == (char) 46 ? res.substring(0, i - 1) : res);
                     respuestaCampo = camp.getText().toString();

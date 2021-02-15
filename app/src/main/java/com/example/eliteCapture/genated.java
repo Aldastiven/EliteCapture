@@ -1,12 +1,10 @@
 package com.example.eliteCapture;
 
-import android.Manifest;
+
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,11 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.eliteCapture.Config.Util.formAdmin;
-import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -62,7 +57,7 @@ public class genated extends AppCompatActivity {
     String path = null, dataCamera;
     int contConsec = 0;
     final private int REQUEST_READ_PHONE_STATE = 1;
-    boolean camera, inicial = true, ok, temporal, footer;
+    boolean camera, inicial = false , ok, temporal, footer;
 
     formAdmin formA;
     Admin adm = null;
@@ -399,10 +394,11 @@ public class genated extends AppCompatActivity {
     public void killChildrens(ContenedorTab temporal) {
         if (linearPrinc.getChildCount() > 0) {
             linearPrinc.removeAllViews();
+            linearBodypop.removeAllViews();
             try {
                 contenedor = contenedorLimipio();
                 iCon.crearTemporal(contenedorEncabezado(temporal));
-                CrearCuerpo();
+                crearform();
                 mypop.show();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -429,11 +425,10 @@ public class genated extends AppCompatActivity {
     public void UpData(View v) {
         try {
         ContenedorTab nuevo = iCon.optenerTemporal();
-        Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo, footer);
 
         boolean full = true;
 
-            for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
+            for (Map.Entry<Integer, List<Long>> entry : iCon.validarVacios(nuevo, footer).entrySet()) {
                 if (entry.getValue().size() > 0) {
                     full = false;
                 }
@@ -442,18 +437,14 @@ public class genated extends AppCompatActivity {
             nuevo.setConsecutivo(contConsec);
 
             if (full) {
-                if(ion.all().equals("onLine")) {
-                    if (iCon.enviarInmediato(nuevo, contConsec)) {
-                        Toast.makeText(this, "Insertado con exito!", Toast.LENGTH_LONG).show();
-                    } else {
-                        iCon.insert(nuevo);
-                        Toast.makeText(this, "Agregado a local", Toast.LENGTH_LONG).show();
-                    }
-                }else{
-                    iCon.insert(nuevo);
-                    Toast.makeText(this, "Agregado a local", Toast.LENGTH_LONG).show();
-                }
+                Toast.makeText(this,
+                        !ion.all().equals("onLine") || !iCon.enviarInmediato(nuevo, contConsec) ?
+                        "Agregado a local" :
+                        "Insertado con exito!", Toast.LENGTH_LONG).show();
+
                 inicial = true;
+
+                iCon.insert(nuevo);
                 killChildrens(nuevo);
 
                 contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
@@ -463,6 +454,7 @@ public class genated extends AppCompatActivity {
                 Toast.makeText(this, "¡tienes campos vacios! ", Toast.LENGTH_LONG).show();
                 killChildrens2(nuevo);
             }
+
         } catch (Exception e) {
             Log.i("Enviar_error", e.toString());
         }

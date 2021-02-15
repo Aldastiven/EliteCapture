@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.example.eliteCapture",
+  "variantName": "debug",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "properties": [],
+      "versionCode": 391,
+      "versionName": "3.9.1",
+      "enabled": true,
+      "outputFile": "app-debug.apk"
+    }
+  ]
+}

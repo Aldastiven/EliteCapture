@@ -13,6 +13,8 @@ import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -58,7 +60,6 @@ public class iContenedor implements Contenedor {
     @Override
     public String insert(ContenedorTab o) {
         all();
-        //o.setConsecutivo( contador.getCantidad(o.getIdUsuario(), o.getIdProceso()) );
         o.setFecha(o.fechaString());
         ct.add(o);
         local();
@@ -243,7 +244,8 @@ public class iContenedor implements Contenedor {
                 detalle.getReglas(),
                 detalle.getTip(),
                 detalle.getDesdeHasta(),
-                detalle.getDecimales()
+                detalle.getDecimales(),
+                detalle.getObligatorio()
         );
     }
 
@@ -261,7 +263,7 @@ public class iContenedor implements Contenedor {
     public List<Long> vacios(List<RespuestasTab> lista) {
         List<Long> v = new ArrayList<>();
         for (RespuestasTab respuesta : lista) {
-            if (respuesta.getRespuesta() == null || respuesta.getRespuesta().isEmpty()) {
+            if (respuesta.getObligatorio() == 1 && StringUtils.isEmpty(respuesta.getRespuesta())) {
                 v.add(respuesta.getId());
             }
         }

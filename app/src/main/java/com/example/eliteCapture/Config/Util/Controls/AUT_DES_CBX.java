@@ -54,7 +54,7 @@ public class AUT_DES_CBX {
         this.rt = rt;
         this.path = path;
         this.initial = initial;
-        this.vacio = StringUtils.isEmpty(rt.getRespuesta());
+        this.vacio = rt.getRespuesta() != null;
 
         ca = new containerAdmin(context);
         pp = new GIDGET(context, ubicacion, rt, path);
@@ -78,7 +78,7 @@ public class AUT_DES_CBX {
             contenedorcampAut.setGravity(Gravity.CENTER_HORIZONTAL);
 
             contenedorcampAut.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
-            contenedorcampAut.addView(pintarRespuesta(rt.getCausa() != null ? rt.getCausa() : ""));
+            contenedorcampAut.addView(pintarRespuesta(rt.getValor() != null ? rt.getValor()  : ""));
             contenedorcampAut.addView(camp());
             pp.validarColorContainer(contenedorcampAut, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
@@ -175,7 +175,7 @@ public class AUT_DES_CBX {
                 DesplegableTab dt = filtroDesplegable(campAut.getText().toString());
                 registro(dt != null ? dt.getOpcion() + "" : null, dt != null ? dt.getCodigo() : null, dt != null ? String.valueOf(rt.getPonderado()) : null);
                 respuestaPonderado.setText(dt != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
-                contenedorcampAut.setBackgroundResource(R.drawable.bordercontainer);
+                //contenedorcampAut.setBackgroundResource(R.drawable.bordercontainer);
                 pintarRespuesta(dt != null ? dt.getCodigo() : null);
             }
         });
@@ -214,9 +214,10 @@ public class AUT_DES_CBX {
     public View pintarRespuesta(String causa){//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
         if (LineRespuesta.getChildCount() > 0 || causa == null) LineRespuesta.removeAllViews();
         if (causa != null && rt.getDesplegable() != null) {
-            if (!causa.isEmpty())
+            if (!causa.isEmpty()) {
                 LineRespuesta.addView(ta.textColor(causa, "verde", 15, "l"));
-                contenedorcampAut.setBackgroundResource(causa != null ? R.drawable.bordercontainer : R.drawable.bordercontainerred);
+                //contenedorcampAut.setBackgroundResource(causa != null ? R.drawable.bordercontainer : R.drawable.bordercontainerred);
+            }
         }
 
         return LineRespuesta;

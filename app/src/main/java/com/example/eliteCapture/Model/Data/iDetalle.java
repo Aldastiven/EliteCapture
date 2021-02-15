@@ -39,6 +39,7 @@ public class iDetalle implements Detalle {
 			"      ,[tip]\n" +
 			"      ,[desde_hasta]\n" +
 			"      ,[decimales]" +
+			"      ,[obligatorio]" +
 			"  FROM [Formularios].[dbo].[Procesos_Detalle]\n" +
 			"  ORDER BY [id_proceso], [codigo_detalle]";
 
@@ -132,7 +133,7 @@ public class iDetalle implements Detalle {
 				rs.getInt("reglas"),
 				rs.getString("tip"),
 				rs.getString("desde_hasta"),
-				rs.getInt("decimales")
-				);
+				rs.getInt("decimales"),
+				rs.getInt("obligatorio"));
 	}
 }

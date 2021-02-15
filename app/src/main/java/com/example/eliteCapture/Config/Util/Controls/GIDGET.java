@@ -107,12 +107,8 @@ public class GIDGET {
     }
 
     public void validarColorContainer(LinearLayout contenedorCamp, boolean vacio, boolean inicial){
-        Log.i("VACIOS","vacio : "+vacio+" inicial : "+inicial);
-        if(!inicial){
-            contenedorCamp.setBackgroundResource(!vacio ? bordercontainerred : bordercontainer);
-        }else{
-            contenedorCamp.setBackgroundResource(bordercontainer);
-        }
+        Log.i("inicialValue", "llego data : "+inicial);
+        contenedorCamp.setBackgroundResource(!inicial && !vacio ? bordercontainerred : bordercontainer);
     }
 
     public View campoEdtable(String tipo, String color){
