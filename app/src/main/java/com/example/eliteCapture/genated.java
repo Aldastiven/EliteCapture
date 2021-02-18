@@ -56,8 +56,7 @@ public class genated extends AppCompatActivity {
 
     String path = null, dataCamera;
     int contConsec = 0;
-    final private int REQUEST_READ_PHONE_STATE = 1;
-    boolean camera, inicial = false , ok, temporal, footer;
+    boolean camera, inicial = true , ok, temporal, footer;
 
     formAdmin formA;
     Admin adm = null;

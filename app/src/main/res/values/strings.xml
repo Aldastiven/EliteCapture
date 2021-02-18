@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">eliteCapture</string>
     <string name="subir">SUBIR</string>
-    <string name="SUBIR"/>
+    <string name="SUBIR" />
     <string name="title_activity_login">Ingresa</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="prompt_email">Email</string>

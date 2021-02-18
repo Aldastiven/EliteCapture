@@ -82,13 +82,11 @@ public class splash_activity extends AppCompatActivity {
   }
 
   public void temporizador(final String tipo, int duracion, final int intent){
-    new Handler().postDelayed(new Runnable() {
-      public void run() {
-        if(tipo.equals("conexion")) {
-          new CargaDeDatos(path, splash_activity.this, txtStatus);
-        }else if(tipo.equals("intent")) {
-          intent(intent);
-        }
+    new Handler().postDelayed(() -> {
+      if(tipo.equals("conexion")) {
+        new CargaDeDatos(path, splash_activity.this, txtStatus);
+      }else if(tipo.equals("intent")) {
+        intent(intent);
       }
     }, duracion);
   }

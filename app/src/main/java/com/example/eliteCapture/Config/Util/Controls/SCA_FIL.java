@@ -21,6 +21,7 @@ import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
+import com.example.eliteCapture.NavPlano;
 import com.example.eliteCapture.R;
 
 import org.apache.commons.lang3.StringUtils;
@@ -117,6 +118,12 @@ public class SCA_FIL implements Serializable {
 
         LinearLayout line = ca.container();
         line.setOrientation(LinearLayout.HORIZONTAL);
+
+        if(rt.getTipo().equals("SCP")){
+            Button btnNav = (Button) pp.boton("Navegar", "verde");
+            BtnStarNavegation(btnNav);
+            line.addView(btnNav);
+        }
         line.addView(camp);
         line.addView(btn);
 
@@ -129,6 +136,7 @@ public class SCA_FIL implements Serializable {
         switch (rt.getTipo()){
             case "SCA" :
             case "SCN" :
+            case "SCP" :
                 btn = (Button) pp.boton("Escanear", "verde");
                 BtnStarCamera(btn);
                 break;
@@ -149,15 +157,26 @@ public class SCA_FIL implements Serializable {
 
     public void BtnStarCamera(Button btn) {//metodo que activa la camara
         try {
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(context, Camera.class);
-                    i.putExtra("ubicacion", ubicacion);
-                    i.putExtra("path", path);
-                    i.putExtra("respuestaTab", rt);
-                    context.startActivity(i);
-                }
+            btn.setOnClickListener(view -> {
+                Intent i = new Intent(context, Camera.class);
+                i.putExtra("ubicacion", ubicacion);
+                i.putExtra("path", path);
+                i.putExtra("respuestaTab", rt);
+                context.startActivity(i);
+            });
+        } catch (Exception ex) {
+            Toast.makeText(context, "Ocurrio un error \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void BtnStarNavegation(Button btn) {//metodo que activa la camara
+        try {
+            btn.setOnClickListener(view -> {
+                Intent i = new Intent(context, NavPlano.class);
+                i.putExtra("ubicacion", ubicacion);
+                i.putExtra("path", path);
+                i.putExtra("respuestaTab", rt);
+                context.startActivity(i);
             });
         } catch (Exception ex) {
             Toast.makeText(context, "Ocurrio un error \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
@@ -165,15 +184,12 @@ public class SCA_FIL implements Serializable {
     }
 
     public void BtnBuscar(Button btn){
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String valida = filtroDesplegable(camp.getText().toString());
-                if (valida != null) {
-                    if (LineRespuesta.getChildCount() > 0 || causa == null)
-                        LineRespuesta.removeAllViews();
-                    LineRespuesta.addView(ta.textColor("No se encontraron resultados", "rojo", 15, "l"));
-                }
+        btn.setOnClickListener(v -> {
+            String valida = filtroDesplegable(camp.getText().toString());
+            if (valida != null) {
+                if (LineRespuesta.getChildCount() > 0 || causa == null)
+                    LineRespuesta.removeAllViews();
+                LineRespuesta.addView(ta.textColor("No se encontraron resultados", "rojo", 15, "l"));
             }
         });
     }

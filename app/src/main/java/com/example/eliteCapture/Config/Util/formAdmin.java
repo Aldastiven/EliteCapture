@@ -122,6 +122,7 @@ public class formAdmin {
                     case "FIN":// campo busqueda con teclado numerico
                     case "SCA":// scanner busqueda con teclado alfanumerico
                     case "SCN":// scanner busqueda con teclado numerico
+                    case "SCP":// scanner busqueda con boton para la navegacion del plano cultivo
                         v = new SCA_FIL(context, ubicacion, r, path, inicial).crear();
                         break;
                     case "AUT":// autocompletable con teclado alfanumerico
@@ -161,7 +162,12 @@ public class formAdmin {
     //VALIDA SI HAY FORMULARIOS PENDIENTES DESDE EL JSON TEMP
     public ContenedorTab validarTemporal() throws Exception {
         ContenedorTab conTemp = iCon.optenerTemporal();
-        return  conTemp.getIdProceso() == pro.getCodigo_proceso() ? conTemp : contenedorLimipio();
+
+        if(conTemp == null){
+            return contenedorLimipio();
+        }else{
+            return  conTemp.getIdProceso() == pro.getCodigo_proceso() ? conTemp : contenedorLimipio();
+        }
     }
 
     public ContenedorTab contenedorLimipio() throws Exception {
