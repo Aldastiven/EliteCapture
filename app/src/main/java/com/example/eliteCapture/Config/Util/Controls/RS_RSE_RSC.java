@@ -2,17 +2,22 @@ package com.example.eliteCapture.Config.Util.Controls;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.icu.text.StringSearch;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -122,10 +127,11 @@ public class RS_RSE_RSC {
         line.setOrientation(LinearLayout.HORIZONTAL);
         line.setWeightSum(3);
 
-        campConteo = (TextView) pp.campoEdtable("TextView", "grisClear");
+        campConteo = (TextView) pp.campoEdtable(rt.getTipo().equals("RSE") ? "Edit" : "TextView", "grisClear");
         campConteo.setLayoutParams(params( rt.getTipo().equals("RSE") ? (float) 0.7 : (float) 1));
         campConteo.setText(vacio ? rt.getRespuesta() : "");
         campConteo.setTextSize(25);
+        campConteo.setRawInputType(Configuration.KEYBOARD_QWERTY);
 
         TextView btnRes = (Button) pp.boton("-", "rojo");
         btnRes.setLayoutParams(params(rt.getTipo().equals("RSE") ? (float) 0.7 : (float) 1));
@@ -142,37 +148,127 @@ public class RS_RSE_RSC {
 
         FunContador(btnRes, "r");
         FunContador(btnSum, "s");
+        funCampChange();
+        funEraser();
         return line;
+    }
+
+    public void funEraser(){
+        campConteo.setOnKeyListener((v, keyCode, event) -> {
+            if(keyCode == KeyEvent.KEYCODE_DEL){
+                String res = campConteo.getText().toString();
+                if(res.equals("-1")){
+                    campConteo.setText(res.substring(0, res.length()-2 ));
+                }
+            }
+            return false;
+        });
+    }
+
+    public void funCampChange(){
+        campConteo.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    String res = reemplazarDecimal();
+                    n = !StringUtils.isEmpty(res) ? Integer.parseInt(res) : 0;
+
+                    if (n > modalEditarRegla.getRegla()) {
+                        campConteo.setText(res.substring(0, res.length() - 1));
+                    }
+
+                    valor = valor(n);
+                    respuestaPonderado.setText(valor.equals("-1") ? "Resultado : N/A" : "Resultado : " + valor);
+                    registro(rta, valor, causa);
+                }catch (Exception e){
+                    Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override public void afterTextChanged(Editable s) { }
+        });
+    }
+
+    public String reemplazarDecimal(){
+        String d = campConteo.getText().toString();
+
+        //elimina punto si el campo es un entero
+        if(d.contains(".") && rt.getDecimales() == 0 || campConteo.getText().length() == 1){
+            d = d.replaceAll("\\.", "");
+        }
+
+        //valida si digita mas de un punto
+        if(getNumerCountCharacter(d, (char)46) == 2){
+            d = d.substring(0, d.length() - 1);
+            campConteo.setText(d);
+        }
+
+        //valida si digita mas de un coma
+        if(getNumerCountCharacter(d, (char)44) > 0){
+            d = d.substring(0, d.length() - 1);
+            campConteo.setText(d);
+        }
+
+        //valida si digita mas de un espacio
+        if(getNumerCountCharacter(d, (char)32) > 0){
+            d = d.substring(0, d.length() - 1);
+            campConteo.setText(d);
+        }
+
+        //valida si digita mas de un quion
+        if(getNumerCountCharacter(d, (char)45) > 0 && d.length() == 1){
+            d = d.substring(0, d.length() - 1);
+            campConteo.setText(d);
+        }
+
+        //valida cantidad de digitos despues del punto
+        if(d.contains(".")) {
+            String[] r = d.split("\\.");
+            d = r[0] + "." + r[1].substring(0, r[1].length() == rt.getDecimales() ? r[1].length() : r[1].length() - (r[1].length() - rt.getDecimales()));
+        }
+
+        //imprime en el campo si el dato registrado es diferente al inicial
+        if(d.length() != campConteo.getText().length()) {
+            campConteo.setText(d);
+        }
+        return d;
+    }
+
+    public int getNumerCountCharacter(String txt, char _toCompare){
+        int c = 0;
+        char []caracteres = txt.toCharArray();
+        for(int i = 0; i <= caracteres.length - 1; i++){
+            if(_toCompare == caracteres[i]){
+                c++;
+            }
+        }
+        return c;
     }
     public void FunContador(View btn, final String tipo){
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                try {
-                    if(StringUtils.isEmpty(rt.getDesplegable())){
-                        n =  contar(tipo);
-                        rta = n+"";
-                        campConteo.setText(n+"");
-                    }else{
-                        if(causa.isEmpty()) {
-                            noti.removeAllViews();
-                            noti.addView(ta.textColor("¡Debes seleccionar al menos una opción!", "rojo", 15, "l"));
-                            temporizador(5000);
-                            n = -1;
-                            rta = n + "";
-                            campConteo.setText("");
-                        }else {
-                            n = contar(tipo);
-                            rta = n + "";
-                            campConteo.setText(""+n);
-                        }
+        btn.setOnClickListener(v -> {
+            try {
+                if(StringUtils.isEmpty(rt.getDesplegable())){
+                    n =  contar(tipo);
+                    rta = n+"";
+                    campConteo.setText(n+"");
+                }else{
+                    if(causa.isEmpty()) {
+                        noti.removeAllViews();
+                        noti.addView(ta.textColor("¡Debes seleccionar al menos una opción!", "rojo", 15, "l"));
+                        temporizador(5000);
+                        n = -1;
+                        rta = n + "";
+                        campConteo.setText("");
+                    }else {
+                        n = contar(tipo);
+                        rta = n + "";
+                        campConteo.setText(""+n);
                     }
-                    valor = valor(n);
-                    respuestaPonderado.setText(valor.equals("-1") ? "Resultado : N/A" : "Resultado : "+valor);
-                    registro(rta, valor, causa);
-                }catch (Exception e){
-                    Log.i("CONTEO",e.toString());
                 }
+
+            }catch (Exception e){
+                Log.i("CONTEO",e.toString());
             }
         });
     }
@@ -254,14 +350,11 @@ public class RS_RSE_RSC {
         btnRegla.setPadding(10, 10, 10, 10);
         btnRegla.setLayoutParams(params((float) 0.9));
 
-        btnRegla.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    modalEditarRegla.showModal();
-                }catch (Exception e){
-                    Toast.makeText(context, ""+e.toString(), Toast.LENGTH_LONG).show();
-                }
+        btnRegla.setOnClickListener(v -> {
+            try {
+                modalEditarRegla.showModal();
+            }catch (Exception e){
+                Toast.makeText(context, ""+e.toString(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -284,11 +377,7 @@ public class RS_RSE_RSC {
         lineDespliegue.setVisibility(View.GONE);
 
 
-        btnDesp.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                lineDespliegue.setVisibility(lineDespliegue.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-            }
-        });
+        btnDesp.setOnClickListener(v -> lineDespliegue.setVisibility(lineDespliegue.getVisibility() == View.GONE ? View.VISIBLE : View.GONE));
 
         line.addView(btnDesp);
         if(rt.getDesplegable() != null) {getMultiOption(lineDespliegue);}
@@ -321,17 +410,14 @@ public class RS_RSE_RSC {
         }
     }
     public void FunmultiSelect(final CheckBox cb){
-        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(cb.isChecked()){
-                    checkList.add(cb.getText().toString());
-                }if(!cb.isChecked()) {
-                    deleteObjList(cb.getText().toString());
-                }
-                causa = respuestaLimpia();
-                registro(rta,valor,causa);
+        cb.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(cb.isChecked()){
+                checkList.add(cb.getText().toString());
+            }if(!cb.isChecked()) {
+                deleteObjList(cb.getText().toString());
             }
+            causa = respuestaLimpia();
+            registro(rta,valor,causa);
         });
     }
     public void deleteObjList(String obj){

@@ -175,7 +175,6 @@ public class AUT_DES_CBX {
                 DesplegableTab dt = filtroDesplegable(campAut.getText().toString());
                 registro(dt != null ? dt.getOpcion() + "" : null, dt != null ? dt.getCodigo() : null, dt != null ? String.valueOf(rt.getPonderado()) : null);
                 respuestaPonderado.setText(dt != null ? "Resultado : " + rt.getPonderado() : "Resultado :");
-                //contenedorcampAut.setBackgroundResource(R.drawable.bordercontainer);
                 pintarRespuesta(dt != null ? dt.getCodigo() : null);
             }
         });
