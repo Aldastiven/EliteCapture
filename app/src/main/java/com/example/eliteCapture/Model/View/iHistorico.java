@@ -58,8 +58,14 @@ public class iHistorico {
         return new JsonAdmin().WriteJson(path, nombre, new Gson().toJson(listHistorico));
     }
 
+    public void limpiarXfecha(Context c){
+        listHistorico.clear();
+        local();
+        Toast.makeText(c, "Limpieza realizada con exito", Toast.LENGTH_SHORT).show();
+    }
+
     //LIMPIA REGISTRO SEGUN LA FECHA
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    /*@RequiresApi(api = Build.VERSION_CODES.O)
     public void limpiarXfecha(Context c){
         try {
             listHistorico = all();
@@ -101,7 +107,7 @@ public class iHistorico {
         }catch (Exception ex){
             Log.i("GETFECHA",ex.toString());
         }
-    }
+    }*/
 
     public String[] splitdate(String d){
         String[] i = d.split("-");

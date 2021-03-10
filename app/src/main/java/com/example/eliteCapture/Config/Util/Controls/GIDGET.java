@@ -183,12 +183,17 @@ public class GIDGET {
             iDesp.nombre = rt.getDesplegable();
             DesplegableTab d = null;
             for (DesplegableTab desp : iDesp.all()) {
-                if (desp.getCodigo().equals(data)) {
+                Log.i("textDesp", "buscando... opcion : "+desp.getOpcion()+", cod : "+desp.getCodigo()+", contra : "+data);
+                if (desp.getCodigo().trim().equals(data.trim())) {
+                    Log.i("textDesp", "Encontro  cod : "+desp.getCodigo());
                     d = desp;
                     break;
-                }else if(desp.getOpcion().equals(data)) {
+                } else if (desp.getOpcion().trim().equals(data.trim())) {
+                    Log.i("textDesp", "Encontro opcion : "+desp.getOpcion());
                     d = desp;
                     break;
+                } else {
+                    Log.i("textDesp", "Definitivamente no encontro");
                 }
             }
             return d;

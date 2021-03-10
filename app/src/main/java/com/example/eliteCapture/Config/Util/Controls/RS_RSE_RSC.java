@@ -290,6 +290,11 @@ public class RS_RSE_RSC {
             DecimalFormat decimalFormat = new DecimalFormat("#.##",separator);
             float operacion = Float.parseFloat((rta < 0) ? "-1" : String.valueOf((rt.getPonderado() / modalEditarRegla.getRegla()) * (modalEditarRegla.getRegla() - rta)));
 
+            //REVISAR CON FERNANDO
+            /*if(rt.getTipo().equals("RSE")){
+                operacion = operacion;
+            }*/
+
             return ""+decimalFormat.format(operacion);
         }catch (Exception ex){
             Toast.makeText(context, ""+ex.toString(), Toast.LENGTH_SHORT).show();

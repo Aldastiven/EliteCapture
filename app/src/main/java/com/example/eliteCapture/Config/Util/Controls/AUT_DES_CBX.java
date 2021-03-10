@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
+import com.example.eliteCapture.Model.Data.Interfaz.Desplegable;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
@@ -91,16 +92,6 @@ public class AUT_DES_CBX {
     public View camp(){
         try {
             LinearLayout.LayoutParams params = ca.params();
-            params.setMargins(5, 2, 5, 5);
-
-            String dataCamp;
-
-            if (!vacio) {
-                dataCamp = rt.getRespuesta();
-            } else {
-                dataCamp = StringUtils.isEmpty(getFinca()) ? "" : getFinca();
-            }
-
             View v = null;
             switch (rt.getTipo()) {
                 case "AUT":
@@ -118,21 +109,33 @@ public class AUT_DES_CBX {
                 case "CBX":
                     campSpin = new Spinner(context);
                     campSpin.setAdapter(getAdapter(getDesp()));
-                    campSpin.setSelection(getDesp().indexOf(dataCamp));
                     campSpin.setBackgroundResource(R.drawable.myspinner);
 
-                    Log.i("ERRORCBX", "desplegable: "+dataCamp);
+                    if (rt.getId() == 0) {
 
-                    if (rt.getId() == 0 && !StringUtils.isEmpty(dataCamp)) {
-                        DesplegableTab opcion = filtroDesplegable(dataCamp);
-                        if(opcion == null){
-                            campSpin.setSelection(getDesp().indexOf(0));
-                        }else{
-                            campSpin.setSelection(getDesp().indexOf(opcion.getOpcion()));
-                        }
-                    } else {
-                        campSpin.setSelection(getDesp().indexOf(StringUtils.isEmpty(dataCamp) ? 0 : dataCamp));
+                        Log.i("desplegable", "DeplegableName" + rt.getDesplegable());
+
+                        DesplegableTab d = filtroDesplegable(getFinca());
+                        String resFinca = d != null ? d.getOpcion() : "Selecciona";
+
+                        Log.i("desplegable", "entro  a ser el primer campo " + resFinca);
+                        campSpin.setSelection(getDesp().indexOf(
+                                StringUtils.isEmpty(
+                                        rt.getRespuesta()) ?
+                                        resFinca :
+                                        rt.getRespuesta()
+                                )
+                        );
+                    }else {
+                        campSpin.setSelection(
+                                getDesp().indexOf(
+                                        StringUtils.isEmpty(rt.getRespuesta()) ?
+                                                0 :
+                                                rt.getRespuesta()
+                                )
+                        );
                     }
+
                     FunsDesp(campSpin);
                     v = campSpin;
                     break;
@@ -201,13 +204,7 @@ public class AUT_DES_CBX {
     }
 
     public DesplegableTab  filtroDesplegable(String rta){
-        DesplegableTab dt = null;
-        if(rt.getDesplegable() != null){
-            if(pp.busqueda(rta) != null) {
-                dt = pp.busqueda(rta);
-            }
-        }
-        return dt;
+        return pp.busqueda(rta);
     }
 
     public View pintarRespuesta(String causa){//PINTA LA RESPUESTA DE BUSQUEDA DEL JSON SI SE REQUIERE
