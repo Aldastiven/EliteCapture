@@ -3,6 +3,7 @@ package com.example.eliteCapture;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,9 @@ import com.example.eliteCapture.Model.View.iContenedor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
@@ -70,7 +74,22 @@ public class Camera extends AppCompatActivity implements Serializable {
         public void handleResult(Result rawResult) {
             try {
                 String bc = rawResult.getContents();
+                String format = rawResult.getBarcodeFormat().getName();
+                //CODE128
+                //QRCODE
                 if (bc != null) {
+                    Log.i("SCANNERBAR", bc);
+
+                    String data = null;
+                    if(format.equals("QRCODE")){
+                        for(String d : bc.split(",")){
+                            Log.i("SCANNERBAR", d);
+                        }
+                        data = bc.split(",")[0];
+                    }
+
+                    bc = data != null ? data : bc;
+
                     Intent i = new Intent(Camera.this, genated.class);
                     i.putExtra("codigo", bc);
                     i.putExtra("camera", true);

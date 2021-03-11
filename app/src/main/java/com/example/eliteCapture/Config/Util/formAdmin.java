@@ -16,6 +16,7 @@ import com.example.eliteCapture.Config.Util.Controls.AUT_DES_CBX;
 import com.example.eliteCapture.Config.Util.Controls.CBE;
 import com.example.eliteCapture.Config.Util.Controls.DPV;
 import com.example.eliteCapture.Config.Util.Controls.ETN_ETA;
+import com.example.eliteCapture.Config.Util.Controls.JSO;
 import com.example.eliteCapture.Config.Util.Controls.RB;
 import com.example.eliteCapture.Config.Util.Controls.RS_RSE_RSC;
 import com.example.eliteCapture.Config.Util.Controls.SCA_FIL;
@@ -104,7 +105,7 @@ public class formAdmin {
 
             for (RespuestasTab r : lista) {
                 View v;
-                switch (r.getTipo()) {
+                switch (r.getTipo().trim()) {
                     case "CBE":// desplegable con editor de texto numerico
                         v = new CBE(context, ubicacion, r, path, inicial).crear();
                         break;
@@ -122,7 +123,6 @@ public class formAdmin {
                     case "FIN":// campo busqueda con teclado numerico
                     case "SCA":// scanner busqueda con teclado alfanumerico
                     case "SCN":// scanner busqueda con teclado numerico
-                    case "SCP":// scanner busqueda con boton para la navegacion del plano cultivo
                         v = new SCA_FIL(context, ubicacion, r, path, inicial).crear();
                         break;
                     case "AUT":// autocompletable con teclado alfanumerico
@@ -139,6 +139,9 @@ public class formAdmin {
                     case "TIM"://timepcker
                     case "FEC"://datepcker
                         v = new TIM_FEC(context, ubicacion, r, path, inicial).crear();
+                        break;
+                     case "JSO":// scanner, busqueda y navegacion de json
+                        v = new JSO(context, ubicacion, r, path, inicial).crear();
                         break;
                     default:
                         v = noCreate(r.getTipo());// El campo asignado en la base no existe

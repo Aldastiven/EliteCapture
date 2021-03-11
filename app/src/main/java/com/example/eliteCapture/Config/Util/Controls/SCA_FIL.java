@@ -80,6 +80,7 @@ public class SCA_FIL implements Serializable {
 
             return contenedorCamp;
         }catch (Exception e){
+            Log.i("ErrorCapm",e.toString());
             return new GIDGET(context, "", null, path).problemCamp(rt.getTipo(), e.toString());
         }
     }
@@ -106,29 +107,30 @@ public class SCA_FIL implements Serializable {
     }
 
     public View campo(){
-        String res = rt.getValor()+"causa";
+        try {
+            String res = rt.getValor() + "causa";
 
-        camp = (EditText) pp.campoEdtable("Edit", "grisClear");
-        camp.setText(!res.equals("causanull") ? rt.getValor() : "");
-        camp.setLayoutParams(params((float) 0.5));
-        if(rt.getTipo().equals("SCN") || rt.getTipo().equals("FIN")) camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
+            camp = (EditText) pp.campoEdtable("Edit", "grisClear");
+            camp.setText(!res.equals("causanull") ? rt.getValor() : "");
+            camp.setLayoutParams(params((float) 0.5));
+            if (rt.getTipo().equals("SCN") || rt.getTipo().equals("FIN")) {
+                camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
+            }
 
-        Button btn = btnTipo();
-        btn.setLayoutParams(params((float) 1.5));
+            Button btn = btnTipo();
+            btn.setLayoutParams(params((float) 1.5));
 
-        LinearLayout line = ca.container();
-        line.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout line = ca.container();
+            line.setOrientation(LinearLayout.HORIZONTAL);
+            line.addView(camp);
+            line.addView(btn);
 
-        if(rt.getTipo().equals("SCP")){
-            Button btnNav = (Button) pp.boton("Navegar", "verde");
-            BtnStarNavegation(btnNav);
-            line.addView(btnNav);
+            funCamp();
+            return line;
+        }catch (Exception e){
+            Log.i("ErrorCapm",e.toString());
+            return ca.container();
         }
-        line.addView(camp);
-        line.addView(btn);
-
-        funCamp();
-        return line;
     }
 
     public Button btnTipo(){
