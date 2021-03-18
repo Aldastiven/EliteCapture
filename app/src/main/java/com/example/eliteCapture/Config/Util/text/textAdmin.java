@@ -38,7 +38,7 @@ public class textAdmin {
 
     public LinearLayout text(String titulo, int sixe1, String dato, int sixe2){
 
-        LinearLayout.LayoutParams ltext = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams ltext = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
         TextView tit = new TextView(context);
         tit.setText(titulo);

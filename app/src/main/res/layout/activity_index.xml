@@ -89,15 +89,16 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_weight="6.5"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0sp">
 
         <ScrollView
+            android:id="@+id/scrollMenu"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
             android:paddingTop="10sp">
 
@@ -106,14 +107,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_alignParentBottom="true"
-                >
-
-            </LinearLayout>
-
+                android:layout_alignParentBottom="true"/>
         </ScrollView>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/floatingServer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:tint="#000000"
+            android:background="@drawable/circle"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="onActualizar"/>
+    </RelativeLayout>
 
     <Button
         android:layout_width="match_parent"

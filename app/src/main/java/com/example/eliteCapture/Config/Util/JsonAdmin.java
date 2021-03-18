@@ -1,6 +1,5 @@
 package com.example.eliteCapture.Config.Util;
 
-
 import android.util.Log;
 
 import java.io.BufferedReader;

@@ -18,6 +18,7 @@ import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
+import com.example.eliteCapture.Model.Data.iJsonPlan;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -37,7 +38,7 @@ public class splash_activity extends AppCompatActivity {
   LinearLayout noti;
   String path = null, carga;
 
-  int intance = 0000;
+  int intance = 0000, idUsuario;
 
   textAdmin ta;
 
@@ -78,6 +79,8 @@ public class splash_activity extends AppCompatActivity {
 
   public int screen(){
     Bundle b = getIntent().getExtras();
+    idUsuario = b != null ? b.getInt("idUsuario",0) : 0;
+    Log.i("getIdUsuario", ""+idUsuario);
     return b != null ? b.getInt("redireccion",0) : 0;
   }
 
@@ -92,7 +95,7 @@ public class splash_activity extends AppCompatActivity {
   }
 
   public void intent(int s){
-    Intent i = new Intent(this, Login.class);
+    Intent i = new Intent(this, s == 1 || s == 0 ? Login.class : Index.class);
     startActivity(i);
   }
 
@@ -118,6 +121,11 @@ public class splash_activity extends AppCompatActivity {
       if (bundle != null) {
         String code = bundle.getString("class");
         carga = bundle.getString("carga");
+        idUsuario = bundle.getInt("idUsuario");
+
+
+        Toast.makeText(this, ""+idUsuario, Toast.LENGTH_SHORT).show();
+
         if (code.equals("Index")) {
           act = Index.class;
         } else if(code.equals("Login")){
@@ -149,6 +157,8 @@ public class splash_activity extends AppCompatActivity {
         this.context = context;
         Status = status;
 
+        Log.i("descargaDatos","descargando...");
+
         String onLine = admin.getOnline().all();
         if (onLine.isEmpty() || onLine.equals("no existe")) {
           admin.getOnline().local("offLine");
@@ -177,10 +187,18 @@ public class splash_activity extends AppCompatActivity {
       try {
 
         if(carga.equals("BajarDatos")){
-          obtenerUsuarios();
-          obtenerProcesos();
-          obtenerDetalles();
-          obtenerDesplegables();
+
+          if(screen() == 1) {
+            obtenerUsuarios();
+            obtenerProcesos();
+            obtenerDetalles();
+            obtenerDesplegables();
+          }
+          if(screen() == 2){
+            Log.i("descargaDatos","descargando... plano");
+            obtenerPlano();
+          }
+
         }else{
           enviarPendientes();
           recargarSession();
@@ -189,6 +207,14 @@ public class splash_activity extends AppCompatActivity {
         temporizador(screen(), 3000);
       } catch (Exception ex) {
         Log.i("Error Splash Carge", ex.toString());
+      }
+    }
+
+    private void obtenerPlano(){
+      try{
+        new iJsonPlan(path, idUsuario, cn).local();
+      }catch (Exception e){
+        Log.i("Error Splash Carge", e.toString());
       }
     }
 

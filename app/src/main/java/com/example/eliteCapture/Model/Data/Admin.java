@@ -19,6 +19,7 @@ public class Admin implements Administrador {
     private Usuario usu = null;
     private idespVariedades var = null;
     private ionLine online = null;
+    private iJsonPlan iJsonP = null;
 
 
     public Admin(Connection con, String path) {
@@ -70,5 +71,12 @@ public class Admin implements Administrador {
             online = new ionLine(path);
         }
         return online;
+    }
+
+    public iJsonPlan getjsonPlan() throws Exception{
+        if(iJsonP == null){
+            iJsonP = new iJsonPlan(path);
+        }
+        return iJsonP;
     }
 }

@@ -95,7 +95,7 @@ public class Index extends AppCompatActivity {
             usu = new Gson().fromJson(sp.getString("usuario", ""), new TypeToken<UsuarioTab>() {
             }.getType());
 
-            txtPaneluser.setText("Usuario : " + usu.getNombre_usuario());
+            txtPaneluser.setText("Usuario : " + usu.getNombre_usuario()+"\n idUsuario : "+usu.getId_usuario());
         } catch (Exception ex) {
             Toast.makeText(this, "Se genero un error al traer los datos del usuario \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
         }
@@ -179,6 +179,9 @@ public class Index extends AppCompatActivity {
     public void onActualizar(View v) {
         Intent i = new Intent(Index.this, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.putExtra("class", "Index");
+        i.putExtra("idUsuario", usu.getId_usuario());
+        i.putExtra("redireccion", 2);
+        i.putExtra("carga", "BajarDatos");
 
         startActivity(i);
         linearCheck.removeAllViews();
@@ -186,5 +189,4 @@ public class Index extends AppCompatActivity {
 
     public void onBackPressed() {
     }
-
 }

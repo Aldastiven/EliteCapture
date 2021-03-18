@@ -1,24 +1,37 @@
 package com.example.eliteCapture.Config.Util.Controls;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eliteCapture.Camera;
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
+import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
+
+import com.example.eliteCapture.Model.Data.iJsonPlan;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
+import com.example.eliteCapture.R;
+import com.google.gson.JsonSyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.Iterator;
 
 public class JSO {
     RespuestasTab rt;
@@ -29,8 +42,13 @@ public class JSO {
     LinearLayout contenedorCamp, LineRespuesta;
     TextView respuestaPonderado;
     boolean vacio, initial, pintada = false;
+    Dialog dialog;
+    ProgressDialog progress;
+    CargarXmlTask c;
 
     String ubicacion, path;
+
+    iJsonPlan ipl;
 
     public JSO(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
         this.context = context;
@@ -45,6 +63,7 @@ public class JSO {
         ca = new containerAdmin(context);
         pp = new GIDGET(context, ubicacion, rt, path);
         ta = new textAdmin(context);
+        ipl = new iJsonPlan(path);
 
         LineRespuesta = (LinearLayout) pp.resultadoFiltro();
 
@@ -105,11 +124,14 @@ public class JSO {
         btn.setOnClickListener(v -> {
             switch (btn.getId()){
                 case 1 :
-                    Toast.makeText(context, "llego escanner", Toast.LENGTH_SHORT).show();
                     BtnStarCamera();
                     break;
                 case 2 :
-                    Toast.makeText(context, "llego navegacion", Toast.LENGTH_SHORT).show();
+                    c = new CargarXmlTask();
+                    c.execute();
+                    new Handler().postDelayed(() -> {
+                        dialog();
+                    }, 1000);
                     break;
             }
         });
@@ -153,6 +175,166 @@ public class JSO {
             context.startActivity(i);
         } catch (Exception ex) {
             Toast.makeText(context, "Ocurrio un error \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void dialog(){
+        try {
+
+        View v;
+        try {
+            dialog = new Dialog(context, R.style.TransparentDialog);
+            LinearLayout linear = ca.container();
+            String data = new JsonAdmin().ObtenerLista(path, "siembraJson");
+            JSONArray jarr = new JSONArray(data);
+            for (int i = 0; i < jarr.length(); i++) {
+                parseJson(jarr.getJSONObject(i), linear);
+            }
+            v = linear;
+        } catch (Exception e) {
+            Log.i("JSOError", "" + e.toString());
+            v = ta.textColor("ErrorJSON : " + e.toString(), "rojo", 15, "c");
+        }
+        dialog.setContentView(ca.scrollv(v));
+        dialog.show();
+
+        c.cancel(true);
+        progress.dismiss();
+        }catch (Exception e){
+            Log.i("JSOError", "" + e.toString());
+        }
+    }
+
+    private class CargarXmlTask extends AsyncTask<String,Integer,Boolean> {
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progress = new ProgressDialog(context);
+            progress.setMessage("Cargando datos, espere un momento por favor...");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.setProgress(0);
+            progress.setCancelable(false);
+            progress.show();
+        }
+    }
+
+
+    public void parseJson(JSONObject data, LinearLayout container){
+        try {
+            container.setPadding(10,10,0,10);
+            if (data != null) {
+                Iterator<String> it = data.keys();
+
+                while (it.hasNext()) {
+                    String key = it.next();
+
+                    if (data.get(key) instanceof JSONArray) {
+                        //se obtiene un array de objetos
+                        TextView v = (TextView) ta.textColor("", "darkGray", 15, "l");
+                        container.addView(v);
+
+                        LinearLayout line2 = ca.borderGradient("#D7DBDD");
+                        line2.setVisibility(View.GONE);
+                        v.setText("{}"+key+(line2.getChildCount() > 0 ? "▼" : "▲"));
+
+                        v.setOnClickListener(x -> {
+                            try{
+                                if(line2.getVisibility() == View.GONE) {
+                                    LinearLayout.LayoutParams p = ca.params();
+                                    p.setMargins(25, 0, 0, 0);
+                                    line2.setLayoutParams(p);
+
+                                    JSONArray arry = data.getJSONArray(key);
+                                    for (int i = 0; i < arry.length(); i++) {
+                                        parseJson(arry.getJSONObject(i), line2);
+                                    }
+                                    line2.setVisibility(View.VISIBLE);
+                                }else{
+                                    line2.removeAllViews();
+                                    line2.setVisibility(View.GONE);
+                                }
+                            }catch (JsonSyntaxException e){
+                            }catch (Exception e){
+                             Log.i("datosJson", e.toString());
+                            }
+                            v.setText("{}"+key+(line2.getChildCount() > 0 ? "▼" : "▲"));
+                        });
+                        container.addView(line2);
+                    }else {
+                        String dataJson = key + " : " + data.getString(key);
+                        View v = ta.textColor(dataJson, "darkGray", 15, "l");
+                        container.addView(v);
+
+                        v.setOnClickListener(x -> {
+                            try {
+                                Boolean b = false;
+                                JSONArray jarr = new JSONArray("["+data+"]");
+                                for(int i = 0; i < jarr.length(); i++){
+                                    Iterator<String> ij = jarr.getJSONObject(i).keys();
+                                    while (ij.hasNext()) {
+                                        String keyx = ij.next();
+                                        if (jarr.getJSONObject(i).get(keyx) instanceof JSONArray) {
+                                            b = true;
+                                        }
+                                    }
+                                }
+
+                                if(!b){
+                                    dialogPanel(jarr, data.length());
+                                }
+                            }catch (Exception e){
+                             Log.i("dataJson", ""+e.toString());
+                            }
+                        });
+                    }
+                }
+            }
+        } catch (Exception  e) {
+            Log.i("datosJson", e.toString());
+        }
+    }
+
+    public void dialogPanel(JSONArray jarr, int size){
+        try {
+            dialog.dismiss();
+
+            LinearLayout linePanel1 = ca.container();
+            linePanel1.setPadding(5,0,0,0);
+
+            LinearLayout linePanel2 = ca.container();
+            linePanel2.setPadding(0,0,0,0);
+
+            for(int j = 0; j < jarr.length(); j++){
+                Iterator<String> ij = jarr.getJSONObject(j).keys();
+                int i = 0;
+                while (ij.hasNext()) {
+                    String keyx = ij.next();
+                    Object data = jarr.getJSONObject(j).get(keyx);
+                    if(i < (size/2)){
+                        linePanel1.addView(ta.text(keyx +" : ", 14, data.toString(), 14));
+                    }else {
+                        linePanel2.addView(ta.text(keyx +" : ", 14, data.toString(), 14));
+                    }
+                    i++;
+                }
+            }
+
+            LinearLayout line = new LinearLayout(context);
+            line.setLayoutParams(ca.params3());
+            line.setOrientation(LinearLayout.HORIZONTAL);
+
+            line.addView(linePanel1);
+            line.addView(linePanel2);
+
+            dialog.setContentView(ca.scrollv(line));
+            dialog.show();
+        }catch (Exception e){
+            Log.i("dataJson", "Error : "+e.toString());
         }
     }
 }
