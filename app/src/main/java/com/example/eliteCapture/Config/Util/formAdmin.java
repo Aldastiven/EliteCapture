@@ -40,6 +40,7 @@ public class formAdmin {
     String path;
     Boolean inicial;
     Dialog popregla;
+    boolean JSO = false;
 
     iContenedor iCon;
 
@@ -53,7 +54,7 @@ public class formAdmin {
 
     int estado = 1, consecutivo;
 
-    public formAdmin(LinearLayout linearPrinc,LinearLayout linearBodypop, Context context, String path, Boolean inicial, int estado, int consecutivo) {
+    public formAdmin(LinearLayout linearPrinc,LinearLayout linearBodypop, Context context, String path, Boolean inicial, int estado, int consecutivo, boolean JSO) {
         try {
             this.linearPrinc = linearPrinc;
             this.linearBodypop = linearBodypop;
@@ -62,6 +63,7 @@ public class formAdmin {
             this.inicial = inicial;
             this.estado = estado;
             this.consecutivo = consecutivo;
+            this.JSO = JSO;
             sp = context.getSharedPreferences("share", context.MODE_PRIVATE);
             adm = new Admin(null, path);//administra la conexion de las entidades
 
@@ -140,7 +142,7 @@ public class formAdmin {
                         v = new TIM_FEC(context, ubicacion, r, path, inicial).crear();
                         break;
                      case "JSO":// scanner, busqueda y navegacion de json
-                        v = new JSO(context, ubicacion, r, path, inicial).crear();
+                        v = new JSO(context, ubicacion, r, path, inicial, JSO).crear();
                         break;
                     default:
                         v = noCreate(r.getTipo());// El campo asignado en la base no existe

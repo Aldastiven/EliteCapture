@@ -26,6 +26,7 @@ import com.example.eliteCapture.Model.Data.iJsonPlan;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.R;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +34,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class JSO {
     RespuestasTab rt;
@@ -42,7 +46,8 @@ public class JSO {
     Context context;
     LinearLayout contenedorCamp, LineRespuesta;
     TextView respuestaPonderado;
-    boolean vacio, initial, pintada = false;
+    EditText campConteo;
+    boolean vacio, initial, pintada = false, dialogPanel;
     Dialog dialog;
     ProgressDialog progress;
     CargarXmlTask c;
@@ -51,13 +56,14 @@ public class JSO {
 
     iJsonPlan ipl;
 
-    public JSO(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial) {
+    public JSO(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial, boolean dialogPanel) {
         this.context = context;
         this.rt = rt;
         this.ubicacion = ubicacion;
         this.path = path;
         this.vacio = rt.getRespuesta() != null;
         this.initial = initial;
+        this.dialogPanel = dialogPanel;
 
         ca = new containerAdmin(context);
         ta = new textAdmin(context);
@@ -84,6 +90,22 @@ public class JSO {
             contenedorCamp.addView(campo());
             pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
+            dialog = new Dialog(context, R.style.TransparentDialog);
+
+            if(dialogPanel){
+                try {
+                    String data = new JsonAdmin().ObtenerLista(path, "siembraJson");
+                    JSONArray jarr = new JSONArray(data);
+                    for (int i = 0; i < jarr.length(); i++) {
+                       if ( filterParseJson(jarr.getJSONObject(i), true) ){
+                           break;
+                        }
+                    }
+                }catch (Exception e){
+                    Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
             return contenedorCamp;
         }catch (Exception e){
             Log.i("ErrorCapm",e.toString());
@@ -96,7 +118,7 @@ public class JSO {
         line.setOrientation(LinearLayout.HORIZONTAL);
         line.setWeightSum(3);
 
-        EditText campConteo = (EditText) pp.campoEdtable("Edit", "grisClear");
+        campConteo = (EditText) pp.campoEdtable("Edit", "grisClear");
         campConteo.setLayoutParams(params( rt.getTipo().equals("RSE") ? (float) 0.7 : (float) 1));
         campConteo.setText(vacio ? rt.getValor() : "");
         campConteo.setTextSize(15);
@@ -109,6 +131,9 @@ public class JSO {
         line.addView(campConteo);
         line.addView(btnNav);
         return line;
+    }
+
+    public void funCamp(){
     }
 
     public Button getButton(String d, int id){
@@ -184,7 +209,6 @@ public class JSO {
 
         View v;
         try {
-            dialog = new Dialog(context, R.style.TransparentDialog);
             LinearLayout linear = ca.container();
             String data = new JsonAdmin().ObtenerLista(path, "siembraJson");
             JSONArray jarr = new JSONArray(data);
@@ -319,7 +343,7 @@ public class JSO {
                                 }
 
                                 if(!b){
-                                    dialogPanel(jarr, data.length());
+                                    dialogPanel(jarr);
                                 }else{
                                     if(line2.getVisibility() == View.GONE) {
                                         line2.setVisibility(View.VISIBLE);
@@ -347,9 +371,12 @@ public class JSO {
         }
     }
 
-    public void dialogPanel(JSONArray jarr, int size){
+    @SuppressLint("ResourceType")
+    public void dialogPanel(JSONArray jarr){
         try {
-            dialog.dismiss();
+            if(dialog.isShowing()){
+                dialog.dismiss();
+            }
 
             LinearLayout linePanel1 = ca.container();
             linePanel1.setPadding(5,0,0,0);
@@ -357,13 +384,18 @@ public class JSO {
             LinearLayout linePanel2 = ca.container();
             linePanel2.setPadding(0,0,0,0);
 
-            for(int j = 0; j < jarr.length(); j++){
+            String dataInfo = "";
+
+             for(int j = 0; j < jarr.length(); j++){
                 Iterator<String> ij = jarr.getJSONObject(j).keys();
                 int i = 0;
                 while (ij.hasNext()) {
                     String keyx = ij.next();
                     Object data = jarr.getJSONObject(j).get(keyx);
                     if(!keyx.equals("Header")) {
+                        if(i == 1){
+                            dataInfo = data.toString();
+                        }
                         if (!(i % 2 == 0)) {
                             linePanel1.addView(ta.text(keyx + " : ", 14, data.toString(), 14));
                         } else {
@@ -374,17 +406,116 @@ public class JSO {
                 }
             }
 
+            LinearLayout linePrincipal = new LinearLayout(context);
+            linePrincipal.setLayoutParams(ca.params3());
+            linePrincipal.setOrientation(LinearLayout.VERTICAL);
+
             LinearLayout line = new LinearLayout(context);
             line.setLayoutParams(ca.params3());
             line.setOrientation(LinearLayout.HORIZONTAL);
 
+
             line.addView(linePanel1);
             line.addView(linePanel2);
 
-            dialog.setContentView(ca.scrollv(line));
+
+            LinearLayout lineFoot = ca.container();
+            lineFoot.setLayoutParams(ca.params2());
+            lineFoot.setOrientation(LinearLayout.HORIZONTAL);
+            lineFoot.setWeightSum(2);
+
+            LinearLayout.LayoutParams params = ca.params2();
+            params.weight = 1;
+
+            Button btnCancelar = (Button) pp.boton("Cancelar", "gris");
+            btnCancelar.setId(1);
+            btnCancelar.setLayoutParams(params);
+
+            Button btnAceptar = (Button) pp.boton("Aceptar", "verde");
+            btnAceptar.setId(0);
+            btnAceptar.setLayoutParams(params);
+
+            funModalInfo(btnCancelar, "");
+            funModalInfo(btnAceptar, dataInfo);
+
+            lineFoot.addView(btnCancelar);
+            lineFoot.addView(btnAceptar);
+
+            linePrincipal.addView(line);
+            linePrincipal.addView(lineFoot);
+
+            dialog.setContentView(ca.scrollv(linePrincipal));
             dialog.show();
         }catch (Exception e){
             Log.i("dataJson", "Error : "+e.toString());
         }
+    }
+
+    public void funModalInfo(Button btn, String data){
+        btn.setOnClickListener(v -> {
+            switch (btn.getId()){
+                case 0 :
+                    campConteo.setText(data);
+                    dialog.dismiss();
+                    break;
+                case 1 :
+                    campConteo.setText("");
+                    dialog.dismiss();
+                    break;
+            }
+        });
+    }
+
+    public boolean filterParseJson(JSONObject data, boolean buscar){
+        Boolean b = false;
+        try {
+            String dataCama = "no encontro";
+            if (data != null && buscar) {
+                Iterator<String> it = data.keys();
+                while (it.hasNext()) {
+                    String key = it.next();
+                    if (data.get(key) instanceof JSONArray && !b) {
+                        JSONArray arry = data.getJSONArray(key);
+                        for (int i = 0; i < arry.length(); i++) {
+                            b = filterParseJson(arry.getJSONObject(i), true);
+                            if(b) {
+                                Log.i("JSO", "Encontro efectivamente");
+                                b = true;
+                                break;
+                            }
+                        }
+                    }else {
+
+                        JSONArray jarr = new JSONArray("["+data+"]");
+                        for(int i = 0; i < jarr.length(); i++){
+                            Iterator<String> ij = jarr.getJSONObject(i).keys();
+                            while (ij.hasNext()) {
+                                String keyx = ij.next();
+                                if(jarr.getJSONObject(i).get(keyx).toString().equals(campConteo.getText().toString())){
+                                    //AQUI ENCUENTRA EL RESULTADO
+                                    dataCama = jarr.getJSONObject(i).get(keyx).toString();
+
+                                    dialogPanel(jarr);
+
+                                    Log.i("JSONDATA","encontro la cama : "+dataCama);
+                                    b = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if(b){
+                        filterParseJson(null, false);
+                        break;
+                    }
+                }
+            }else{
+                Log.i("JSONDATA","termino el proceso de busqueda : "+dataCama);
+            }
+        } catch (Exception  e) {
+            Log.i("datosJson", e.toString());
+        }
+        return b;
     }
 }

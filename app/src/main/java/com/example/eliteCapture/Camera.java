@@ -1,7 +1,9 @@
 package com.example.eliteCapture;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,6 +36,8 @@ public class Camera extends AppCompatActivity implements Serializable {
     RespuestasTab rt;
 
     SharedPreferences sp;
+
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -73,12 +77,16 @@ public class Camera extends AppCompatActivity implements Serializable {
         @Override
         public void handleResult(Result rawResult) {
             try {
+                new CargarXmlTask().execute();
+
                 String bc = rawResult.getContents();
                 String format = rawResult.getBarcodeFormat().getName();
                 //CODE128
                 //QRCODE
                 if (bc != null) {
                     Log.i("SCANNERBAR", bc);
+
+
 
                     String data = null;
                     if(format.equals("QRCODE")){
@@ -161,6 +169,29 @@ public class Camera extends AppCompatActivity implements Serializable {
         String cadena;
         cadena = respuesta;
         return cadena.substring(0, cadena.length() - n);
+    }
+
+    private class CargarXmlTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            publishProgress();
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progress = new ProgressDialog(Camera.this);
+            progress.setMessage("Analizando datos, espere un momento por favor...");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(false);
+            progress.setCancelable(false);
+            progress.show();
+        }
+
+        protected void onProgressUpdate (String... strings) {
+            Log.i("AsyncClass", strings[0]);
+            progress.setMessage(strings[0]);
+        }
     }
 
 }

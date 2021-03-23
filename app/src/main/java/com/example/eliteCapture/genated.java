@@ -17,12 +17,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.eliteCapture.Config.Util.Controls.JSO;
 import com.example.eliteCapture.Config.Util.formAdmin;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.Data.ionLine;
 import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
+import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContador;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.google.gson.Gson;
@@ -56,11 +58,13 @@ public class genated extends AppCompatActivity {
 
     String path = null, dataCamera;
     int contConsec = 0;
-    boolean camera, inicial = true , ok, temporal, footer;
+    boolean camera, inicial = true , ok, temporal, footer, JSO = false;
 
     formAdmin formA;
     Admin adm = null;
     SharedPreferences sp = null;
+
+    RespuestasTab rt = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +107,7 @@ public class genated extends AppCompatActivity {
                 camera = bundle.getBoolean("camera");
                 dataCamera = bundle.getString("codigo");
                 String ubicacion = bundle.getString("ubicacion");
+                rt = (RespuestasTab) getIntent().getSerializableExtra("respuestaTab");
                 ok = true;
                 crearform();
 
@@ -128,6 +133,24 @@ public class genated extends AppCompatActivity {
 
     }
 
+    @Override protected void onResume() {
+        super.onResume();
+        Log.i("cycleLife", "onResume");
+
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null) {
+            camera = bundle.getBoolean("camera");
+            rt = (RespuestasTab) getIntent().getSerializableExtra("respuestaTab");
+        }
+
+        if(rt != null && rt.getTipo().equals("JSO")){
+            Log.i("cycleLife", "llego respuesta data : "+rt.getTipo());
+            JSO = true;
+        }
+        crearform();
+    }
+
     public void cargarContador() {
         EncabTitulo.setText(" "+pro.getNombre_proceso());//asigna el nombre del encabezado
         contConsec = contador.getCantidad(usu.getId_usuario(), pro.getCodigo_proceso()) + 1;
@@ -146,7 +169,8 @@ public class genated extends AppCompatActivity {
 
     public void crearform() {
         try {
-            formA = new formAdmin(linearPrinc, linearBodypop,this, path, inicial, 0, 0);
+            Log.i("cycleLife", "llego a crear formulario");
+            formA = new formAdmin(linearPrinc, linearBodypop,this, path, inicial, 0, 0, JSO);
             CrearEncabezado();
             CrearCuerpo();
         } catch (Exception ex) {
@@ -156,6 +180,7 @@ public class genated extends AppCompatActivity {
     }
 
     public void CrearEncabezado() {
+        linearBodypop.removeAllViews();
         formA.CrearForm("H");
     }
 
