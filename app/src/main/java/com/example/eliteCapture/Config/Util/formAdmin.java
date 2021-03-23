@@ -51,7 +51,6 @@ public class formAdmin {
     Admin adm = null;
     containerAdmin contAdmin;
 
-    boolean temporal;
     int estado = 1, consecutivo;
 
     public formAdmin(LinearLayout linearPrinc,LinearLayout linearBodypop, Context context, String path, Boolean inicial, int estado, int consecutivo) {

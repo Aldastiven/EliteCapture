@@ -94,6 +94,7 @@ public class Camera extends AppCompatActivity implements Serializable {
                     i.putExtra("codigo", bc);
                     i.putExtra("camera", true);
                     i.putExtra("ubicacion", ubicacion);
+                    i.putExtra("respuestaTab", rt);
 
                     registro(bc);
 

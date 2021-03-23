@@ -25,7 +25,7 @@ import static com.example.eliteCapture.R.drawable.bordercontainerred;
 public class GIDGET {
 
     Context context;
-    String ubicacion, path;
+    String ubicacion;
     RespuestasTab rt;
 
     textAdmin ta;

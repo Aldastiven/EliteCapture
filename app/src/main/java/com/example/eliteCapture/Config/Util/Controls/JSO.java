@@ -25,6 +25,7 @@ import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.iJsonPlan;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.R;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonSyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -205,9 +206,10 @@ public class JSO {
         }
     }
 
-    private class CargarXmlTask extends AsyncTask<String,Integer,Boolean> {
+    private class CargarXmlTask extends AsyncTask<Void, Void, Void> {
         @Override
-        protected Boolean doInBackground(String... strings) {
+        protected Void doInBackground(Void... params) {
+            publishProgress();
             return null;
         }
 
@@ -216,13 +218,16 @@ public class JSO {
             progress = new ProgressDialog(context);
             progress.setMessage("Cargando datos, espere un momento por favor...");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progress.setIndeterminate(true);
-            progress.setProgress(0);
+            progress.setIndeterminate(false);
             progress.setCancelable(false);
             progress.show();
         }
-    }
 
+        protected void onProgressUpdate (String... strings) {
+            Log.i("AsyncClass", strings[0]);
+            progress.setMessage(strings[0]);
+        }
+    }
 
     public void parseJson(JSONObject data, LinearLayout container){
         try {
@@ -230,15 +235,21 @@ public class JSO {
             if (data != null) {
                 Iterator<String> it = data.keys();
 
+                int paso = 0;
+
+                LinearLayout lineCamp = ca.card(ca.container(), "#EAEDED");
+                lineCamp.setOrientation(LinearLayout.VERTICAL);
+                lineCamp.removeAllViews();
+
                 while (it.hasNext()) {
                     String key = it.next();
+                    LinearLayout line2 = ca.borderGradient("#D7DBDD");
 
                     if (data.get(key) instanceof JSONArray) {
                         //se obtiene un array de objetos
                         TextView v = (TextView) ta.textColor("", "darkGray", 15, "l");
-                        container.addView(v);
+                        lineCamp.addView(v);
 
-                        LinearLayout line2 = ca.borderGradient("#D7DBDD");
                         line2.setVisibility(View.GONE);
                         v.setText("{}"+key+(line2.getChildCount() > 0 ? "▼" : "▲"));
 
@@ -264,11 +275,33 @@ public class JSO {
                             }
                             v.setText("{}"+key+(line2.getChildCount() > 0 ? "▼" : "▲"));
                         });
-                        container.addView(line2);
                     }else {
+
+                        Boolean b2 = false;
+                        JSONArray jarr2 = new JSONArray("["+data+"]");
+                        for(int i = 0; i < jarr2.length(); i++){
+                            Iterator<String> ij = jarr2.getJSONObject(i).keys();
+                            while (ij.hasNext()) {
+                                String keyx = ij.next();
+                                if (jarr2.getJSONObject(i).get(keyx) instanceof JSONArray) {
+                                    b2 = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        View v = null;
                         String dataJson = key + " : " + data.getString(key);
-                        View v = ta.textColor(dataJson, "darkGray", 15, "l");
-                        container.addView(v);
+                        if(!b2){
+                            if(key.equals("Header")) {
+                                v = ca.card(ta.textColor(dataJson.split(":")[1], "darkGray", 15, "c"), "#58D68D");
+                                container.addView(v);
+                            }
+                        }else{
+                            v = ta.textColor(dataJson, "darkGray", 15, "l");
+
+                            lineCamp.addView(v);
+                        }
 
                         v.setOnClickListener(x -> {
                             try {
@@ -280,19 +313,34 @@ public class JSO {
                                         String keyx = ij.next();
                                         if (jarr.getJSONObject(i).get(keyx) instanceof JSONArray) {
                                             b = true;
+                                            break;
                                         }
                                     }
                                 }
 
                                 if(!b){
                                     dialogPanel(jarr, data.length());
+                                }else{
+                                    if(line2.getVisibility() == View.GONE) {
+                                        line2.setVisibility(View.VISIBLE);
+                                    }else{
+                                        line2.removeAllViews();
+                                        line2.setVisibility(View.GONE);
+                                    }
                                 }
                             }catch (Exception e){
                              Log.i("dataJson", ""+e.toString());
                             }
                         });
                     }
+                    if(lineCamp.getChildCount() == 3) {
+                        container.addView(lineCamp);
+                        container.addView(line2);
+                    }
                 }
+
+                Log.i("KEY", "PASO : " + (paso + 1));
+                c.onProgressUpdate("cargo finca");
             }
         } catch (Exception  e) {
             Log.i("datosJson", e.toString());
@@ -315,10 +363,12 @@ public class JSO {
                 while (ij.hasNext()) {
                     String keyx = ij.next();
                     Object data = jarr.getJSONObject(j).get(keyx);
-                    if(i < (size/2)){
-                        linePanel1.addView(ta.text(keyx +" : ", 14, data.toString(), 14));
-                    }else {
-                        linePanel2.addView(ta.text(keyx +" : ", 14, data.toString(), 14));
+                    if(!keyx.equals("Header")) {
+                        if (!(i % 2 == 0)) {
+                            linePanel1.addView(ta.text(keyx + " : ", 14, data.toString(), 14));
+                        } else {
+                            linePanel2.addView(ta.text(keyx + " : ", 14, data.toString(), 14));
+                        }
                     }
                     i++;
                 }

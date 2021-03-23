@@ -101,6 +101,7 @@ public class textAdmin {
                 break;
             case "darkGray":
                 C = Color.parseColor("#154360");
+                break;
         }
         return C;
     }
