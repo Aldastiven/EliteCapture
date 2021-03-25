@@ -38,7 +38,7 @@ import java.util.Set;
 
 public class Index extends AppCompatActivity {
     LinearLayout linearCheck, titulodata;
-    TextView txtPaneluser, txtELige, txtUpdateData;
+    TextView txtPaneluser, txtELige;
     RelativeLayout contenUser;
 
     public String path = null;
@@ -71,7 +71,6 @@ public class Index extends AppCompatActivity {
 
             admin = new Admin(null, path);
             contenedor = new iContenedor(path);
-            historico = new iHistorico(path);
 
             traerDataUser();
             traerFechaUpDate();
@@ -79,11 +78,6 @@ public class Index extends AppCompatActivity {
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), "Error \n" + ex, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void clearHistory(View v){
-        historico.limpiarXfecha(this);
     }
 
     private void traerFechaUpDate() {
@@ -152,12 +146,7 @@ public class Index extends AppCompatActivity {
     public List<ProcesoTab> orderMenu(){
         try {
             List<ProcesoTab> listProceso = admin.getProceso().procesosUsuario(usu.getProcesos());
-            Collections.sort(listProceso, new Comparator<ProcesoTab>() {
-                @Override
-                public int compare(ProcesoTab o1, ProcesoTab o2) {
-                    return o1.getNombre_proceso().compareTo(o2.getNombre_proceso());
-                }
-            });
+            Collections.sort(listProceso, (o1, o2) -> o1.getNombre_proceso().compareTo(o2.getNombre_proceso()));
             return listProceso;
         }catch (Exception e){
             Toast.makeText(this, ""+e.toString(), Toast.LENGTH_SHORT).show();

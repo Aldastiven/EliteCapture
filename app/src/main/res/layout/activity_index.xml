@@ -109,20 +109,9 @@
                 android:orientation="vertical"
                 android:layout_alignParentBottom="true"/>
         </ScrollView>
-
-        <TextView
-            android:id="@+id/floatingServer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:tint="#000000"
-            android:background="@drawable/circle"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:onClick="onActualizar"/>
     </RelativeLayout>
 
-    <Button
+    <!--<Button
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_weight="1"
@@ -130,7 +119,6 @@
         android:onClick="clearHistory"
         android:background="#000000"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
-        />
+        android:textSize="20dp" />-->
 
 </LinearLayout>

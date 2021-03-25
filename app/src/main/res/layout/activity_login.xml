@@ -107,8 +107,8 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/verde"
                 android:text="Ingresar"
+                android:background="@color/verde"
                 android:textSize="20dp"
                 android:layout_margin="1dp"
                 android:paddingVertical="20dp"
@@ -133,7 +133,34 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relContent"
+        android:weightSum="2"
+        android:padding="10px">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1.2"
+            android:layout_height="match_parent"
+            android:text="Trabajando con la finca : "
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/btnDownloadFarms"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:layout_height="match_parent"
+            android:text="Actualizar finca"
+            android:textColor="#ffffff"
+            android:textAllCaps="false"
+            android:background="@color/verde"/>
+
+    </LinearLayout>
+
     <RelativeLayout
+        android:id="@+id/layoutFoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="10dp">

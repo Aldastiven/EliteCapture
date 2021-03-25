@@ -15,7 +15,7 @@ import java.util.List;
 
 public class iJsonPlan {
 
-    String path, nombre = "planJSON";
+    String path, nombre = "planJSON", nameFincas = "planFincas";
     int usuario;
 
     Connection cn;
@@ -43,7 +43,7 @@ public class iJsonPlan {
 
     public boolean local() throws Exception{
         ResultSet rs;
-        String q = "SELECT Area FROM Plano_json_Bloque WHERE codigo = "+usuario;
+        String q = "SELECT Area FROM loginFinca WHERE codigo = "+usuario;
         PreparedStatement ps = cn.prepareStatement(q);
         rs = ps.executeQuery();
 
@@ -52,6 +52,19 @@ public class iJsonPlan {
             data = rs.getString(1) + data;
         }
         return ja.WriteJson(path, nombre, data);
+    }
+
+    public boolean localListFincas() throws Exception{
+        ResultSet rs;
+        String q = "SELECT Area FROM loginFinca WHERE codigo = "+usuario;
+        PreparedStatement ps = cn.prepareStatement(q);
+        rs = ps.executeQuery();
+
+        String data = "";
+        while (rs.next()) {
+            data = rs.getString(1) + data;
+        }
+        return ja.WriteJson(path, nameFincas, data);
     }
 
     public boolean exist(){

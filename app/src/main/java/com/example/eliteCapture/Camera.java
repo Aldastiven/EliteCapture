@@ -187,11 +187,6 @@ public class Camera extends AppCompatActivity implements Serializable {
             progress.setCancelable(false);
             progress.show();
         }
-
-        protected void onProgressUpdate (String... strings) {
-            Log.i("AsyncClass", strings[0]);
-            progress.setMessage(strings[0]);
-        }
     }
 
 }

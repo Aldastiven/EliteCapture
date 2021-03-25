@@ -320,7 +320,7 @@ public class iContenedor implements Contenedor {
                     }
                     ps.executeBatch();
 
-                    ih.insert(c);//agrega el formulario enviado al json historico
+                    //ih.insert(c);//agrega el formulario enviado al json historico
 
                     index++;
                     load++;
@@ -373,7 +373,7 @@ public class iContenedor implements Contenedor {
                     }
                     ps.executeBatch();
                     Log.i("CONSECUTIVO", c.getConsecutivo()+"");
-                    ih.insert(c);//agrega el formulario enviado al json historico
+                    //ih.insert(c);//agrega el formulario enviado al json historico
                     load++;
                 } else {
                 }

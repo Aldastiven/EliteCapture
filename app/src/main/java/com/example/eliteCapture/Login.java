@@ -1,5 +1,6 @@
 package com.example.eliteCapture;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -13,9 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.eliteCapture.Config.Util.Modal.modalServer;
 import com.example.eliteCapture.Config.Util.Modal.modalSetting;
+import com.example.eliteCapture.Config.Util.notification.notificationAdmin;
+import com.example.eliteCapture.Config.Util.permissions.permissionAdmin;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.Data.iSesion;
@@ -46,12 +50,14 @@ public class Login extends AppCompatActivity {
     iContenedor icont;
     iSesion is;
     ionLine ionLine;
+    permissionAdmin pa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_login);
         getSupportActionBar().hide();
+        ;
 
         Screen();
 
@@ -74,6 +80,8 @@ public class Login extends AppCompatActivity {
             icont = new iContenedor(path);
             is = new iSesion(path);
             ionLine = new ionLine(path);
+            pa = new permissionAdmin(this);
+            pa.permissionGrantedCamera();
 
             imgOnline.setBackgroundResource(ionLine.all().equals("onLine") ? ic_wifi_on : ic_wifi_off);
             floatingServer.setCompoundDrawablesWithIntrinsicBounds(icont.pendientesCantidad() > 0 ? ic_cloud_noti : ic_cloud, 0, 0, 0);
@@ -86,41 +94,45 @@ public class Login extends AppCompatActivity {
 
     public void ingresar(View v) throws Exception {
         try {
-            int txt_user = Integer.parseInt(txtUser.getText().toString());
-            int txt_pass = Integer.parseInt(txtPass.getText().toString());
-            Admin admin = new Admin(null, path);
-            UsuarioTab m = admin.getUsuario().login(txt_user, txt_pass);
+            if(pa.getPermissionCamera() == -1){
+                txtError.setText("No tienes permisos en la aplicacion !!!");
+                pa.permissionGrantedCamera();
+            }else {
+                int txt_user = Integer.parseInt(txtUser.getText().toString());
+                int txt_pass = Integer.parseInt(txtPass.getText().toString());
+                Admin admin = new Admin(null, path);
+                UsuarioTab m = admin.getUsuario().login(txt_user, txt_pass);
 
-            if (m != null) {
+                if (m != null) {
 
-                SharedPreferences.Editor edit = sp.edit();
-                String session = admin.getUsuario().json(m);
-                Log.i("Session:", session);
+                    SharedPreferences.Editor edit = sp.edit();
+                    String session = admin.getUsuario().json(m);
+                    Log.i("Session:", session);
 
-                edit.putString("usuario", session);
-                edit.putString("check", "ok");
-                edit.commit();
-                edit.apply();
+                    edit.putString("usuario", session);
+                    edit.putString("check", "ok");
+                    edit.commit();
+                    edit.apply();
 
-                Intent intent = new Intent(this, Index.class);
-                startActivity(intent);
+                    Intent intent = new Intent(this, Index.class);
+                    startActivity(intent);
 
-                guardarUsuario(txt_user, txt_pass, m.getGrupo2());
+                    guardarUsuario(txt_user, txt_pass, m.getGrupo2());
 
-                borrarTemp(m.getId_usuario());
-                new iSesion(path).local(m.getId_usuario());
+                    borrarTemp(m.getId_usuario());
+                    new iSesion(path).local(m.getId_usuario());
 
-            } else if (m == null) {
-                txtUser.setBackgroundResource(bordercontainerred);
-                txtPass.setBackgroundResource(bordercontainerred);
-                txtError.setText("Identificación o contraseña incorrectas !!!");
-                new iSesion(path).local(0000);
+                } else if (m == null) {
+                    txtUser.setBackgroundResource(bordercontainerred);
+                    txtPass.setBackgroundResource(bordercontainerred);
+                    txtError.setText("Identificación o contraseña incorrectas !!!");
+                    new iSesion(path).local(0000);
+                }
             }
-
         } catch (NumberFormatException ex) {
             txtUser.setBackgroundResource(bordercontainerred);
             txtPass.setBackgroundResource(bordercontainerred);
-            txtError.setText("No puedes dejar campos vacios !!!");
+            txtError.setText("No puedes dejar campos vacios !!!"+ex.toString());
             new iSesion(path).local(0000);
         }
     }
@@ -184,7 +196,7 @@ public class Login extends AppCompatActivity {
 
 
     public void onActualizar(View v) {
-        new modalServer(this, path).modal().show();
+        new modalServer(this, path, txtUser.getText().toString()).modal().show();
     }
 
     public void Settings(View v){

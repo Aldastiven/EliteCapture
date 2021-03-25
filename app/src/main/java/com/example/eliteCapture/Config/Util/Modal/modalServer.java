@@ -1,5 +1,6 @@
 package com.example.eliteCapture.Config.Util.Modal;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,35 +8,45 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebSettings;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
+import com.example.eliteCapture.Config.Util.Controls.GIDGET;
 import com.example.eliteCapture.Config.Util.Image.imageAdmin;
+import com.example.eliteCapture.Config.Util.notification.notificationAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.ionLine;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 import com.example.eliteCapture.splash_activity;
 
+import org.w3c.dom.Text;
+
 public class modalServer {
     Context context;
-    String path;
+    String path, user;
 
     containerAdmin ca;
     textAdmin ta;
     imageAdmin ia;
 
-    Dialog d;
+    Dialog d, duser;
 
     iContenedor icont;
     ionLine io;
+    GIDGET pp;
 
-    public modalServer(Context context, String path) {
+    TextView txtUser;
+
+    public modalServer(Context context, String path, String user) {
         this.context = context;
         this.path = path;
+        this.user = user;
 
         ca = new containerAdmin(context);
         ta = new textAdmin(context);
@@ -43,6 +54,7 @@ public class modalServer {
 
         icont = new iContenedor(path);
         io = new ionLine(path);
+        pp = new GIDGET(context, "", null, path);
     }
 
     public Dialog modal(){
@@ -69,7 +81,6 @@ public class modalServer {
             return null;
         }
     }
-
 
     public View Line(){
 
@@ -142,34 +153,77 @@ public class modalServer {
     }
 
     public void funDescargar(View v){
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(context, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                i.putExtra("redireccion", 1);
-                i.putExtra("carga", "BajarDatos");
-                if(io.all().equals("onLine")) {
-                    context.startActivity(i);
-                }else{
-                    Toast.makeText(context, "Tienes que habilitar la opcion de conexión onLine para descargar datos", Toast.LENGTH_LONG).show();
+        v.setOnClickListener(v1 -> {
+            if (io.all().equals("onLine")) {
+                if (user.isEmpty()) {
+                    modalUser();
+                } else {
+                    downloadData(Integer.parseInt(user));
                 }
+            }else{
+                Toast.makeText(context, "Tienes que habilitar la opcion de conexión onLine para descargar datos", Toast.LENGTH_LONG).show();
             }
         });
     }
 
     public void funEnviar(View v){
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(context, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                i.putExtra("redireccion", 1);
-                i.putExtra("carga", "Pendientes");
-                if(io.all().equals("onLine")) {
-                    context.startActivity(i);
-                }else{
-                    Toast.makeText(context, "Tienes que habilitar la opcion de conexión onLine para enviar datos", Toast.LENGTH_LONG).show();
-                }
+        v.setOnClickListener(v1 -> {
+            Intent i = new Intent(context, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            i.putExtra("redireccion", 1);
+            i.putExtra("carga", "Pendientes");
+            if(io.all().equals("onLine")) {
+                context.startActivity(i);
+            }else{
+                Toast.makeText(context, "Tienes que habilitar la opcion de conexión onLine para enviar datos", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @SuppressLint("ResourceType")
+    public void modalUser(){
+        duser = new Dialog(context, R.style.MyProgressDialogNormal);
+        //duser.getWindow().setDimAmount(0);//sirve para quitar el fondo transparente
+
+
+        LinearLayout line = ca.container();
+
+        LinearLayout lineNoti = ca.container();
+        line.addView(lineNoti);
+
+        line.addView(ta.textColor("Digita tu usuario para continuar el proceso de descarga", "darkGray", 15, "l"));
+
+        LinearLayout.LayoutParams param = ca.params();
+        param.setMargins(10, 5, 10,5);
+        txtUser = (EditText) pp.campoEdtable("Edit", "grisClear");
+        txtUser.setLayoutParams(param);
+        line.addView(txtUser);
+
+        Button btnContinue = (Button) pp.boton("Continuar", "verde");
+        line.addView(btnContinue);
+
+        duser.setContentView(line);
+
+
+        btnContinue.setOnClickListener(v -> {
+            if(txtUser.getText().toString().isEmpty()){
+                new notificationAdmin(context, "Por favor digita el codigo de usuario", "bad", 5000, lineNoti).crear();
+            }else{
+                downloadData(Integer.parseInt(txtUser.getText().toString()));
+            }
+        });
+
+        Window w = duser.getWindow();
+        w.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        w.setGravity(Gravity.CENTER);
+        duser.show();
+        d.dismiss();
+    }
+
+    public void downloadData(int idUsuario){
+        Intent i = new Intent(context, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        i.putExtra("redireccion", 1);
+        i.putExtra("carga", "BajarDatos");
+        i.putExtra("idUsuario", idUsuario);
+        context.startActivity(i);
     }
 }

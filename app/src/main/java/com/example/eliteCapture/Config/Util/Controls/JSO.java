@@ -24,6 +24,7 @@ import com.example.eliteCapture.Config.Util.text.textAdmin;
 
 import com.example.eliteCapture.Model.Data.iJsonPlan;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
+import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -71,6 +72,8 @@ public class JSO {
         pp = new GIDGET(context, ubicacion, rt, path);
         ta = new textAdmin(context);
         ipl = new iJsonPlan(path);
+        progress = new ProgressDialog(context);
+        c = new CargarXmlTask("Consultando datos, espere un momento...");
 
         LineRespuesta = (LinearLayout) pp.resultadoFiltro();
 
@@ -93,17 +96,32 @@ public class JSO {
             dialog = new Dialog(context, R.style.TransparentDialog);
 
             if(dialogPanel){
-                try {
-                    String data = new JsonAdmin().ObtenerLista(path, "siembraJson");
-                    JSONArray jarr = new JSONArray(data);
-                    for (int i = 0; i < jarr.length(); i++) {
-                       if ( filterParseJson(jarr.getJSONObject(i), true) ){
-                           break;
-                        }
-                    }
-                }catch (Exception e){
-                    Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+                if(!progress.isShowing()){
+                    c.execute();
                 }
+                new Handler().postDelayed(() -> {
+                    try {
+                        String data = new JsonAdmin().ObtenerLista(path, "siembraJson");
+                        if(data.contains(campConteo.getText().toString())) {
+                            JSONArray jarr = new JSONArray(data);
+                            for (int i = 0; i < jarr.length(); i++) {
+                                if (filterParseJson(jarr.getJSONObject(i), true)) {
+                                    break;
+                                }
+                            }
+                            c.cancel(true);
+                            progress.dismiss();
+                        }else{
+                            Toast.makeText(context, "no se encontro el dato relacionado", Toast.LENGTH_SHORT).show();
+                            campConteo.setText("");
+                            c.cancel(true);
+                            progress.dismiss();
+                        }
+
+                    }catch (Exception e){
+                        Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }, 100);
             }
 
             return contenedorCamp;
@@ -130,10 +148,9 @@ public class JSO {
         line.addView(btnSca);
         line.addView(campConteo);
         line.addView(btnNav);
-        return line;
-    }
 
-    public void funCamp(){
+        funCamp();
+        return line;
     }
 
     public Button getButton(String d, int id){
@@ -153,7 +170,7 @@ public class JSO {
                     BtnStarCamera();
                     break;
                 case 2 :
-                    c = new CargarXmlTask();
+                    c = new CargarXmlTask("Cargando datos, espere un momento por favor...");
                     c.execute();
                     new Handler().postDelayed(() -> {
                         dialog();
@@ -230,17 +247,24 @@ public class JSO {
         }
     }
 
-    private class CargarXmlTask extends AsyncTask<Void, Void, Void> {
+    private class CargarXmlTask extends AsyncTask<String, Void, Void> {
+
+        String dataText;
+
+        public CargarXmlTask(String dataText) {
+            this.dataText = dataText;
+        }
+
         @Override
-        protected Void doInBackground(Void... params) {
-            publishProgress();
+        protected Void doInBackground(String... strings) {
             return null;
         }
 
         @Override
         protected void onPreExecute() {
-            progress = new ProgressDialog(context);
-            progress.setMessage("Cargando datos, espere un momento por favor...");
+
+            //"Cargando datos, espere un momento por favor..."
+            progress.setMessage(dataText);
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progress.setIndeterminate(false);
             progress.setCancelable(false);
@@ -250,6 +274,12 @@ public class JSO {
         protected void onProgressUpdate (String... strings) {
             Log.i("AsyncClass", strings[0]);
             progress.setMessage(strings[0]);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            progress.dismiss();
         }
     }
 
@@ -517,5 +547,22 @@ public class JSO {
             Log.i("datosJson", e.toString());
         }
         return b;
+    }
+
+    public void funCamp(){//FUNCION DEL CAMPO
+        campConteo.setOnFocusChangeListener((v, hasFocus) -> {
+            try {
+                if (!hasFocus) {
+                    registro(campConteo.getText().toString(), campConteo.getText().toString() != null ? rt.getPonderado() + "" : "");
+                }
+            } catch (Exception e) {
+                Toast.makeText(context, "Funcamp : " + e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void registro(String rta, String valor) {//REGISTRO
+        Log.i("registro", "respuesta : " + rta);
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null, rt.getReglas());
     }
 }
