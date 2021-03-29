@@ -113,34 +113,6 @@ public class permissionAdmin {
     }
 
     public void permissionGrantedCamera(){
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) {
-            Log.i("permission", "llego a ser verdadero");
-
-        }else{
-            Log.i("permission", "llego a ser falso");
-            showDialogOK("SMS and Location Services Permission required for this app",
-                    (dialog, which) -> {
-                        switch (which) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                //checkAndRequestPermissions();
-                                break;
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                // proceed with logic by disabling the related features or quit the app.
-                                break;
-                        }
-                    });
-        }
-
         ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, 226);
-    }
-
-    private void showDialogOK(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(activity)
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", okListener)
-                .create()
-                .show();
     }
 }

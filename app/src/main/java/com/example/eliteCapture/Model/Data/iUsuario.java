@@ -1,5 +1,7 @@
 package com.example.eliteCapture.Model.Data;
 
+import android.widget.TextView;
+
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.Data.Interfaz.Usuario;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -105,12 +107,16 @@ public class iUsuario implements Usuario {
     }
 
     @Override
-    public UsuarioTab login(int user, int pass) throws Exception {
+    public UsuarioTab login(int user, int pass, TextView txt) throws Exception {
         all();
-        for (UsuarioTab m : ut) {
-            if (m.getId_usuario() == user && m.getPassword() == pass) {
-                return m;
+        if(ut != null) {
+            for (UsuarioTab m : ut) {
+                if (m.getId_usuario() == user && m.getPassword() == pass) {
+                    return m;
+                }
             }
+        }else{
+            txt.setText("¡No tienes datos de usuario, por favor realiza la descarga!");
         }
         return null;
     }

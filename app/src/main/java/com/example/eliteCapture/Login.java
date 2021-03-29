@@ -1,12 +1,16 @@
 package com.example.eliteCapture;
 
-import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,14 +18,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
+import com.example.eliteCapture.Config.Util.Container.containerAdmin;
+import com.example.eliteCapture.Config.Util.Controls.GIDGET;
 import com.example.eliteCapture.Config.Util.Modal.modalServer;
 import com.example.eliteCapture.Config.Util.Modal.modalSetting;
-import com.example.eliteCapture.Config.Util.notification.notificationAdmin;
 import com.example.eliteCapture.Config.Util.permissions.permissionAdmin;
+import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
+import com.example.eliteCapture.Model.Data.Tab.listFincasTab;
+import com.example.eliteCapture.Model.Data.iJsonPlan;
 import com.example.eliteCapture.Model.Data.iSesion;
 import com.example.eliteCapture.Model.Data.iUsuario;
 import com.example.eliteCapture.Model.Data.ionLine;
@@ -52,12 +59,19 @@ public class Login extends AppCompatActivity {
     ionLine ionLine;
     permissionAdmin pa;
 
+    iJsonPlan ipl;
+
+    GIDGET gg;
+    containerAdmin ca;
+    textAdmin ta;
+
+    Dialog dialogListFincas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_login);
         getSupportActionBar().hide();
-        ;
 
         Screen();
 
@@ -72,6 +86,7 @@ public class Login extends AppCompatActivity {
             floatingServer = findViewById(id.floatingServer);
             notification = findViewById(id.lineNotication);
 
+            dialogListFincas = new Dialog(this);
             iUsuario iU = new iUsuario(null, path);
             iU.nombre = "Usuarios";
 
@@ -82,6 +97,10 @@ public class Login extends AppCompatActivity {
             ionLine = new ionLine(path);
             pa = new permissionAdmin(this);
             pa.permissionGrantedCamera();
+            ipl = new iJsonPlan(path, Integer.parseInt(txtUser.getText().toString()), null);
+            gg = new GIDGET(this, "", null , path);
+            ca = new containerAdmin(this);
+            ta = new textAdmin(this);
 
             imgOnline.setBackgroundResource(ionLine.all().equals("onLine") ? ic_wifi_on : ic_wifi_off);
             floatingServer.setCompoundDrawablesWithIntrinsicBounds(icont.pendientesCantidad() > 0 ? ic_cloud_noti : ic_cloud, 0, 0, 0);
@@ -94,46 +113,59 @@ public class Login extends AppCompatActivity {
 
     public void ingresar(View v) throws Exception {
         try {
+            Admin admin = new Admin(null, path);
+
             if(pa.getPermissionCamera() == -1){
                 txtError.setText("No tienes permisos en la aplicacion !!!");
                 pa.permissionGrantedCamera();
             }else {
-                int txt_user = Integer.parseInt(txtUser.getText().toString());
-                int txt_pass = Integer.parseInt(txtPass.getText().toString());
-                Admin admin = new Admin(null, path);
-                UsuarioTab m = admin.getUsuario().login(txt_user, txt_pass);
 
-                if (m != null) {
+                String dataUser = txtUser.getText().toString();
+                String dataPass = txtPass.getText().toString();
+                if(new iUsuario(null, path).all() != null) {
 
-                    SharedPreferences.Editor edit = sp.edit();
-                    String session = admin.getUsuario().json(m);
-                    Log.i("Session:", session);
+                    if (!dataUser.isEmpty() && !dataPass.isEmpty()) {
+                        int txt_user = Integer.parseInt(dataUser);
+                        int txt_pass = Integer.parseInt(dataPass);
+                        UsuarioTab m = admin.getUsuario().login(txt_user, txt_pass, txtError);
 
-                    edit.putString("usuario", session);
-                    edit.putString("check", "ok");
-                    edit.commit();
-                    edit.apply();
+                        if (m != null) {
 
-                    Intent intent = new Intent(this, Index.class);
-                    startActivity(intent);
+                            SharedPreferences.Editor edit = sp.edit();
+                            String session = admin.getUsuario().json(m);
+                            Log.i("Session:", session);
 
-                    guardarUsuario(txt_user, txt_pass, m.getGrupo2());
+                            edit.putString("usuario", session);
+                            edit.putString("check", "ok");
+                            edit.commit();
+                            edit.apply();
 
-                    borrarTemp(m.getId_usuario());
-                    new iSesion(path).local(m.getId_usuario());
+                            Intent intent = new Intent(this, Index.class);
+                            startActivity(intent);
 
-                } else if (m == null) {
-                    txtUser.setBackgroundResource(bordercontainerred);
-                    txtPass.setBackgroundResource(bordercontainerred);
-                    txtError.setText("Identificación o contraseña incorrectas !!!");
-                    new iSesion(path).local(0000);
+                            guardarUsuario(txt_user, txt_pass, m.getGrupo2());
+
+                            borrarTemp(m.getId_usuario());
+                            new iSesion(path).local(m.getId_usuario());
+
+                        } else if (m == null) {
+                            txtUser.setBackgroundResource(bordercontainerred);
+                            txtPass.setBackgroundResource(bordercontainerred);
+                            txtError.setText("¡Identificación o contraseña incorrectas!");
+                            new iSesion(path).local(0000);
+                        }
+                    } else {
+                        txtUser.setBackgroundResource(bordercontainerred);
+                        txtPass.setBackgroundResource(bordercontainerred);
+                        txtError.setText("¡No puedes dejar campos vacios !");
+                        new iSesion(path).local(0000);
+                    }
+                }else{
+                    txtError.setText("¡No tienes datos de usuario, por favor realiza la descarga!");
                 }
             }
-        } catch (NumberFormatException ex) {
-            txtUser.setBackgroundResource(bordercontainerred);
-            txtPass.setBackgroundResource(bordercontainerred);
-            txtError.setText("No puedes dejar campos vacios !!!"+ex.toString());
-            new iSesion(path).local(0000);
+        } catch (Exception ex) {
+            txtError.setText("Error : "+ex.toString());
         }
     }
 
@@ -201,6 +233,59 @@ public class Login extends AppCompatActivity {
 
     public void Settings(View v){
         new modalSetting(this, path, imgOnline, notification).modal().show();
+    }
+
+    public void DowloadFarms(View v){
+        try {
+            LinearLayout line = ca.container();
+
+            line.addView(ta.textColor("Elige una finca para continuar el proceso de descarga", "darkGray", 15, "l"));
+
+            if (ipl.allListFincas() != null) {
+                for (listFincasTab lf : ipl.allListFincas()) {
+                    if (lf.getUsuario() == Integer.parseInt(txtUser.getText().toString())) {
+                        for (listFincasTab.fincasTab finca : lf.getFincas()) {
+                            getItem(finca, line);
+                        }
+                    }
+                }
+            } else {
+                line.addView(ta.textColor(
+                        "No se encontraron fincas Asociadas con el usuario",
+                        "rojo",
+                        15,
+                        "c"
+                ));
+            }
+
+            dialogListFincas.setContentView(ca.scrollv(line));
+
+            Window w = dialogListFincas.getWindow();
+            w.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            w.setGravity(Gravity.CENTER);
+            dialogListFincas.show();
+        }catch (Exception e){
+            Log.i("ErrorFarms", e.toString());
+        }
+    }
+
+    public void getItem(listFincasTab.fincasTab nomBtn, LinearLayout line){
+        Button btn = (Button) gg.boton(nomBtn.getNombreFinca(), "gris");
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(5, 2, 5, 2);
+
+        btn.setLayoutParams(params);
+
+        btn.setOnClickListener(v -> {
+            Intent i = new Intent(this, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            i.putExtra("redireccion", 2);
+            i.putExtra("carga", "BajarDatos");
+            i.putExtra("idFinca", nomBtn.getIdFinca());
+            startActivity(i);
+        });
+
+        line.addView(btn);
     }
 
     public void onBackPressed() {

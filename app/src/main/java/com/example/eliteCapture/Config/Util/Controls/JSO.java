@@ -93,7 +93,7 @@ public class JSO {
             contenedorCamp.addView(campo());
             pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
-            dialog = new Dialog(context, R.style.TransparentDialog);
+            dialog = new Dialog(context, R.style.MyProgressDialogNormal);
 
             if(dialogPanel){
                 if(!progress.isShowing()){
@@ -227,7 +227,7 @@ public class JSO {
         View v;
         try {
             LinearLayout linear = ca.container();
-            String data = new JsonAdmin().ObtenerLista(path, "siembraJson");
+            String data = new JsonAdmin().ObtenerLista(path, "planJSON");
             JSONArray jarr = new JSONArray(data);
             for (int i = 0; i < jarr.length(); i++) {
                 parseJson(jarr.getJSONObject(i), linear);
@@ -392,8 +392,6 @@ public class JSO {
                         container.addView(line2);
                     }
                 }
-
-                Log.i("KEY", "PASO : " + (paso + 1));
                 c.onProgressUpdate("cargo finca");
             }
         } catch (Exception  e) {

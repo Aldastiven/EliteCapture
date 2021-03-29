@@ -155,7 +155,8 @@
             android:text="Actualizar finca"
             android:textColor="#ffffff"
             android:textAllCaps="false"
-            android:background="@color/verde"/>
+            android:background="@color/verde"
+            android:onClick="DowloadFarms"/>
 
     </LinearLayout>
 

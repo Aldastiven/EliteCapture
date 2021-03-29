@@ -38,7 +38,7 @@ public class splash_activity extends AppCompatActivity {
   LinearLayout noti;
   String path = null, carga;
 
-  int intance = 0000, idUsuario;
+  int intance = 0000, idUsuario, idFinca;
 
   textAdmin ta;
 
@@ -95,7 +95,7 @@ public class splash_activity extends AppCompatActivity {
   }
 
   public void intent(int s){
-    Intent i = new Intent(this, s == 1 || s == 0 ? Login.class : Index.class);
+    Intent i = new Intent(this, s == 1 || s == 0 || s == 2 ? Login.class : Index.class);
     startActivity(i);
   }
 
@@ -122,6 +122,7 @@ public class splash_activity extends AppCompatActivity {
         String code = bundle.getString("class");
         carga = bundle.getString("carga");
         idUsuario = bundle.getInt("idUsuario");
+        idFinca = bundle.getInt("idFinca");
 
 
         Toast.makeText(this, ""+idUsuario, Toast.LENGTH_SHORT).show();
@@ -193,10 +194,12 @@ public class splash_activity extends AppCompatActivity {
             obtenerProcesos();
             obtenerDetalles();
             obtenerDesplegables();
+            obtenerListFincas();
+            obtenerPlano();
           }
           if(screen() == 2){
             Log.i("descargaDatos","descargando... plano");
-            obtenerPlano();
+            obtenerListFincas();
           }
 
         }else{
@@ -210,11 +213,20 @@ public class splash_activity extends AppCompatActivity {
       }
     }
 
-    private void obtenerPlano(){
+    private void obtenerListFincas() {
       try{
-        new iJsonPlan(path, idUsuario, cn).local();
+        new iJsonPlan(path, idUsuario, cn).localListFincas(idFinca);
       }catch (Exception e){
         Log.i("Error Splash Carge", e.toString());
+      }
+    }
+
+    private void obtenerPlano(){
+      try{
+        Log.i("ErrorDownload", "Consultando lista de fincas");
+        new iJsonPlan(path, idUsuario, cn).local();
+      }catch (Exception e){
+        Log.i("ErrorDownload", e.toString());
       }
     }
 
@@ -275,7 +287,7 @@ public class splash_activity extends AppCompatActivity {
                           new TypeToken<UsuarioTab>() {
                           }.getType());
 
-          sess = admin.getUsuario().login(sess.getId_usuario(), sess.getPassword());
+          sess = admin.getUsuario().login(sess.getId_usuario(), sess.getPassword(), txtStatus);
           SharedPreferences.Editor edit = sp.edit();
           Session = admin.getUsuario().json(sess);
 
