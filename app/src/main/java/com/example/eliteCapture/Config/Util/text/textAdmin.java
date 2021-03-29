@@ -17,7 +17,7 @@ public class textAdmin {
     }
 
     public LinearLayout ubication(View v1 , View v2){
-        LinearLayout.LayoutParams paramsl = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsl = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         LinearLayout line = new LinearLayout(context);
         line.setWeightSum(2);
@@ -38,7 +38,15 @@ public class textAdmin {
 
     public LinearLayout text(String titulo, int sixe1, String dato, int sixe2){
 
-        LinearLayout.LayoutParams ltext = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams ltext = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        LinearLayout.LayoutParams ltext2 = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
 
         TextView tit = new TextView(context);
         tit.setText(titulo);
@@ -51,7 +59,7 @@ public class textAdmin {
         tda.setText(dato);
         tda.setTextColor(Color.parseColor("#85929E" ));
         tda.setTextSize(sixe2);
-        tda.setLayoutParams(ltext);
+        tda.setLayoutParams(ltext2);
 
         return ubication(tit, tda);
     }

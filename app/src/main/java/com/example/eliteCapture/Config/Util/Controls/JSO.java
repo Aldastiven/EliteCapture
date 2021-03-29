@@ -227,6 +227,9 @@ public class JSO {
         View v;
         try {
             LinearLayout linear = ca.container();
+
+            linear.addView(ta.textColor("Selecciona una opcion, realizando el despliegue", "verde", 15, "l")) ;
+
             String data = new JsonAdmin().ObtenerLista(path, "planJSON");
             JSONArray jarr = new JSONArray(data);
             for (int i = 0; i < jarr.length(); i++) {
@@ -406,11 +409,29 @@ public class JSO {
                 dialog.dismiss();
             }
 
+            LinearLayout linePrincipal = new LinearLayout(context);
+            linePrincipal.setLayoutParams(ca.params2());
+            linePrincipal.setOrientation(LinearLayout.VERTICAL);
+
+            LinearLayout line = new LinearLayout(context);
+            line.setLayoutParams(ca.params2());
+            line.setOrientation(LinearLayout.HORIZONTAL);
+            line.setWeightSum(2);
+
+            LinearLayout.LayoutParams params2 = ca.params3();
+            params2.weight = 1;
+
             LinearLayout linePanel1 = ca.container();
             linePanel1.setPadding(5,0,0,0);
+            linePanel1.setLayoutParams(params2);
+
+            LinearLayout linePanelLong = ca.container();
+            linePanelLong.setPadding(5,0,0,0);
+            linePanelLong.setLayoutParams(params2);
 
             LinearLayout linePanel2 = ca.container();
             linePanel2.setPadding(0,0,0,0);
+            linePanel2.setLayoutParams(params2);
 
             String dataInfo = "";
 
@@ -429,18 +450,12 @@ public class JSO {
                         } else {
                             linePanel2.addView(ta.text(keyx + " : ", 14, data.toString(), 14));
                         }
+                    }if(keyx.equals("Provedor")){
+                        linePanelLong.addView(ta.text(keyx + " : ", 14, data.toString(), 14));
                     }
                     i++;
                 }
             }
-
-            LinearLayout linePrincipal = new LinearLayout(context);
-            linePrincipal.setLayoutParams(ca.params3());
-            linePrincipal.setOrientation(LinearLayout.VERTICAL);
-
-            LinearLayout line = new LinearLayout(context);
-            line.setLayoutParams(ca.params3());
-            line.setOrientation(LinearLayout.HORIZONTAL);
 
 
             line.addView(linePanel1);
@@ -470,6 +485,11 @@ public class JSO {
             lineFoot.addView(btnAceptar);
 
             linePrincipal.addView(line);
+
+            if(linePanelLong.getChildCount() > 0){
+                linePrincipal.addView(linePanelLong);
+            }
+
             linePrincipal.addView(lineFoot);
 
             dialog.setContentView(ca.scrollv(linePrincipal));
