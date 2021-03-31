@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
@@ -166,7 +167,7 @@ public class modalSetting {
     }
 
     public void validarConexion(){
-        sw.setChecked(ionLine.all().equals("onLine"));
+        sw.setChecked(false);
         txtR.setText(ionLine.all());
         imgOnline.setBackgroundResource(ionLine.all().equals("offLine") ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
         ionLine.local(!sw.isChecked() ? "offLine" : "onLine");

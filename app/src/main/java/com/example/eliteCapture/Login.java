@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -67,6 +68,8 @@ public class Login extends AppCompatActivity {
 
     Dialog dialogListFincas;
 
+    modalSetting modalSetting;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,18 +100,23 @@ public class Login extends AppCompatActivity {
             ionLine = new ionLine(path);
             pa = new permissionAdmin(this);
             pa.permissionGrantedCamera();
-            ipl = new iJsonPlan(path, Integer.parseInt(txtUser.getText().toString()), null);
+
+            String user = txtUser.getText().toString();
+
+            ipl = new iJsonPlan(path, Integer.parseInt(user.isEmpty() ? "0000" : user), null);
             gg = new GIDGET(this, "", null , path);
             ca = new containerAdmin(this);
             ta = new textAdmin(this);
 
+
+            modalSetting = new modalSetting(this, path, imgOnline, notification);
+            modalSetting.modal();
+
             imgOnline.setBackgroundResource(ionLine.all().equals("onLine") ? ic_wifi_on : ic_wifi_off);
             floatingServer.setCompoundDrawablesWithIntrinsicBounds(icont.pendientesCantidad() > 0 ? ic_cloud_noti : ic_cloud, 0, 0, 0);
-
         } catch (Exception ex) {
-            Toast.makeText(this, "Se genero un Error al traer los datos de Usuario \n \n" + ex.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error onCrete : \n" + ex.toString(), Toast.LENGTH_LONG).show();
         }
-
     }
 
     public void ingresar(View v) throws Exception {
@@ -119,7 +127,6 @@ public class Login extends AppCompatActivity {
                 txtError.setText("No tienes permisos en la aplicacion !!!");
                 pa.permissionGrantedCamera();
             }else {
-
                 String dataUser = txtUser.getText().toString();
                 String dataPass = txtPass.getText().toString();
                 if(new iUsuario(null, path).all() != null) {
@@ -232,7 +239,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void Settings(View v){
-        new modalSetting(this, path, imgOnline, notification).modal().show();
+        modalSetting.modal().show();
     }
 
     public void DowloadFarms(View v){
