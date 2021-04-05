@@ -124,9 +124,6 @@ public class splash_activity extends AppCompatActivity {
         idUsuario = bundle.getInt("idUsuario");
         idFinca = bundle.getInt("idFinca");
 
-
-        Toast.makeText(this, ""+idUsuario, Toast.LENGTH_SHORT).show();
-
         if (code.equals("Index")) {
           act = Index.class;
         } else if(code.equals("Login")){

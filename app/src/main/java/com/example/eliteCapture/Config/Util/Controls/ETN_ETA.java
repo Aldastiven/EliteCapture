@@ -49,8 +49,6 @@ public class ETN_ETA extends ContextWrapper {
 
         noti = new LinearLayout(context);
         noti.setOrientation(LinearLayout.VERTICAL);
-
-
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM

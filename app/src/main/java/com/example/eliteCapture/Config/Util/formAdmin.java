@@ -1,5 +1,6 @@
 package com.example.eliteCapture.Config.Util;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -16,6 +17,7 @@ import com.example.eliteCapture.Config.Util.Controls.AUT_DES_CBX;
 import com.example.eliteCapture.Config.Util.Controls.CBE;
 import com.example.eliteCapture.Config.Util.Controls.DPV;
 import com.example.eliteCapture.Config.Util.Controls.ETN_ETA;
+import com.example.eliteCapture.Config.Util.Controls.GPS;
 import com.example.eliteCapture.Config.Util.Controls.JSO;
 import com.example.eliteCapture.Config.Util.Controls.RB;
 import com.example.eliteCapture.Config.Util.Controls.RS_RSE_RSC;
@@ -37,6 +39,7 @@ public class formAdmin {
 
     LinearLayout linearPrinc, linearBodypop;
     Context context;
+    Activity act;
     String path;
     Boolean inicial;
     Dialog popregla;
@@ -54,7 +57,7 @@ public class formAdmin {
 
     int estado = 1, consecutivo;
 
-    public formAdmin(LinearLayout linearPrinc,LinearLayout linearBodypop, Context context, String path, Boolean inicial, int estado, int consecutivo, boolean JSO) {
+    public formAdmin(LinearLayout linearPrinc, LinearLayout linearBodypop, Context context, Activity act, String path, Boolean inicial, int estado, int consecutivo, boolean JSO) {
         try {
             this.linearPrinc = linearPrinc;
             this.linearBodypop = linearBodypop;
@@ -64,6 +67,7 @@ public class formAdmin {
             this.estado = estado;
             this.consecutivo = consecutivo;
             this.JSO = JSO;
+            this.act = act;
             sp = context.getSharedPreferences("share", context.MODE_PRIVATE);
             adm = new Admin(null, path);//administra la conexion de las entidades
 
@@ -143,6 +147,9 @@ public class formAdmin {
                         break;
                      case "JSO":// scanner, busqueda y navegacion de json
                         v = new JSO(context, ubicacion, r, path, inicial, JSO).crear();
+                        break;
+                    case "GPS"://georeferenciación
+                        v = new GPS(context, ubicacion, r, path, inicial).crear();
                         break;
                     default:
                         v = noCreate(r.getTipo());// El campo asignado en la base no existe

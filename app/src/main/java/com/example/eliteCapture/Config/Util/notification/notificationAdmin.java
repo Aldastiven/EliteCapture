@@ -1,9 +1,12 @@
 package com.example.eliteCapture.Config.Util.notification;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +20,8 @@ public class notificationAdmin {
 
     LinearLayout linearLayout;
     TextView txt;
+
+    ProgressDialog progress;
 
     public notificationAdmin(Context context, String mensaje, String tipo, int duracion, LinearLayout linear) {
         this.context = context;
@@ -98,6 +103,43 @@ public class notificationAdmin {
                     linear.removeAllViews();
                 }
             }, duracion);
+        }
+    }
+
+
+    private class CargarXmlTask extends AsyncTask<String, Void, Void> {
+
+        String dataText;
+
+        public CargarXmlTask(String dataText) {
+            this.dataText = dataText;
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            //"Cargando datos, espere un momento por favor..."
+            progress.setMessage(dataText);
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(false);
+            progress.setCancelable(false);
+            progress.show();
+        }
+
+        protected void onProgressUpdate (String... strings) {
+            Log.i("AsyncClass", strings[0]);
+            progress.setMessage(strings[0]);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            progress.dismiss();
         }
     }
 }

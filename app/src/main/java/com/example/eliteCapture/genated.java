@@ -170,7 +170,7 @@ public class genated extends AppCompatActivity {
     public void crearform() {
         try {
             Log.i("cycleLife", "llego a crear formulario");
-            formA = new formAdmin(linearPrinc, linearBodypop,this, path, inicial, 0, 0, JSO);
+            formA = new formAdmin(linearPrinc, linearBodypop,this, this, path, inicial, 0, 0, JSO);
             CrearEncabezado();
             CrearCuerpo();
         } catch (Exception ex) {

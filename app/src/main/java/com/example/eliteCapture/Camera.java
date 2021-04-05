@@ -19,9 +19,6 @@ import com.example.eliteCapture.Model.View.iContenedor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
