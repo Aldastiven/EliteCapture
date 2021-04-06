@@ -21,8 +21,6 @@ import static android.content.Context.LOCATION_SERVICE;
 public class gpsAdmin implements LocationListener {
 
     private final Context mContext;
-    Dialog dialog;
-
     // flag for GPS status
     boolean isGPSEnabled = false;
 
@@ -37,7 +35,7 @@ public class gpsAdmin implements LocationListener {
     double longitude; // longitude
 
     // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 10 meters
 
     // The minimum time between updates in milliseconds
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
@@ -119,52 +117,32 @@ public class gpsAdmin implements LocationListener {
         return location;
     }
 
-    /**
-     * Stop using GPS listener
-     * Calling this function will stop using GPS in your app
-     * */
     public void stopUsingGPS(){
         if(locationManager != null){
             locationManager.removeUpdates((LocationListener) mContext);
         }
     }
 
-    /**
-     * Function to get latitude
-     * */
     public double getLatitude(){
-        if(location != null){
+        // return latitude
+        if(location != null) {
             latitude = location.getLatitude();
         }
-
-        // return latitude
         return latitude;
     }
 
-    /**
-     * Function to get longitude
-     * */
     public double getLongitude(){
+        // return longitude
         if(location != null){
             longitude = location.getLongitude();
         }
-
-        // return longitude
         return longitude;
     }
 
-    /**
-     * Function to check GPS/wifi enabled
-     * @return boolean
-     * */
     public boolean canGetLocation() {
         return this.canGetLocation;
     }
 
-    /**
-     * Function to show settings alert dialog
-     * On pressing Settings button will lauch Settings Options
-     * */
     public void showSettingsAlert(){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 

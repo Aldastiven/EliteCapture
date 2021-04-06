@@ -6,7 +6,7 @@
     android:weightSum="10"
     android:orientation="vertical"
     tools:context=".Index"
-    android:background="#ffffff">
+    android:background="#EAEDED">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -26,18 +26,20 @@
             android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="salir"
-            android:textStyle="bold"
-            android:textColor="#d98880"
+            android:text="Cerrar sesion"
+            android:textColor="#ffffff"
             style="?android:attr/borderlessButtonStyle"
-            android:onClick="Salir"/>
+            android:onClick="Salir"
+            android:textAllCaps="false"
+            android:background="#CB4335"
+            android:layout_marginHorizontal="5dp"/>
 
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:layout_weight="1">
+        android:layout_weight="0.8">
 
         <LinearLayout
             android:orientation="vertical"
@@ -50,7 +52,6 @@
                 android:layout_weight="1.5"
                 android:layout_width="match_parent"
                 android:layout_height="0sp"
-                android:paddingVertical="10sp"
                 android:paddingHorizontal="5sp"
                 android:layout_marginHorizontal="10sp">
 
@@ -59,9 +60,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Bienvenid@"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp"
+                    android:textColor="#34495E"/>
             </RelativeLayout>
-
 
         </LinearLayout>
 
@@ -73,8 +74,7 @@
         android:layout_height="0sp"
         android:layout_weight="0.5"
         android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        >
+        android:gravity="center_horizontal">
 
         <TextView
             android:id="@+id/txtELige"
@@ -84,8 +84,7 @@
             android:textSize="20sp"
             android:textAlignment="center"
             android:textStyle="bold"
-            android:textColor=" #808b96 "
-            />
+            android:textColor="#34495E" />
 
     </LinearLayout>
 

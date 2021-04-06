@@ -3,9 +3,14 @@ package com.example.eliteCapture;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -49,7 +54,17 @@ public class Index extends AppCompatActivity {
     Admin admin = null;
     iContenedor contenedor = null;
 
-    iHistorico historico = null;
+
+    LayerDrawable layerdrawable;
+
+    //Creating Multiple ColorDrawable.
+    Drawable[] DrawableArray = new Drawable[]{
+            new ColorDrawable(Color.parseColor("#58D68D")), //green
+            new ColorDrawable(Color.parseColor("#FDFEFE")), //white
+            new ColorDrawable(Color.parseColor("#FDFEFE")), //white
+            new ColorDrawable(Color.parseColor("#FDFEFE")), //white
+            new ColorDrawable(Color.WHITE) //white
+    };
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -89,7 +104,7 @@ public class Index extends AppCompatActivity {
             usu = new Gson().fromJson(sp.getString("usuario", ""), new TypeToken<UsuarioTab>() {
             }.getType());
 
-            txtPaneluser.setText("Usuario : " + usu.getNombre_usuario()+"\n idUsuario : "+usu.getId_usuario());
+            txtPaneluser.setText("Usuario : " + usu.getNombre_usuario()+"\nCod. : "+usu.getId_usuario());
         } catch (Exception ex) {
             Toast.makeText(this, "Se genero un error al traer los datos del usuario \n \n" + ex.toString(), Toast.LENGTH_SHORT).show();
         }
@@ -113,11 +128,12 @@ public class Index extends AppCompatActivity {
                 Button btn = new Button(getApplicationContext());
                 btn.setText(c.getNombre_proceso() + (cuenta == 0 ? "" : " (" + cuenta + ")"));
                 btn.setId(c.getCodigo_proceso());
-                btn.setTextColor(Color.parseColor("#ffffff"));
+                btn.setTextColor(Color.parseColor("#34495E"));
                 btn.setTextSize(15);
-                btn.setBackgroundColor(Color.parseColor("#2e2d33"));
                 btn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 btn.setLayoutParams(layoutParamsbtn);
+
+                GradientDrawable(btn);
 
                 //agregando check dinamicos
                 linearCheck.addView(btn, layoutParams);
@@ -141,6 +157,17 @@ public class Index extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+
+    public void GradientDrawable(View v) {
+        layerdrawable = new LayerDrawable(DrawableArray);
+        layerdrawable.setLayerInset(0,0,0,5,0);
+        layerdrawable.setLayerInset(1,5,0,0,0);
+        layerdrawable.setLayerInset(2,10,5,0,0);
+        layerdrawable.setLayerInset(3,10,5,5,0);
+        layerdrawable.setLayerInset(4,18,5,5,0);
+        v.setBackgroundDrawable(layerdrawable);
     }
 
     public List<ProcesoTab> orderMenu(){
