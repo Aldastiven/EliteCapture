@@ -3,6 +3,9 @@ package com.example.eliteCapture.Config.Util.Controls;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -40,6 +43,9 @@ public class GIDGET {
         ta = new textAdmin(context);
         ca = new containerAdmin(context);
         iDesp = new iDesplegable(null, path);
+    }
+
+    public GIDGET() {
     }
 
     public View pregunta(){
@@ -212,5 +218,41 @@ public class GIDGET {
 
         line.addView(txt);
         return line;
+    }
+
+    public void GradientDrawable(View v, String side) {
+        LayerDrawable layerdrawable;
+
+        String  w = "#FFFFFF", //WHITE
+                gr = "#FDFEFE", //gray
+                g = "#58D68D"; //green
+
+        layerdrawable = new LayerDrawable(
+                new Drawable[]{
+                    colDraw(gr), colDraw(g), colDraw(gr), colDraw(gr), colDraw(w)
+                }
+        );
+
+        switch (side){
+            case "l" :
+                layerdrawable.setLayerInset(0,5,0,0,0);
+                layerdrawable.setLayerInset(1,5,0,0,0);
+                layerdrawable.setLayerInset(2,10,5,0,0);
+                layerdrawable.setLayerInset(3,10,5,5,0);
+                layerdrawable.setLayerInset(4,10,0,0,0);
+                break;
+            case "r" :
+                layerdrawable.setLayerInset(0,5,0,5,0);
+                layerdrawable.setLayerInset(1,0,0,5,0);
+                layerdrawable.setLayerInset(2,0,5,10,0);
+                layerdrawable.setLayerInset(3,5,5,10,0);
+                layerdrawable.setLayerInset(4,0,0,10,0);
+                break;
+        }
+        v.setBackgroundDrawable(layerdrawable);
+    }
+
+    public ColorDrawable colDraw(String color){
+        return new ColorDrawable(Color.parseColor(color));
     }
 }

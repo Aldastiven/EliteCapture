@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -244,9 +245,12 @@ public class Login extends AppCompatActivity {
 
     public void DowloadFarms(View v){
         try {
+            LinearLayout linePrincipal = ca.container();
+            LinearLayout lineText = ca.container();
             LinearLayout line = ca.container();
+            line.setBackgroundColor(Color.parseColor("#EAEDED"));
 
-            line.addView(ta.textColor("Elige una finca para continuar el proceso de descarga", "darkGray", 15, "l"));
+            lineText.addView(ta.textColor(" Elige una finca para continuar el proceso de descarga", "darkGray", 15, "l"));
 
             if (ipl.allListFincas() != null) {
                 for (listFincasTab lf : ipl.allListFincas()) {
@@ -265,7 +269,10 @@ public class Login extends AppCompatActivity {
                 ));
             }
 
-            dialogListFincas.setContentView(ca.scrollv(line));
+
+            linePrincipal.addView(lineText);
+            linePrincipal.addView(line);
+            dialogListFincas.setContentView(ca.scrollv(linePrincipal));
 
             Window w = dialogListFincas.getWindow();
             w.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -278,6 +285,8 @@ public class Login extends AppCompatActivity {
 
     public void getItem(listFincasTab.fincasTab nomBtn, LinearLayout line){
         Button btn = (Button) gg.boton(nomBtn.getNombreFinca(), "gris");
+        btn.setTextColor(Color.parseColor("#000000"));
+        new GIDGET().GradientDrawable(btn, "l");
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(5, 2, 5, 2);

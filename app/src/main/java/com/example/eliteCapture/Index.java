@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.eliteCapture.Config.Util.Controls.GIDGET;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -54,17 +55,6 @@ public class Index extends AppCompatActivity {
     Admin admin = null;
     iContenedor contenedor = null;
 
-
-    LayerDrawable layerdrawable;
-
-    //Creating Multiple ColorDrawable.
-    Drawable[] DrawableArray = new Drawable[]{
-            new ColorDrawable(Color.parseColor("#58D68D")), //green
-            new ColorDrawable(Color.parseColor("#FDFEFE")), //white
-            new ColorDrawable(Color.parseColor("#FDFEFE")), //white
-            new ColorDrawable(Color.parseColor("#FDFEFE")), //white
-            new ColorDrawable(Color.WHITE) //white
-    };
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -133,7 +123,7 @@ public class Index extends AppCompatActivity {
                 btn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 btn.setLayoutParams(layoutParamsbtn);
 
-                GradientDrawable(btn);
+                new GIDGET().GradientDrawable(btn, "l");
 
                 //agregando check dinamicos
                 linearCheck.addView(btn, layoutParams);
@@ -157,17 +147,6 @@ public class Index extends AppCompatActivity {
             e.printStackTrace();
         }
 
-    }
-
-
-    public void GradientDrawable(View v) {
-        layerdrawable = new LayerDrawable(DrawableArray);
-        layerdrawable.setLayerInset(0,0,0,5,0);
-        layerdrawable.setLayerInset(1,5,0,0,0);
-        layerdrawable.setLayerInset(2,10,5,0,0);
-        layerdrawable.setLayerInset(3,10,5,5,0);
-        layerdrawable.setLayerInset(4,18,5,5,0);
-        v.setBackgroundDrawable(layerdrawable);
     }
 
     public List<ProcesoTab> orderMenu(){
