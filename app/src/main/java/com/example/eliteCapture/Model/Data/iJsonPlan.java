@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class iJsonPlan {
@@ -84,9 +85,24 @@ public class iJsonPlan {
         String data = "";
         while (rs.next()) {
             data = rs.getString(2) + data;
-            Log.i("nextFinca", rs.getString(1)+", "+rs.getString(2));
+            Log.i("nextFinca", rs.getString(1));
         }
         return ja.WriteJson(path, nombre, data);
+    }
+
+    public boolean getDateUpdate(int idFinca) throws Exception{
+        ResultSet rs;
+        String q = "SELECT  3 FROM Plano_json_Bloque WHERE codigo = "+idFinca;
+        PreparedStatement ps = cn.prepareStatement(q);
+        rs = ps.executeQuery();
+
+        Date fecha;
+        while (rs.next()) {
+            fecha = rs.getDate(3);
+            Log.i("nextFinca", "ultima fecha de modificacion : "+fecha);
+        }
+
+        return false;
     }
 
     public boolean exist(){

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.eliteCapture.Config.Util.secondTaks.getUpdate;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
@@ -48,6 +49,10 @@ public class splash_activity extends AppCompatActivity {
     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     setContentView(R.layout.activity_splash_activity);
+
+
+    new Thread(() -> new getUpdate().start()).start();
+
 
     txtStatus = (TextView) findViewById(R.id.idStatus);
     noti = findViewById(R.id.noti);
@@ -183,6 +188,8 @@ public class splash_activity extends AppCompatActivity {
 
     private void CargeInicial() {
       try {
+
+        Log.i("screen", "num : "+screen());
 
         if(carga.equals("BajarDatos")){
 
