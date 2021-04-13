@@ -1,36 +1,39 @@
-//REALIZA LA DESCARGA MULTIFINCA FINCAS
 package com.example.eliteCapture;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.GIDGET;
+import com.example.eliteCapture.Config.Util.secondTaks.getTimeTaks;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
-import com.example.eliteCapture.Model.Data.Tab.jsonPlanTab;
 import com.example.eliteCapture.Model.Data.Tab.listFincasTab;
 import com.example.eliteCapture.Model.Data.iJsonPlan;
 
 import java.io.File;
-import java.util.List;
 
 public class downloadScreen extends AppCompatActivity {
+    //Administración de datos multi-fincas
 
     LinearLayout lineFarmws;
+    TextView timeText;
     containerAdmin ca;
     textAdmin ta;
     GIDGET gg;
 
     iJsonPlan ipl;
 
-    String path;
+    String path, titulo, msg1, msg2;
+    int sizeText, idFinca;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,10 @@ public class downloadScreen extends AppCompatActivity {
         path = getExternalFilesDir(null) + File.separator;
         insEntity();
         insViews();
+        insVariables();
         paintFarms();
+
+        new taskDownloader(this, timeText);
     }
 
     public void insEntity(){
@@ -51,9 +57,24 @@ public class downloadScreen extends AppCompatActivity {
 
     public void insViews(){
         lineFarmws = findViewById(R.id.lineFarms);
+        timeText = findViewById(R.id.timeText);
+    }
+
+    public void insVariables(){
+        //instancia de las variables necesarias
+        sizeText = 15;
+
+        titulo = "Elige una finca para continuar el proceso de descarga";
+
+        msg1 =  "¡Las fincas actuales no estan asociadas " +
+                " al codigo de usuario, por favor actualiza las" +
+                " fincas e intentalo nuevamente!";
+
+        msg2 = "No se encontraron fincas Asociadas con el usuario";
     }
 
     public int getUser(){
+        //obtiene el codigo del usuario
         try {
             Bundle b = getIntent().getExtras();
             return  b != null ? b.getInt("usuario") : null;
@@ -64,55 +85,42 @@ public class downloadScreen extends AppCompatActivity {
     }
 
     public void paintFarms(){
+        //obtiene la lista de fincas del usuario
         try{
-            LinearLayout linePrincipal = ca.container();
-            LinearLayout lineText = ca.container();
-            LinearLayout line = ca.container();
-            line.setBackgroundColor(Color.parseColor("#EAEDED"));
+            listFincasTab fincaplan = ipl.allListFincas().get(0);
 
-            lineText.addView(ta.textColor(" Elige una finca para continuar el proceso de descarga", "darkGray", 15, "l"));
+            if (fincaplan != null) {
+                if (fincaplan.getUsuario() == getUser()) {
+                    for (listFincasTab.fincasTab finca : fincaplan.getFincas()) {
+                        idFinca = finca.getIdFinca();
+                        createFolder();
 
-            List<listFincasTab> listFarms = ipl.allListFincas();
-
-            if (listFarms != null) {
-                for (listFincasTab lf : listFarms) {
-
-                    if (lf.getUsuario() == getUser()) {
-                        for (listFincasTab.fincasTab finca : lf.getFincas()) {
-                            File folderFarm = new File(path+"/listFarms", ""+finca.getIdFinca());
-                            if(!folderFarm.exists()) {
-                                folderFarm.mkdirs();//crea la carpeta de cada finca sino existe
-                            }
-                            getItem(finca, line);//crea el item de finca
-                        }
-                    }else{
-                        lineText.removeAllViews();
-                        lineText.addView(ta.textColor("  ¡Las fincas actuales no estan asociadas  al codigo de usuario, por favor actualiza las fincas e intentalo nuevamente!", "rojo", 15, "l"));
-                        break;
+                        getItem(finca, lineFarmws);
                     }
+                }else{
+                    Toast.makeText(this, msg1, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                line.addView(ta.textColor(
-                        "No se encontraron fincas Asociadas con el usuario",
-                        "rojo",
-                        15,
-                        "c"
-                ));
+                lineFarmws.addView(
+                        ta.textColor(msg2, "rojo", sizeText, "l")
+                );
             }
-
-            linePrincipal.addView(lineText);
-            linePrincipal.addView(ca.scrollv(line));
-            lineFarmws.addView(linePrincipal);
         }catch (Exception e){
             Log.i("ErrorFarms", e.toString());
         }
     }
 
     public void getItem(listFincasTab.fincasTab nomBtn, LinearLayout line){
+        //crea el item de finca
         try {
+            LinearLayout.LayoutParams param = ca.params();
+            param.setMargins(15,2,15,2);
+
             LinearLayout linePrincipal = ca.container();
+            linePrincipal.setLayoutParams(param);
+
             linePrincipal.setOrientation(LinearLayout.HORIZONTAL);
-            linePrincipal.setPadding(10, 0, 0, 0);
+            linePrincipal.setPadding(20, 0, 20, 0);
             linePrincipal.setWeightSum(2);
 
             gg.GradientDrawable(linePrincipal, "l");
@@ -124,11 +132,8 @@ public class downloadScreen extends AppCompatActivity {
 
             LinearLayout linearPanel2 = LinearPanel("H");
 
+            linearPanel2.addView(gg.boton("Trabajar finca", "blue"));
             linearPanel2.addView(getCheck());
-            linearPanel2.addView(gg.boton("Trabajar finca", "verde"));
-
-            linearPanel1.setLayoutParams(param());
-            linearPanel2.setLayoutParams(param());
 
             linePrincipal.addView(linearPanel1);
             linePrincipal.addView(linearPanel2);
@@ -141,8 +146,11 @@ public class downloadScreen extends AppCompatActivity {
 
     public LinearLayout LinearPanel(String ori){
         LinearLayout line = ca.container();
-        line.setOrientation(ori.equals("V") ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+        line.setOrientation(
+                ori.equals("V") ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL
+        );
         line.setWeightSum(2);
+        line.setLayoutParams(param());
 
         return line;
     }
@@ -159,5 +167,28 @@ public class downloadScreen extends AppCompatActivity {
 
         param.weight = 1;
         return param;
+    }
+
+    public void createFolder(){
+        //crea la carpeta de cada finca si no existe
+        File folderFarm = new File(path+"/listFarms", String.valueOf(idFinca));
+        if(!folderFarm.exists()) {
+            folderFarm.mkdirs();
+        }
+    }
+
+    public static class taskDownloader {
+        //Realiza la descarga de fiincas en segundo plano
+
+        Context context;
+        ProgressDialog dialog;
+
+        public taskDownloader(Context context, TextView timeText) {
+            this.context = context;
+            dialog = new ProgressDialog(context);
+            getTimeTaks gtt = new getTimeTaks();
+            gtt.setTimeText(timeText);
+            gtt.start();
+        }
     }
 }

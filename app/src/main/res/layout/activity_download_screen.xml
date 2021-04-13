@@ -4,13 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".downloadScreen"
-    android:orientation="vertical"
-    android:paddingHorizontal="15sp">
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/lineFarms"
+    <TextView
+        android:id="@+id/timeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:textSize="15sp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/lineFarms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </ScrollView>
 
 </LinearLayout>

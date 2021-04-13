@@ -80,7 +80,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="0.8"
                         android:layout_height="wrap_content"
-                        android:text="Descargar finca"
+                        android:text="Administar fincas"
                         android:textColor="#ffffff"
                         android:textAllCaps="false"
                         android:background="@color/verde"

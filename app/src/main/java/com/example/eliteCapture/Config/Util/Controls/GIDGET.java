@@ -180,6 +180,9 @@ public class GIDGET {
             case "grisClear":
                 C = Color.parseColor("#eeeeee");
                 break;
+            case "blue":
+                C = Color.parseColor("#3498DB");
+                break;
         }
         return C;
     }
