@@ -54,6 +54,7 @@ public class splash_activity extends AppCompatActivity {
     new Thread(() -> new getUpdate().start()).start();
 
 
+
     txtStatus = (TextView) findViewById(R.id.idStatus);
     noti = findViewById(R.id.noti);
 
@@ -67,6 +68,9 @@ public class splash_activity extends AppCompatActivity {
     try {
       sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
       getActivity();
+
+
+      new File(path, "listFarms").mkdirs();
 
       ta = new textAdmin(this);
 
@@ -170,6 +174,11 @@ public class splash_activity extends AppCompatActivity {
         if (admin.getOnline().all().equals("onLine")) {
           // Validando conexion
           if (cn != null) {
+
+
+            Toast.makeText(context, "llego la finca : "+idFinca, Toast.LENGTH_SHORT).show();
+            new iJsonPlan(path, idUsuario, cn).getDateUpdate(idFinca);
+
             CargeInicial();
             if(noti.getChildCount() > 0) noti.removeAllViews();
             noti.addView(ta.textColor(carga.equals("BajarDatos") ? "Datos descargados con exito" : "Datos enviados con exito","verde",15, "c"));

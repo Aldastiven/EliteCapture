@@ -10,8 +10,6 @@ public class getUpdate extends Thread{
     public void run() {
         super.run();
 
-        Log.i("secondTasks", "comenzo el thead");
-
         int conta1 = 0;
         while(true){
             if (conta1==9){

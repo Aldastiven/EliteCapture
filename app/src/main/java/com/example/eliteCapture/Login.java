@@ -29,6 +29,7 @@ import com.example.eliteCapture.Config.Util.permissions.permissionAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
+import com.example.eliteCapture.Model.Data.Tab.jsonPlanTab;
 import com.example.eliteCapture.Model.Data.Tab.listFincasTab;
 import com.example.eliteCapture.Model.Data.iJsonPlan;
 import com.example.eliteCapture.Model.Data.iSesion;
@@ -37,6 +38,7 @@ import com.example.eliteCapture.Model.Data.ionLine;
 import com.example.eliteCapture.Model.View.iContenedor;
 
 import java.io.File;
+import java.util.List;
 
 import static com.example.eliteCapture.R.drawable.bordercontainerred;
 import static com.example.eliteCapture.R.drawable.ic_cloud;
@@ -51,10 +53,11 @@ public class Login extends AppCompatActivity {
     SharedPreferences sp;
 
     public String path = null;
+    int idFinca;
     EditText txtUser, txtPass;
-    TextView txtError, floatingServer;
+    TextView txtError, floatingServer, txtFarmWork;
     ImageView imgOnline;
-    LinearLayout notification;
+    LinearLayout notification, notificationFarm;
 
     iContenedor icont;
     iSesion is;
@@ -89,6 +92,7 @@ public class Login extends AppCompatActivity {
             imgOnline = findViewById(id.imgOnline);
             floatingServer = findViewById(id.floatingServer);
             notification = findViewById(id.lineNotication);
+            txtFarmWork = findViewById(id.txtFarmWork);
 
             dialogListFincas = new Dialog(this);
             iUsuario iU = new iUsuario(null, path);
@@ -110,6 +114,7 @@ public class Login extends AppCompatActivity {
             ta = new textAdmin(this);
 
 
+
             modalSetting = new modalSetting(this, path, imgOnline, notification);
             modalSetting.modal();
 
@@ -119,6 +124,7 @@ public class Login extends AppCompatActivity {
             Toast.makeText(this, "Error onCrete : \n" + ex.toString(), Toast.LENGTH_LONG).show();
         }
     }
+
 
     public void ingresar(View v) throws Exception {
         try {
@@ -250,25 +256,33 @@ public class Login extends AppCompatActivity {
             LinearLayout line = ca.container();
             line.setBackgroundColor(Color.parseColor("#EAEDED"));
 
-            lineText.addView(ta.textColor(" Elige una finca para continuar el proceso de descarga", "darkGray", 15, "l"));
+            if(!txtUser.getText().toString().isEmpty()) {
 
-            if (ipl.allListFincas() != null) {
-                for (listFincasTab lf : ipl.allListFincas()) {
-                    if (lf.getUsuario() == Integer.parseInt(txtUser.getText().toString())) {
-                        for (listFincasTab.fincasTab finca : lf.getFincas()) {
-                            getItem(finca, line);
+                lineText.addView(ta.textColor(" Elige una finca para continuar el proceso de descarga", "darkGray", 15, "l"));
+
+                if (ipl.allListFincas() != null) {
+                    for (listFincasTab lf : ipl.allListFincas()) {
+                        if (lf.getUsuario() == Integer.parseInt(txtUser.getText().toString())) {
+                            for (listFincasTab.fincasTab finca : lf.getFincas()) {
+                                getItem(finca, line);
+                            }
+                        }else{
+                            lineText.removeAllViews();
+                            lineText.addView(ta.textColor("  ¡Las fincas actuales no estan asociadas  al codigo de usuario, por favor actualiza las fincas e intentalo nuevamente!", "rojo", 15, "l"));
+                            break;
                         }
                     }
+                } else {
+                    line.addView(ta.textColor(
+                            "No se encontraron fincas Asociadas con el usuario",
+                            "rojo",
+                            15,
+                            "c"
+                    ));
                 }
-            } else {
-                line.addView(ta.textColor(
-                        "No se encontraron fincas Asociadas con el usuario",
-                        "rojo",
-                        15,
-                        "c"
-                ));
+            }else{
+                lineText.addView(ta.textColor("  ¡Ingresa tu codigo de usuario para continuar con la descarga!", "rojo", 15, "l"));
             }
-
 
             linePrincipal.addView(lineText);
             linePrincipal.addView(line);
@@ -298,6 +312,9 @@ public class Login extends AppCompatActivity {
             i.putExtra("redireccion", 2);
             i.putExtra("carga", "BajarDatos");
             i.putExtra("idFinca", nomBtn.getIdFinca());
+
+            idFinca = nomBtn.getIdFinca();
+
             startActivity(i);
         });
 

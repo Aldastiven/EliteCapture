@@ -39,7 +39,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:layout_weight="0.8">
+        android:layout_weight="1">
 
         <LinearLayout
             android:orientation="vertical"
@@ -49,11 +49,11 @@
 
             <RelativeLayout
                 android:id="@+id/contenUser"
-                android:layout_weight="1.5"
                 android:layout_width="match_parent"
-                android:layout_height="0sp"
+                android:layout_height="match_parent"
                 android:paddingHorizontal="5sp"
-                android:layout_marginHorizontal="10sp">
+                android:layout_marginHorizontal="10sp"
+                android:background="@drawable/border_gray">
 
                 <TextView
                     android:id="@+id/txtPaneluser"
@@ -62,6 +62,30 @@
                     android:text="Bienvenid@"
                     android:textSize="15sp"
                     android:textColor="#34495E"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtPaneluser">
+                    <TextView
+                        android:id="@+id/txtFarmWork"
+                        android:layout_width="0dp"
+                        android:layout_weight="1.2"
+                        android:layout_height="wrap_content"
+                        android:text="Trabajando con la finca : "
+                        android:gravity="center"/>
+
+                    <Button
+                        android:id="@+id/btnDownloadFarms"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.8"
+                        android:layout_height="wrap_content"
+                        android:text="Descargar finca"
+                        android:textColor="#ffffff"
+                        android:textAllCaps="false"
+                        android:background="@color/verde"
+                        android:onClick="DowloadFarms"/>
+                </LinearLayout>
             </RelativeLayout>
 
         </LinearLayout>

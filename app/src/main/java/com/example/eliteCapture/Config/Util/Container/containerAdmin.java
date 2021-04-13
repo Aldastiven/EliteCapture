@@ -46,7 +46,7 @@ public class containerAdmin {
     }
 
     public View scrollv(View l){
-        LinearLayout.LayoutParams lscv = new LinearLayout.LayoutParams(1000, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lscv = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         ScrollView scv = new ScrollView(c);
         scv.setLayoutParams(lscv);

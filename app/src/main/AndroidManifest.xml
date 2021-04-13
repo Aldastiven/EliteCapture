@@ -7,7 +7,9 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" tools:node="strict"/>
+    <uses-permission
+        android:name="android.permission.CAMERA"
+        tools:node="strict" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -17,7 +19,8 @@
         android:roundIcon="@drawable/ic_logo_elite_capture"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NavPlano"></activity>
+        <activity android:name=".downloadScreen"></activity>
+        <activity android:name=".NavPlano" />
         <activity android:name=".Camera" />
         <activity
             android:name=".Login"
