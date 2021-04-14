@@ -5,13 +5,30 @@ import android.widget.TextView;
 
 public class getTimeTaks extends Thread{
     long initialTime = System.currentTimeMillis(), timeMinutes = 0, timeSeconds;
-    String timeChar;
+    String timeChar, nameTask;
     TextView timeText;
+    int terminadeTime = 0;
 
     @Override
     public void run() {
         super.run();
         getTime();
+    }
+
+    public int getTerminadeTime() {
+        return terminadeTime;
+    }
+
+    public void setTerminadeTime(int terminadeTime) {
+        this.terminadeTime = terminadeTime;
+    }
+
+    public String getNameTask() {
+        return nameTask;
+    }
+
+    public void setNameTask(String nameTask) {
+        this.nameTask = nameTask;
     }
 
     public void setTimeText(TextView timeText) {
@@ -21,9 +38,8 @@ public class getTimeTaks extends Thread{
     public void setTimeChar(String timeChar) {
         this.timeChar = timeChar;
         if(timeText != null){
-            timeText.setText("Tomando tiempo -->  : " + this.timeChar);
+            timeText.setText("Tomando tiempo  : " + this.timeChar);
         }
-        Log.i("secondTasks","Tomando tiempo -->  : " + this.timeChar);
     }
 
     private void initialTime(){
@@ -47,8 +63,10 @@ public class getTimeTaks extends Thread{
 
             Thread.sleep(1000);
 
-            if(timeMinutes < 2){
+            if(timeSeconds < getTerminadeTime()){
                 getTime();
+            }else{//temino la tarea
+                timeText.setText("Termino la tarea : "+getNameTask());
             }
         }catch (Exception e){
             Log.i("secondTasks", "Error en la tarea  : "+e.toString());

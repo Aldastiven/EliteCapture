@@ -1,10 +1,15 @@
 package com.example.eliteCapture;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -14,6 +19,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +35,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiresApi(api = Build.VERSION_CODES.Q)
 public class downloadScreen extends AppCompatActivity {
     //Administración de datos multi-fincas
 
@@ -50,14 +57,13 @@ public class downloadScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_download_screen);
         path = getExternalFilesDir(null) + File.separator;
         insEntity();
         insViews();
         insVariables();
         paintFarms();
-
-        new taskDownloader(this, timeText);
     }
 
     public void insEntity(){
@@ -207,6 +213,7 @@ public class downloadScreen extends AppCompatActivity {
             }
             messageFarmList();
         });
+
     }
 
     public boolean validateFarmSelected(listFincasTab.fincasTab farm){
@@ -256,7 +263,7 @@ public class downloadScreen extends AppCompatActivity {
             btnDownload.setLayoutParams(param());
 
             btnDownload.setOnClickListener(v ->{
-
+                new taskDownloader(this, farmsCheck).start();
             });
 
             line.addView(textNotificationFarmSelected);
@@ -267,20 +274,102 @@ public class downloadScreen extends AppCompatActivity {
         if(farmsCheck.size() == 0){
             linearDownload.removeAllViews();
         }
+
+        //adiciona un padding al final para visualizar el ultimo item Finca
+        lineFarmws.setPadding(0,0,0, farmsCheck.size() > 0 ? 106 : 0);
     }
 
-    public static class taskDownloader {
+    public static class taskDownloader extends Thread {
         //Realiza la descarga de fiincas en segundo plano
 
         Context context;
-        ProgressDialog dialog;
+        Dialog dialog;
+        LinearLayout lineFarms;
 
-        public taskDownloader(Context context, TextView timeText) {
-            this.context = context;
-            dialog = new ProgressDialog(context);
-            getTimeTaks gtt = new getTimeTaks();
-            gtt.setTimeText(timeText);
-            gtt.start();
+        List<listFincasTab.fincasTab> farms;
+
+        containerAdmin ca;
+        textAdmin ta;
+
+        @Override
+        public void run() {
+            super.run();
+        }
+
+        public taskDownloader(Context context, List<listFincasTab.fincasTab> farms) {
+            try {
+                this.context = context;
+                this.farms = farms;
+                ca = new containerAdmin(context);
+                ta = new textAdmin(context);
+
+                this.lineFarms = ca.container();
+                lineFarms.setLayoutParams(ca.params());
+
+                dialog = new Dialog(context);
+                dialog.setContentView(ca.scrollv(lineFarms  ), ca.params());
+                dialog.show();
+
+                paintFarms();
+            }catch (Exception e){
+                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+                Log.i("taskDownloader", e.toString());
+            }
+        }
+
+        public void paintFarms() throws Exception{
+            int hilo = 1;
+            for(listFincasTab.fincasTab farm : farms){
+                LinearLayout principal = ca.container();
+                principal.setOrientation(LinearLayout.VERTICAL);
+
+                TextView txtNotification = (TextView) ta.textColor(
+                        "Consultando...",
+                        "darkGray",
+                        10,
+                        "l"
+                );
+
+                LinearLayout lineItem = ca.container();
+                lineItem.setLayoutParams(ca.params());
+                lineItem.setOrientation(LinearLayout.HORIZONTAL);
+                lineItem.setWeightSum(2);
+                lineItem.setGravity(Gravity.CENTER);
+
+                TextView txt = (TextView) ta.textColor(
+                        farm.getNombreFinca(),
+                        "darkGray",
+                        15,
+                        "l"
+                );
+
+                ProgressBar prb = getProgress();
+
+                lineItem.addView(txt);
+                lineItem.addView(prb);
+
+                principal.addView(lineItem);
+                principal.addView(txtNotification);
+
+                lineFarms.addView(principal);
+
+                getTimeTaks taskTime = new getTimeTaks();
+                taskTime.setTimeText(txtNotification);
+                taskTime.setNameTask(farm.getNombreFinca());
+                taskTime.setTerminadeTime(hilo * 5);
+                taskTime.start();
+
+                hilo++;
+            }
+        }
+
+        public ProgressBar getProgress() throws Exception{
+            ProgressBar pb = new ProgressBar(context);
+            Drawable draw = context.getResources().getDrawable(R.drawable.my_progressbar);
+            pb.setProgressDrawable(draw);
+            pb.setScaleX(0.4f);
+            pb.setScaleY(0.4f);
+            return pb;
         }
     }
 }
