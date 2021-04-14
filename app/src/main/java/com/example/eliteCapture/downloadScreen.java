@@ -4,33 +4,45 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.GIDGET;
+import com.example.eliteCapture.Config.Util.notification.notificationAdmin;
 import com.example.eliteCapture.Config.Util.secondTaks.getTimeTaks;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Tab.listFincasTab;
 import com.example.eliteCapture.Model.Data.iJsonPlan;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class downloadScreen extends AppCompatActivity {
     //Administración de datos multi-fincas
 
-    LinearLayout lineFarmws;
-    TextView timeText;
+    LinearLayout lineFarmws, linearDownload;
+    TextView timeText, textNotificationFarmSelected;
+    CheckBox checkFamsAll;
     containerAdmin ca;
     textAdmin ta;
     GIDGET gg;
 
     iJsonPlan ipl;
+
+    List<listFincasTab.fincasTab> farmsCheck = new ArrayList<>();
+    List<CheckBox> listChecks = new ArrayList<>();
 
     String path, titulo, msg1, msg2;
     int sizeText, idFinca;
@@ -58,6 +70,22 @@ public class downloadScreen extends AppCompatActivity {
     public void insViews(){
         lineFarmws = findViewById(R.id.lineFarms);
         timeText = findViewById(R.id.timeText);
+        checkFamsAll = findViewById(R.id.checkFamsAll);
+        linearDownload = findViewById(R.id.linearDownload);
+
+        selectedAllFarms();
+    }
+
+    public void selectedAllFarms(){
+        //REALIZA LA DES/SELECCION DE TODAS LAS CAMAS
+
+        checkFamsAll.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(listChecks.size() > 0){
+                for(CheckBox cb : listChecks){
+                    cb.setChecked(checkFamsAll.isChecked());
+                }
+            }
+        });
     }
 
     public void insVariables(){
@@ -110,11 +138,11 @@ public class downloadScreen extends AppCompatActivity {
         }
     }
 
-    public void getItem(listFincasTab.fincasTab nomBtn, LinearLayout line){
+    public void getItem(listFincasTab.fincasTab farm, LinearLayout line){
         //crea el item de finca
         try {
             LinearLayout.LayoutParams param = ca.params();
-            param.setMargins(15,2,15,2);
+            param.setMargins(15,10,15,10);
 
             LinearLayout linePrincipal = ca.container();
             linePrincipal.setLayoutParams(param);
@@ -123,17 +151,24 @@ public class downloadScreen extends AppCompatActivity {
             linePrincipal.setPadding(20, 0, 20, 0);
             linePrincipal.setWeightSum(2);
 
-            gg.GradientDrawable(linePrincipal, "l");
+            gg.GradientDrawable(linePrincipal, "l", "blue");
 
             LinearLayout linearPanel1 = LinearPanel("V");
 
-            linearPanel1.addView(ta.textColor(nomBtn.getNombreFinca(), "darkGray", 18, "l"));
+            linearPanel1.addView(ta.textColor(farm.getNombreFinca(), "darkGray", 18, "l"));
             linearPanel1.addView(ta.textColor("notificacion", "rojo", 15, "l"));
 
-            LinearLayout linearPanel2 = LinearPanel("H");
+            LinearLayout linearPanel2 = LinearPanel("H");;
+            linearPanel2.setGravity(Gravity.RIGHT);
 
-            linearPanel2.addView(gg.boton("Trabajar finca", "blue"));
-            linearPanel2.addView(getCheck());
+            gg.setSizeText(15);
+            gg.setParams("w_w");
+            linearPanel2.addView(gg.boton(" Trabajar ", "blue"));
+
+            CheckBox cb = new CheckBox(this);
+            listChecks.add(cb);
+            functionCheckFarm(cb, farm);
+            linearPanel2.addView(cb);
 
             linePrincipal.addView(linearPanel1);
             linePrincipal.addView(linearPanel2);
@@ -155,9 +190,34 @@ public class downloadScreen extends AppCompatActivity {
         return line;
     }
 
-    public CheckBox getCheck(){
-        CheckBox cb = new CheckBox(this);
-        return cb;
+    public void functionCheckFarm(CheckBox cb, listFincasTab.fincasTab farm){
+        cb.setOnCheckedChangeListener((CompoundButton, b) -> {
+            if(cb.isChecked()) {
+                if(!validateFarmSelected(farm)){
+                    farmsCheck.add(farm);
+                }
+            }else{
+                List<listFincasTab.fincasTab> farmsCheckSelectedRenovated = new ArrayList<>();
+                for(listFincasTab.fincasTab farmi : farmsCheck){
+                    if(farm.getIdFinca() != farmi.getIdFinca()){
+                        farmsCheckSelectedRenovated.add(farmi);
+                    }
+                }
+                farmsCheck = farmsCheckSelectedRenovated;
+            }
+            messageFarmList();
+        });
+    }
+
+    public boolean validateFarmSelected(listFincasTab.fincasTab farm){
+        boolean validate = false;
+        for(listFincasTab.fincasTab farmi : farmsCheck){
+            if(farmi.getIdFinca() == farm.getIdFinca()){
+                validate = true;
+                break;
+            }
+        }
+        return validate;
     }
 
     public LinearLayout.LayoutParams param(){
@@ -174,6 +234,38 @@ public class downloadScreen extends AppCompatActivity {
         File folderFarm = new File(path+"/listFarms", String.valueOf(idFinca));
         if(!folderFarm.exists()) {
             folderFarm.mkdirs();
+        }
+    }
+
+    public void messageFarmList(){
+        String msg = "Fincas seleccionadas : "+farmsCheck.size();
+        if(linearDownload.getChildCount() > 0 && textNotificationFarmSelected != null) {
+            textNotificationFarmSelected.setText(msg);
+        }else if(linearDownload.getChildCount() == 0 && farmsCheck.size() > 0){
+
+            LinearLayout line = ca.container();
+            line.setOrientation(LinearLayout.HORIZONTAL);
+            line.setBackgroundResource(R.drawable.border_gray);
+
+            textNotificationFarmSelected = (TextView) ta.textColor(
+                    msg, "darkGray", 15, "c"
+            );
+            textNotificationFarmSelected.setLayoutParams(param());
+
+            Button btnDownload = (Button) gg.boton("Realizar descarga", "verde");
+            btnDownload.setLayoutParams(param());
+
+            btnDownload.setOnClickListener(v ->{
+
+            });
+
+            line.addView(textNotificationFarmSelected);
+            line.addView(btnDownload);
+            linearDownload.addView(line);
+        }
+
+        if(farmsCheck.size() == 0){
+            linearDownload.removeAllViews();
         }
     }
 

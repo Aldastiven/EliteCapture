@@ -9,6 +9,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,10 +36,15 @@ public class GIDGET {
     containerAdmin ca;
     iDesplegable iDesp;
 
+    String params;
+    int sizeText;
+
     public GIDGET(Context context, String ubicacion, RespuestasTab rt, String path) {
         this.context = context;
         this.ubicacion = ubicacion;
         this.rt = rt;
+
+        this.params = "w_m";
 
         ta = new textAdmin(context);
         ca = new containerAdmin(context);
@@ -46,6 +52,52 @@ public class GIDGET {
     }
 
     public GIDGET() {
+    }
+
+    public LinearLayout.LayoutParams getParams(String... varParams) {
+        LinearLayout.LayoutParams params = null;
+        String sParams = varParams.length > 0 ? varParams[0] : this.params;
+        Log.i("setParams", "llego a validar : "+sParams);
+        switch (sParams){
+            case "w_m" :
+                params = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                );
+                break;
+            case "m_w" :
+                params = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                break;
+            case "m_m" :
+                params = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                );
+                break;
+            case "w_w" :
+                params = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                break;
+        }
+        return params;
+    }
+
+    public void setParams(String params) {
+        Log.i("setParams", params);
+        this.params = params;
+    }
+
+    public int getSizeText() {
+        return sizeText;
+    }
+
+    public void setSizeText(int sizeText) {
+        this.sizeText = sizeText;
     }
 
     public View pregunta(){
@@ -154,8 +206,10 @@ public class GIDGET {
         btn.setText(nombre);
         btn.setTextColor(Color.WHITE);
         btn.setTypeface(null, Typeface.BOLD);
+        btn.setTextSize((getSizeText() == 0) ? 15 : getSizeText());
         btn.setAllCaps(false);
 
+        btn.setLayoutParams(getParams() == null ? getParams("w_w") : getParams());
         return btn;
     }
 
@@ -223,12 +277,13 @@ public class GIDGET {
         return line;
     }
 
-    public void GradientDrawable(View v, String side) {
+    public void GradientDrawable(View v, String side, String... color) {
         LayerDrawable layerdrawable;
 
-        String  w = "#FFFFFF", //WHITE
+        String  w = "#FFFFFF", //WHITE background container
                 gr = "#FDFEFE", //gray
-                g = "#58D68D"; //green
+                g = color.length == 0 ? "#58D68D" :
+                        String.format("#%06X", (0xFFFFFF & colorBack(color[0]))); //color selected barLine
 
         layerdrawable = new LayerDrawable(
                 new Drawable[]{

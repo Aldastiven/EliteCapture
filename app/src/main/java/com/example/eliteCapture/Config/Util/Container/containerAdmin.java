@@ -30,6 +30,20 @@ public class containerAdmin {
         return container;
     }
 
+    public LinearLayout containerH(){
+        LinearLayout.LayoutParams lcontainer = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        lcontainer.setMargins(1, 5, 1, 5);
+
+        LinearLayout container = new LinearLayout(c);
+        container.setOrientation(LinearLayout.HORIZONTAL);
+        container.setLayoutParams(lcontainer);
+
+        return container;
+    }
+
     public LinearLayout.LayoutParams params(){
         return new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                                             LinearLayout.LayoutParams.WRAP_CONTENT);
