@@ -98,47 +98,4 @@ public class sqlConect {
             return 0000;
         }
     }
-
-    public int excecuteGPS(Context c){
-        try {
-            Process p;
-            p = Runtime.getRuntime().exec("ls -al");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    p.getInputStream()));
-
-            StringBuffer output = new StringBuffer();
-            String temp;
-
-            int count = 0;
-            String str = "";
-            while ( (temp = reader.readLine()) != null) {
-                output.append(temp);
-                count++;
-            }
-
-            reader.close();
-
-            if(count > 0) {
-                str = output.toString();
-            }
-
-            Log.i("ping", str);
-
-            int respuesta = 2;
-            if(str.length() > 0) {
-                String data = str.split("statistics")[1];
-                String data2[] = data.split(",");
-                int res = Integer.parseInt(data2[2].split(" ")[1].substring(0, 1));
-                respuesta = res < 25 ? 0 : 1;
-            }
-
-            p.destroy();
-            return respuesta;
-        }catch (Exception e){
-            Log.i("CONEXION_ERROR", "error de conexion \n" + e.toString());
-            return 0000;
-        }
-    }
-
 }

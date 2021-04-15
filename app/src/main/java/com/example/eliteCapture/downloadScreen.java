@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.GIDGET;
 import com.example.eliteCapture.Config.Util.notification.notificationAdmin;
+import com.example.eliteCapture.Config.Util.secondTaks.downloadFarmsTaks;
 import com.example.eliteCapture.Config.Util.secondTaks.getTimeTaks;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Tab.listFincasTab;
@@ -263,7 +265,7 @@ public class downloadScreen extends AppCompatActivity {
             btnDownload.setLayoutParams(param());
 
             btnDownload.setOnClickListener(v ->{
-                new taskDownloader(this, farmsCheck).start();
+                new taskDownloader(this, farmsCheck, path, this);
             });
 
             line.addView(textNotificationFarmSelected);
@@ -279,27 +281,27 @@ public class downloadScreen extends AppCompatActivity {
         lineFarmws.setPadding(0,0,0, farmsCheck.size() > 0 ? 106 : 0);
     }
 
-    public static class taskDownloader extends Thread {
+    public static class taskDownloader {
         //Realiza la descarga de fiincas en segundo plano
 
+        Activity act;
         Context context;
         Dialog dialog;
         LinearLayout lineFarms;
+        String path;
 
         List<listFincasTab.fincasTab> farms;
 
         containerAdmin ca;
         textAdmin ta;
 
-        @Override
-        public void run() {
-            super.run();
-        }
 
-        public taskDownloader(Context context, List<listFincasTab.fincasTab> farms) {
+        public taskDownloader(Context context, List<listFincasTab.fincasTab> farms, String path, Activity act) {
             try {
+                this.act = act;
                 this.context = context;
                 this.farms = farms;
+                this.path = path;
                 ca = new containerAdmin(context);
                 ta = new textAdmin(context);
 
@@ -307,7 +309,7 @@ public class downloadScreen extends AppCompatActivity {
                 lineFarms.setLayoutParams(ca.params());
 
                 dialog = new Dialog(context);
-                dialog.setContentView(ca.scrollv(lineFarms  ), ca.params());
+                dialog.setContentView(ca.scrollv(lineFarms), ca.params());
                 dialog.show();
 
                 paintFarms();
@@ -317,8 +319,7 @@ public class downloadScreen extends AppCompatActivity {
             }
         }
 
-        public void paintFarms() throws Exception{
-            int hilo = 1;
+        public void paintFarms() {
             for(listFincasTab.fincasTab farm : farms){
                 LinearLayout principal = ca.container();
                 principal.setOrientation(LinearLayout.VERTICAL);
@@ -353,17 +354,12 @@ public class downloadScreen extends AppCompatActivity {
 
                 lineFarms.addView(principal);
 
-                getTimeTaks taskTime = new getTimeTaks();
-                taskTime.setTimeText(txtNotification);
-                taskTime.setNameTask(farm.getNombreFinca());
-                taskTime.setTerminadeTime(hilo * 5);
-                taskTime.start();
-
-                hilo++;
+                String folderPath = path+"/listFarms/"+farm.getIdFinca()+"/";
+                new downloadFarmsTaks(act, txtNotification, folderPath, farm);
             }
         }
 
-        public ProgressBar getProgress() throws Exception{
+        public ProgressBar getProgress() {
             ProgressBar pb = new ProgressBar(context);
             Drawable draw = context.getResources().getDrawable(R.drawable.my_progressbar);
             pb.setProgressDrawable(draw);

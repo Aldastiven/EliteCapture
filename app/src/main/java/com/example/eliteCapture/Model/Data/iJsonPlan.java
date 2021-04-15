@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
+import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Tab.DetalleTab;
 import com.example.eliteCapture.Model.Data.Tab.jsonPlanTab;
 import com.example.eliteCapture.Model.Data.Tab.listFincasTab;
@@ -30,11 +31,19 @@ public class iJsonPlan {
 
     Connection cn;
     JsonAdmin ja;
+    listFincasTab.fincasTab farm;
 
     public iJsonPlan(String path, int usuario, Connection cn) {
         Log.i("getIdUsuario", "llego el usuario : "+usuario);
         this.path = path;
         this.usuario = usuario;
+        this.cn = cn;
+        ja = new JsonAdmin();
+    }
+
+    public iJsonPlan(String path, Connection cn, listFincasTab.fincasTab... farm) {
+        this.path = path;
+        this.farm = farm[0];
         this.cn = cn;
         ja = new JsonAdmin();
     }
@@ -84,15 +93,18 @@ public class iJsonPlan {
     public boolean localListFincas(int idFinca) throws Exception{
         ResultSet rs;
         String q = "SELECT  * FROM Plano_json_Bloque WHERE codigo = "+idFinca;
+
+        Log.i("nextFinca", "query : "+q);
+
         PreparedStatement ps = cn.prepareStatement(q);
         rs = ps.executeQuery();
 
         String data = "";
         while (rs.next()) {
             data = rs.getString(2) + data;
-            Log.i("nextFinca", rs.getString(1));
+            Log.i("nextFinca", data);
         }
-        return ja.WriteJson(path, nombre, data);
+        return ja.WriteJson(path, "Finca_"+idFinca, data);
     }
 
     public Date getDateUpdate(int idFinca) throws Exception{
