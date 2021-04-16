@@ -447,11 +447,12 @@ public class downloadScreen extends AppCompatActivity {
         public void valideConexion(getConexion conexion){
             try {
                 Thread.sleep(1000);
-                while (conexion.getCn() == null) {
+                if(conexion.getCn() == null) {
                     valideConexion(conexion);
+                }else {
+                    this.conexion = conexion.getCn();
+                    paintFarms();
                 }
-                this.conexion = conexion.getCn();
-                paintFarms();
             }catch (Exception e){
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 Log.i("taskDownloader", "validateConexion : "+e.toString());
