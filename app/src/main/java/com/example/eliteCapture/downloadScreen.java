@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -28,14 +29,18 @@ import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.GIDGET;
 import com.example.eliteCapture.Config.Util.notification.notificationAdmin;
 import com.example.eliteCapture.Config.Util.secondTaks.downloadFarmsTaks;
+import com.example.eliteCapture.Config.Util.secondTaks.getConexion;
 import com.example.eliteCapture.Config.Util.secondTaks.getTimeTaks;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
+import com.example.eliteCapture.Model.Data.Tab.farmSelectDownloadTab;
 import com.example.eliteCapture.Model.Data.Tab.listFincasTab;
 import com.example.eliteCapture.Model.Data.iJsonPlan;
 
 import java.io.File;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiresApi(api = Build.VERSION_CODES.Q)
 public class downloadScreen extends AppCompatActivity {
@@ -295,7 +300,11 @@ public class downloadScreen extends AppCompatActivity {
         containerAdmin ca;
         textAdmin ta;
 
+        List<farmSelectDownloadTab> listFamsSelected = new ArrayList<>();
 
+        Connection conexion;
+
+        @SuppressLint("ResourceType")
         public taskDownloader(Context context, List<listFincasTab.fincasTab> farms, String path, Activity act) {
             try {
                 this.act = act;
@@ -309,62 +318,159 @@ public class downloadScreen extends AppCompatActivity {
                 lineFarms.setLayoutParams(ca.params());
 
                 dialog = new Dialog(context);
-                dialog.setContentView(ca.scrollv(lineFarms), ca.params());
+                dialog.setContentView(R.layout.modal_admin);
+
+                Window windowfinca = dialog.getWindow();
+                windowfinca.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                windowfinca.getAttributes().gravity = Gravity.CENTER;
+
+                LinearLayout lineDialog = dialog.findViewById(R.id.linearMod);
+                lineDialog.addView(ca.scrollv(lineFarms));
+
+                //dialog.setCancelable(false);
                 dialog.show();
 
-                paintFarms();
+                paintConexion();
             }catch (Exception e){
                 Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 Log.i("taskDownloader", e.toString());
             }
         }
 
+        public void paintConexion() throws Exception{
+            TextView txtConexionStatus = (TextView) ta.textColor(
+                    "Obteniendo conexion ...",
+                    "darkGray",
+                    13,
+                    "c"
+            );
+
+            lineFarms.addView(txtConexionStatus);
+
+
+            new Thread(()->{
+                valideConexion(
+                    new getConexion(act, txtConexionStatus)
+                );
+            }).start();
+        }
+
         public void paintFarms() {
+
+            listFamsSelected.clear();
+
             for(listFincasTab.fincasTab farm : farms){
-                LinearLayout principal = ca.container();
+
+                LinearLayout principal = ca.borderGradient("#154360");
                 principal.setOrientation(LinearLayout.VERTICAL);
+                principal.setPadding(10,10,10,10);
+
+                LinearLayout.LayoutParams paramPrincipal = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+
+                paramPrincipal.setMargins(10,10,10,10);
+
+                principal.setLayoutParams(paramPrincipal);
 
                 TextView txtNotification = (TextView) ta.textColor(
                         "Consultando...",
                         "darkGray",
-                        10,
+                        13,
                         "l"
                 );
 
                 LinearLayout lineItem = ca.container();
                 lineItem.setLayoutParams(ca.params());
                 lineItem.setOrientation(LinearLayout.HORIZONTAL);
-                lineItem.setWeightSum(2);
                 lineItem.setGravity(Gravity.CENTER);
 
                 TextView txt = (TextView) ta.textColor(
                         farm.getNombreFinca(),
                         "darkGray",
-                        15,
+                        18,
                         "l"
                 );
 
+                LinearLayout lineDrawable = ca.container();
+
                 ProgressBar prb = getProgress();
+                lineDrawable.addView(prb);
 
                 lineItem.addView(txt);
-                lineItem.addView(prb);
+                lineItem.addView(lineDrawable);
+
 
                 principal.addView(lineItem);
                 principal.addView(txtNotification);
 
-                lineFarms.addView(principal);
 
-                String folderPath = path+"/listFarms/"+farm.getIdFinca()+"/";
-                new downloadFarmsTaks(act, txtNotification, folderPath, farm);
+                String pathFolderFarm = path+"/listFarms/"+farm.getIdFinca()+"/";
+
+                listFamsSelected.add(
+                        new farmSelectDownloadTab(
+                                act,
+                               txtNotification,
+                                pathFolderFarm,
+                                farm,
+                               lineDrawable,
+                                this.conexion
+                        )
+                );
+
+                List<farmSelectDownloadTab> listClear = listFamsSelected.stream().distinct().collect(Collectors.toList());
+                listFamsSelected.clear();
+                listFamsSelected = listClear;
+
+                paintInLayoutDialog(principal);
+            }
+
+            for(farmSelectDownloadTab f : listFamsSelected){
+                new downloadFarmsTaks(
+                        f.getAct(),
+                        f.getTxtNotification(),
+                        f.getFolderPath(),
+                        f.getFarm(),
+                        f.getLineDrawable(),
+                        f.getConexion()
+                );
+            }
+        }
+
+        public void paintInLayoutDialog(LinearLayout principal){
+            act.runOnUiThread(() -> {
+                lineFarms.addView(principal);
+            });
+        }
+
+        public void valideConexion(getConexion conexion){
+            try {
+                Thread.sleep(1000);
+                while (conexion.getCn() == null) {
+                    valideConexion(conexion);
+                }
+                this.conexion = conexion.getCn();
+                paintFarms();
+            }catch (Exception e){
+                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+                Log.i("taskDownloader", "validateConexion : "+e.toString());
             }
         }
 
         public ProgressBar getProgress() {
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+              ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            param.setMargins(-10,-10,-10,-10);
+
             ProgressBar pb = new ProgressBar(context);
             Drawable draw = context.getResources().getDrawable(R.drawable.my_progressbar);
             pb.setProgressDrawable(draw);
-            pb.setScaleX(0.4f);
-            pb.setScaleY(0.4f);
+            pb.setPadding(-8,-8,-8,-8);
+            pb.setScaleX(0.5f);
+            pb.setScaleY(0.5f);
+            pb.setLayoutParams(param);
             return pb;
         }
     }

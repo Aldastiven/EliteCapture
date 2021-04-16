@@ -89,7 +89,7 @@ public class containerAdmin {
 
         LinearLayout line2 = container();
         line2.setLayoutParams(params);
-        line2.setVisibility(View.GONE);
+        //line2.setVisibility(View.GONE);
 
         GradientDrawable gd = new GradientDrawable();
         gd.setColor(0xFFFFFFFF); // Changes this drawbale to use a single color instead of a gradient

@@ -62,7 +62,7 @@ public class iJsonPlan {
 
     public boolean local() throws Exception{
         ResultSet rs;
-        String q = "SELECT * FROM loginFinca WHERE codigo = "+usuario;
+        String q = "SELECT * FROM eliteFinca WHERE codigo = "+usuario;
         PreparedStatement ps = cn.prepareStatement(q);
         rs = ps.executeQuery();
 
