@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.AUT_DES_CBX;
+import com.example.eliteCapture.Config.Util.Controls.CAM;
 import com.example.eliteCapture.Config.Util.Controls.CBE;
 import com.example.eliteCapture.Config.Util.Controls.DPV;
 import com.example.eliteCapture.Config.Util.Controls.ETN_ETA;
@@ -65,7 +66,7 @@ public class formAdmin {
             this.path = path;
             this.inicial = inicial;
             this.estado = estado;
-            this.consecutivo = consecutivo;
+            this.consecutivo = consecutivo + 1;
             this.JSO = JSO;
             this.act = act;
             sp = context.getSharedPreferences("share", context.MODE_PRIVATE);
@@ -150,6 +151,9 @@ public class formAdmin {
                         break;
                     case "GPS"://georeferenciación
                         v = new GPS(context, ubicacion, r, path, inicial).crear();
+                        break;
+                    case "CAM"://captura de fotos
+                        v = new CAM(context, ubicacion, r, path, inicial, usu, consecutivo).crear();
                         break;
                     default:
                         v = noCreate(r.getTipo());// El campo asignado en la base no existe
