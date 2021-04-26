@@ -27,6 +27,7 @@ import com.example.eliteCapture.Config.Util.Modal.modalServer;
 import com.example.eliteCapture.Config.Util.Modal.modalSetting;
 import com.example.eliteCapture.Config.Util.permissions.permissionAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
+import com.example.eliteCapture.Config.ftpConect;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.Data.Tab.jsonPlanTab;

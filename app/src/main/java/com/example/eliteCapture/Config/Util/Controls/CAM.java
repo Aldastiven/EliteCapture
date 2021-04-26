@@ -11,30 +11,22 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
-
-import com.example.eliteCapture.Camera;
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
+import com.example.eliteCapture.Config.ftpConect;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 public class CAM extends ContextWrapper {
     Context context;
     RespuestasTab rt;
     UsuarioTab usuario;
-    String ubicacion, path, pathPhoto;
+    String ubicacion, path, pathPhoto, date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
     int consecutivo;
     boolean vacio, initial;
 
@@ -98,6 +90,8 @@ public class CAM extends ContextWrapper {
                 Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getPhoto()));
                 startActivity(i);
+
+                //new ftpConect(this, path,"photos/eliteCapture/"+rt.getIdProceso()).start();
             });
 
             return btn;
@@ -117,16 +111,14 @@ public class CAM extends ContextWrapper {
         //Fecha, Formulario, Usuario, Consecutivo, idPregunta, # Imágen (Consecutivo)
 
         int countFiles = validateFiles();
-
-        String  date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime()),
-                dataItem = date+"_"+rt.getIdProceso()+"_"+usuario.getId_usuario()+"_"+consecutivo+"_"+rt.getId()+"_"+countFiles;
+        String dataItem = date+"_"+rt.getIdProceso()+"_"+usuario.getId_usuario()+"_"+consecutivo+"_"+rt.getId()+"_"+countFiles;
 
         return new File(getPathPhoto(), dataItem+".jpg");
     }
 
     public int validateFiles(){
         try{
-            String pathImage = path+"/photos/"+rt.getIdProceso();
+            String pathImage = path+"/photos/eliteCapture/"+rt.getIdProceso();
             int countFiles = 0;
             File file = new File(pathImage);
 

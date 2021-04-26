@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.GIDGET;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
+import com.example.eliteCapture.Config.ftpConect;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -101,6 +102,13 @@ public class Index extends AppCompatActivity {
             CargaMenu();
 
             ipl = new iJsonPlan(path, usu.getId_usuario() , null);
+
+
+            //inicia la sincronizacion de fotos al servidor ftp
+            new Thread(
+                    () -> new ftpConect(Index.this, path, "").start()
+            ).start();
+
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), "Error \n" + ex, Toast.LENGTH_SHORT).show();
         }
@@ -208,71 +216,11 @@ public class Index extends AppCompatActivity {
 
     public void DowloadFarms(View v){
         try {
-            /*LinearLayout linePrincipal = ca.container();
-            LinearLayout lineText = ca.container();
-            LinearLayout line = ca.container();
-            line.setBackgroundColor(Color.parseColor("#EAEDED"));
-
-                lineText.addView(ta.textColor(" Elige una finca para continuar el proceso de descarga", "darkGray", 15, "l"));
-
-                if (ipl.allListFincas() != null) {
-                    for (listFincasTab lf : ipl.allListFincas()) {
-                        if (lf.getUsuario() == usu.getId_usuario()) {
-                            for (listFincasTab.fincasTab finca : lf.getFincas()) {
-                                getItem(finca, line);
-                            }
-                        }else{
-                            lineText.removeAllViews();
-                            lineText.addView(ta.textColor("  ¡Las fincas actuales no estan asociadas  al codigo de usuario, por favor actualiza las fincas e intentalo nuevamente!", "rojo", 15, "l"));
-                            break;
-                        }
-                    }
-                } else {
-                    line.addView(ta.textColor(
-                            "No se encontraron fincas Asociadas con el usuario",
-                            "rojo",
-                            15,
-                            "c"
-                    ));
-                }
-
-            linePrincipal.addView(lineText);
-            linePrincipal.addView(line);
-            dialogListFincas.setContentView(ca.scrollv(linePrincipal));
-
-            Window w = dialogListFincas.getWindow();
-            w.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            w.setGravity(Gravity.CENTER);
-            dialogListFincas.show();*/
             Intent i = new Intent(getApplicationContext(), downloadScreen.class);
             i.putExtra("usuario",  usu.getId_usuario());
             startActivity(i);
         }catch (Exception e){
             Log.i("ErrorFarms", e.toString());
         }
-    }
-
-    public void getItem(listFincasTab.fincasTab nomBtn, LinearLayout line){
-        Button btn = (Button) gg.boton(nomBtn.getNombreFinca(), "gris");
-        btn.setTextColor(Color.parseColor("#000000"));
-        new GIDGET().GradientDrawable(btn, "l");
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(5, 2, 5, 2);
-
-        btn.setLayoutParams(params);
-
-        btn.setOnClickListener(v -> {
-            Intent i = new Intent(this, splash_activity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            i.putExtra("redireccion", 2);
-            i.putExtra("carga", "BajarDatos");
-            i.putExtra("idFinca", nomBtn.getIdFinca());
-
-            //idFinca = nomBtn.getIdFinca();
-
-            startActivity(i);
-        });
-
-        line.addView(btn);
     }
 }
