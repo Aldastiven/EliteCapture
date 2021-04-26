@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -61,6 +62,8 @@ public class downloadScreen extends AppCompatActivity {
     String path, titulo, msg1, msg2;
     int sizeText, idFinca;
 
+    public Connection conexionPro;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +73,7 @@ public class downloadScreen extends AppCompatActivity {
         insEntity();
         insViews();
         insVariables();
-        paintFarms();
+        validateFarmMod();
     }
 
     public void insEntity(){
@@ -125,7 +128,7 @@ public class downloadScreen extends AppCompatActivity {
         }
     }
 
-    public void paintFarms(){
+    public void paintFarms(Connection... con){
         //obtiene la lista de fincas del usuario
         try{
             listFincasTab fincaplan = ipl.allListFincas().get(0);
@@ -136,7 +139,7 @@ public class downloadScreen extends AppCompatActivity {
                         idFinca = finca.getIdFinca();
                         createFolder();
 
-                        getItem(finca, lineFarmws);
+                        runOnUiThread(() -> getItem(finca, lineFarmws, con[0]));
                     }
                 }else{
                     Toast.makeText(this, msg1, Toast.LENGTH_SHORT).show();
@@ -151,7 +154,7 @@ public class downloadScreen extends AppCompatActivity {
         }
     }
 
-    public void getItem(listFincasTab.fincasTab farm, LinearLayout line){
+    public void getItem(listFincasTab.fincasTab farm, LinearLayout line, Connection con){
         //crea el item de finca
         try {
             LinearLayout.LayoutParams param = ca.params();
@@ -169,9 +172,15 @@ public class downloadScreen extends AppCompatActivity {
             LinearLayout linearPanel1 = LinearPanel("V");
 
             linearPanel1.addView(ta.textColor(farm.getNombreFinca(), "darkGray", 18, "l"));
+
+
+            validateDateNoti(farm, con);
+
             linearPanel1.addView(ta.textColor("notificacion", "rojo", 15, "l"));
 
-            LinearLayout linearPanel2 = LinearPanel("H");;
+
+
+            LinearLayout linearPanel2 = LinearPanel("H");
             linearPanel2.setGravity(Gravity.RIGHT);
 
             gg.setSizeText(15);
@@ -189,6 +198,58 @@ public class downloadScreen extends AppCompatActivity {
             line.addView(linePrincipal);
         }catch (Exception e){
             Log.i("itemFarm", "exception : "+e.toString());
+        }
+    }
+
+    public int validateDateNoti(listFincasTab.fincasTab farm, Connection... con){
+        //gris si no tiene descargue de datos = 0
+        //verde si esta descargado y la fecha es mayor o igual a la del servidor = 1
+        //rojo si esta desactualizado = 2
+
+        int i = 0;
+        try{
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            if(con[0] != null){
+                //true == fecha es superior o igual a la del servidor
+                Log.i("validate", "fecha de la finca : "+farm.getIdFinca()+" es superior ? : "+
+                        new iJsonPlan(path, con[0], farm).validateDateFile(farm.getIdFinca()));
+            }else{
+                Log.i("validate", "sin conexion");
+            }
+
+        }catch (Exception e){
+            Log.i("itemFarm", "exception error : "+e.toString());
+        }
+        return i;
+    }
+
+    public void validateFarmMod(){
+        try{
+            new Thread(()->{
+                valideConexion(
+                        new getConexion(this, timeText, 1)
+                );
+            }).start();
+
+        }catch (Exception e){
+            Log.i("itemFarm", "exception : "+e.toString());
+        }
+    }
+
+    public void valideConexion(getConexion conexion){
+        try {
+            Thread.sleep(1000);
+            if(conexion.getCn() == null) {
+                valideConexion(conexion);
+            }else {
+                paintFarms(conexion.getCn());
+            }
+        }catch (Exception e){
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            Log.i("taskDownloader", "validateConexion : "+e.toString());
         }
     }
 
@@ -337,7 +398,15 @@ public class downloadScreen extends AppCompatActivity {
             }
         }
 
-        public void paintConexion() throws Exception{
+        public Connection getConexion() {
+            return conexion;
+        }
+
+        public void setConexion(Connection conexion) {
+            this.conexion = conexion;
+        }
+
+        public void paintConexion() {
             TextView txtConexionStatus = (TextView) ta.textColor(
                     "Obteniendo conexion ...",
                     "darkGray",
@@ -347,10 +416,9 @@ public class downloadScreen extends AppCompatActivity {
 
             lineFarms.addView(txtConexionStatus);
 
-
             new Thread(()->{
                 valideConexion(
-                    new getConexion(act, txtConexionStatus)
+                    new getConexion(act, txtConexionStatus, 3)
                 );
             }).start();
         }
@@ -450,7 +518,7 @@ public class downloadScreen extends AppCompatActivity {
                 if(conexion.getCn() == null) {
                     valideConexion(conexion);
                 }else {
-                    this.conexion = conexion.getCn();
+                    setConexion(conexion.getCn());
                     paintFarms();
                 }
             }catch (Exception e){

@@ -40,6 +40,9 @@ public class JsonAdmin {
 
     public Boolean ExitsJson(String path, String nombre) {
         //COMPRUEBA SI EL FICHERO JSON EXISTE
+
+        Log.i("rutaLlegada", path + nombre + ".json");
+
         return new File(path + nombre + ".json").exists();
     }
 }

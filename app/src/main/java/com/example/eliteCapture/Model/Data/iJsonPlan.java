@@ -122,18 +122,14 @@ public class iJsonPlan {
         return fecha;
     }
 
-    public String modify(){
-        if(ja.ExitsJson(path, nombre)) {
-            File f = new File(path + "/" + nombre + ".json");
-            return  new SimpleDateFormat("yyyy-MM-dd").format(f.getAbsoluteFile().lastModified());
-        }else{
-            return "";
-        }
+    public String modify(int idFinca){
+        String pathFarm = path +"listFarms/"+idFinca+"/Finca_"+idFinca + ".json";
+        return  new SimpleDateFormat("yyyy-MM-dd").format(new File(pathFarm).getAbsoluteFile().lastModified());
     }
 
     public boolean validateDateFile(int idFinca) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date fechaParseada = sdf.parse(modify());
+        Date fechaParseada = sdf.parse(modify(idFinca));
         return fechaParseada.before(getDateUpdate(idFinca));
     }
 }

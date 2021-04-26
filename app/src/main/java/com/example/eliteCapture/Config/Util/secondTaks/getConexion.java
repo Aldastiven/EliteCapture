@@ -13,15 +13,16 @@ public class getConexion{
     Activity act;
 
     String conexionEstableshed = "", getIntentConexion = "", IntentTermined = "", intermitendStatus = "";
-    int intentosConexion = 0;
+    int intentosConexion = 0, intentosDefinidos = 3;
     long initialTimeConexion = System.currentTimeMillis(), timeSeconds;
     Connection cn = null;
 
     TextView txtConexionStatus;
 
-    public getConexion(Activity act, TextView txtConexionStatus) {
+    public getConexion(Activity act, TextView txtConexionStatus, int intentosDefinidos) {
         this.act = act;
         this.txtConexionStatus = txtConexionStatus;
+        this.intentosDefinidos = intentosDefinidos;
         initialMessage();
         new getConexionThread().start();
     }
@@ -52,10 +53,10 @@ public class getConexion{
     }
 
     public void initialMessage(){
-        conexionEstableshed = "Conexion establecida, tiempo de ejecución : "+getTimeSeconds()+" Seg.";
-        getIntentConexion = "Termino el tiempo de conexion, intentando "+getIntentosConexion()+"/3";
-        IntentTermined = "!SIN CONEXION¡ Termino el tiempo de conexion, se utilizaron "+getIntentosConexion()+"/3 intentos";
-        intermitendStatus = "comprobando la conexión"+", tiempo "+getTimeSeconds()+" Seg., intentos : "+getIntentosConexion()+"/3";
+        conexionEstableshed = " Conexion establecida, tiempo de ejecución : "+getTimeSeconds()+" Seg.";
+        getIntentConexion = " Termino el tiempo de conexion, intentando "+getIntentosConexion()+"/"+intentosDefinidos;
+        IntentTermined = " !SIN CONEXION¡ Termino el tiempo de conexion, se utilizaron "+getIntentosConexion()+"/"+intentosDefinidos+" intentos";
+        intermitendStatus = " comprobando la conexión"+", tiempo "+getTimeSeconds()+" Seg., intentos : "+getIntentosConexion()+"/"+intentosDefinidos;
     }
 
     class getConexionThread extends Thread{
@@ -85,9 +86,9 @@ public class getConexion{
                     if(cn != null){
                         setCn(cn);
                         getMessage(conexionEstableshed, false, 1);
-                    }else if(intentosConexion < 3){
+                    }else if(intentosConexion < intentosDefinidos){
                         comenzarTareas();
-                    }else if(intentosConexion == 3){
+                    }else if(intentosConexion == intentosDefinidos){
                         getMessage(IntentTermined, true, 2);
                     }
                     return true;
