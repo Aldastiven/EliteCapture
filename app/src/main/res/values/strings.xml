@@ -12,6 +12,6 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="login_failed">"Login failed"</string>
     <string name="invalid_password">Password must be >5 characters</string>
-    <string name="intro">Elite_Capture Version 2.0 Rel. 4.3.8 (test) \n The Elite Flower \n Todos los derechos reservados© 2020</string>
-    <string name="version">Elite_Capture Version 2.0 Rel. 4.3.8 (test) </string>
+    <string name="intro">Elite_Capture Version 2.0 Rel. 4.3.9 (test) \n The Elite Flower \n Todos los derechos reservados© 2021</string>
+    <string name="version">Elite_Capture Version 2.0 Rel. 4.3.9 (test) </string>
 </resources>

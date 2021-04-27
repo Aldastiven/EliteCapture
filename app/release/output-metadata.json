@@ -1,19 +1,17 @@
 {
-  "version": 1,
+  "version": 2,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
   },
   "applicationId": "com.example.eliteCapture",
-  "variantName": "release",
+  "variantName": "processReleaseResources",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "properties": [],
       "versionCode": 434,
       "versionName": "4.3.4",
-      "enabled": true,
       "outputFile": "app-release.apk"
     }
   ]

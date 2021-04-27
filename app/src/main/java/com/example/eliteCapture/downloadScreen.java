@@ -173,11 +173,9 @@ public class downloadScreen extends AppCompatActivity {
 
             linearPanel1.addView(ta.textColor(farm.getNombreFinca(), "darkGray", 18, "l"));
 
-
             validateDateNoti(farm, con);
 
             linearPanel1.addView(ta.textColor("notificacion", "rojo", 15, "l"));
-
 
 
             LinearLayout linearPanel2 = LinearPanel("H");

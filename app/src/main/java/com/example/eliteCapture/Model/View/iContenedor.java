@@ -357,7 +357,8 @@ public class iContenedor implements Contenedor {
                         "           ,[porc_resp_d]\n" +
                         "           ,[id_terminal]\n" +
                         "           ,[id_usuario]\n" +
-                        "           ,[consec_json])\n" +
+                        "           ,[consec_json]\n" +
+                        "           ,[reglas])\n" +
                         "     VALUES\n" +
                         "           (?,?,?,?,?,?,?,?,?,?);";
                 int load = 0;
@@ -402,6 +403,7 @@ public class iContenedor implements Contenedor {
                 ps.setString(8, c.getTerminal());
                 ps.setInt(9, c.getIdUsuario());
                 ps.setInt(10, c.getConsecutivo());
+                ps.setString(11, String.valueOf(r.getReglas()));
                 ps.addBatch();
             }
         }catch (Exception e){
