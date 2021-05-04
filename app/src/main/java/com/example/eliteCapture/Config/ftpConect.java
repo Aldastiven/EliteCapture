@@ -28,7 +28,6 @@ public class ftpConect extends Thread {
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
 
         syncronizedPhoto(new File(path+"/photos").getAbsoluteFile(), getConexion());
-        txtMessage();
     }
 
     public static FTPClient getConexion(){
@@ -52,26 +51,32 @@ public class ftpConect extends Thread {
 
     public void syncronizedPhoto(File src, FTPClient ftp){
         try {
-            if (src.isDirectory()) {
-                ftp.makeDirectory(src.getName());
-                ftp.changeWorkingDirectory(src.getName());
-                Log.i("ftpSyncronized", "carpeta "+src.getName()+" es creada : "+ftp.printWorkingDirectory());
-                for (File file : src.listFiles()) {
-                    syncronizedPhoto(file, ftp);
-                }
-                ftp.changeToParentDirectory();
-            } else {
-                InputStream srcStream = null;
-                try {
-                    srcStream = src.toURI().toURL().openStream();
-                    Log.i("ftpSyncronized", "archivo img : " + src.getName());
-                    ftp.storeFile(src.getName(), srcStream);
-                    countImage++;
-                } finally {
-                    if(srcStream != null) {
-                        srcStream.close();
+
+            if(ftp != null) {
+                if (src.isDirectory()) {
+                    ftp.makeDirectory(src.getName());
+                    ftp.changeWorkingDirectory(src.getName());
+                    Log.i("ftpSyncronized", "carpeta " + src.getName() + " es creada : " + ftp.printWorkingDirectory());
+                    for (File file : src.listFiles()) {
+                        syncronizedPhoto(file, ftp);
+                    }
+                    ftp.changeToParentDirectory();
+                } else {
+                    InputStream srcStream = null;
+                    try {
+                        srcStream = src.toURI().toURL().openStream();
+                        Log.i("ftpSyncronized", "archivo img : " + src.getName());
+                        ftp.storeFile(src.getName(), srcStream);
+                        countImage++;
+                    } finally {
+                        if (srcStream != null) {
+                            srcStream.close();
+                            txtMessage();
+                        }
                     }
                 }
+            }else{
+                c.runOnUiThread(() -> Toast.makeText(c, "sin conexion para sincronizar fotos", Toast.LENGTH_LONG).show()    );
             }
         }catch (IOException e){
             Log.i("error", "syncronizedPhoto : "+e.toString());
@@ -80,7 +85,9 @@ public class ftpConect extends Thread {
 
     public void txtMessage(){
         c.runOnUiThread(()-> {
-            Toast.makeText(c, "Fotos enviadas ✓, se sicronizaron "+countImage+" fotos", Toast.LENGTH_SHORT).show();
+            if(countImage > 0) {
+                Toast.makeText(c, "Fotos enviadas ✓, se sicronizaron " + countImage + " fotos", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }
