@@ -169,7 +169,7 @@ public class splash_activity extends AppCompatActivity {
 
 
             Toast.makeText(context, "llego la finca : "+idFinca, Toast.LENGTH_SHORT).show();
-            new iJsonPlan(path, idUsuario, cn).getDateUpdate(idFinca);
+            //new iJsonPlan(path, idUsuario, cn).getDateUpdate(idFinca);
 
             CargeInicial();
             if(noti.getChildCount() > 0) noti.removeAllViews();

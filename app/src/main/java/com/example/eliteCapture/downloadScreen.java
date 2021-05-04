@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ public class downloadScreen extends AppCompatActivity {
 
     List<listFincasTab.fincasTab> farmsCheck = new ArrayList<>();
     List<CheckBox> listChecks = new ArrayList<>();
+    List<itemFamrTab> listItemFarm = new ArrayList<>();
 
     String path, titulo, msg1, msg2, msg3;
     int sizeText, idFinca;
@@ -126,43 +128,41 @@ public class downloadScreen extends AppCompatActivity {
         }
     }
 
-    public void paintFarms(Connection... con){
+    public void paintFarms(){
         //obtiene la lista de fincas del usuario
         try{
             List<listFincasTab> listFincas = ipl.allListFincas();
-            Log.i("farmsDownload", ""+listFincas.size());
 
-            if(listFincas != null){
-
-                listFincasTab fincaplan = listFincas.get(0);
-
-                if (fincaplan != null) {
-                    if (fincaplan.getUsuario() == getUser()) {
-                        for (listFincasTab.fincasTab finca : fincaplan.getFincas()) {
-                            idFinca = finca.getIdFinca();
+            if(listFincas.size() > 0) {
+                for (listFincasTab finca : listFincas) {
+                    if (finca.getUsuario() == getUser()) {
+                        for (listFincasTab.fincasTab f : finca.getFincas()) {
                             createFolder();
 
-                            getItem(finca, lineFarmws, con[0]);
+                            getItem(f, lineFarmws);
                         }
-                    }else{
-                        Toast.makeText(this, msg1, Toast.LENGTH_SHORT).show();
+                    } else {
+                        //los datos de finca no son del usuario
+                        lineFarmws.addView(ta.textColor("Las fincas no corresponden con el usuario", "rojo", 15, "l"));
                     }
-                } else {
-                    lineFarmws.addView(
-                            ta.textColor(msg2, "rojo", sizeText, "l")
-                    );
                 }
             }else{
-                lineFarmws.addView(
-                        ta.textColor(msg3, "rojo", sizeText, "l")
-                );
+                //no tiene fincas descargadas
+                lineFarmws.addView(ta.textColor("No tienes fincas descargadas, descarga datos y vuelve a intentarlo", "rojo", 15, "l"));
             }
+
+            Log.i("farmsDownload", "cantidad de fincas creadas : "+listItemFarm.size());
+
+            if(listItemFarm.size() > 0){
+                validateFarmMod();
+            }
+
         }catch (Exception e){
             Log.i("ErrorFarms", e.toString());
         }
     }
 
-    public void getItem(listFincasTab.fincasTab farm, LinearLayout line, Connection con){
+    public void getItem(listFincasTab.fincasTab farm, LinearLayout line){
         //crea el item de finca
         try {
             LinearLayout.LayoutParams param = ca.params();
@@ -181,9 +181,9 @@ public class downloadScreen extends AppCompatActivity {
 
             linearPanel1.addView(ta.textColor(farm.getNombreFinca(), "darkGray", 18, "l"));
 
-            //validateDateNoti(farm, con);
 
-            linearPanel1.addView(ta.textColor("notificacion", "rojo", 15, "l"));
+            TextView txtNotification = (TextView)  ta.textColor("notificacion", "rojo", 15, "l");
+            linearPanel1.addView(txtNotification);
 
 
             LinearLayout linearPanel2 = LinearPanel("H");
@@ -191,7 +191,9 @@ public class downloadScreen extends AppCompatActivity {
 
             gg.setSizeText(15);
             gg.setParams("w_w");
-            linearPanel2.addView(gg.boton(" Trabajar ", "blue"));
+
+            Button btnWorking = (Button) gg.boton(" Trabajar ", "blue");
+            linearPanel2.addView(btnWorking);
 
             CheckBox cb = new CheckBox(this);
             listChecks.add(cb);
@@ -201,36 +203,23 @@ public class downloadScreen extends AppCompatActivity {
             linePrincipal.addView(linearPanel1);
             linePrincipal.addView(linearPanel2);
 
+
+            listItemFarm.add(
+                   new itemFamrTab(
+                        farm,
+                        linePrincipal,
+                        txtNotification,
+                        btnWorking,
+                        cb
+                   )
+            );
+
             line.addView(linePrincipal);
         }catch (Exception e){
             Log.i("itemFarm", "exception : "+e.toString());
         }
     }
-
-    public int validateDateNoti(listFincasTab.fincasTab farm, Connection... con){
-        //gris si no tiene descargue de datos = 0
-        //verde si esta descargado y la fecha es mayor o igual a la del servidor = 1
-        //rojo si esta desactualizado = 2
-
-        int i = 0;
-        try{
-
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-
-            if(con[0] != null){
-                //true == fecha es superior o igual a la del servidor
-                Log.i("validate", "fecha de la finca : "+farm.getIdFinca()+" es superior ? : "+
-                        new iJsonPlan(path, con[0], farm).validateDateFile(farm.getIdFinca()));
-            }else{
-                Log.i("validate", "sin conexion");
-            }
-
-        }catch (Exception e){
-            Log.i("itemFarm", "exception error : "+e.toString());
-        }
-        return i;
-    }
+    
 
     public void validateFarmMod(){
         try{
@@ -251,10 +240,32 @@ public class downloadScreen extends AppCompatActivity {
             if(conexion.getCn() == null) {
                 valideConexion(conexion);
             }else {
-                //paintFarms(conexion.getCn());
+
+                final int[] iSincronizado = {0};
+                for(itemFamrTab f : listItemFarm){
+                    new Thread(() -> {
+                        try {
+                            Boolean actualizada = !ipl.validateDateFile(f.farm.getIdFinca(), conexion.getCn());
+                             Log.i("validateDate", "finca "+f.farm.getNombreFinca() + ( actualizada ? " ACTUALIZADA" : " DESACTUALIZADA"));
+                             downloadScreen.this.runOnUiThread(() -> {
+                                    f.txtNotification.setText((actualizada ? "Actualizada" : "¡Desactualizada!"));
+                                    f.txtNotification.setTextColor(Color.parseColor(actualizada ? "#27AE60" : "#E74C3C"));
+                                    gg.GradientDrawable(f.linePrincipal, "l",actualizada ? "verde" : "rojo");
+                                    f.btnWork.setEnabled(actualizada);
+                                    f.btnWork.setBackgroundColor(Color.parseColor(actualizada ? "#3498DB" : "#154360"));
+                                    iSincronizado[0] = iSincronizado[0] +1;
+                                    timeText.setText(" Sincronizadas "+iSincronizado[0]+" de "+listItemFarm.size()+" fincas");
+                                }
+                             );
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
             }
         }catch (Exception e){
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
             Log.i("taskDownloader", "validateConexion : "+e.toString());
         }
     }
@@ -547,6 +558,23 @@ public class downloadScreen extends AppCompatActivity {
             pb.setScaleY(0.5f);
             pb.setLayoutParams(param);
             return pb;
+        }
+    }
+
+
+    public class itemFamrTab{
+        listFincasTab.fincasTab farm;
+        LinearLayout linePrincipal;
+        TextView txtNotification;
+        Button btnWork;
+        CheckBox check;
+
+        public itemFamrTab(listFincasTab.fincasTab farm, LinearLayout linePrincipal, TextView txtNotification, Button btnWork, CheckBox check) {
+            this.farm = farm;
+            this.linePrincipal = linePrincipal;
+            this.txtNotification = txtNotification;
+            this.btnWork = btnWork;
+            this.check = check;
         }
     }
 }

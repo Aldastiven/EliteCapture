@@ -99,9 +99,10 @@ public class iJsonPlan {
         return ja.WriteJson(path, "Finca_"+idFinca, data);
     }
 
-    public Date getDateUpdate(int idFinca) throws Exception{
+    public Date getDateUpdate(int idFinca, Connection cn) throws Exception{
         ResultSet rs;
         String q = "SELECT  * FROM Plano_json_Bloque WHERE codigo = "+idFinca;
+        Log.i("nextFinca", "idFinca : "+q);
         PreparedStatement ps = cn.prepareStatement(q);
         rs = ps.executeQuery();
 
@@ -119,9 +120,10 @@ public class iJsonPlan {
         return  new SimpleDateFormat("yyyy-MM-dd").format(new File(pathFarm).getAbsoluteFile().lastModified());
     }
 
-    public boolean validateDateFile(int idFinca) throws Exception {
+    public boolean validateDateFile(int idFinca, Connection cn) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date fechaParseada = sdf.parse(modify(idFinca));
-        return fechaParseada.before(getDateUpdate(idFinca));
+
+        return fechaParseada.before(getDateUpdate(idFinca, cn));
     }
 }
