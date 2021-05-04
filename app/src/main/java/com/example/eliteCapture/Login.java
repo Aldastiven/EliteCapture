@@ -116,7 +116,7 @@ public class Login extends AppCompatActivity {
 
 
 
-            modalSetting = new modalSetting(this,this, path, imgOnline, notification);
+            modalSetting = new modalSetting(this,this, path, imgOnline);
             modalSetting.modal();
 
             imgOnline.setBackgroundResource(ionLine.all().equals("onLine") ? ic_wifi_on : ic_wifi_off);
