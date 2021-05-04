@@ -1,11 +1,13 @@
 package com.example.eliteCapture.Config.Util.Modal;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +23,18 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Container.notificationAdmin;
+import com.example.eliteCapture.Config.Util.secondTaks.getConexion;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.ionLine;
 import com.example.eliteCapture.R;
 import com.example.eliteCapture.splash_activity;
 
+import java.sql.Connection;
+
 public class modalSetting {
 
+    Activity act;
     Context context;
     String path;
     Dialog d;
@@ -42,11 +48,11 @@ public class modalSetting {
 
     ionLine ionLine;
 
-    public modalSetting(Context context, String path, ImageView imgOnline, LinearLayout notifications) {
+    public modalSetting(Activity act, Context context, String path, ImageView imgOnline, LinearLayout notifications) {
+        this.act = act;
         this.context = context;
         this.path = path;
         this.imgOnline = imgOnline;
-        this.notifications = notifications;
 
 
         ionLine = new ionLine(path);
@@ -101,6 +107,9 @@ public class modalSetting {
         txtR = (TextView) ta.textColor(ionLine.all(), "negro", 15, "c");
         txtR.setLayoutParams(ll);
 
+        notifications = new LinearLayout(context);
+        notifications.setOrientation(LinearLayout.VERTICAL);
+
         estadoOnline();
 
         linearLayout1.addView(txtR);
@@ -108,6 +117,7 @@ public class modalSetting {
 
         linearLayout.addView(txt);
         linearLayout.addView(linearLayout1);
+        linearLayout.addView(notifications);
 
         //validarConexion();
         sw.setChecked(ionLine.all().equals("onLine"));
@@ -120,19 +130,22 @@ public class modalSetting {
             try {
                 if(sw.isChecked() && ionLine.all().equals("offLine")){
                     sw.setChecked(ionLine.all().equals("onLine"));
-                    new notificationAdmin(context, "Comprobando servidor disponible", "dark", 2000, notifications).crear();
-                    new Handler().postDelayed((Runnable) () -> {
-
+                    //new notificationAdmin(context, "Comprobando servidor disponible", "dark", 2000, notifications).crear();
+                    /*new Handler().postDelayed((Runnable) () -> {
                         int conexion = new Conexion().excecutePing(context);
+                    }, 2000);*/
 
-                        new notificationAdmin(context, conexion == 0 ? "obtuvo Conexión" : "Conexión perdida, cod. : "+conexion, conexion == 0 ? "good" : "bad", 3000, notifications).crear();
-                        ionLine.local(conexion == 0 ? "onLine" : "offLine");
-                        sw.setButtonDrawable(conexion == 0 ? R.color.verde : R.color.rojo);
-                        sw.setChecked(conexion == 0);
-                        txtR.setText(conexion == 0 ? "onLine" : "offLine");
-                        imgOnline.setBackgroundResource(conexion == 0 ? R.drawable.ic_wifi_on : R.drawable.ic_wifi_off);
+                    TextView txt = (TextView) ta.textColor("Validando conexion", "verde", 15, "c");
+                    notifications.addView(txt);
 
-                    }, 2000);
+                    d.setCancelable(false);
+
+                    new Thread(()->{
+                        valideConexion(
+                                new getConexion(act, txt, 3)
+                        );
+                    }).start();
+
                 }else if(!sw.isChecked()){
                     ionLine.local("offLine");
                     sw.setButtonDrawable(R.color.rojo);
@@ -166,11 +179,52 @@ public class modalSetting {
         DrawableCompat.setTintList(DrawableCompat.wrap(sw.getTrackDrawable()), new ColorStateList(states, trackColors));
     }
 
+    public void validatetConexion(Connection conexion){
+        new notificationAdmin(context, conexion != null ? "obtuvo Conexión" : "Conexión perdida, cod. : "+conexion, conexion != null ? "good" : "bad", 3000, notifications).crear();
+        ionLine.local(conexion != null ? "onLine" : "offLine");
+        sw.setButtonDrawable(conexion != null ? R.color.verde : R.color.rojo);
+        sw.setChecked(conexion != null);
+        txtR.setText(conexion != null ? "onLine" : "offLine");
+        imgOnline.setBackgroundResource(conexion != null ? R.drawable.ic_wifi_on : R.drawable.ic_wifi_off);
+    }
+
     public void validarConexion(){
-        sw.setChecked(false);
-        txtR.setText(ionLine.all());
-        imgOnline.setBackgroundResource(ionLine.all().equals("offLine") ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
-        ionLine.local(!sw.isChecked() ? "offLine" : "onLine");
+        try{
+            sw.setChecked(false);
+            txtR.setText(ionLine.all());
+            imgOnline.setBackgroundResource(ionLine.all().equals("offLine") ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
+            ionLine.local(!sw.isChecked() ? "offLine" : "onLine");
+        }catch (Exception e){
+            Toast.makeText(act, e.toString(), Toast.LENGTH_SHORT).show();
+            Log.i("taskDownloader", "validateConexion : "+e.toString());
+        }
+    }
+
+
+    public void valideConexion(getConexion conexion){
+        try {
+            Thread.sleep(1000);
+            Log.i("taskDownloader", "termino : "+conexion.getTerminated());
+            if(conexion.getCn() == null) {
+                if(!conexion.getTerminated()){
+                    valideConexion(conexion);
+                }else {
+                    Log.i("taskDownloader", "paso por aqui!!");
+                    Thread.sleep(3000);
+                    d.setCancelable(true);
+                    d.dismiss();
+                }
+            }else if(conexion.getCn() != null) {
+                validarConexion();
+                Log.i("taskDownloader", "paso por aqui!!");
+                Thread.sleep(3000);
+                d.setCancelable(true);
+                d.dismiss();
+            }
+        }catch (Exception e){
+            Toast.makeText(act, e.toString(), Toast.LENGTH_SHORT).show();
+            Log.i("taskDownloader", "validateConexion : "+e.toString());
+        }
     }
 
     protected class Conexion extends sqlConect {}

@@ -16,6 +16,7 @@ public class getConexion{
     int intentosConexion = 0, intentosDefinidos = 3;
     long initialTimeConexion = System.currentTimeMillis(), timeSeconds;
     Connection cn = null;
+    Boolean terminated = false;
 
     TextView txtConexionStatus;
 
@@ -52,6 +53,14 @@ public class getConexion{
         this.timeSeconds = timeSeconds;
     }
 
+    public Boolean getTerminated() {
+        return terminated;
+    }
+
+    public void setTerminated(Boolean terminated) {
+        this.terminated = terminated;
+    }
+
     public void initialMessage(){
         conexionEstableshed = " Conexion establecida, tiempo de ejecución : "+getTimeSeconds()+" Seg.";
         getIntentConexion = " Termino el tiempo de conexion, intentando "+getIntentosConexion()+"/"+intentosDefinidos;
@@ -86,10 +95,12 @@ public class getConexion{
                     if(cn != null){
                         setCn(cn);
                         getMessage(conexionEstableshed, false, 1);
+                        setTerminated(true);
                     }else if(intentosConexion < intentosDefinidos){
                         comenzarTareas();
                     }else if(intentosConexion == intentosDefinidos){
                         getMessage(IntentTermined, true, 2);
+                        setTerminated(true);
                     }
                     return true;
                 }else{
