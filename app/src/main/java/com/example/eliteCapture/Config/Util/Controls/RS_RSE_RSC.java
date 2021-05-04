@@ -385,8 +385,11 @@ public class RS_RSE_RSC {
         btnDesp.setOnClickListener(v -> lineDespliegue.setVisibility(lineDespliegue.getVisibility() == View.GONE ? View.VISIBLE : View.GONE));
 
         line.addView(btnDesp);
-        if(rt.getDesplegable() != null) {getMultiOption(lineDespliegue);}
-        else {line.addView(ta.textColor("¡El campo no tiene desplegable asignada!", "rojo", 15, "l"));}
+        if(rt.getDesplegable() != null) {
+            getMultiOption(lineDespliegue);
+        } else {
+            line.addView(ta.textColor("¡El campo no tiene desplegable asignada!", "rojo", 15, "l"));
+        }
         line.addView(lineDespliegue);
         return line;
     }

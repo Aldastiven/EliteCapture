@@ -219,7 +219,7 @@ public class downloadScreen extends AppCompatActivity {
             Log.i("itemFarm", "exception : "+e.toString());
         }
     }
-    
+
 
     public void validateFarmMod(){
         try{
@@ -246,7 +246,7 @@ public class downloadScreen extends AppCompatActivity {
                     new Thread(() -> {
                         try {
                             Boolean actualizada = !ipl.validateDateFile(f.farm.getIdFinca(), conexion.getCn());
-                             Log.i("validateDate", "finca "+f.farm.getNombreFinca() + ( actualizada ? " ACTUALIZADA" : " DESACTUALIZADA"));
+
                              downloadScreen.this.runOnUiThread(() -> {
                                     f.txtNotification.setText((actualizada ? "Actualizada" : "¡Desactualizada!"));
                                     f.txtNotification.setTextColor(Color.parseColor(actualizada ? "#27AE60" : "#E74C3C"));
