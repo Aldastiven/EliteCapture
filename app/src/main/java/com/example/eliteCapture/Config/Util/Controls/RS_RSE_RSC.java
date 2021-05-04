@@ -253,7 +253,7 @@ public class RS_RSE_RSC {
                     rta = n+"";
                     campConteo.setText(n+"");
                 }else{
-                    if(causa.isEmpty()) {
+                    if(StringUtils.isEmpty(causa)) {
                         noti.removeAllViews();
                         noti.addView(ta.textColor("¡Debes seleccionar al menos una opción!", "rojo", 15, "l"));
                         temporizador(5000);

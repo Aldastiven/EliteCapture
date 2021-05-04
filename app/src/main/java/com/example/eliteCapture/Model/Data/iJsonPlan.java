@@ -1,14 +1,7 @@
 package com.example.eliteCapture.Model.Data;
 
-import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
-
-import androidx.annotation.RequiresApi;
-
 import com.example.eliteCapture.Config.Util.JsonAdmin;
-import com.example.eliteCapture.Config.sqlConect;
-import com.example.eliteCapture.Model.Data.Tab.DetalleTab;
 import com.example.eliteCapture.Model.Data.Tab.jsonPlanTab;
 import com.example.eliteCapture.Model.Data.Tab.listFincasTab;
 import com.google.gson.Gson;
@@ -18,7 +11,6 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

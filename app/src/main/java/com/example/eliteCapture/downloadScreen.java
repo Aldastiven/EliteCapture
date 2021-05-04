@@ -6,21 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,10 +24,8 @@ import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.GIDGET;
-import com.example.eliteCapture.Config.Util.notification.notificationAdmin;
 import com.example.eliteCapture.Config.Util.secondTaks.downloadFarmsTaks;
 import com.example.eliteCapture.Config.Util.secondTaks.getConexion;
-import com.example.eliteCapture.Config.Util.secondTaks.getTimeTaks;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.Tab.farmSelectDownloadTab;
 import com.example.eliteCapture.Model.Data.Tab.listFincasTab;
@@ -59,7 +53,7 @@ public class downloadScreen extends AppCompatActivity {
     List<listFincasTab.fincasTab> farmsCheck = new ArrayList<>();
     List<CheckBox> listChecks = new ArrayList<>();
 
-    String path, titulo, msg1, msg2;
+    String path, titulo, msg1, msg2, msg3;
     int sizeText, idFinca;
 
     public Connection conexionPro;
@@ -73,7 +67,9 @@ public class downloadScreen extends AppCompatActivity {
         insEntity();
         insViews();
         insVariables();
-        validateFarmMod();
+        //validateFarmMod();
+        getUser();
+        paintFarms();
     }
 
     public void insEntity(){
@@ -115,6 +111,8 @@ public class downloadScreen extends AppCompatActivity {
                 " fincas e intentalo nuevamente!";
 
         msg2 = "No se encontraron fincas Asociadas con el usuario";
+
+        msg3 = "No tienes datos de fincas descargadas";
     }
 
     public int getUser(){
@@ -131,22 +129,32 @@ public class downloadScreen extends AppCompatActivity {
     public void paintFarms(Connection... con){
         //obtiene la lista de fincas del usuario
         try{
-            listFincasTab fincaplan = ipl.allListFincas().get(0);
+            List<listFincasTab> listFincas = ipl.allListFincas();
+            Log.i("farmsDownload", ""+listFincas.size());
 
-            if (fincaplan != null) {
-                if (fincaplan.getUsuario() == getUser()) {
-                    for (listFincasTab.fincasTab finca : fincaplan.getFincas()) {
-                        idFinca = finca.getIdFinca();
-                        createFolder();
+            if(listFincas != null){
 
-                        runOnUiThread(() -> getItem(finca, lineFarmws, con[0]));
+                listFincasTab fincaplan = listFincas.get(0);
+
+                if (fincaplan != null) {
+                    if (fincaplan.getUsuario() == getUser()) {
+                        for (listFincasTab.fincasTab finca : fincaplan.getFincas()) {
+                            idFinca = finca.getIdFinca();
+                            createFolder();
+
+                            getItem(finca, lineFarmws, con[0]);
+                        }
+                    }else{
+                        Toast.makeText(this, msg1, Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    Toast.makeText(this, msg1, Toast.LENGTH_SHORT).show();
+                } else {
+                    lineFarmws.addView(
+                            ta.textColor(msg2, "rojo", sizeText, "l")
+                    );
                 }
-            } else {
+            }else{
                 lineFarmws.addView(
-                        ta.textColor(msg2, "rojo", sizeText, "l")
+                        ta.textColor(msg3, "rojo", sizeText, "l")
                 );
             }
         }catch (Exception e){
@@ -173,7 +181,7 @@ public class downloadScreen extends AppCompatActivity {
 
             linearPanel1.addView(ta.textColor(farm.getNombreFinca(), "darkGray", 18, "l"));
 
-            validateDateNoti(farm, con);
+            //validateDateNoti(farm, con);
 
             linearPanel1.addView(ta.textColor("notificacion", "rojo", 15, "l"));
 
@@ -243,7 +251,7 @@ public class downloadScreen extends AppCompatActivity {
             if(conexion.getCn() == null) {
                 valideConexion(conexion);
             }else {
-                paintFarms(conexion.getCn());
+                //paintFarms(conexion.getCn());
             }
         }catch (Exception e){
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
