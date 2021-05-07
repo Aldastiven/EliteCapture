@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -58,7 +59,7 @@ public class downloadScreen extends AppCompatActivity {
     String path, titulo, msg1, msg2, msg3;
     int sizeText, idFinca;
 
-    public Connection conexionPro;
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class downloadScreen extends AppCompatActivity {
         ca = new containerAdmin(this);
         ta = new textAdmin(this);
         ipl = new iJsonPlan(path);
+        sp = getBaseContext().getSharedPreferences("share", MODE_PRIVATE);
     }
 
     public void insViews(){
@@ -96,7 +98,9 @@ public class downloadScreen extends AppCompatActivity {
         checkFamsAll.setOnCheckedChangeListener((compoundButton, b) -> {
             if(listChecks.size() > 0){
                 for(CheckBox cb : listChecks){
-                    cb.setChecked(checkFamsAll.isChecked());
+                    if(cb.isEnabled()) {
+                        cb.setChecked(checkFamsAll.isChecked());
+                    }
                 }
             }
         });
@@ -165,6 +169,10 @@ public class downloadScreen extends AppCompatActivity {
     public void getItem(listFincasTab.fincasTab farm, LinearLayout line){
         //crea el item de finca
         try {
+
+            boolean downloaded = new File(path+"/listFarms/"+farm.getIdFinca()+"/Finca_"+farm.getIdFinca()+".json").exists();
+            Log.i("farmDownload", farm.getIdFinca()+""+downloaded);
+
             LinearLayout.LayoutParams param = ca.params();
             param.setMargins(15,10,15,10);
 
@@ -175,14 +183,19 @@ public class downloadScreen extends AppCompatActivity {
             linePrincipal.setPadding(20, 0, 20, 0);
             linePrincipal.setWeightSum(2);
 
-            gg.GradientDrawable(linePrincipal, "l", "blue");
+            gg.GradientDrawable(linePrincipal, "l", downloaded ? "verde" : "gris");
 
             LinearLayout linearPanel1 = LinearPanel("V");
 
             linearPanel1.addView(ta.textColor(farm.getNombreFinca(), "darkGray", 18, "l"));
 
 
-            TextView txtNotification = (TextView)  ta.textColor("notificacion", "rojo", 15, "l");
+            TextView txtNotification = (TextView)  ta.textColor(
+                    downloaded  ? "descargada" : "Finca sin descargar",
+                    downloaded ? "verde" : "rojo",
+                    15,
+                    "l"
+            );
             linearPanel1.addView(txtNotification);
 
 
@@ -192,13 +205,43 @@ public class downloadScreen extends AppCompatActivity {
             gg.setSizeText(15);
             gg.setParams("w_w");
 
-            Button btnWorking = (Button) gg.boton(" Trabajar ", "blue");
+            Button btnWorking = (Button) gg.boton(
+                    " Trabajar ",
+                    downloaded ? "verde" : "gris");
+
+            //btnWorking.setEnabled(downloaded);
+
             linearPanel2.addView(btnWorking);
+
+            btnWorking.setOnClickListener(v -> {
+                if(!downloaded){
+                    Toast.makeText(this, "por favor descarga la finca", Toast.LENGTH_SHORT).show();
+                }else{
+                    SharedPreferences.Editor edit = sp.edit();
+                    String pathFarm = path+"/listFarms/"+farm.getIdFinca()+"/Finca_"+farm.getIdFinca()+".json";
+                    edit.putString("farmWorkingPath", pathFarm);
+                    edit.putString("farmWorkingPathName", farm.getNombreFinca());
+                    edit.commit();
+                    edit.apply();
+
+                    txtNotification.setText("Trabajando con la finca");
+
+                    for(itemFamrTab f : listItemFarm){
+                        if(f.farm.getIdFinca() != farm.getIdFinca()){
+                            boolean downloaded2 = new File(path+"/listFarms/"+farm.getIdFinca()+"/Finca_"+farm.getIdFinca()+".json").exists();
+                            f.txtNotification.setText(downloaded2  ? "descargada" : "Finca sin descargar");
+                            f.txtNotification.setTextColor(Color.parseColor(downloaded2 ? "#2ecc71" : "#E74C3C"));
+                        }
+                    }
+                }
+            });
 
             CheckBox cb = new CheckBox(this);
             listChecks.add(cb);
-            functionCheckFarm(cb, farm);
             linearPanel2.addView(cb);
+
+            cb.setEnabled(false);
+            functionCheckFarm(cb, farm);
 
             linePrincipal.addView(linearPanel1);
             linePrincipal.addView(linearPanel2);
@@ -220,7 +263,6 @@ public class downloadScreen extends AppCompatActivity {
         }
     }
 
-
     public void validateFarmMod(){
         try{
             new Thread(()->{
@@ -239,6 +281,13 @@ public class downloadScreen extends AppCompatActivity {
             Thread.sleep(1000);
             if(conexion.getCn() == null) {
                 valideConexion(conexion);
+
+                downloadScreen.this.runOnUiThread(() -> {
+                    for(itemFamrTab item : listItemFarm){
+                        item.check.setEnabled(false);
+                    }
+                });
+
             }else {
 
                 final int[] iSincronizado = {0};
@@ -255,6 +304,8 @@ public class downloadScreen extends AppCompatActivity {
                                     f.btnWork.setBackgroundColor(Color.parseColor(actualizada ? "#3498DB" : "#154360"));
                                     iSincronizado[0] = iSincronizado[0] +1;
                                     timeText.setText(" Sincronizadas "+iSincronizado[0]+" de "+listItemFarm.size()+" fincas");
+
+                                    f.check.setEnabled(!actualizada);
                                 }
                              );
 
@@ -283,6 +334,8 @@ public class downloadScreen extends AppCompatActivity {
 
     public void functionCheckFarm(CheckBox cb, listFincasTab.fincasTab farm){
         cb.setOnCheckedChangeListener((CompoundButton, b) -> {
+            Toast.makeText(this, ""+cb.isEnabled(), Toast.LENGTH_SHORT).show();
+
             if(cb.isChecked()) {
                 if(!validateFarmSelected(farm)){
                     farmsCheck.add(farm);
@@ -560,7 +613,6 @@ public class downloadScreen extends AppCompatActivity {
             return pb;
         }
     }
-
 
     public class itemFamrTab{
         listFincasTab.fincasTab farm;

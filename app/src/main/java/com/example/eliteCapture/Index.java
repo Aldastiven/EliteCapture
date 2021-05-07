@@ -53,7 +53,7 @@ import java.util.Set;
 
 public class Index extends AppCompatActivity {
     LinearLayout linearCheck, titulodata;
-    TextView txtPaneluser, txtELige;
+    TextView txtPaneluser, txtELige, txtFarmWork;
     RelativeLayout contenUser;
 
     public String path = null;
@@ -84,6 +84,7 @@ public class Index extends AppCompatActivity {
         contenUser = findViewById(R.id.contenUser);
         txtPaneluser = findViewById(R.id.txtPaneluser);
         txtELige = findViewById(R.id.txtELige);
+        txtFarmWork = findViewById(R.id.txtFarmWork);
         dialogListFincas = new Dialog(this);
 
         path = getExternalFilesDir(null) + File.separator;
@@ -108,6 +109,10 @@ public class Index extends AppCompatActivity {
             new Thread(
                     () -> new ftpConect(Index.this, path, "").start()
             ).start();
+
+            String farmWorking = sp.getString("farmWorkingPathName", "");
+            Toast.makeText(this, ""+farmWorking, Toast.LENGTH_SHORT).show();
+            txtFarmWork.setText(farmWorking.isEmpty() ? "No estas trabajando con ninguna finca" : "Trabajando con la finca : "+farmWorking);
 
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), "Error \n" + ex, Toast.LENGTH_SHORT).show();
