@@ -13,10 +13,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.ftpConect;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
+import com.example.eliteCapture.Model.View.iContenedor;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -35,6 +38,8 @@ public class CAM extends ContextWrapper {
     containerAdmin ca;
     GIDGET pp;
 
+    iContenedor icon;
+
     public CAM(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial, UsuarioTab usuario, int consecutivo) {
         super(context);
         this.context = context;
@@ -47,7 +52,7 @@ public class CAM extends ContextWrapper {
         this.consecutivo = consecutivo;
         ca = new containerAdmin(context);
         pp = new GIDGET(context, ubicacion, rt, path);
-
+        icon = new iContenedor(path);
         respuestaPonderado = (TextView) pp.resultadoPonderado();
         respuestaPonderado.setText(vacio ? "Resultado : " + rt.getPonderado() : "Resultado :");
 
@@ -90,8 +95,6 @@ public class CAM extends ContextWrapper {
                 Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getPhoto()));
                 startActivity(i);
-
-                //new ftpConect(this, path,"photos/eliteCapture/"+rt.getIdProceso()).start();
             });
 
             return btn;
@@ -108,12 +111,30 @@ public class CAM extends ContextWrapper {
 
     @SuppressLint("SimpleDateFormat")
     public File getPhoto(){
-        //Fecha, Formulario, Usuario, Consecutivo, idPregunta, # Imágen (Consecutivo)
+        try {
+            //Fecha, Formulario, Usuario, Consecutivo, idPregunta, # Imágen (Consecutivo)
 
-        int countFiles = validateFiles();
-        String dataItem = date+"_"+rt.getIdProceso()+"_"+usuario.getId_usuario()+"_"+consecutivo+"_"+rt.getId()+"_"+countFiles;
+            int countFiles = validateFiles();
+            String dataItem = date + "_" + rt.getIdProceso() + "_" + usuario.getId_usuario() + "_" + consecutivo + "_" + rt.getId() + "_" + countFiles;
 
-        return new File(getPathPhoto(), dataItem+".jpg");
+            String resAnt = "";
+            for (RespuestasTab r : icon.all().get(0).getQuestions()) {
+                if (r.getIdPregunta() == r.getIdPregunta()) {
+                    resAnt = r.getRespuesta();
+                    break;
+                }
+            }
+            String respuesta = (resAnt + ";" + dataItem),
+                    valor = "Cantidad : " + (!resAnt.isEmpty() ? resAnt.split(";").length : 0);
+
+            Log.i("dataRespuesta", "respuesta : "+respuesta+", valor : "+valor);
+            Toast.makeText(context, "respuesta : "+respuesta+", valor : "+valor, Toast.LENGTH_SHORT).show();
+            //registro(, );
+            return new File(getPathPhoto(), dataItem+".png");
+        }catch (Exception e) {
+            Log.i("camPhoto", ""+e.toString());
+            return new File("prueba");
+        }
     }
 
     public int validateFiles(){
@@ -134,6 +155,11 @@ public class CAM extends ContextWrapper {
             Log.i("errorCam", "Error : "+e.toString());
             return 0;
         }
+    }
+
+    public void registro(String rta, String valor) {//REGISTRO
+        Log.i("registro", "respuesta : " + rta);
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null, rt.getReglas());
     }
 }
 

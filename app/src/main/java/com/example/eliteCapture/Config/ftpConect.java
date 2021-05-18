@@ -6,14 +6,16 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class ftpConect extends Thread {
     static Activity c;
@@ -64,10 +66,34 @@ public class ftpConect extends Thread {
                 } else {
                     InputStream srcStream = null;
                     try {
-                        srcStream = src.toURI().toURL().openStream();
+                        /*srcStream = src.toURI().toURL().openStream();
+
                         Log.i("ftpSyncronized", "archivo img : " + src.getName());
                         ftp.storeFile(src.getName(), srcStream);
                         countImage++;
+                         */
+
+                        ftp.setFileType(FTP.BINARY_FILE_TYPE);
+                        ftp.enterLocalPassiveMode();
+                        ftp.setAutodetectUTF8(true);
+
+                        //Create an InputStream to the File Data and use FileOutputStream to write it
+                        InputStream inputStream = ftp.retrieveFileStream(src.getName());
+                        FileOutputStream fileOutputStream = new FileOutputStream(src.getAbsoluteFile());
+                        //Using org.apache.commons.io.IOUtils
+                        IOUtils.copy(inputStream, fileOutputStream);
+                        fileOutputStream.flush();
+                        IOUtils.closeQuietly(fileOutputStream);
+                        IOUtils.closeQuietly(inputStream);
+                        boolean commandOK = ftp.completePendingCommand();
+
+                        if (commandOK) {
+                            System.out.println("El archivo se subio correctamente. "+src.getName());
+                            countImage++;
+                        }else{
+                            System.out.println("No subio el archivo");
+                        }
+
                     } finally {
                         if (srcStream != null) {
                             srcStream.close();
