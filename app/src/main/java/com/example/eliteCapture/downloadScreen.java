@@ -240,7 +240,6 @@ public class downloadScreen extends AppCompatActivity {
             listChecks.add(cb);
             linearPanel2.addView(cb);
 
-            cb.setEnabled(false);
             functionCheckFarm(cb, farm);
 
             linePrincipal.addView(linearPanel1);

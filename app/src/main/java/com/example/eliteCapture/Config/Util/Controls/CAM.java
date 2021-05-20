@@ -18,12 +18,17 @@ import android.widget.Toast;
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.ftpConect;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
+import com.example.eliteCapture.Model.View.Interfaz.Respuestas;
+import com.example.eliteCapture.Model.View.Tab.ContenedorTab;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 public class CAM extends ContextWrapper {
     Context context;
@@ -33,7 +38,7 @@ public class CAM extends ContextWrapper {
     int consecutivo;
     boolean vacio, initial;
 
-    TextView respuestaPonderado;
+    TextView respuestaPonderado, txtCantidadPhoto;
     LinearLayout contenedorCamp, noti;
     containerAdmin ca;
     GIDGET pp;
@@ -86,8 +91,14 @@ public class CAM extends ContextWrapper {
         }
     }
 
-    public Button campo(){
+    public LinearLayout campo(){
         try {
+            LinearLayout line = ca.container();
+            line.setOrientation(LinearLayout.VERTICAL);
+
+            txtCantidadPhoto = (TextView) pp.campoEdtable("TextView", "#000000");
+            txtCantidadPhoto.setText(vacio ? "Cantidad de fotos : "+rt.getValor() : "");
+
             Button btn = (Button) pp.boton("Tomar foto", "verde");
 
             btn.setOnClickListener(V -> {
@@ -97,7 +108,9 @@ public class CAM extends ContextWrapper {
                 startActivity(i);
             });
 
-            return btn;
+            line.addView(txtCantidadPhoto);
+            line.addView(btn);
+            return line;
         }catch (Exception e){
             Log.i("errorCam", "Error : "+e.toString());
             return null;
@@ -114,23 +127,44 @@ public class CAM extends ContextWrapper {
         try {
             //Fecha, Formulario, Usuario, Consecutivo, idPregunta, # Imágen (Consecutivo)
 
-            int countFiles = validateFiles();
-            String dataItem = date + "_" + rt.getIdProceso() + "_" + usuario.getId_usuario() + "_" + consecutivo + "_" + rt.getId() + "_" + countFiles;
+            validateFiles();
 
-            String resAnt = "";
-            for (RespuestasTab r : icon.all().get(0).getQuestions()) {
-                if (r.getIdPregunta() == r.getIdPregunta()) {
-                    resAnt = r.getRespuesta();
+            ContenedorTab temporal = new iContenedor(path).optenerTemporal();
+
+            List<RespuestasTab> res = null;
+            switch (ubicacion){
+                case "H" :
+                    res = temporal.getHeader();
+                    break;
+                case "Q" :
+                    res = temporal.getQuestions();
+                    break;
+                case "F" :
+                    res = temporal.getFooter();
+                    break;
+            }
+
+            String dataRespuesta = null;
+            int dataValor = 0;
+
+            for(RespuestasTab r : res){
+                if(r.getId() == rt.getId()){
+                    dataRespuesta = r.getRespuesta();
+                    dataValor = r.getValor() != null ? Integer.parseInt(r.getValor().trim()) : dataValor;
                     break;
                 }
             }
-            String respuesta = (resAnt + ";" + dataItem),
-                    valor = "Cantidad : " + (!resAnt.isEmpty() ? resAnt.split(";").length : 0);
 
-            Log.i("dataRespuesta", "respuesta : "+respuesta+", valor : "+valor);
-            Toast.makeText(context, "respuesta : "+respuesta+", valor : "+valor, Toast.LENGTH_SHORT).show();
-            //registro(, );
-            return new File(getPathPhoto(), dataItem+".png");
+            String respuesta = date + "_" + rt.getIdProceso() + "_" + usuario.getId_usuario() + "_" + consecutivo + "_" + rt.getId() + "_" + (dataValor+1) + ".jpg";
+
+            dataRespuesta =  dataRespuesta != null ? dataRespuesta+respuesta+";" : respuesta+";";
+            String valor = "" + (dataValor+1);
+
+            registro(dataRespuesta, valor);
+
+            txtCantidadPhoto.setText("Cantidad de fotos: "+valor);
+
+            return new File(getPathPhoto(), respuesta);
         }catch (Exception e) {
             Log.i("camPhoto", ""+e.toString());
             return new File("prueba");
@@ -156,6 +190,7 @@ public class CAM extends ContextWrapper {
             return 0;
         }
     }
+
 
     public void registro(String rta, String valor) {//REGISTRO
         Log.i("registro", "respuesta : " + rta);

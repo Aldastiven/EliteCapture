@@ -1,21 +1,18 @@
 package com.example.eliteCapture.Config;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 public class ftpConect extends Thread {
     static Activity c;
@@ -40,8 +37,10 @@ public class ftpConect extends Thread {
             client.connect(servFtp, 21);
             client.login(ftpUser,userPass);
 
+            client.setFileType(FTP.ASCII_FILE_TYPE);
             client.enterLocalPassiveMode();
             client.setUseEPSVwithIPv4( true );
+
             return client;
         }catch (Exception e){
             e.printStackTrace();
@@ -51,10 +50,10 @@ public class ftpConect extends Thread {
     }
 
 
-    public void syncronizedPhoto(File src, FTPClient ftp){
+    public void syncronizedPhoto(File src, FTPClient ftp) {
         try {
 
-            if(ftp != null) {
+            if (ftp != null) {
                 if (src.isDirectory()) {
                     ftp.makeDirectory(src.getName());
                     ftp.changeWorkingDirectory(src.getName());
@@ -64,50 +63,39 @@ public class ftpConect extends Thread {
                     }
                     ftp.changeToParentDirectory();
                 } else {
-                    InputStream srcStream = null;
+                    InputStream srcStream;
                     try {
-                        /*srcStream = src.toURI().toURL().openStream();
-
-                        Log.i("ftpSyncronized", "archivo img : " + src.getName());
-                        ftp.storeFile(src.getName(), srcStream);
-                        countImage++;
-                         */
+                        srcStream = new FileInputStream(src);
+                        String upliadPath = src.getPath();
+                        System.out.println("Uploading file : " + upliadPath);
 
                         ftp.setFileType(FTP.BINARY_FILE_TYPE);
                         ftp.enterLocalPassiveMode();
-                        ftp.setAutodetectUTF8(true);
 
-                        //Create an InputStream to the File Data and use FileOutputStream to write it
-                        InputStream inputStream = ftp.retrieveFileStream(src.getName());
-                        FileOutputStream fileOutputStream = new FileOutputStream(src.getAbsoluteFile());
-                        //Using org.apache.commons.io.IOUtils
-                        IOUtils.copy(inputStream, fileOutputStream);
-                        fileOutputStream.flush();
-                        IOUtils.closeQuietly(fileOutputStream);
-                        IOUtils.closeQuietly(inputStream);
-                        boolean commandOK = ftp.completePendingCommand();
-
-                        if (commandOK) {
-                            System.out.println("El archivo se subio correctamente. "+src.getName());
-                            countImage++;
-                        }else{
-                            System.out.println("No subio el archivo");
-                        }
-
-                    } finally {
-                        if (srcStream != null) {
-                            srcStream.close();
-                            txtMessage();
-                        }
+                        ftp.storeFile(src.getName(), srcStream);
+                        countImage++;
+                        srcStream.close();
+                    } catch (Exception e) {
+                        System.out.println("Error : " + e.toString());
                     }
                 }
-            }else{
-                c.runOnUiThread(() -> Toast.makeText(c, "sin conexion para sincronizar fotos", Toast.LENGTH_LONG).show()    );
+            } else {
+                c.runOnUiThread(() -> Toast.makeText(c, "sin conexion para sincronizar fotos", Toast.LENGTH_LONG).show());
             }
-        }catch (IOException e){
-            Log.i("error", "syncronizedPhoto : "+e.toString());
+        } catch (IOException e) {
+            Log.i("error", "syncronizedPhoto : " + e.toString());
+        } finally {
+            txtMessage();
+            if (ftp != null) {
+                try {
+                    ftp.logout();
+                } catch (IOException ioe) {
+                    Log.i("error", ioe.toString());
+                }
+            }
         }
     }
+
 
     public void txtMessage(){
         c.runOnUiThread(()-> {
