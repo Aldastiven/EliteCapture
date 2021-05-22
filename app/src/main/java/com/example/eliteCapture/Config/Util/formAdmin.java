@@ -41,7 +41,7 @@ public class formAdmin {
     LinearLayout linearPrinc, linearBodypop;
     Context context;
     Activity act;
-    String path;
+    String path, pathFarmWorking, nameFarm;
     Boolean inicial;
     Dialog popregla;
     boolean JSO = false;
@@ -147,7 +147,7 @@ public class formAdmin {
                         v = new TIM_FEC(context, ubicacion, r, path, inicial).crear();
                         break;
                      case "JSO":// scanner, busqueda y navegacion de json
-                        v = new JSO(context, ubicacion, r, path, inicial, JSO).crear();
+                        v = new JSO(context, ubicacion, r, path, inicial, JSO, pathFarmWorking, nameFarm).crear();
                         break;
                     case "GPS"://georeferenciación
                         v = new GPS(context, ubicacion, r, path, inicial).crear();
@@ -213,6 +213,10 @@ public class formAdmin {
         pro = new Gson().fromJson(sp.getString("proceso", ""), new TypeToken<ProcesoTab>() {}.getType());
         // metodo para extraer del SharedPreferences el id del usuario
         usu = new Gson().fromJson(sp.getString("usuario", ""), new TypeToken<UsuarioTab>() {}.getType());
+        // obtiene el path de la finca a trabajar
+        pathFarmWorking = sp.getString("farmWorkingPath", "");
+        //obtiene el nombre de la finca a trabajar
+        nameFarm = sp.getString("farmWorkingPathName", "");
     }
 
     public String getPhoneName() {//metodo para obtener el nombre del telefono

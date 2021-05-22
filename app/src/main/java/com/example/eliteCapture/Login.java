@@ -26,6 +26,7 @@ import com.example.eliteCapture.Config.Util.Controls.GIDGET;
 import com.example.eliteCapture.Config.Util.Modal.modalServer;
 import com.example.eliteCapture.Config.Util.Modal.modalSetting;
 import com.example.eliteCapture.Config.Util.permissions.permissionAdmin;
+import com.example.eliteCapture.Config.Util.secondTaks.validateProcesos;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Config.ftpConect;
 import com.example.eliteCapture.Model.Data.Admin;
@@ -114,7 +115,7 @@ public class Login extends AppCompatActivity {
             ca = new containerAdmin(this);
             ta = new textAdmin(this);
 
-
+            new validateProcesos(this, txtError, floatingServer, path);
 
             modalSetting = new modalSetting(this,this, path, imgOnline);
             modalSetting.modal();

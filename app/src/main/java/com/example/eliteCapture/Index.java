@@ -111,7 +111,6 @@ public class Index extends AppCompatActivity {
             ).start();
 
             String farmWorking = sp.getString("farmWorkingPathName", "");
-            Toast.makeText(this, ""+farmWorking, Toast.LENGTH_SHORT).show();
             txtFarmWork.setText(farmWorking.isEmpty() ? "No estas trabajando con ninguna finca" : "Trabajando con la finca : "+farmWorking);
 
         } catch (Exception ex) {

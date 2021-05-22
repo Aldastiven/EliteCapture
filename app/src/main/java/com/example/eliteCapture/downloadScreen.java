@@ -376,6 +376,7 @@ public class downloadScreen extends AppCompatActivity {
     public void createFolder(){
         //crea la carpeta de cada finca si no existe
         File folderFarm = new File(path+"/listFarms", String.valueOf(idFinca));
+        Toast.makeText(this, "creando carpeta : "+idFinca, Toast.LENGTH_SHORT).show();
         if(!folderFarm.exists()) {
             folderFarm.mkdirs();
         }

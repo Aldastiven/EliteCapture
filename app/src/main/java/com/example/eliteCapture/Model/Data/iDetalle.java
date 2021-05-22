@@ -1,6 +1,8 @@
 package com.example.eliteCapture.Model.Data;
 
+import android.app.Activity;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.Data.Interfaz.Detalle;
@@ -8,10 +10,13 @@ import com.example.eliteCapture.Model.Data.Tab.DetalleTab;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class iDetalle implements Detalle {
@@ -83,18 +88,18 @@ public class iDetalle implements Detalle {
 
 	@Override
 	public boolean local() throws Exception {
-
 		ResultSet rs;
-		PreparedStatement ps = cn.prepareStatement(all);
+		PreparedStatement ps = cn.prepareStatement("SELECT  * FROM Plano_json_Bloque WHERE codigo = 0");
 		rs = ps.executeQuery();
 
+		String dataJson = "";
+
 		while (rs.next()) {
-			D1.add(gift(rs));
+			//D1.add(gift(rs));
+			dataJson = dataJson + rs.getString(2);
 		}
 
-		//closeConexion(cn,rs);
-		String contenido = new Gson().toJson(D1);
-
+		String contenido = new Gson().toJson(dataJson);
 		return ja.WriteJson(path, nombre, contenido);
 	}
 
@@ -135,5 +140,45 @@ public class iDetalle implements Detalle {
 				rs.getString("desde_hasta"),
 				rs.getInt("decimales"),
 				rs.getInt("obligatorio"));
+	}
+
+	public Date getDateJson(){
+		try {
+			Log.i("getDateJson", "validando query");
+			ResultSet rs;
+			PreparedStatement ps = cn.prepareStatement("SELECT  * FROM Plano_json_Bloque WHERE codigo = 0");
+			rs = ps.executeQuery();
+
+			Date fecha = null;
+			while (rs.next()){
+				fecha = rs.getDate(3);
+				Log.i("nextFinca", "ultima fecha de modificacion formularios : "+fecha);
+			}
+			Log.i("getDateJson", "fecha : "+fecha);
+			return fecha;
+		}catch (Exception e){
+			Log.i("getDateJson", "Error : "+e.toString());
+			return null;
+		}
+	}
+
+	public boolean validateDateFile() throws Exception {
+		try {
+			String dateJson = new SimpleDateFormat("yyyy-MM-dd").format(new File(path + "/Detalle.json").getAbsoluteFile().lastModified());
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date fechaParseada = sdf.parse(dateJson);
+
+			return fechaParseada.before(getDateJson());
+		}catch (Exception e){
+			Log.i("getDateJson", "Error : "+e.toString());
+			return false;
+		}
+	}
+
+	public void setTxtNotification(Activity act, TextView txt){
+		act.runOnUiThread(() -> {
+			txt.setText("Validando Actualizaciones espere un momento porfavor...");
+		});
 	}
 }
