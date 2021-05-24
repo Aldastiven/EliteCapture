@@ -18,6 +18,7 @@ import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Config.sqlConect;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
+import com.example.eliteCapture.Model.Data.iDetalle;
 import com.example.eliteCapture.Model.Data.iJsonPlan;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.google.gson.Gson;
@@ -253,7 +254,7 @@ public class splash_activity extends AppCompatActivity {
 
     private void obtenerDetalles() {
       try {
-        admin.getDetalles().local();
+        new iDetalle(cn, path).localDesp(0);
       } catch (Exception ex) {
         Log.i("ErrorSplashDetalle", ex.toString());
       }

@@ -141,9 +141,10 @@ public class downloadScreen extends AppCompatActivity {
                 for (listFincasTab finca : listFincas) {
                     if (finca.getUsuario() == getUser()) {
                         for (listFincasTab.fincasTab f : finca.getFincas()) {
-                            createFolder();
-
-                            getItem(f, lineFarmws);
+                            if (f.getIdFinca() != 0) {
+                                createFolder(f.getIdFinca());
+                                getItem(f, lineFarmws);
+                            }
                         }
                     } else {
                         //los datos de finca no son del usuario
@@ -333,7 +334,6 @@ public class downloadScreen extends AppCompatActivity {
 
     public void functionCheckFarm(CheckBox cb, listFincasTab.fincasTab farm){
         cb.setOnCheckedChangeListener((CompoundButton, b) -> {
-            Toast.makeText(this, ""+cb.isEnabled(), Toast.LENGTH_SHORT).show();
 
             if(cb.isChecked()) {
                 if(!validateFarmSelected(farm)){
@@ -373,10 +373,10 @@ public class downloadScreen extends AppCompatActivity {
         return param;
     }
 
-    public void createFolder(){
+    public void createFolder(int idFinca){
         //crea la carpeta de cada finca si no existe
         File folderFarm = new File(path+"/listFarms", String.valueOf(idFinca));
-        Toast.makeText(this, "creando carpeta : "+idFinca, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "creando carpeta : "+idFinca, Toast.LENGTH_SHORT).show();
         if(!folderFarm.exists()) {
             folderFarm.mkdirs();
         }

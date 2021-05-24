@@ -69,10 +69,6 @@ public class iDetalle implements Detalle {
 		return detalles;
 	}
 
-	@Override
-	public boolean local(Long id_proceso) throws Exception {
-		return false;
-	}
 
 	@Override
 	public String insert(DetalleTab o) throws Exception {
@@ -85,26 +81,31 @@ public class iDetalle implements Detalle {
 		return null;
 	}
 
-
 	@Override
 	public boolean local() throws Exception {
+		return false;
+	}
+
+
+	public boolean localDesp(int idFinca) throws Exception {
 		ResultSet rs;
-		PreparedStatement ps = cn.prepareStatement("SELECT  * FROM Plano_json_Bloque WHERE codigo = 0");
+		String q = "SELECT  * FROM Plano_json_Bloque WHERE codigo = "+idFinca;
+
+		Log.i("nextFinca", "query : "+q);
+
+		PreparedStatement ps = cn.prepareStatement(q);
 		rs = ps.executeQuery();
 
-		String dataJson = "";
-
+		String data = "";
 		while (rs.next()) {
-			//D1.add(gift(rs));
-			dataJson = dataJson + rs.getString(2);
+			data = rs.getString(2) + data;
+			Log.i("nextFinca", data);
 		}
-
-		String contenido = new Gson().toJson(dataJson);
-		return ja.WriteJson(path, nombre, contenido);
+		return ja.WriteJson(path, "Detalle", data);
 	}
 
 	@Override
-	public List<DetalleTab> all() throws Exception {
+	public List<DetalleTab> all(){
 
 		Gson gson = new Gson();
 		D1 = gson.fromJson(ja.ObtenerLista(path, nombre), new TypeToken<List<DetalleTab>>() {
@@ -114,33 +115,11 @@ public class iDetalle implements Detalle {
 	}
 
 	@Override
-	public String json(DetalleTab o) throws Exception {
+	public String json(DetalleTab o){
 		Gson gson = new Gson();
 		return gson.toJson(o);
 	}
 
-	private DetalleTab gift(ResultSet rs) throws Exception {
-		Log.i("ErrorSplashDetalle",rs.getInt("id_proceso")+" COD. DETALLE : "+rs.getString("codigo_detalle"));
-
-		return new DetalleTab(
-				rs.getLong("id_detalle"),
-				rs.getInt("id_proceso"),
-				rs.getInt("codigo_detalle"),
-				rs.getString("nombre_detalle"),
-				rs.getString("tipo"),
-				rs.getString("lista_desp"),
-				rs.getString("tipo_M"),
-				rs.getFloat("porcentaje"),
-				rs.getString("capitulo"),
-				rs.getString("item"),
-				rs.getString("Capitulo_Nombre"),
-				rs.getString("grupo1"),
-				rs.getInt("reglas"),
-				rs.getString("tip"),
-				rs.getString("desde_hasta"),
-				rs.getInt("decimales"),
-				rs.getInt("obligatorio"));
-	}
 
 	public Date getDateJson(){
 		try {
