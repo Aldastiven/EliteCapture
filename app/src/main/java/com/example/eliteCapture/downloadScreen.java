@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -219,9 +220,10 @@ public class downloadScreen extends AppCompatActivity {
                     Toast.makeText(this, "por favor descarga la finca", Toast.LENGTH_SHORT).show();
                 }else{
                     SharedPreferences.Editor edit = sp.edit();
-                    String pathFarm = path+"/listFarms/"+farm.getIdFinca()+"/Finca_"+farm.getIdFinca()+".json";
+                    String pathFarm = path+"listFarms/"+farm.getIdFinca()+"/";
                     edit.putString("farmWorkingPath", pathFarm);
                     edit.putString("farmWorkingPathName", farm.getNombreFinca());
+                    edit.putString("farmWorkingIdPath", farm.getIdFinca()+"");
                     edit.commit();
                     edit.apply();
 
@@ -628,5 +630,10 @@ public class downloadScreen extends AppCompatActivity {
             this.btnWork = btnWork;
             this.check = check;
         }
+    }
+
+    public void onBackPressed(){
+        Intent i = new Intent(this, Index.class);
+        this.startActivity(i);
     }
 }

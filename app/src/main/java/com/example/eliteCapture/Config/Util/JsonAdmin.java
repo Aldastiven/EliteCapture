@@ -30,7 +30,7 @@ public class JsonAdmin {
     public String ObtenerLista(String path, String nombre) {
         //LECTURA DE DATOS DESDE UN FICHERO JSON
         try {
-            Log.i("CONSULTAJSON", nombre);
+            Log.i("CONSULTAJSON", path + nombre + ".json");
             FileInputStream fis = new FileInputStream(new File(path + nombre + ".json"));
             return new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8)).readLine() + "\n";
         } catch (IOException ex) {

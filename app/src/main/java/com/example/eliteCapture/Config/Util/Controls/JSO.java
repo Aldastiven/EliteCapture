@@ -53,11 +53,11 @@ public class JSO {
     ProgressDialog progress;
     CargarXmlTask c;
 
-    String ubicacion, path, farmWorkingPath, nameFarm;
+    String ubicacion, path, farmWorkingPath, nameFarm, farmIdPath;
 
     iJsonPlan ipl;
 
-    public JSO(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial, boolean dialogPanel, String farmWorkingPath, String nameFarm) {
+    public JSO(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial, boolean dialogPanel, String farmWorkingPath, String nameFarm, String farmIdPath) {
         this.context = context;
         this.rt = rt;
         this.ubicacion = ubicacion;
@@ -67,6 +67,7 @@ public class JSO {
         this.dialogPanel = dialogPanel;
         this.farmWorkingPath = farmWorkingPath;
         this.nameFarm = nameFarm;
+        this.farmIdPath = farmIdPath;
 
         ca = new containerAdmin(context);
         ta = new textAdmin(context);
@@ -82,7 +83,8 @@ public class JSO {
         respuestaPonderado = (TextView) pp.resultadoPonderado();
         respuestaPonderado.setText(vacio ? "Resultado : "+rt.getPonderado() : "Resultado :");
 
-        Toast.makeText(context, "path : "+farmWorkingPath+", nombre finca : "+nameFarm, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "path : "+farmWorkingPath+", nombre finca : "+farmIdPath, Toast.LENGTH_SHORT).show();
+        Log.i("getFinca", "path : "+farmWorkingPath+", nombre finca : "+farmIdPath);
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM
@@ -234,7 +236,7 @@ public class JSO {
 
             linear.addView(ta.textColor("Selecciona una opcion, realizando el despliegue", "verde", 15, "l")) ;
 
-            String data = new JsonAdmin().ObtenerLista(farmWorkingPath, nameFarm);
+            String data = new JsonAdmin().ObtenerLista(farmWorkingPath, "Finca_"+farmIdPath);
             JSONArray jarr = new JSONArray(data);
             for (int i = 0; i < jarr.length(); i++) {
                 parseJson(jarr.getJSONObject(i), linear);

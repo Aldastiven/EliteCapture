@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.AUT_DES_CBX;
@@ -41,7 +42,7 @@ public class formAdmin {
     LinearLayout linearPrinc, linearBodypop;
     Context context;
     Activity act;
-    String path, pathFarmWorking, nameFarm;
+    String path, pathFarmWorking, nameFarm, farmIdFarm;
     Boolean inicial;
     Dialog popregla;
     boolean JSO = false;
@@ -147,7 +148,8 @@ public class formAdmin {
                         v = new TIM_FEC(context, ubicacion, r, path, inicial).crear();
                         break;
                      case "JSO":// scanner, busqueda y navegacion de json
-                        v = new JSO(context, ubicacion, r, path, inicial, JSO, pathFarmWorking, nameFarm).crear();
+                         Log.i("getFinca", "path Json Create: "+pathFarmWorking+", nombre finca : "+farmIdFarm);
+                        v = new JSO(context, ubicacion, r, path, inicial, JSO, pathFarmWorking, nameFarm, farmIdFarm).crear();
                         break;
                     case "GPS"://georeferenciación
                         v = new GPS(context, ubicacion, r, path, inicial).crear();
@@ -215,6 +217,8 @@ public class formAdmin {
         usu = new Gson().fromJson(sp.getString("usuario", ""), new TypeToken<UsuarioTab>() {}.getType());
         // obtiene el path de la finca a trabajar
         pathFarmWorking = sp.getString("farmWorkingPath", "");
+        // obtiene el id de la finca a trabajar
+        farmIdFarm = sp.getString("farmWorkingIdPath", "");
         //obtiene el nombre de la finca a trabajar
         nameFarm = sp.getString("farmWorkingPathName", "");
     }
