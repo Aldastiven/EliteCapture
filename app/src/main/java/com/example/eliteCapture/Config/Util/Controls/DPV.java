@@ -165,7 +165,6 @@ public class DPV {
         try {
             despVariedadesTab.variedades variedad = null;
             for (despVariedadesTab dt : idv.all(rt.getDesplegable())) {
-                Log.i("BUSCADOR","idPadre : "+idDPV);
                 if(dt.getIdProducto() == idDPV){
                     for(despVariedadesTab.variedades variedades : dt.getVariedades()){
                         if (variedades.getVariedad().equals(data)) {

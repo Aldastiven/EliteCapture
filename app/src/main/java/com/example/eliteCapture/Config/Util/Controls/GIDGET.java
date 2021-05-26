@@ -57,7 +57,6 @@ public class GIDGET {
     public LinearLayout.LayoutParams getParams(String... varParams) {
         LinearLayout.LayoutParams params = null;
         String sParams = varParams.length > 0 ? varParams[0] : this.params;
-        Log.i("setParams", "llego a validar : "+sParams);
         switch (sParams){
             case "w_m" :
                 params = new LinearLayout.LayoutParams(
@@ -88,7 +87,6 @@ public class GIDGET {
     }
 
     public void setParams(String params) {
-        Log.i("setParams", params);
         this.params = params;
     }
 
@@ -165,7 +163,6 @@ public class GIDGET {
     }
 
     public void validarColorContainer(LinearLayout contenedorCamp, boolean vacio, boolean inicial){
-        Log.i("inicialValue", "llego data : "+inicial);
         contenedorCamp.setBackgroundResource(!inicial && !vacio ? bordercontainerred : bordercontainer);
     }
 
@@ -246,13 +243,10 @@ public class GIDGET {
             iDesp.nombre = rt.getDesplegable();
             DesplegableTab d = null;
             for (DesplegableTab desp : iDesp.all()) {
-                Log.i("textDesp", "buscando... opcion : "+desp.getOpcion()+", cod : "+desp.getCodigo()+", contra : "+data);
                 if (desp.getCodigo().trim().equals(data.trim())) {
-                    Log.i("textDesp", "Encontro  cod : "+desp.getCodigo());
                     d = desp;
                     break;
                 } else if (desp.getOpcion().trim().equals(data.trim())) {
-                    Log.i("textDesp", "Encontro opcion : "+desp.getOpcion());
                     d = desp;
                     break;
                 } else {

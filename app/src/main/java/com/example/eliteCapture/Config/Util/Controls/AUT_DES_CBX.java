@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
-import com.example.eliteCapture.Model.Data.Interfaz.Desplegable;
 import com.example.eliteCapture.Model.Data.Tab.DesplegableTab;
 import com.example.eliteCapture.Model.Data.iDesplegable;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
@@ -113,12 +112,9 @@ public class AUT_DES_CBX {
 
                     if (rt.getId() == 0) {
 
-                        Log.i("desplegable", "DeplegableName" + rt.getDesplegable());
-
                         DesplegableTab d = filtroDesplegable(getFinca());
                         String resFinca = d != null ? d.getOpcion() : "Selecciona";
 
-                        Log.i("desplegable", "entro  a ser el primer campo " + resFinca);
                         campSpin.setSelection(getDesp().indexOf(
                                 StringUtils.isEmpty(
                                         rt.getRespuesta()) ?
@@ -223,7 +219,6 @@ public class AUT_DES_CBX {
         String finca = null;
         if(sp != null) {
             finca = sp.getString("fincaAsignada", "");
-            Log.i("fincaAsignada", finca);
         }
         return finca;
     }

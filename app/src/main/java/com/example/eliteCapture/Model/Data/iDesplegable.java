@@ -140,7 +140,6 @@ public class iDesplegable implements Desplegable {
   }
 
   public DesplegableTab gift(ResultSet rs) throws Exception {
-    Log.i("CONSULTA","Filtro : "+rs.getString("Filtro")+" condi : "+rs.getString("condicional"));
     return new DesplegableTab(
         rs.getString("Filtro"),
         rs.getString("Codigo"),

@@ -1,11 +1,12 @@
 package com.example.eliteCapture.Config.Util.Controls;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
@@ -26,8 +27,6 @@ import com.example.eliteCapture.Model.Data.iJsonPlan;
 import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,16 +34,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class JSO {
     RespuestasTab rt;
     containerAdmin ca;
     textAdmin ta;
     GIDGET pp;
-    Context context;
+    Activity context;
     LinearLayout contenedorCamp, LineRespuesta;
     TextView respuestaPonderado;
     EditText campConteo;
@@ -57,7 +54,7 @@ public class JSO {
 
     iJsonPlan ipl;
 
-    public JSO(Context context, String ubicacion, RespuestasTab rt, String path, boolean initial, boolean dialogPanel, String farmWorkingPath, String nameFarm, String farmIdPath) {
+    public JSO(Activity context, String ubicacion, RespuestasTab rt, String path, boolean initial, boolean dialogPanel, String farmWorkingPath, String nameFarm, String farmIdPath) {
         this.context = context;
         this.rt = rt;
         this.ubicacion = ubicacion;
@@ -82,9 +79,6 @@ public class JSO {
 
         respuestaPonderado = (TextView) pp.resultadoPonderado();
         respuestaPonderado.setText(vacio ? "Resultado : "+rt.getPonderado() : "Resultado :");
-
-        Toast.makeText(context, "path : "+farmWorkingPath+", nombre finca : "+farmIdPath, Toast.LENGTH_SHORT).show();
-        Log.i("getFinca", "path : "+farmWorkingPath+", nombre finca : "+farmIdPath);
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM
@@ -281,7 +275,6 @@ public class JSO {
         }
 
         protected void onProgressUpdate (String... strings) {
-            Log.i("AsyncClass", strings[0]);
             progress.setMessage(strings[0]);
         }
 
@@ -294,11 +287,9 @@ public class JSO {
 
     public void parseJson(JSONObject data, LinearLayout container){
         try {
-            container.setPadding(10,10,0,10);
+            container.setPadding(10,5,0,0);
             if (data != null) {
                 Iterator<String> it = data.keys();
-
-                int paso = 0;
 
                 LinearLayout lineCamp = ca.card(ca.container(), "#EAEDED");
                 lineCamp.setOrientation(LinearLayout.VERTICAL);
@@ -306,7 +297,7 @@ public class JSO {
 
                 while (it.hasNext()) {
                     String key = it.next();
-                    LinearLayout line2 = ca.borderGradient("#D7DBDD");
+                    LinearLayout line2 = ca.borderGradient("#CCD1D1");
 
                     if (data.get(key) instanceof JSONArray) {
                         //se obtiene un array de objetos
@@ -315,6 +306,9 @@ public class JSO {
 
                         line2.setVisibility(View.GONE);
                         v.setText("{}"+key+(line2.getChildCount() > 0 ? "▼" : "▲"));
+                        v.setTextSize(15);
+                        v.setBackgroundColor(Color.parseColor("#ABEBC6"));
+                        v.setPadding(0,25,0, 25);
 
                         v.setOnClickListener(x -> {
                             try{
@@ -327,6 +321,7 @@ public class JSO {
                                     for (int i = 0; i < arry.length(); i++) {
                                         parseJson(arry.getJSONObject(i), line2);
                                     }
+
                                     line2.setVisibility(View.VISIBLE);
                                 }else{
                                     line2.removeAllViews();
@@ -401,7 +396,6 @@ public class JSO {
                         container.addView(line2);
                     }
                 }
-                c.onProgressUpdate("cargo finca");
             }
         } catch (Exception  e) {
             Log.i("datosJson", e.toString());
@@ -533,7 +527,6 @@ public class JSO {
                         for (int i = 0; i < arry.length(); i++) {
                             b = filterParseJson(arry.getJSONObject(i), true);
                             if(b) {
-                                Log.i("JSO", "Encontro efectivamente");
                                 b = true;
                                 break;
                             }
@@ -547,11 +540,7 @@ public class JSO {
                                 String keyx = ij.next();
                                 if(jarr.getJSONObject(i).get(keyx).toString().equals(campConteo.getText().toString())){
                                     //AQUI ENCUENTRA EL RESULTADO
-                                    dataCama = jarr.getJSONObject(i).get(keyx).toString();
-
                                     dialogPanel(jarr);
-
-                                    Log.i("JSONDATA","encontro la cama : "+dataCama);
                                     b = true;
                                     break;
                                 }
@@ -586,7 +575,6 @@ public class JSO {
     }
 
     public void registro(String rta, String valor) {//REGISTRO
-        Log.i("registro", "respuesta : " + rta);
         new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null, rt.getReglas());
     }
 }

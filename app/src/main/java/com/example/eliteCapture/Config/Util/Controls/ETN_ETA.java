@@ -249,7 +249,6 @@ public class ETN_ETA extends ContextWrapper {
     }
 
     public void registro(String rta, String valor) {//REGISTRO
-        Log.i("registro", "respuesta : " + rta);
         new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null, rt.getReglas());
     }
 }

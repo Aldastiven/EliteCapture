@@ -286,111 +286,27 @@ public class iContenedor implements Contenedor {
         return true;
     }
 
-    public boolean enviar2() throws Exception {
+    
 
-        Connection cn = new Conexion().getConexion();
-
-        if (cn != null) {
-            String ins = "" +
-                    "     INSERT INTO [dbo].[datos_procesos_detalle]\n" +
-                    "           ([fecha]\n" +
-                    "           ,[id_procesos]\n" +
-                    "           ,[id_codigo]\n" +
-                    "           ,[id_procesos_detalle]\n" +
-                    "           ,[rUsu_resp_d]\n" +
-                    "           ,[valor_resp_d]\n" +
-                    "           ,[porc_resp_d]\n" +
-                    "           ,[id_terminal]\n" +
-                    "           ,[id_usuario]\n" +
-                    "           ,[consec_json])\n" +
-                    "     VALUES (?,?,?,?,?,?,?,?,?,?);";
-
-
-            int load = 0;
-            int index = 0;
-
-            PreparedStatement ps = cn.prepareStatement(ins);
-            for (ContenedorTab c : all()) {
-                Log.i("Enviar_env", "Recorriendo: " + c.getEstado());
-                if (c.getEstado() != 1) {
-                    bloque(ps, c, c.getHeader());
-                    bloque(ps, c, c.getQuestions());
-                    if (c.getFooter() != null) {
-                        bloque(ps, c, c.getFooter());
-                    }
-                    ps.executeBatch();
-
-                    //ih.insert(c);//agrega el formulario enviado al json historico
-
-                    index++;
-                    load++;
-                } else {
-                    Log.i("Enviar_env", "Recorriendo: ocurrio un error");
-                    index++;
-                }
-            }
-            if(load > 0){
-                ct.clear();
-                local();
-            }
-            Log.i("Enviar_env", "Registros actualizados: " + load);
-            return true;
-        } else {
-            Log.i("id_usuario", "Registros actualizados: ");
-            return false;
-        }
-
-    }
-
-    public boolean enviarInmediato(ContenedorTab c, int consecutivo){
+    public boolean enviarInmediato2(ContenedorTab c, int consecutivo){
         try {
-            Connection cn = new Conexion().getConexion();
-            if (cn != null) {
-                String ins = "" +
-                        "     INSERT INTO [dbo].[datos_procesos_detalle]\n" +
-                        "           ([fecha]\n" +
-                        "           ,[id_procesos]\n" +
-                        "           ,[id_codigo]\n" +
-                        "           ,[id_procesos_detalle]\n" +
-                        "           ,[rUsu_resp_d]\n" +
-                        "           ,[valor_resp_d]\n" +
-                        "           ,[porc_resp_d]\n" +
-                        "           ,[id_terminal]\n" +
-                        "           ,[id_usuario]\n" +
-                        "           ,[consec_json]\n" +
-                        "           ,[reglas])\n" +
-                        "     VALUES\n" +
-                        "           (?,?,?,?,?,?,?,?,?,?);";
-                int load = 0;
+            boolean env = false;
+            PreparedStatement ps = new Conexion().getConexion().prepareCall("EXEC recibir_json_ec ?");
 
-                c.setConsecutivo(consecutivo);
+            Log.i("envioData", "convert : "+new Gson().toJson(c));
 
-                PreparedStatement ps = cn.prepareStatement(ins);
-                if (c.getEstado() != 1) {
-                    bloque(ps, c, c.getHeader());
-                    bloque(ps, c, c.getQuestions());
-                    if (c.getFooter() != null) {
-                        bloque(ps, c, c.getFooter());
-                    }
-                    ps.executeBatch();
-                    Log.i("CONSECUTIVO", c.getConsecutivo()+"");
-                    //ih.insert(c);//agrega el formulario enviado al json historico
-                    load++;
-                } else {
-                }
-                Log.i("Enviar_env", "Registros actualizados: " + load);
-                return true;
-            } else {
-                Log.i("Enviar_env", "Registros no han sido actualizados");
-                return false;
-            }
+            c.setEstado(1);
+            ps.setString(1, new Gson().toJson(c));
+            ps.execute();
+
+            return true;
         }catch (Exception e){
-            Log.i("Enviar_env", "Problema de insercion : "+e.toString());
+            Log.i("Error en el envio",""+e.toString());
             return false;
         }
     }
 
-    public void bloque(PreparedStatement ps, ContenedorTab c, List<RespuestasTab> rtas) throws SQLException {
+    public void bloque(PreparedStatement ps, ContenedorTab c, List<RespuestasTab> rtas){
         try {
             for (RespuestasTab r : rtas) {
                 ps.setString(1, c.getFecha());
@@ -405,6 +321,8 @@ public class iContenedor implements Contenedor {
                 ps.setInt(10, c.getConsecutivo());
                 ps.setString(11, String.valueOf(r.getReglas()));
                 ps.addBatch();
+
+                Log.i("envioData", "fecha : "+c.getFecha());
             }
         }catch (Exception e){
             Log.i("Envio", e.toString());
@@ -426,7 +344,6 @@ public class iContenedor implements Contenedor {
         try {
             int size = 0;
             for (ContenedorTab c : all()) {
-                Log.i("ESTADO", c.getEstado() + "");
                 if (c.getEstado() < 1) {
                     size++;
                 }

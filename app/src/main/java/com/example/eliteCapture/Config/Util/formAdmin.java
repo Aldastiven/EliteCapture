@@ -149,7 +149,7 @@ public class formAdmin {
                         break;
                      case "JSO":// scanner, busqueda y navegacion de json
                          Log.i("getFinca", "path Json Create: "+pathFarmWorking+", nombre finca : "+farmIdFarm);
-                        v = new JSO(context, ubicacion, r, path, inicial, JSO, pathFarmWorking, nameFarm, farmIdFarm).crear();
+                        v = new JSO(act, ubicacion, r, path, inicial, JSO, pathFarmWorking, nameFarm, farmIdFarm).crear();
                         break;
                     case "GPS"://georeferenciación
                         v = new GPS(context, ubicacion, r, path, inicial).crear();

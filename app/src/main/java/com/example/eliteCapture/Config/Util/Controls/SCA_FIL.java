@@ -237,7 +237,6 @@ public class SCA_FIL implements Serializable {
 
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
-        Log.i("registro", "respuesta sca : " + valor);
         new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), valor == null ? "sin desplegable" : valor, rta, causa, rt.getReglas());
     }
 }

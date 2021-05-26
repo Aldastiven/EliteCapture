@@ -26,7 +26,6 @@ public class iJsonPlan {
     listFincasTab.fincasTab farm;
 
     public iJsonPlan(String path, int usuario, Connection cn) {
-        Log.i("getIdUsuario", "llego el usuario : "+usuario);
         this.path = path;
         this.usuario = usuario;
         this.cn = cn;
@@ -86,15 +85,12 @@ public class iJsonPlan {
         ResultSet rs;
         String q = "SELECT  * FROM Plano_json_Bloque WHERE codigo = "+idFinca;
 
-        Log.i("nextFinca", "query : "+q);
-
         PreparedStatement ps = cn.prepareStatement(q);
         rs = ps.executeQuery();
 
         String data = "";
         while (rs.next()) {
             data = rs.getString(2) + data;
-            Log.i("nextFinca", data);
         }
         return ja.WriteJson(path, "Finca_"+idFinca, data);
     }

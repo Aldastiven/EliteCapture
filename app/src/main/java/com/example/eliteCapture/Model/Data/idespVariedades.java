@@ -1,6 +1,5 @@
 package com.example.eliteCapture.Model.Data;
 
-import android.util.Log;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Model.Data.Tab.despVariedadesTab;
@@ -45,9 +44,6 @@ public class idespVariedades {
                                                         "GROUP BY filtro, Id_p, Des_p\n" +
                                                         "ORDER BY Des_p ASC");
         rs = ps.executeQuery();
-
-        Log.i("CONSULTAS", "==============================="+filtroName+"===========================================");
-
         while (rs.next()){
             Lproductos.add(new despVariedadesTab(
                                     rs.getString("filtro"),
@@ -56,9 +52,6 @@ public class idespVariedades {
                                     getHijo(rs.getInt("Id_p"), rs.getString("filtro"))
             ));
         }
-
-        Log.i("CONSULTAS", "===============================TERMINO===========================================");
-        Log.i("CONSULTAS", "_");
         return new JsonAdmin().WriteJson(path, nombre+filtroName, new Gson().toJson(Lproductos));
     }
 
@@ -67,7 +60,6 @@ public class idespVariedades {
         ResultSet rs;
         String q = "SELECT id_d, Des_d FROM Desp_Dependiente WHERE filtro = '"+filtro+"' AND Id_p = '"+idPadre+"' ";
 
-        Log.i("CONSULTAS", q);
 
         PreparedStatement ps = cn.prepareStatement(q);
 
@@ -77,13 +69,9 @@ public class idespVariedades {
 
         while (rs.next()){
             contador ++;
-            Log.i("CONSULTAS", "Resultado : hijo ---> "+rs.getString("Des_d"));
             Lvariedades.add(new despVariedadesTab.variedades(rs.getInt("id_d"),
                                                              rs.getString("Des_d")));
         }
-
-        Log.i("CONSULTAS", "Resultado : hijos Contados ---> "+contador);
-
         return Lvariedades;
     }
 

@@ -451,7 +451,6 @@ public class genated extends AppCompatActivity {
         ContenedorTab nuevo = iCon.optenerTemporal();
 
         boolean full = true;
-
             for (Map.Entry<Integer, List<Long>> entry : iCon.validarVacios(nuevo, footer).entrySet()) {
                 if (entry.getValue().size() > 0) {
                     full = false;
@@ -461,14 +460,18 @@ public class genated extends AppCompatActivity {
             nuevo.setConsecutivo(contConsec);
 
             if (full) {
+                boolean envio = iCon.enviarInmediato2(nuevo, contConsec);
+
                 Toast.makeText(this,
-                        !ion.all().equals("onLine") || !iCon.enviarInmediato(nuevo, contConsec) ?
-                        "Agregado a local" :
-                        "Insertado con exito!", Toast.LENGTH_LONG).show();
+                        !ion.all().equals("onLine") || !envio ? "Agregado a local" : "Insertado con exito!", Toast.LENGTH_LONG).show();
 
                 inicial = true;
 
-                iCon.insert(nuevo);
+                if(ion.all().equals("offLine")) {
+                    nuevo.setEstado(0);
+                    iCon.insert(nuevo);
+                }
+
                 killChildrens(nuevo);
 
                 contador.update(usu.getId_usuario(), pro.getCodigo_proceso());

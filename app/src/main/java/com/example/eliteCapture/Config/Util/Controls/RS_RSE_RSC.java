@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.icu.text.StringSearch;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,8 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -273,7 +270,6 @@ public class RS_RSE_RSC {
         });
     }
     public int contar(String tipo){
-        Log.i("countcamp","paso a contar");
         n = campConteo.getText().toString() == null ?  -1 : n;
         if(tipo.equals("s")) {
             if (n < modalEditarRegla.getRegla()) n++;

@@ -91,15 +91,12 @@ public class iDetalle implements Detalle {
 		ResultSet rs;
 		String q = "SELECT  * FROM Plano_json_Bloque WHERE codigo = "+idFinca;
 
-		Log.i("nextFinca", "query : "+q);
-
 		PreparedStatement ps = cn.prepareStatement(q);
 		rs = ps.executeQuery();
 
 		String data = "";
 		while (rs.next()) {
 			data = rs.getString(2) + data;
-			Log.i("nextFinca", data);
 		}
 		return ja.WriteJson(path, "Detalle", data);
 	}
@@ -123,7 +120,6 @@ public class iDetalle implements Detalle {
 
 	public Date getDateJson(){
 		try {
-			Log.i("getDateJson", "validando query");
 			ResultSet rs;
 			PreparedStatement ps = cn.prepareStatement("SELECT  * FROM Plano_json_Bloque WHERE codigo = 0");
 			rs = ps.executeQuery();
@@ -131,9 +127,7 @@ public class iDetalle implements Detalle {
 			Date fecha = null;
 			while (rs.next()){
 				fecha = rs.getDate(3);
-				Log.i("nextFinca", "ultima fecha de modificacion formularios : "+fecha);
 			}
-			Log.i("getDateJson", "fecha : "+fecha);
 			return fecha;
 		}catch (Exception e){
 			Log.i("getDateJson", "Error : "+e.toString());
