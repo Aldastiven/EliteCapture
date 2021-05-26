@@ -99,9 +99,7 @@ public class downloadScreen extends AppCompatActivity {
         checkFamsAll.setOnCheckedChangeListener((compoundButton, b) -> {
             if(listChecks.size() > 0){
                 for(CheckBox cb : listChecks){
-                    if(cb.isEnabled()) {
-                        cb.setChecked(checkFamsAll.isChecked());
-                    }
+                    cb.setChecked(checkFamsAll.isChecked());
                 }
             }
         });
@@ -211,33 +209,12 @@ public class downloadScreen extends AppCompatActivity {
                     " Trabajar ",
                     downloaded ? "verde" : "gris");
 
-            //btnWorking.setEnabled(downloaded);
+            if(farm.getNombreFinca().equals(sp.getString("farmWorkingPathName", ""))){
+                txtNotification.setText("Trabajando con la finca");
+            }
 
             linearPanel2.addView(btnWorking);
 
-            btnWorking.setOnClickListener(v -> {
-                if(!downloaded){
-                    Toast.makeText(this, "por favor descarga la finca", Toast.LENGTH_SHORT).show();
-                }else{
-                    SharedPreferences.Editor edit = sp.edit();
-                    String pathFarm = path+"listFarms/"+farm.getIdFinca()+"/";
-                    edit.putString("farmWorkingPath", pathFarm);
-                    edit.putString("farmWorkingPathName", farm.getNombreFinca());
-                    edit.putString("farmWorkingIdPath", farm.getIdFinca()+"");
-                    edit.commit();
-                    edit.apply();
-
-                    txtNotification.setText("Trabajando con la finca");
-
-                    for(itemFamrTab f : listItemFarm){
-                        if(f.farm.getIdFinca() != farm.getIdFinca()){
-                            boolean downloaded2 = new File(path+"/listFarms/"+farm.getIdFinca()+"/Finca_"+farm.getIdFinca()+".json").exists();
-                            f.txtNotification.setText(downloaded2  ? "descargada" : "Finca sin descargar");
-                            f.txtNotification.setTextColor(Color.parseColor(downloaded2 ? "#2ecc71" : "#E74C3C"));
-                        }
-                    }
-                }
-            });
 
             CheckBox cb = new CheckBox(this);
             listChecks.add(cb);
@@ -249,20 +226,65 @@ public class downloadScreen extends AppCompatActivity {
             linePrincipal.addView(linearPanel2);
 
 
-            listItemFarm.add(
-                   new itemFamrTab(
-                        farm,
-                        linePrincipal,
-                        txtNotification,
-                        btnWorking,
-                        cb
-                   )
+            itemFamrTab itemFarm = new itemFamrTab(
+                    farm,
+                    linePrincipal,
+                    txtNotification,
+                    btnWorking,
+                    cb,
+                    txtNotification.getText().toString()
             );
+
+            listItemFarm.add(itemFarm);
+
+            workFarm(farm, btnWorking, downloaded, itemFarm);
 
             line.addView(linePrincipal);
         }catch (Exception e){
             Log.i("itemFarm", "exception : "+e.toString());
         }
+    }
+
+    public void workFarm(listFincasTab.fincasTab farm, Button btnWorking, boolean downloaded, itemFamrTab itemFarm){
+        btnWorking.setOnClickListener(v -> {
+            if(!downloaded){
+                Toast.makeText(this, "por favor descarga la finca", Toast.LENGTH_SHORT).show();
+            } else{
+
+
+                for(itemFamrTab item : listItemFarm){
+                    if(item.farm.getNombreFinca().equals(farm.getNombreFinca())){
+                        Log.i("btnWorking", "llego : "+item.farm.getNombreFinca());
+                        item.status = "Trabajando con la finca";
+                        item.txtNotification.setText("Trabajando con la finca");
+                        break;
+                    }else{
+                        Log.i("btnWorking", "no llego : "+item.farm.getNombreFinca());
+                    }
+                }
+
+                SharedPreferences.Editor edit = sp.edit();
+                String pathFarm = path+"listFarms/"+farm.getIdFinca()+"/";
+                edit.putString("farmWorkingPath", pathFarm);
+                edit.putString("farmWorkingPathName", farm.getNombreFinca());
+                edit.putString("farmWorkingIdPath", farm.getIdFinca()+"");
+                edit.commit();
+                edit.apply();
+                Toast.makeText(this, "Trabajando fonca : "+farm.getNombreFinca(), Toast.LENGTH_SHORT).show();
+                itemFarm.txtNotification.setText("Trabajando con la finca");
+
+                for(itemFamrTab item : listItemFarm){
+                    if(!item.farm.getNombreFinca().equals(farm.getNombreFinca()) && item.status.equals("Trabajando con la finca")){
+                        Log.i("btnWorking", "llego : "+item.farm.getNombreFinca());
+                        item.status = "Actualizada";
+                        item.txtNotification.setText("Actualizada");
+                        break;
+                    }else{
+                        Log.i("btnWorking", "no llego : "+item.farm.getNombreFinca());
+                    }
+                }
+            }
+        });
     }
 
     public void validateFarmMod(){
@@ -286,7 +308,7 @@ public class downloadScreen extends AppCompatActivity {
 
                 downloadScreen.this.runOnUiThread(() -> {
                     for(itemFamrTab item : listItemFarm){
-                        item.check.setEnabled(false);
+                        //item.check.setEnabled(false);
                     }
                 });
 
@@ -306,8 +328,6 @@ public class downloadScreen extends AppCompatActivity {
                                     f.btnWork.setBackgroundColor(Color.parseColor(actualizada ? "#3498DB" : "#154360"));
                                     iSincronizado[0] = iSincronizado[0] +1;
                                     timeText.setText(" Sincronizadas "+iSincronizado[0]+" de "+listItemFarm.size()+" fincas");
-
-                                    f.check.setEnabled(!actualizada);
                                 }
                              );
 
@@ -622,13 +642,15 @@ public class downloadScreen extends AppCompatActivity {
         TextView txtNotification;
         Button btnWork;
         CheckBox check;
+        String status;
 
-        public itemFamrTab(listFincasTab.fincasTab farm, LinearLayout linePrincipal, TextView txtNotification, Button btnWork, CheckBox check) {
+        public itemFamrTab(listFincasTab.fincasTab farm, LinearLayout linePrincipal, TextView txtNotification, Button btnWork, CheckBox check, String status) {
             this.farm = farm;
             this.linePrincipal = linePrincipal;
             this.txtNotification = txtNotification;
             this.btnWork = btnWork;
             this.check = check;
+            this.status = status;
         }
     }
 
