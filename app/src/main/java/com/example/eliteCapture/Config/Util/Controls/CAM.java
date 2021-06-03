@@ -63,6 +63,7 @@ public class CAM extends ContextWrapper {
 
         noti = new LinearLayout(context);
         noti.setOrientation(LinearLayout.VERTICAL);
+        validateFiles();
     }
 
     public String getPathPhoto() {

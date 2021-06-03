@@ -98,11 +98,11 @@ public class modalServer {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         params.setMargins(0, 10, 0, 20);
         LinearLayout lineDescarga = line();
-        lineDescarga.setBackgroundResource(R.drawable.camp_gray);
+        lineDescarga.setBackgroundResource(R.drawable.bordercontainerred);
         lineDescarga.setPadding(0, 20, 0, 20);
         lineDescarga.setLayoutParams(params);
 
-        TextView txtDescarga =(TextView) ta.textColor("Descargar/Actualizar datos.            ","gris",18,"l");
+        TextView txtDescarga =(TextView) ta.textColor(" Descargar/Actualizar datos.            ","gris",18,"l");
         txtDescarga.setLayoutParams(params(2));
 
         lineDescarga.addView(txtDescarga);
@@ -119,7 +119,7 @@ public class modalServer {
         lineSubida.setBackgroundResource(R.drawable.camp_gray);
         lineSubida.setPadding(0, 20, 0, 20);
 
-        TextView txtDescarga =(TextView) ta.textColor("Tienes pendendientes ("+icont.pendientesCantidad()+") registros por enviar.","rojo",18,"l");
+        TextView txtDescarga =(TextView) ta.textColor(" Tienes pendendientes ("+icont.pendientesCantidad()+") registros por enviar.","rojo",18,"l");
         txtDescarga.setLayoutParams(params(2));
 
         lineSubida.addView(txtDescarga);

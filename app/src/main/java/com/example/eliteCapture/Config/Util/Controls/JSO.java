@@ -418,7 +418,7 @@ public class JSO {
             line.setOrientation(LinearLayout.HORIZONTAL);
             line.setWeightSum(2);
 
-            LinearLayout.LayoutParams params2 = ca.params3();
+            LinearLayout.LayoutParams params2 = ca.params();
             params2.weight = 1;
 
             LinearLayout linePanel1 = ca.container();

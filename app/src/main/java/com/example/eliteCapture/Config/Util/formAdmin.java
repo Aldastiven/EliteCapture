@@ -82,7 +82,7 @@ public class formAdmin {
 
             contenedor = validarTemporal();//valida si hay datos temporales de los formularios
         }catch (Exception e){
-            Log.i("formAdmin", e.toString());
+            Log.i("formAdminDta", e.toString());
         }
     }
 
@@ -148,7 +148,6 @@ public class formAdmin {
                         v = new TIM_FEC(context, ubicacion, r, path, inicial).crear();
                         break;
                      case "JSO":// scanner, busqueda y navegacion de json
-                         Log.i("getFinca", "path Json Create: "+pathFarmWorking+", nombre finca : "+farmIdFarm);
                         v = new JSO(act, ubicacion, r, path, inicial, JSO, pathFarmWorking, nameFarm, farmIdFarm).crear();
                         break;
                     case "GPS"://georeferenciación

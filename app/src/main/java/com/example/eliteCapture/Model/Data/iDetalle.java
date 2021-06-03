@@ -97,6 +97,8 @@ public class iDetalle implements Detalle {
 		String data = "";
 		while (rs.next()) {
 			data = rs.getString(2) + data;
+
+			Log.i("jsonview", data);
 		}
 		return ja.WriteJson(path, "Detalle", data);
 	}
