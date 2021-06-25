@@ -86,11 +86,9 @@ public class ETN_ETA extends ContextWrapper {
             }
 
             camp.setText(vacio ? rt.getRespuesta() : "");
-            if (rt.getTipo().equals("ETN")) {
-                camp.setRawInputType(Configuration.KEYBOARD_QWERTY);
-                funLimit();
-            }
-            funCamp();
+            camp.setRawInputType(rt.getTipo().equals("ETN") ? Configuration.KEYBOARD_QWERTY : Configuration.KEYBOARD_NOKEYS);
+            funLimit();
+            //funCamp();
             validateHasFocus();
             return camp;
         }catch (Exception e){
@@ -100,7 +98,8 @@ public class ETN_ETA extends ContextWrapper {
     }
 
     public void validateHasFocus(){
-        camp.setOnFocusChangeListener((View.OnFocusChangeListener) (v, hasFocus) -> {
+        camp.setOnFocusChangeListener((v, hasFocus) -> {
+
             try {
                 if (!hasFocus) {
                     int i = camp.getText().toString().length();
@@ -141,94 +140,94 @@ public class ETN_ETA extends ContextWrapper {
     public void funLimit() {
         camp.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     if (rt.getTipo().equals("ETN")) {
                         String r = reemplazarDecimal();
-                        if (rt.getDesdeHasta() != null) {
 
-                            String data[] = rt.getDesdeHasta().split("-");
+                        if (rt.getDesde_hasta() != null) {
+                            String data[] = rt.getDesde_hasta().trim().split("-");
+
                             int from = Integer.parseInt(data[0].trim()),
                                     to = Integer.parseInt(data[1].trim());
+
                             double rta = 0;
                             if (!camp.getText().toString().isEmpty()) {
                                 rta = Double.parseDouble(r);
                             }
+
                             noti.removeAllViews();
-                            if (rta > to || rta < from) {
+                            if(rta > to || rta < from) {
                                 noti.addView(new textAdmin(context).textColor("No se encuentra dentro del rango requerido (" + from + " a " + to + ")", "rojo", 15, "l"));
-                                respuestaCampo = null;
-                            } else {
+                                registro(null, null);
+                            }else {
                                 respuestaCampo = r;
+                                registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
                             }
                         } else {
                             respuestaCampo = camp.getText().toString();
+                            registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
                         }
-                        //respuestaCampo = respuestaCampo != null ? respuestaCampo.replaceAll("\\W+", "") : "";
+                    }else if (rt.getTipo().equals("ETA")){
+                        respuestaCampo = camp.getText().toString();
+                        registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
                     }
-                    registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
                 } catch (Exception e) {
-                    //Toast.makeText(context, "limit : " + e.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "limit : " + e.toString(), Toast.LENGTH_SHORT).show();
+                    Log.i("funLimit","error : "+e.toString());
                 }
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                respuestaCampo = camp.getText().toString();
-                registro(respuestaCampo, respuestaCampo != null ? rt.getPonderado() + "" : "");
-            }
+            public void afterTextChanged(Editable s) {}
         });
     }
 
     public String reemplazarDecimal(){
+
         String d = camp.getText().toString();
 
         //elimina punto si el campo es un entero
-        if(d.contains(".") && rt.getDecimales() == 0 || camp.getText().length() == 1){
+        if (d.contains(".") && rt.getDecimales() == 0 || d.length() == 1) {
             d = d.replaceAll("\\.", "");
+        }else {
+            //valida si digita mas de un punto
+            if (getNumerCountCharacter(d, (char) 46) == 2) {
+                d = d.substring(0, d.length() - 1);
+            }
+
+            //valida si digita mas de un coma
+            if (getNumerCountCharacter(d, (char) 44) > 0) {
+                d = d.substring(0, d.length() - 1);
+            }
+
+            //valida si digita mas de un espacio
+            if (getNumerCountCharacter(d, (char) 32) > 0) {
+                d = d.substring(0, d.length() - 1);
+            }
+
+            //valida si digita mas de un quion
+            if (getNumerCountCharacter(d, (char) 45) > 0) {
+                d = d.substring(0, d.length() - 1);
+            }
+
+            //valida cantidad de digitos despues del punto
+            if (d.contains(".")) {
+                try {
+
+                    String[] r = d.split("\\.");
+                    d = r[0] + "." + r[1].substring(0, r[1].length() == rt.getDecimales() ? r[1].length() : r[1].length() - (r[1].length() - rt.getDecimales()));
+                }catch (Exception e){
+                    Log.i("decimal", "error en el campo : "+e.toString());
+                }
+            }
         }
 
-        //valida si digita mas de un punto
-        if(getNumerCountCharacter(d, (char)46) == 2){
-            d = d.substring(0, d.length() - 1);
-            camp.setText(d);
-            camp.setSelection(camp.getText().length());
-        }
-
-        //valida si digita mas de un coma
-        if(getNumerCountCharacter(d, (char)44) > 0){
-            d = d.substring(0, d.length() - 1);
-            camp.setText(d);
-            camp.setSelection(camp.getText().length());
-        }
-
-        //valida si digita mas de un espacio
-        if(getNumerCountCharacter(d, (char)32) > 0){
-            d = d.substring(0, d.length() - 1);
-            camp.setText(d);
-            camp.setSelection(camp.getText().length());
-        }
-
-        //valida si digita mas de un quion
-        if(getNumerCountCharacter(d, (char)45) > 0){
-            d = d.substring(0, d.length() - 1);
-            camp.setText(d);
-            camp.setSelection(camp.getText().length());
-        }
-
-        //valida cantidad de digitos despues del punto
-        if(d.contains(".")) {
-            String[] r = d.split("\\.");
-            d = r[0] + "." + r[1].substring(0, r[1].length() == rt.getDecimales() ? r[1].length() : r[1].length() - (r[1].length() - rt.getDecimales()));
-        }
-
-        //imprime en el campo si el dato registrado es diferente al inicial
-        if(d.length() != camp.getText().length()) {
+        //imprime en el campo si el dato registrado es diferente al inicia
+        if (d.length() != camp.getText().length()) {
             camp.setText(d);
         }
 

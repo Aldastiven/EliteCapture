@@ -101,6 +101,7 @@ public class CAM extends ContextWrapper {
             txtCantidadPhoto.setText(vacio ? "Cantidad de fotos : "+rt.getValor() : "");
 
             Button btn = (Button) pp.boton("Tomar foto", "verde");
+            btn.setLayoutParams(ca.params());
 
             btn.setOnClickListener(V -> {
                 getPolicy();

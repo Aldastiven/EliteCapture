@@ -23,8 +23,13 @@ import com.example.eliteCapture.Model.View.Tab.RespuestasTab;
 import com.example.eliteCapture.Model.View.iContenedor;
 import com.example.eliteCapture.R;
 
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Calendar;
+import java.util.Date;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class TIM_FEC {
     Context context;
     RespuestasTab rt;
@@ -60,6 +65,8 @@ public class TIM_FEC {
 
         respuestaPonderado = (TextView) pp.resultadoPonderado();
         respuestaPonderado.setText(vacio ? "Resultado : "+rt.getPonderado() : "Resultado :");
+
+        Log.i("getReglas", "regla : "+rt.getReglas());
     }
 
     public View crear(){//GENERA EL CONTENEDOR DEL ITEM
@@ -101,7 +108,7 @@ public class TIM_FEC {
             }
         });
         funEdt();
-        obtenerRespuesta();
+        registrarRespuesta();
         return camp;
     }
 
@@ -129,17 +136,13 @@ public class TIM_FEC {
 
     public void timePickerView(){
         tp = new TimePickerDialog(context,
-                new TimePickerDialog.OnTimeSetListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hora, int minuto) {
-                        try {
-                            camp.setText(String.format("%02d", hora) + ":" + String.format("%02d", minuto));
-                            obtenerRespuesta();
-                        }catch (Exception e){
-                            Toast.makeText(context, "Error conversion : "+e.toString(), Toast.LENGTH_SHORT).show();
-                            Log.i("TIMEDATE", e.toString());
-                        }
+                (timePicker, hora, minuto) -> {
+                    try {
+                        camp.setText(String.format("%02d", hora) + ":" + String.format("%02d", minuto));
+                        registrarRespuesta();
+                    }catch (Exception e){
+                        Toast.makeText(context, "Error conversion : "+e.toString(), Toast.LENGTH_SHORT).show();
+                        Log.i("TIMEDATE", e.toString());
                     }
                 }, hour, minutes, false);
         tp.show();
@@ -149,8 +152,15 @@ public class TIM_FEC {
 
         DatePickerDialog.OnDateSetListener on = (view, yearS, monthS, dayS) -> {
             String dateElegido = yearS + "-" + (monthS+1) + "-" + dayS;
-            camp.setText(dateElegido);
-            obtenerRespuesta();
+
+            boolean getValidateDate = validateDateDelimiter(dateElegido);
+
+            if (!getValidateDate) {
+                Toast.makeText(context, "La fecha no cumple con el rango requerido", Toast.LENGTH_SHORT).show();
+            }
+
+            camp.setText(getValidateDate ? dateElegido : (year + "-" + month + "-" + day));
+            registrarRespuesta();
         };
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(context, R.style.DialogPickerDate, on, year, (month - 1), day);
@@ -161,9 +171,43 @@ public class TIM_FEC {
         datePickerDialog.show();
     }
 
-    public void obtenerRespuesta() {
+    public void registrarRespuesta() {
         rta = camp.getText().toString();
         rta = rta.replace(" ", "");
         registro(!rta.isEmpty() ? rta : null, !rta.isEmpty() ? rt.getPonderado() + "" : null);
+    }
+
+    public boolean validateDateDelimiter(String dateSelect){
+        try {
+            if(!dateSelect.isEmpty()) {
+                Log.i("funLimit", "llego el dato : "+rt.getDesde_hasta()+" , pregunta : "+rt.getPregunta()+", regla : "+rt.getReglas());
+                if(!rt.getDesde_hasta().isEmpty()) {
+                    String parts[] = String.valueOf(rt.getDesde_hasta()).split("-");
+                    int nDateAfter = Integer.parseInt(parts[0].trim()), nDateBefore = Integer.parseInt(parts[1].trim());
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+                    Date formaSelelectDate = sdf.parse(dateSelect + "T00:00:00");
+
+                    Instant after = Instant.now().minus(Duration.ofDays(nDateAfter));
+                    Instant before = Instant.now().plus(Duration.ofDays(nDateBefore));
+
+                    Log.i("funLimit", "nDateAfter : "+after+", nDateBefore : "+before+", dateSelect : "+formaSelelectDate);
+
+                    boolean b1 = !after.isAfter(formaSelelectDate.toInstant()),
+                            b2 = !before.isBefore(formaSelelectDate.toInstant());
+
+                    //si cumple el rango de fechas
+                    return nDateAfter == 0 && nDateBefore == 0 && dateSelect.equals((year + "-" + month + "-" + day)) || (b1 && b2);
+                }else{
+                    return false;
+                }
+            }else{
+                return true;
+            }
+        }catch (Exception e){
+            Log.i("error_validateDat", e.toString());
+            return false;
+        }
     }
 }

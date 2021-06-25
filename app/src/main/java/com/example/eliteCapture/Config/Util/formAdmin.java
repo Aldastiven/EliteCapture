@@ -6,12 +6,15 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.AUT_DES_CBX;
@@ -94,6 +97,7 @@ public class formAdmin {
     }
 
     //CREA CONTROLES DEL FORMULARIO
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void CrearForm(String ubicacion) {
         try {
             linearPrinc.removeAllViews();
@@ -111,6 +115,8 @@ public class formAdmin {
             }
 
             for (RespuestasTab r : lista) {
+                Log.i("paintCamps", "va a pintar campo : " + r.getTipo()+", desde_hasta : " + r.getDesde_hasta());
+
                 View v;
                 switch (r.getTipo().trim()) {
                     case "CBE":// desplegable con editor de texto numerico

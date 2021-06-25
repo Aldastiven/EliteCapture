@@ -5,12 +5,14 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -52,7 +54,7 @@ public class ftpConect extends Thread {
 
     public void syncronizedPhoto(File src, FTPClient ftp) {
         try {
-
+            c.runOnUiThread(() -> Toast.makeText(c, "Sincronizando fotos...", Toast.LENGTH_LONG).show());
             if (ftp != null) {
                 if (src.isDirectory()) {
                     ftp.makeDirectory(src.getName());
@@ -72,8 +74,10 @@ public class ftpConect extends Thread {
                         ftp.setFileType(FTP.BINARY_FILE_TYPE);
                         ftp.enterLocalPassiveMode();
 
-                        ftp.storeFile(src.getName(), srcStream);
-                        countImage++;
+                        if(ftp.storeFile(src.getName(), srcStream)){
+                            countImage++;
+                            transferSent(src);
+                        }
                         srcStream.close();
                     } catch (Exception e) {
                         System.out.println("Error : " + e.toString());
@@ -85,9 +89,9 @@ public class ftpConect extends Thread {
         } catch (IOException e) {
             Log.i("error", "syncronizedPhoto : " + e.toString());
         } finally {
-            txtMessage();
             if (ftp != null) {
                 try {
+                    txtMessage();
                     ftp.logout();
                 } catch (IOException ioe) {
                     Log.i("error", ioe.toString());
@@ -96,6 +100,25 @@ public class ftpConect extends Thread {
         }
     }
 
+    public void transferSent(File src){
+        try {
+            Log.i("transferSent", "name : "+src.getName());
+            File sentFile = new File(path + "/photos/sent");
+            if (!sentFile.exists()) {
+                Log.i("transferSent", "entro a crear la carpeta");
+                sentFile.mkdirs();
+                transferSent(src);
+            } else {
+                if (!src.isDirectory()) {
+                    Log.i("transferSent", "entro a enviar el archivo");
+                    FileUtils.copyFileToDirectory(src, sentFile);
+                }
+                src.delete();
+            }
+        }catch (Exception e){
+            Log.i("ErrortransferSent", e.toString());
+        }
+    }
 
     public void txtMessage(){
         c.runOnUiThread(()-> {

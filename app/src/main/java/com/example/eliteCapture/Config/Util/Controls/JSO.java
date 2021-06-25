@@ -9,6 +9,8 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -563,18 +565,27 @@ public class JSO {
     }
 
     public void funCamp(){//FUNCION DEL CAMPO
-        campConteo.setOnFocusChangeListener((v, hasFocus) -> {
-            try {
-                if (!hasFocus) {
+
+        campConteo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
                     registro(campConteo.getText().toString(), campConteo.getText().toString() != null ? rt.getPonderado() + "" : "");
+                } catch (Exception e) {
+                    Toast.makeText(context, "Funcamp : " + e.toString(), Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                Toast.makeText(context, "Funcamp : " + e.toString(), Toast.LENGTH_SHORT).show();
             }
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
+
     }
 
     public void registro(String rta, String valor) {//REGISTRO
+        Toast.makeText(context, "registro : "+rta, Toast.LENGTH_SHORT).show();
         new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null, rt.getReglas());
     }
 }

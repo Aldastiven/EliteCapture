@@ -74,8 +74,6 @@ public class AUT_DES_CBX {
         try {
             contenedorcampAut = ca.container();
             contenedorcampAut.setOrientation(LinearLayout.VERTICAL);
-            contenedorcampAut.setPadding(10, 0, 10, 5);
-            contenedorcampAut.setGravity(Gravity.CENTER_HORIZONTAL);
 
             contenedorcampAut.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
             contenedorcampAut.addView(pintarRespuesta(rt.getValor() != null ? rt.getValor()  : ""));
@@ -90,7 +88,7 @@ public class AUT_DES_CBX {
 
     public View camp(){
         try {
-            LinearLayout.LayoutParams params = ca.params();
+            LinearLayout.LayoutParams params = ca.params2();
             View v = null;
             switch (rt.getTipo()) {
                 case "AUT":
@@ -108,7 +106,6 @@ public class AUT_DES_CBX {
                 case "CBX":
                     campSpin = new Spinner(context);
                     campSpin.setAdapter(getAdapter(getDesp()));
-                    campSpin.setBackgroundResource(R.drawable.myspinner);
 
                     if (rt.getId() == 0) {
 
@@ -160,7 +157,7 @@ public class AUT_DES_CBX {
     }
 
     public ArrayAdapter<String> getAdapter(List<String> listaCargada){
-        int resource = rt.getTipo().equals("DES") || rt.getTipo().equals("CBX") ? R.layout.items_des : R.layout.items_aut;
+        int resource = rt.getTipo().equals("DES") || rt.getTipo().equals("CBX") ? R.layout.items_aut : R.layout.items_aut;
         ArrayAdapter<String> autoArray = new ArrayAdapter<>(context,resource , listaCargada);
         return autoArray;
     }

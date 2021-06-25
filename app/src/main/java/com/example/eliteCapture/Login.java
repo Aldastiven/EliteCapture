@@ -102,9 +102,9 @@ public class Login extends AppCompatActivity {
 
             recibirUsuario();
 
-            icont = new iContenedor(path);
             is = new iSesion(path);
             ionLine = new ionLine(path);
+            icont = new iContenedor(path);
             pa = new permissionAdmin(this);
             pa.permissionGrantedCamera();
 

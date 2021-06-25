@@ -17,11 +17,11 @@ public class RespuestasTab implements Serializable {
 	private String desplegable;
 	private int reglas;
 	private String tip;
-	private String desdeHasta;
+	private String desde_hasta;
 	private int decimales;
 	private int obligatorio;
 
-	public RespuestasTab(Long id, int codigo, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, String valor, String causa, String desplegable, int reglas, String tip, String desdeHasta, int decimales, int obligatorio) {
+	public RespuestasTab(Long id, int codigo, int idProceso, Long idPregunta, String tipo, String pregunta, float ponderado, String respuesta, String valor, String causa, String desplegable, int reglas, String tip, String desde_hasta, int decimales, int obligatorio) {
 		this.id = id;
 		this.codigo = codigo;
 		this.idProceso = idProceso;
@@ -35,18 +35,11 @@ public class RespuestasTab implements Serializable {
 		this.desplegable = desplegable;
 		this.reglas = reglas;
 		this.tip = tip;
-		this.desdeHasta = desdeHasta;
+		this.desde_hasta = desde_hasta;
 		this.decimales = decimales;
 		this.obligatorio = obligatorio;
 	}
 
-	public int getObligatorio() {
-		return obligatorio;
-	}
-
-	public void setObligatorio(int obligatorio) {
-		this.obligatorio = obligatorio;
-	}
 
 	public Long getId() {
 		return id;
@@ -120,6 +113,14 @@ public class RespuestasTab implements Serializable {
 		this.valor = valor;
 	}
 
+	public String getCausa() {
+		return causa;
+	}
+
+	public void setCausa(String causa) {
+		this.causa = causa;
+	}
+
 	public String getDesplegable() {
 		return desplegable;
 	}
@@ -144,20 +145,12 @@ public class RespuestasTab implements Serializable {
 		this.tip = tip;
 	}
 
-	public String getCausa() {
-		return causa;
+	public String getDesde_hasta() {
+		return desde_hasta;
 	}
 
-	public void setCausa(String causa) {
-		this.causa = causa;
-	}
-
-	public String getDesdeHasta() {
-		return desdeHasta;
-	}
-
-	public void setDesdeHasta(String desdeHasta) {
-		this.desdeHasta = desdeHasta;
+	public void setDesde_hasta(String desde_hasta) {
+		this.desde_hasta = desde_hasta;
 	}
 
 	public int getDecimales() {
@@ -166,5 +159,13 @@ public class RespuestasTab implements Serializable {
 
 	public void setDecimales(int decimales) {
 		this.decimales = decimales;
+	}
+
+	public int getObligatorio() {
+		return obligatorio;
+	}
+
+	public void setObligatorio(int obligatorio) {
+		this.obligatorio = obligatorio;
 	}
 }

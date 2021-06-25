@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eliteCapture.Config.Util.Controls.JSO;
@@ -40,6 +42,7 @@ import static com.example.eliteCapture.R.drawable.ic_cloud_upload;
 import static com.example.eliteCapture.R.drawable.ic_save;
 import static com.example.eliteCapture.R.drawable.ic_star;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class genated extends AppCompatActivity {
 
     TextView EncabTitulo, contcc, scrollcomplete, txtCalificacion, btnEnvioGuardar, btnCalificar;
@@ -179,6 +182,7 @@ public class genated extends AppCompatActivity {
         }
     }
 
+
     public void CrearEncabezado() {
         linearBodypop.removeAllViews();
         formA.CrearForm("H");
@@ -240,7 +244,7 @@ public class genated extends AppCompatActivity {
 
             return contenedorLimipio();
         } catch (Exception e) {
-            Log.i("Contenedor_Error", e.toString());
+            Log.i("Contenedor_ErrorData", e.toString());
             temporal = false;
         }
         return contenedorLimipio();

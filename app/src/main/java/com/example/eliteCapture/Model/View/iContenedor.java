@@ -2,6 +2,7 @@ package com.example.eliteCapture.Model.View;
 
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.eliteCapture.Config.Util.JsonAdmin;
 import com.example.eliteCapture.Config.sqlConect;
@@ -61,6 +62,7 @@ public class iContenedor implements Contenedor {
     public String insert(ContenedorTab o) {
         all();
         o.setFecha(o.fechaString());
+
         ct.add(o);
         local();
 
@@ -111,36 +113,41 @@ public class iContenedor implements Contenedor {
     }
 
     public float calcular(ContenedorTab c, boolean footer) {
-        float ponderado = 0;
-        float calificacion = 0;
+        try {
+            float ponderado = 0;
+            float calificacion = 0;
 
-        for (RespuestasTab respuesta : c.getQuestions()) {
-            if (respuesta.getValor() != null && !respuesta.getValor().equals("-1")) {
-                ponderado += respuesta.getPonderado();
-                calificacion += Float.parseFloat(respuesta.getValor());
-                Log.i("calificar", respuesta.getId() + ") resp:" + respuesta.getValor() + " pon: " + respuesta.getPonderado() + " cal: " + calificacion + " ponTotal: " + ponderado);
-            }
-        }
-
-        if (footer) {
-            for (RespuestasTab respuesta : c.getFooter()) {
-                if (!respuesta.getValor().equals("-1")) {
+            for (RespuestasTab respuesta : c.getQuestions()) {
+                if (respuesta.getValor() != null && !respuesta.getValor().equals("-1")) {
                     ponderado += respuesta.getPonderado();
                     calificacion += Float.parseFloat(respuesta.getValor());
+                    Log.i("calificar", respuesta.getId() + ") resp:" + respuesta.getValor() + " pon: " + respuesta.getPonderado() + " cal: " + calificacion + " ponTotal: " + ponderado);
                 }
             }
+
+            if (footer) {
+                for (RespuestasTab respuesta : c.getFooter()) {
+                    if (!respuesta.getValor().equals("-1")) {
+                        ponderado += respuesta.getPonderado();
+                        calificacion += Float.parseFloat(respuesta.getValor());
+                    }
+                }
+            }
+
+            Log.i("calificar", "" + calificacion + " / " + ponderado + " = " + calificacion / ponderado * 100);
+
+            DecimalFormatSymbols separador = new DecimalFormatSymbols();
+            separador.setDecimalSeparator('.');
+            DecimalFormat format = new DecimalFormat("#.##", separador);
+
+            return Float.parseFloat(format.format(calificacion / ponderado * 100));
+        }catch (Exception e ){
+            Log.i("calificar", e.toString());
+            return 0;
         }
-
-        Log.i("calificar", "" + calificacion + " / " + ponderado + " = " + calificacion / ponderado * 100);
-
-        DecimalFormatSymbols separador = new DecimalFormatSymbols();
-        separador.setDecimalSeparator('.');
-        DecimalFormat format = new DecimalFormat("#.##", separador);
-
-        return Float.parseFloat(format.format(calificacion / ponderado * 100));
     }
 
-    public boolean crearTemporal(ContenedorTab formTemporal) throws Exception {
+    public boolean crearTemporal(ContenedorTab formTemporal){
         try {
             return new JsonAdmin().WriteJson(
                     path,
@@ -199,6 +206,7 @@ public class iContenedor implements Contenedor {
 
     public void editarTemporal(String donde, int idPregunta, String respuesta, String valor, String causa, int regla){
         try {
+            Log.i("edit", "paso a editar "+idPregunta+": "+respuesta);
             ContenedorTab conTemp = new Gson().fromJson(new JsonAdmin().ObtenerLista(path, "temp"),
                     new TypeToken<ContenedorTab>() {
                     }.getType());
@@ -221,6 +229,7 @@ public class iContenedor implements Contenedor {
     }
 
     public List<RespuestasTab> editar(List<RespuestasTab> editar, int idPregunta, String respuesta, String valor, String causa, int regla) {
+
         editar.get(idPregunta).setRespuesta(respuesta);
         editar.get(idPregunta).setValor(valor);
         editar.get(idPregunta).setCausa(causa);
@@ -243,7 +252,7 @@ public class iContenedor implements Contenedor {
                 detalle.getLista_desp(),
                 detalle.getReglas(),
                 detalle.getTip(),
-                detalle.getDesdeHasta(),
+                detalle.getDesde_hasta(),
                 detalle.getDecimales(),
                 detalle.getObligatorio()
         );

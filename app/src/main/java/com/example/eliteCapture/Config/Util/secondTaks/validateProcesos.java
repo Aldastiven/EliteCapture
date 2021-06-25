@@ -7,6 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eliteCapture.Model.Data.iDetalle;
+import com.example.eliteCapture.Model.View.iContenedor;
 
 import java.sql.Connection;
 
@@ -65,6 +66,7 @@ public class validateProcesos {
                         });
                     }
                     floatingServer.setCompoundDrawablesWithIntrinsicBounds(b ? ic_cloud_noti : ic_cloud, 0, 0, 0);
+                    floatingServer.setCompoundDrawablesWithIntrinsicBounds(new iContenedor(path).pendientesCantidad() > 0 ? ic_cloud_noti : ic_cloud, 0, 0, 0);
                 });
             }
         }catch (Exception e){

@@ -16,12 +16,12 @@ public class DetalleTab {
 	private String grupo1;
 	private int reglas;
 	private String tip;
-	private String desdeHasta;
+	private String desde_hasta;
 	private  int decimales;
 	int obligatorio;
 
 
-	public DetalleTab(Long id_detalle, int id_proceso, int codigo_detalle, String nombre_detalle, String tipo, String lista_desp, String tipo_M, Float porcentaje, String capitulo, String item, String capitulo_Nombre, String grupo1, int reglas, String tip, String desdeHasta, int decimales, int obligatorio) {
+	public DetalleTab(Long id_detalle, int id_proceso, int codigo_detalle, String nombre_detalle, String tipo, String lista_desp, String tipo_M, Float porcentaje, String capitulo, String item, String capitulo_Nombre, String grupo1, int reglas, String tip, String desde_hasta, int decimales, int obligatorio) {
 		this.setId_detalle(id_detalle);
 		this.setId_proceso(id_proceso);
 		this.setCodigo_detalle(codigo_detalle);
@@ -36,18 +36,10 @@ public class DetalleTab {
 		this.setGrupo1(grupo1);
 		this.setReglas(reglas);
 		this.setTip(tip);
-		this.setDesdeHasta(desdeHasta);
 		this.setDecimales(decimales);
 		this.setObligatorio(obligatorio);
 	}
 
-	public int getObligatorio() {
-		return obligatorio;
-	}
-
-	public void setObligatorio(int obligatorio) {
-		this.obligatorio = obligatorio;
-	}
 
 	public Long getId_detalle() {
 		return id_detalle;
@@ -161,12 +153,12 @@ public class DetalleTab {
 		this.tip = tip;
 	}
 
-	public String getDesdeHasta() {
-		return desdeHasta;
+	public String getDesde_hasta() {
+		return desde_hasta;
 	}
 
-	public void setDesdeHasta(String desdeHasta) {
-		this.desdeHasta = desdeHasta;
+	public void setDesde_hasta(String desde_hasta) {
+		this.desde_hasta = desde_hasta;
 	}
 
 	public int getDecimales() {
@@ -175,5 +167,13 @@ public class DetalleTab {
 
 	public void setDecimales(int decimales) {
 		this.decimales = decimales;
+	}
+
+	public int getObligatorio() {
+		return obligatorio;
+	}
+
+	public void setObligatorio(int obligatorio) {
+		this.obligatorio = obligatorio;
 	}
 }
