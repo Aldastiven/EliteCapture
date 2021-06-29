@@ -3,6 +3,7 @@ package com.example.eliteCapture.Config.Util.Controls;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Configuration;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -162,6 +163,9 @@ public class ETN_ETA extends ContextWrapper {
                             noti.removeAllViews();
                             if(rta > to || rta < from) {
                                 noti.addView(new textAdmin(context).textColor("No se encuentra dentro del rango requerido (" + from + " a " + to + ")", "rojo", 15, "l"));
+                                new Handler().postDelayed(() -> {
+                                    camp.setText("");
+                                }, 3000);
                                 registro(null, null);
                             }else {
                                 respuestaCampo = r;
