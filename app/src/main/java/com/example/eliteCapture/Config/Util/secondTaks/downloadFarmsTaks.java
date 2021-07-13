@@ -11,6 +11,8 @@ import com.example.eliteCapture.Model.Data.Tab.listFincasTab;
 import com.example.eliteCapture.Model.Data.iJsonPlan;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class downloadFarmsTaks {
 
@@ -28,13 +30,16 @@ public class downloadFarmsTaks {
 
     textAdmin ta;
 
+    List<Integer> listFarm = new ArrayList<>();
+
     public downloadFarmsTaks(
             Activity act,
             TextView txtNotification,
             String path,
             listFincasTab.fincasTab farm,
             LinearLayout lineDrawable,
-            Connection cn) {
+            Connection cn,
+            List<Integer> listFarm) {
 
         this.act = act;
         this.txtNotification = txtNotification;
@@ -42,6 +47,7 @@ public class downloadFarmsTaks {
         this.farm = farm;
         this.lineDrawable = lineDrawable;
         this.cn = cn;
+        this.listFarm = listFarm;
 
         ta = new textAdmin(act);
 
@@ -61,7 +67,13 @@ public class downloadFarmsTaks {
         public void downloader(){
             try{
                 runEditNotification("Obteniendo información de finca..", "#154360");
-                ijp.localListFincas(farm.getIdFinca());
+                boolean b = ijp.localListFincas(farm.getIdFinca());
+
+                if (b){
+                    Log.i("downloadedFarm", "llego a adicionar");
+                    listFarm.add(0);
+                }
+
                 runEditNotification(
                         "Descarga y almacenamiento completado con exito \nTiempo de ejecución : "+calulateTime(),
                         "#2ecc71");

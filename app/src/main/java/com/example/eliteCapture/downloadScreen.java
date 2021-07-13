@@ -73,7 +73,7 @@ public class downloadScreen extends AppCompatActivity {
         insVariables();
         //validateFarmMod();
         getUser();
-        paintFarms();
+        paintFarmsPanel();
     }
 
     public void insEntity(){
@@ -131,10 +131,14 @@ public class downloadScreen extends AppCompatActivity {
         }
     }
 
-    public void paintFarms(){
+    public void paintFarmsPanel(){
         //obtiene la lista de fincas del usuario
         try{
             List<listFincasTab> listFincas = ipl.allListFincas();
+
+            if(lineFarmws.getChildCount() > 0){
+                lineFarmws.removeAllViews();
+            }
 
             if(listFincas.size() > 0) {
                 for (listFincasTab finca : listFincas) {
@@ -169,7 +173,6 @@ public class downloadScreen extends AppCompatActivity {
     public void getItem(listFincasTab.fincasTab farm, LinearLayout line){
         //crea el item de finca
         try {
-
             boolean downloaded = new File(path+"/listFarms/"+farm.getIdFinca()+"/Finca_"+farm.getIdFinca()+".json").exists();
             Log.i("farmDownload", farm.getIdFinca()+""+downloaded);
 
@@ -439,7 +442,7 @@ public class downloadScreen extends AppCompatActivity {
         lineFarmws.setPadding(0,0,0, farmsCheck.size() > 0 ? 106 : 0);
     }
 
-    public static class taskDownloader {
+    public class taskDownloader {
         //Realiza la descarga de fiincas en segundo plano
 
         Activity act;
@@ -456,6 +459,8 @@ public class downloadScreen extends AppCompatActivity {
         List<farmSelectDownloadTab> listFamsSelected = new ArrayList<>();
 
         Connection conexion;
+
+        List<Integer> listFarm = new ArrayList<>();
 
         @SuppressLint("ResourceType")
         public taskDownloader(Context context, List<listFincasTab.fincasTab> farms, String path, Activity act) {
@@ -480,7 +485,7 @@ public class downloadScreen extends AppCompatActivity {
                 LinearLayout lineDialog = dialog.findViewById(R.id.linearMod);
                 lineDialog.addView(ca.scrollv(lineFarms));
 
-                //dialog.setCancelable(false);
+                dialog.setCancelable(false);
                 dialog.show();
 
                 paintConexion();
@@ -586,6 +591,7 @@ public class downloadScreen extends AppCompatActivity {
                 paintInLayoutDialog(principal);
             }
 
+
             for(farmSelectDownloadTab f : listFamsSelected){
                 new downloadFarmsTaks(
                         f.getAct(),
@@ -593,8 +599,33 @@ public class downloadScreen extends AppCompatActivity {
                         f.getFolderPath(),
                         f.getFarm(),
                         f.getLineDrawable(),
-                        f.getConexion()
+                        f.getConexion(),
+                        listFarm
                 );
+            }
+
+            validateDownloaded();
+        }
+
+        public void validateDownloaded(){
+            try {
+                Log.i("downloadedFarm", "" + listFarm.size());
+                Thread.sleep(1000);
+                if (listFamsSelected.size() == listFarm.size()) {
+                    act.runOnUiThread(() -> {
+                        Toast.makeText(act, "Fincas descargadas con exito", Toast.LENGTH_SHORT).show();
+                        downloadScreen.this.paintFarmsPanel();
+                        farmsCheck.clear();
+                        messageFarmList();
+                    });
+
+                    Thread.sleep(1000);
+                    dialog.dismiss();
+                } else {
+                    validateDownloaded();
+                }
+            }catch (Exception e){
+                Log.i("validateDownloaded", e.toString());
             }
         }
 
