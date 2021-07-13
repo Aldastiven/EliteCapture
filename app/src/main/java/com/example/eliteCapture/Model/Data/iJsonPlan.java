@@ -53,7 +53,10 @@ public class iJsonPlan {
 
     public boolean local() throws Exception{
         ResultSet rs;
-        String q = "SELECT * FROM eliteFinca WHERE codigo = "+usuario;
+        String q = "SELECT * FROM loginFinca WHERE codigo = "+usuario;
+
+        Log.i("consultaFincas", q);
+
         PreparedStatement ps = cn.prepareStatement(q);
         rs = ps.executeQuery();
 
@@ -61,6 +64,7 @@ public class iJsonPlan {
         List<listFincasTab.fincasTab> fincas = new ArrayList<>();
 
         while (rs.next()) {
+            Log.i("consultaFincas", "encontron : "+rs.getString(2));
             fincas.add(new listFincasTab.fincasTab(
                     Integer.parseInt(rs.getString(2)),
                     rs.getString(3)

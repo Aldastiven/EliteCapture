@@ -294,6 +294,8 @@ public class JSO {
                 Iterator<String> it = data.keys();
 
                 LinearLayout lineCamp = ca.card(ca.container(), "#EAEDED");
+                new GIDGET().GradientDrawable(lineCamp, "l", "verde");
+                lineCamp.setPadding(20, 0,0,0);
                 lineCamp.setOrientation(LinearLayout.VERTICAL);
                 lineCamp.removeAllViews();
 
@@ -309,7 +311,7 @@ public class JSO {
                         line2.setVisibility(View.GONE);
                         v.setText("{}"+key+(line2.getChildCount() > 0 ? "▼" : "▲"));
                         v.setTextSize(15);
-                        v.setBackgroundColor(Color.parseColor("#ABEBC6"));
+                        v.setBackgroundColor(Color.parseColor("#F2F3F4"));
                         v.setPadding(0,25,0, 25);
 
                         v.setOnClickListener(x -> {
@@ -585,7 +587,7 @@ public class JSO {
     }
 
     public void registro(String rta, String valor) {//REGISTRO
-        Toast.makeText(context, "registro : "+rta, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "registro : "+rta, Toast.LENGTH_SHORT).show();
         new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null, rt.getReglas());
     }
 }

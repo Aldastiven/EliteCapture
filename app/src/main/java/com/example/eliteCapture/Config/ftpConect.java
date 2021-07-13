@@ -54,7 +54,7 @@ public class ftpConect extends Thread {
 
     public void syncronizedPhoto(File src, FTPClient ftp) {
         try {
-            c.runOnUiThread(() -> Toast.makeText(c, "Sincronizando fotos...", Toast.LENGTH_LONG).show());
+            //c.runOnUiThread(() -> Toast.makeText(c, "Sincronizando fotos...", Toast.LENGTH_LONG).show());
             if (ftp != null) {
                 if (src.isDirectory()) {
                     ftp.makeDirectory(src.getName());

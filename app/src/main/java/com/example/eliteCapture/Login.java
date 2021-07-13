@@ -115,9 +115,11 @@ public class Login extends AppCompatActivity {
             ca = new containerAdmin(this);
             ta = new textAdmin(this);
 
-            new validateProcesos(this, txtError, floatingServer, path);
+            if(ionLine.all().equals("onLine")) {
+                new validateProcesos(this, txtError, floatingServer, path);
+            }
 
-            modalSetting = new modalSetting(this,this, path, imgOnline);
+            modalSetting = new modalSetting(this,this, path, imgOnline, floatingServer, txtError);
             modalSetting.modal();
 
             imgOnline.setBackgroundResource(ionLine.all().equals("onLine") ? ic_wifi_on : ic_wifi_off);

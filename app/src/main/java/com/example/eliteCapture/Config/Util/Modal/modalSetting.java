@@ -20,6 +20,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.secondTaks.getConexion;
+import com.example.eliteCapture.Config.Util.secondTaks.validateProcesos;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Model.Data.ionLine;
 import com.example.eliteCapture.R;
@@ -35,17 +36,18 @@ public class modalSetting {
     containerAdmin ca;
 
     Switch sw;
-    TextView txtR, txtNoti;
+    TextView txtR, txtNoti, floatingServer, txtError;
     LinearLayout notifications;
 
     ionLine ionLine;
 
-    public modalSetting(Activity act, Context context, String path, ImageView imgOnline) {
+    public modalSetting(Activity act, Context context, String path, ImageView imgOnline, TextView floatingServer,TextView txtError) {
         this.act = act;
         this.context = context;
         this.path = path;
         this.imgOnline = imgOnline;
-
+        this.floatingServer = floatingServer;
+        this.txtError = txtError;
 
         ionLine = new ionLine(path);
         ta = new textAdmin(context);
@@ -175,6 +177,10 @@ public class modalSetting {
             ionLine.local(con ? "offLine" : "onLine");
             txtR.setText(ionLine.all());
             imgOnline.setBackgroundResource(con ? R.drawable.ic_wifi_off : R.drawable.ic_wifi_on);
+
+            if(ionLine.all().equals("onLine")) {
+                new validateProcesos(act, txtError, floatingServer, path);
+            }
         }catch (Exception e){
             Toast.makeText(act, e.toString(), Toast.LENGTH_SHORT).show();
             Log.i("taskDownloader", "validateConexion : "+e.toString());

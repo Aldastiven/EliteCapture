@@ -29,6 +29,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 public class CAM extends ContextWrapper {
     Context context;
@@ -156,6 +157,8 @@ public class CAM extends ContextWrapper {
                     break;
                 }
             }
+
+            Log.i("generateUI", UUID.randomUUID().toString());
 
             String respuesta = date + "_" + rt.getIdProceso() + "_" + usuario.getId_usuario() + "_" + consecutivo + "_" + rt.getId() + "_" + (dataValor+1) + ".jpg";
 
