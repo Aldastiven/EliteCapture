@@ -32,6 +32,8 @@ public class downloadFarmsTaks {
 
     List<Integer> listFarm = new ArrayList<>();
 
+    int idUsuario;
+
     public downloadFarmsTaks(
             Activity act,
             TextView txtNotification,
@@ -39,7 +41,8 @@ public class downloadFarmsTaks {
             listFincasTab.fincasTab farm,
             LinearLayout lineDrawable,
             Connection cn,
-            List<Integer> listFarm) {
+            List<Integer> listFarm,
+            int idUsuario) {
 
         this.act = act;
         this.txtNotification = txtNotification;
@@ -48,6 +51,7 @@ public class downloadFarmsTaks {
         this.lineDrawable = lineDrawable;
         this.cn = cn;
         this.listFarm = listFarm;
+        this.idUsuario = idUsuario;
 
         ta = new textAdmin(act);
 
@@ -60,7 +64,7 @@ public class downloadFarmsTaks {
         @Override
         public void run() {
             super.run();
-            ijp = new iJsonPlan(path, cn, farm);
+            ijp = new iJsonPlan(path, idUsuario, cn, farm);
             downloader();
         }
 

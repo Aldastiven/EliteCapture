@@ -72,8 +72,44 @@ public class downloadScreen extends AppCompatActivity {
         insViews();
         insVariables();
         //validateFarmMod();
-        getUser();
+        int usuario = getUser();
+
         paintFarmsPanel();
+        validateFarms();
+    }
+
+
+    public void validateFarms(){
+
+        try {
+            if (ipl.allListFincas() == null) {
+                lineFarmws.addView(ta.textColor("no tienes fincas descargadas", "rojo", 15, "c"));
+                Button btnDownload = new Button(this);
+                btnDownload.setBackgroundColor(Color.parseColor("#82E0AA"));
+                btnDownload.setTextColor(Color.parseColor("#ffffff"));
+                btnDownload.setText("Ralizar descarga");
+
+                btnDownload.setOnClickListener(v -> {
+                    Intent i = new Intent(this, splash_activity.class);
+                    i.putExtra("idUsuario", getUser());
+                    i.putExtra("redireccion", 3);
+                    i.putExtra("carga", "BajarDatos");
+                    i.putExtra("idFinca", idFinca);
+                    i.putExtra("class", "screenDownload");
+                    startActivity(i);
+                });
+
+                lineFarmws.addView(btnDownload);
+            } else{
+                //validateFarmMod();
+
+                Log.i("validateFarms", "si tiene datos de finca");
+
+                paintFarmsPanel();
+            }
+        }catch (Exception e){
+            Log.i("validateFarms", ""+e.toString());
+        }
     }
 
     public void insEntity(){
@@ -140,7 +176,7 @@ public class downloadScreen extends AppCompatActivity {
                 lineFarmws.removeAllViews();
             }
 
-            if(listFincas.size() > 0) {
+            if(listFincas != null) {
                 for (listFincasTab finca : listFincas) {
                     if (finca.getUsuario() == getUser()) {
                         for (listFincasTab.fincasTab f : finca.getFincas()) {
@@ -152,6 +188,23 @@ public class downloadScreen extends AppCompatActivity {
                     } else {
                         //los datos de finca no son del usuario
                         lineFarmws.addView(ta.textColor("Las fincas no corresponden con el usuario", "rojo", 15, "l"));
+
+                        Button btnDownload = new Button(this);
+                        btnDownload.setBackgroundColor(Color.parseColor("#82E0AA"));
+                        btnDownload.setTextColor(Color.parseColor("#ffffff"));
+                        btnDownload.setText("Ralizar descarga");
+
+                        btnDownload.setOnClickListener(v -> {
+                            Intent i = new Intent(this, splash_activity.class);
+                            i.putExtra("idUsuario", getUser());
+                            i.putExtra("redireccion", 3);
+                            i.putExtra("carga", "BajarDatos");
+                            i.putExtra("class", "screenDownload");
+                            i.putExtra("idFinca", idFinca);
+                            startActivity(i);
+                        });
+
+                        lineFarmws.addView(btnDownload);
                     }
                 }
             }else{
@@ -273,7 +326,7 @@ public class downloadScreen extends AppCompatActivity {
                 edit.putString("farmWorkingIdPath", farm.getIdFinca()+"");
                 edit.commit();
                 edit.apply();
-                Toast.makeText(this, "Trabajando fonca : "+farm.getNombreFinca(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Trabajando finca : "+farm.getNombreFinca(), Toast.LENGTH_SHORT).show();
                 itemFarm.txtNotification.setText("Trabajando con la finca");
 
                 for(itemFamrTab item : listItemFarm){
@@ -600,7 +653,8 @@ public class downloadScreen extends AppCompatActivity {
                         f.getFarm(),
                         f.getLineDrawable(),
                         f.getConexion(),
-                        listFarm
+                        listFarm,
+                        getUser()
                 );
             }
 

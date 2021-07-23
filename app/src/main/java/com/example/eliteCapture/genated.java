@@ -464,10 +464,14 @@ public class genated extends AppCompatActivity {
             nuevo.setConsecutivo(contConsec);
 
             if (full) {
-                boolean envio = iCon.enviarInmediato2(nuevo, contConsec);
 
-                Toast.makeText(this,
-                        !ion.all().equals("onLine") || !envio ? "Agregado a local" : "Insertado con exito!", Toast.LENGTH_LONG).show();
+                boolean envio = false;
+
+                if (ion.all().equals("onLine")) {
+                    envio = iCon.enviarInmediato2(nuevo, contConsec);
+                }
+
+                Toast.makeText(this, !envio ? "Agregado a local" : "Insertado con exito!", Toast.LENGTH_SHORT).show();
 
                 inicial = true;
 

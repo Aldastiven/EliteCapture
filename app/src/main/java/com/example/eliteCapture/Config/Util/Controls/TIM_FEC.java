@@ -144,6 +144,7 @@ public class TIM_FEC {
                         Toast.makeText(context, "Error conversion : "+e.toString(), Toast.LENGTH_SHORT).show();
                         Log.i("TIMEDATE", e.toString());
                     }
+
                 }, hour, minutes, false);
         tp.show();
     }

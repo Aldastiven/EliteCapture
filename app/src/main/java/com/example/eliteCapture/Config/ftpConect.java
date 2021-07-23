@@ -91,7 +91,7 @@ public class ftpConect extends Thread {
         } finally {
             if (ftp != null) {
                 try {
-                    txtMessage();
+                    //txtMessage();
                     ftp.logout();
                 } catch (IOException ioe) {
                     Log.i("error", ioe.toString());

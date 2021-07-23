@@ -37,7 +37,7 @@ public class splash_activity extends AppCompatActivity {
   SharedPreferences sp = null;
   TextView txtStatus;
   LinearLayout noti;
-  String path = null, carga;
+  String path = null, carga, code;
 
   int intance = 0000, idUsuario, idFinca;
 
@@ -71,21 +71,28 @@ public class splash_activity extends AppCompatActivity {
 
       String intent = screen() == 0 ? "intent" : "conexion";
 
+      Log.i("getIdUsuario", ""+idUsuario);
+      Log.i("getIdUsuario", "acr : "+intent);
+      Log.i("getIdUsuario", "code : "+code);
+      Log.i("getIdUsuario", "carga : "+carga);
+
       if(intent.equals("conexion")) {
         noti.addView(ta.textColor(carga.equals("BajarDatos") ? "Descargando datos, espera un momento ..." : "Enviando datos, espera un momento ...", "negro", 15, "c"));
       }
       temporizador(intent, 3000, screen());
 
     } catch (Exception e) {
-      Toast.makeText(this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+      Toast.makeText(this, "Error Splaah: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+      Log.i("Error_Splaah", e.getStackTrace().toString());
     }
   }
 
   public int screen(){
     Bundle b = getIntent().getExtras();
     idUsuario = b != null ? b.getInt("idUsuario",0) : 0;
-    Log.i("getIdUsuario", ""+idUsuario);
-    return b != null ? b.getInt("redireccion",0) : 0;
+    int screen = b != null ?  b.getInt("redireccion",0) : 0;
+
+    return screen;
   }
 
   public void temporizador(final String tipo, int duracion, final int intent){
@@ -99,7 +106,16 @@ public class splash_activity extends AppCompatActivity {
   }
 
   public void intent(int s){
-    Intent i = new Intent(this, s == 1 || s == 0 || s == 2 ? Login.class : Index.class);
+
+    Intent i;
+    if(s == 1 || s == 0 || s == 2){
+      i = new Intent(this, Login.class);
+    }else if (s == 3){
+      i = new Intent(this, downloadScreen.class);
+      i.putExtra("usuario", idUsuario);
+    }else{
+      i = new Intent(this, Index.class);
+    }
     startActivity(i);
   }
 
@@ -122,7 +138,7 @@ public class splash_activity extends AppCompatActivity {
       Bundle bundle = getIntent().getExtras();
 
       if (bundle != null) {
-        String code = bundle.getString("class");
+        code = bundle.getString("class");
         carga = bundle.getString("carga");
         idUsuario = bundle.getInt("idUsuario");
         idFinca = bundle.getInt("idFinca");
@@ -131,6 +147,8 @@ public class splash_activity extends AppCompatActivity {
           act = Index.class;
         } else if(code.equals("Login")){
           act = Login.class;
+          } else if(code.equals("screenDownload")){
+          act = downloadScreen.class;
         }
       }
     } catch (Exception ex) {
@@ -167,11 +185,6 @@ public class splash_activity extends AppCompatActivity {
         if (admin.getOnline().all().equals("onLine")) {
           // Validando conexion
           if (cn != null) {
-
-
-            Toast.makeText(context, "llego la finca : "+idFinca, Toast.LENGTH_SHORT).show();
-            //new iJsonPlan(path, idUsuario, cn).getDateUpdate(idFinca);
-
             CargeInicial();
             if(noti.getChildCount() > 0) noti.removeAllViews();
             noti.addView(ta.textColor(carga.equals("BajarDatos") ? "Datos descargados con exito" : "Datos enviados con exito","verde",15, "c"));
@@ -202,10 +215,10 @@ public class splash_activity extends AppCompatActivity {
             obtenerDesplegables();
             obtenerListFincas();
             obtenerPlano();
-          }
-          if(screen() == 2){
-            Log.i("descargaDatos","descargando... plano");
+          }else if(screen() == 3 || screen() == 2){
             obtenerListFincas();
+            obtenerPlano();
+            Log.i("descargaDatos","descargando... plano");
           }
 
         }else{
@@ -230,7 +243,7 @@ public class splash_activity extends AppCompatActivity {
     private void obtenerPlano(){
       try{
         Log.i("ErrorDownload", "Consultando lista de fincas");
-        new iJsonPlan(path, idUsuario, cn).local();
+        new iJsonPlan(path, idUsuario, cn).local(idUsuario);
       }catch (Exception e){
         Log.i("ErrorDownload", e.toString());
       }

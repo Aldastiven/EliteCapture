@@ -32,10 +32,11 @@ public class iJsonPlan {
         ja = new JsonAdmin();
     }
 
-    public iJsonPlan(String path, Connection cn, listFincasTab.fincasTab... farm) {
+    public iJsonPlan(String path, int usuario, Connection cn, listFincasTab.fincasTab... farm) {
         this.path = path;
         this.farm = farm[0];
         this.cn = cn;
+        this.usuario = usuario;
         ja = new JsonAdmin();
     }
 
@@ -51,11 +52,11 @@ public class iJsonPlan {
         }.getType());
     }
 
-    public boolean local() throws Exception{
+    public boolean local(int usuario) throws Exception{
         ResultSet rs;
         String q = "SELECT * FROM loginFinca WHERE codigo = "+usuario;
 
-        Log.i("consultaFincas", q);
+        Log.i("consultaFincasQuery", q);
 
         PreparedStatement ps = cn.prepareStatement(q);
         rs = ps.executeQuery();
@@ -89,12 +90,15 @@ public class iJsonPlan {
         ResultSet rs;
         String q = "SELECT  * FROM Plano_json_Bloque WHERE codigo = "+idFinca;
 
+        Log.i("descaga", q);
+
         PreparedStatement ps = cn.prepareStatement(q);
         rs = ps.executeQuery();
 
         String data = "";
         while (rs.next()) {
             data = rs.getString(2) + data;
+            Log.i("descaga", data);
         }
         return ja.WriteJson(path, "Finca_"+idFinca, data);
     }
