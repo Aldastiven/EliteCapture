@@ -74,7 +74,7 @@ public class Camera extends AppCompatActivity implements Serializable {
         @Override
         public void handleResult(Result rawResult) {
             try {
-                new CargarXmlTask().execute();
+                //new CargarXmlTask().execute();
 
                 String bc = rawResult.getContents();
                 String format = rawResult.getBarcodeFormat().getName();

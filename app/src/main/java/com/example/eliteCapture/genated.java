@@ -147,10 +147,10 @@ public class genated extends AppCompatActivity {
             rt = (RespuestasTab) getIntent().getSerializableExtra("respuestaTab");
         }
 
-        if(rt != null && rt.getTipo().equals("JSO")){
+        /*if(rt != null && rt.getTipo().equals("JSO")){
             Log.i("cycleLife", "llego respuesta data : "+rt.getTipo());
             JSO = true;
-        }
+        }*/
         crearform();
     }
 
