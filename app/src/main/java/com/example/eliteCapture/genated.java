@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +21,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eliteCapture.Config.Util.Controls.JSO;
+import com.example.eliteCapture.Config.Util.Modal.modalServer;
+import com.example.eliteCapture.Config.Util.Modal.modalValidateConexionSend;
 import com.example.eliteCapture.Config.Util.formAdmin;
+import com.example.eliteCapture.Config.Util.secondTaks.getConexion;
 import com.example.eliteCapture.Model.Data.Admin;
 import com.example.eliteCapture.Model.Data.Tab.ProcesoTab;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -467,23 +471,42 @@ public class genated extends AppCompatActivity {
 
                 boolean envio = false;
 
-                if (ion.all().equals("onLine")) {
-                    envio = iCon.enviarInmediato2(nuevo, contConsec);
-                }
-
-                Toast.makeText(this, !envio ? "Agregado a local" : "Insertado con exito!", Toast.LENGTH_SHORT).show();
-
                 inicial = true;
 
-                if(ion.all().equals("offLine")) {
+                if (ion.all().equals("onLine")) {
+
+
+                    modalValidateConexionSend mvcs = new modalValidateConexionSend(this);
+                    Dialog modal = mvcs.modal();
+                    modal.show();
+
+                    new Thread(()->{
+                        try {
+                            valideConexion(
+                                    new getConexion(this, mvcs.getTxt(), 2), nuevo, modal
+                            );
+
+                            this.runOnUiThread(() -> {
+                                killChildrens(nuevo);
+                                try {
+                                    contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                cargarContador();
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }else {
                     nuevo.setEstado(0);
                     iCon.insert(nuevo);
+                    contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
+                    Toast.makeText(this,"Agregado a local", Toast.LENGTH_SHORT).show();
+                    killChildrens(nuevo);
                 }
 
-                killChildrens(nuevo);
-
-                contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
-                cargarContador();
             } else {
                 inicial = false;
                 Toast.makeText(this, "¡tienes campos vacios! ", Toast.LENGTH_LONG).show();
@@ -492,6 +515,35 @@ public class genated extends AppCompatActivity {
 
         } catch (Exception e) {
             Log.i("Enviar_error", e.toString());
+        }
+    }
+
+
+    public void valideConexion(getConexion conexion, ContenedorTab nuevo, Dialog modal){
+        try {
+            Thread.sleep(1000);
+            if(conexion.getCn() == null) {
+
+                if(!conexion.getTerminated()) {
+                    valideConexion(conexion, nuevo, modal);
+                }else{
+                    nuevo.setEstado(0);
+                    iCon.insert(nuevo);
+                    this.runOnUiThread(() -> {
+                        Toast.makeText(this,"Agregado a local", Toast.LENGTH_SHORT).show();
+                        modal.dismiss();
+                    });
+                }
+            }else {
+                this.runOnUiThread(() -> {
+                    iCon.enviarInmediato2(iCon.optenerTemporal(), contConsec);
+                    Toast.makeText(this, "Insertado con exito", Toast.LENGTH_SHORT).show();
+                    modal.dismiss();
+                });
+            }
+        }catch (Exception e){
+            //Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            Log.i("taskDownloader", "validateConexion : "+e.toString());
         }
     }
 }

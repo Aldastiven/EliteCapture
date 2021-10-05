@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -68,6 +69,8 @@ public class CAM extends ContextWrapper {
     }
 
     public String getPathPhoto() {
+
+        //return Environment.getExternalStorageDirectory() + "/" + Environment.DIRECTORY_DCIM + "/Camera/Elite/";
         return pathPhoto;
     }
 
@@ -158,10 +161,11 @@ public class CAM extends ContextWrapper {
                 }
             }
 
-            Log.i("generateUI", UUID.randomUUID().toString());
 
-            String respuesta = date + "_" + rt.getIdProceso() + "_" + usuario.getId_usuario() + "_" + consecutivo + "_" + rt.getId() + "_" + (dataValor+1) + ".jpg";
+            // String respuesta = date + "_" + rt.getIdProceso() + "_" + usuario.getId_usuario() + "_" + consecutivo + "_" + rt.getId() + "_" + (dataValor+1) + ".jpg";
+            String respuesta = UUID.randomUUID().toString()+ ".jpg";
 
+            Log.i("generateUI", respuesta);
             dataRespuesta =  dataRespuesta != null ? dataRespuesta+respuesta+";" : respuesta+";";
             String valor = "" + (dataValor+1);
 
