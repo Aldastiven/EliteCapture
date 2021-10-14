@@ -70,8 +70,8 @@ public class CAM extends ContextWrapper {
 
     public String getPathPhoto() {
 
-        //return Environment.getExternalStorageDirectory() + "/" + Environment.DIRECTORY_DCIM + "/Camera/Elite/";
-        return pathPhoto;
+        return Environment.getExternalStorageDirectory()+ "/" + Environment.DIRECTORY_DCIM;// + "/Camera/Elite/";
+        //           return pathPhoto;
     }
 
     public void setPathPhoto(String pathPhoto) {
@@ -109,8 +109,9 @@ public class CAM extends ContextWrapper {
 
             btn.setOnClickListener(V -> {
                 getPolicy();
-                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getPhoto()));
+                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE_SECURE);
+                String respuesta = "EC-" +rt.getIdProceso() +"-"+ UUID.randomUUID().toString()+ ".jpg";
+                i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getPhoto(respuesta)));
                 startActivity(i);
             });
 
@@ -129,51 +130,25 @@ public class CAM extends ContextWrapper {
     }
 
     @SuppressLint("SimpleDateFormat")
-    public File getPhoto(){
+    public File getPhoto(String respuesta){
         try {
-            //Fecha, Formulario, Usuario, Consecutivo, idPregunta, # Imágen (Consecutivo)
-
             validateFiles();
-
-            ContenedorTab temporal = new iContenedor(path).optenerTemporal();
-
-            List<RespuestasTab> res = null;
-            switch (ubicacion){
-                case "H" :
-                    res = temporal.getHeader();
-                    break;
-                case "Q" :
-                    res = temporal.getQuestions();
-                    break;
-                case "F" :
-                    res = temporal.getFooter();
-                    break;
-            }
 
             String dataRespuesta = null;
             int dataValor = 0;
 
-            for(RespuestasTab r : res){
-                if(r.getId() == rt.getId()){
-                    dataRespuesta = r.getRespuesta();
-                    dataValor = r.getValor() != null ? Integer.parseInt(r.getValor().trim()) : dataValor;
-                    break;
-                }
-            }
-
-
-            // String respuesta = date + "_" + rt.getIdProceso() + "_" + usuario.getId_usuario() + "_" + consecutivo + "_" + rt.getId() + "_" + (dataValor+1) + ".jpg";
-            String respuesta = UUID.randomUUID().toString()+ ".jpg";
-
-            Log.i("generateUI", respuesta);
             dataRespuesta =  dataRespuesta != null ? dataRespuesta+respuesta+";" : respuesta+";";
-            String valor = "" + (dataValor+1);
+            String valor = "" + (dataValor + 1);
 
             registro(dataRespuesta, valor);
 
             txtCantidadPhoto.setText("Cantidad de fotos: "+valor);
 
-            return new File(getPathPhoto(), respuesta);
+            File f = new File(getPathPhoto() + "/fotos", respuesta);
+
+            Toast.makeText(context, "fotografia creada : "+f.getAbsolutePath(), Toast.LENGTH_LONG).show();
+
+            return f;
         }catch (Exception e) {
             Log.i("camPhoto", ""+e.toString());
             return new File("prueba");
@@ -182,7 +157,7 @@ public class CAM extends ContextWrapper {
 
     public int validateFiles(){
         try{
-            String pathImage = path+"/photos/eliteCapture/"+rt.getIdProceso();
+            String pathImage = getPathPhoto()+"/fotos/";
             int countFiles = 0;
             File file = new File(pathImage);
 

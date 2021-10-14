@@ -221,7 +221,6 @@ public class ETN_ETA extends ContextWrapper {
             //valida cantidad de digitos despues del punto
             if (d.contains(".")) {
                 try {
-
                     String[] r = d.split("\\.");
                     d = r[0] + "." + r[1].substring(0, r[1].length() == rt.getDecimales() ? r[1].length() : r[1].length() - (r[1].length() - rt.getDecimales()));
                 }catch (Exception e){

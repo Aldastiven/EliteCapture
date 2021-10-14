@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission
         android:name="android.permission.CAMERA"
         tools:node="strict" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -18,7 +21,9 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_logo_elite_capture"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true">
+
         <activity android:name=".downloadScreen"></activity>
         <activity android:name=".NavPlano" />
         <activity android:name=".Camera" />
