@@ -215,6 +215,9 @@ public class Index extends AppCompatActivity {
         linearCheck.removeAllViews();
     }
 
+    public void ItentPhoto(View v){
+    }
+
     public void onBackPressed() {
     }
 

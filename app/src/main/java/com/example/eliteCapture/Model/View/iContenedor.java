@@ -272,11 +272,11 @@ public class iContenedor implements Contenedor {
     public List<Long> vacios(List<RespuestasTab> lista) {
         List<Long> v = new ArrayList<>();
         for (RespuestasTab respuesta : lista) {
-            if (respuesta.getObligatorio() == 1 && respuesta.getRespuesta() == null) {
+            if (respuesta.getObligatorio() == 1 && StringUtils.isEmpty(respuesta.getRespuesta())) {
                 v.add(respuesta.getId());
             }
         }
-        Log.i("vacios", v.toString());
+        Log.i("vaciosData", v.toString());
         return v;
     }
 

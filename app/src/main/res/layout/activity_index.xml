@@ -38,14 +38,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:weightSum="2">
+            android:layout_height="wrap_content"
+            android:weightSum="3">
 
             <RelativeLayout
                 android:id="@+id/contenUser"
@@ -60,13 +59,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Bienvenid@"
-                    android:textSize="15sp"
-                    android:textColor="#34495E"/>
+                    android:textColor="#34495E"
+                    android:textSize="15sp" />
 
                 <LinearLayout
+                    android:id="@+id/lineAdminFarm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtPaneluser">
+                    android:layout_below="@+id/txtPaneluser"
+                    android:layout_marginBottom="15sp">
                     <TextView
                         android:id="@+id/txtFarmWork"
                         android:layout_width="0dp"
@@ -85,6 +86,32 @@
                         android:textAllCaps="false"
                         android:background="@color/verde"
                         android:onClick="DowloadFarms"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lineAdminFarm"
+                    android:layout_marginBottom="15sp">
+
+                    <TextView
+                        android:id="@+id/txtFhografy"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text="Deseas conocer el estado de las fotografias " />
+
+                    <Button
+                        android:id="@+id/btnAdminPhotos"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:background="@color/verde"
+                        android:onClick="ItentPhoto"
+                        android:text="fotografias"
+                        android:textAllCaps="false"
+                        android:textColor="#ffffff" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -113,7 +140,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_weight="7.7"
+        android:layout_weight="8.5"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0sp">

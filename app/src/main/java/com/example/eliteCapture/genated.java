@@ -362,6 +362,10 @@ public class genated extends AppCompatActivity {
         mypop.getWindow().getDecorView().clearFocus();//limpia el foco de la ventana
         String splitS = obtenerNulos(0);
 
+        Toast.makeText(this, "Split vacios : "+splitS, Toast.LENGTH_SHORT).show();
+
+
+
         if (splitS.isEmpty()) {
             mypop.dismiss();
         } else {
@@ -397,13 +401,14 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    public String obtenerNulos(int ubicacion) {
+    public String obtenerNulos(int tipo) {
         ContenedorTab nuevo = iCon.optenerTemporal();
         Map<Integer, List<Long>> ArrMap = iCon.validarVacios(nuevo, footer);
         String encabezado = "";
         for (Map.Entry<Integer, List<Long>> entry : ArrMap.entrySet()) {
-            if (entry.getKey() == ubicacion) {
-                encabezado += entry.getValue().toString();
+            if (entry.getKey() == tipo) {
+                Log.i("Enviar_Array", "Entry value : "+entry.getKey());
+                encabezado = encabezado + entry.getValue().toString();
             }
         }
 
@@ -411,6 +416,7 @@ public class genated extends AppCompatActivity {
         Log.i("Enviar_Array", "vacios = " + splitS);
         return splitS;
     }
+
 
     //SI OPRIME EL BOTON DE RETROCESO
     public void onBackPressed() {
@@ -483,18 +489,9 @@ public class genated extends AppCompatActivity {
                     new Thread(()->{
                         try {
                             valideConexion(
-                                    new getConexion(this, mvcs.getTxt(), 2), nuevo, modal
+                                    new getConexion(this, mvcs.getTxt(), 1), nuevo, modal
                             );
 
-                            this.runOnUiThread(() -> {
-                                killChildrens(nuevo);
-                                try {
-                                    contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                cargarContador();
-                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -541,6 +538,18 @@ public class genated extends AppCompatActivity {
                     modal.dismiss();
                 });
             }
+
+
+            this.runOnUiThread(() -> {
+                killChildrens(nuevo);
+                try {
+                    contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
+                    cargarContador();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
         }catch (Exception e){
             //Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
             Log.i("taskDownloader", "validateConexion : "+e.toString());
