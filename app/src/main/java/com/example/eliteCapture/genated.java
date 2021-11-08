@@ -362,9 +362,7 @@ public class genated extends AppCompatActivity {
         mypop.getWindow().getDecorView().clearFocus();//limpia el foco de la ventana
         String splitS = obtenerNulos(0);
 
-        Toast.makeText(this, "Split vacios : "+splitS, Toast.LENGTH_SHORT).show();
-
-
+        //Toast.makeText(this, "Split vacios : "+splitS, Toast.LENGTH_SHORT).show();
 
         if (splitS.isEmpty()) {
             mypop.dismiss();
@@ -459,8 +457,59 @@ public class genated extends AppCompatActivity {
         }
     }
 
-    //SUBIR DATOS DEL FORMULARIO
+
+
     public void UpData(View v) {
+        try {
+            ContenedorTab nuevo = iCon.optenerTemporal();
+
+            boolean full = true;
+            for (Map.Entry<Integer, List<Long>> entry : iCon.validarVacios(nuevo, footer).entrySet()) {
+
+                Log.i("upData", "entry : "+entry.getValue());
+
+                if (entry.getValue().size() > 0) {
+                    full = false;
+                }
+            }
+
+            nuevo.setConsecutivo(contConsec);
+
+            if (full) {
+
+                boolean envio = false;
+
+                if (ion.all().equals("onLine")) {
+                    envio = iCon.enviarInmediato2(nuevo, contConsec);
+                }
+
+                inicial = true;
+
+                if(ion.all().equals("offLine") || !envio) {
+                    nuevo.setEstado(0);
+                    iCon.insert(nuevo);
+                }
+
+                Toast.makeText(this, !envio ? "Agregado a local" : "Insertado con exito!", Toast.LENGTH_SHORT).show();
+
+                killChildrens(nuevo);
+
+                contador.update(usu.getId_usuario(), pro.getCodigo_proceso());
+                cargarContador();
+            } else {
+                inicial = false;
+                Toast.makeText(this, "¡tienes campos vacios! ", Toast.LENGTH_LONG).show();
+                killChildrens2(nuevo);
+            }
+
+        } catch (Exception e) {
+            Log.i("Enviar_error", e.toString());
+        }
+    }
+
+
+    //SUBIR DATOS DEL FORMULARIO
+    public void UpData2(View v) {
         try {
         ContenedorTab nuevo = iCon.optenerTemporal();
 

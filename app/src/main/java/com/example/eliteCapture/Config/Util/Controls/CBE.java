@@ -210,11 +210,7 @@ public class CBE {
 
     public void temporizador(int duracion){
         if(duracion > 0 ) {
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    noti.removeAllViews();
-                }
-            }, duracion);
+            new Handler().postDelayed(() -> noti.removeAllViews(), duracion);
         }
     }
 }

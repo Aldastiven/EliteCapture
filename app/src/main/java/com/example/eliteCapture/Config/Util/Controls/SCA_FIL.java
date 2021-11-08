@@ -237,7 +237,7 @@ public class SCA_FIL implements Serializable {
 
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
-        Toast.makeText(context, "Edita scanner : respuesta "+rta+", valor "+valor, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "Edita scanner : respuesta "+rta+", valor "+valor, Toast.LENGTH_SHORT).show();
         new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), StringUtils.isEmpty(valor) ? "sin desplegable" : valor, rta, causa, rt.getReglas());
     }
 }

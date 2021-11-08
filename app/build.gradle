@@ -7,8 +7,8 @@ android {
         applicationId "com.example.eliteCapture"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 442
-        versionName "4.4.2"
+        versionCode 4410
+        versionName "4.4.10"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
