@@ -1,9 +1,12 @@
 package com.example.eliteCapture.Config.Util.Controls;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -16,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eliteCapture.Config.Util.CompressFile;
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.ftpConect;
 import com.example.eliteCapture.Model.Data.Tab.UsuarioTab;
@@ -27,6 +31,10 @@ import com.example.eliteCapture.Model.View.iContenedor;
 import org.w3c.dom.Text;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -97,31 +105,28 @@ public class CAM extends ContextWrapper {
     }
 
     public LinearLayout campo(){
-        try {
-            LinearLayout line = ca.container();
-            line.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout line = ca.container();
+        line.setOrientation(LinearLayout.VERTICAL);
 
-            txtCantidadPhoto = (TextView) pp.campoEdtable("TextView", "#000000");
-            txtCantidadPhoto.setText(vacio ? "Cantidad de fotos : "+rt.getValor() : "");
+        txtCantidadPhoto = (TextView) pp.campoEdtable("TextView", "#000000");
+        //txtCantidadPhoto.setText(vacio ? "Cantidad de fotos : "+rt.getValor() : "");
 
-            Button btn = (Button) pp.boton("Tomar foto", "verde");
-            btn.setLayoutParams(ca.params());
+        Button btn = (Button) pp.boton("Tomar foto", "verde");
+        btn.setLayoutParams(ca.params());
 
-            btn.setOnClickListener(V -> {
-                getPolicy();
-                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE_SECURE);
-                String respuesta = "EC-" +rt.getIdProceso() +"-"+ UUID.randomUUID().toString()+ ".jpg";
-                i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getPhoto(respuesta)));
-                startActivity(i);
-            });
+        btn.setOnClickListener(V -> {
+            getPolicy();
 
-            line.addView(txtCantidadPhoto);
-            line.addView(btn);
-            return line;
-        }catch (Exception e){
-            Log.i("errorCam", "Error : "+e.toString());
-            return null;
-        }
+            Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            i.putExtra("holamundo", "hola mundo");
+            String respuesta = "EC-" +rt.getIdProceso() +"-"+ UUID.randomUUID().toString()+ ".jpg";
+            File getPhoto = getPhoto(respuesta);
+            i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getPhoto));
+        });
+
+        line.addView(txtCantidadPhoto);
+        line.addView(btn);
+        return line;
     }
 
     public void getPolicy(){
@@ -137,16 +142,59 @@ public class CAM extends ContextWrapper {
             String dataRespuesta = null;
             int dataValor = 0;
 
+            ContenedorTab i = icon.optenerTemporal();
+
+            switch (ubicacion){
+                case "H":
+                    for(RespuestasTab r : i.getHeader()){
+
+                        Log.i("containt", "r.getId() :"+r.getId()+", rt.getId() : "+rt.getId());
+
+                        if(r.getId() == rt.getId()){
+                            dataRespuesta = r.getRespuesta();
+                            break;
+                        }
+                    }
+                    break;
+                case "Q":
+                    for(RespuestasTab r : i.getQuestions()){
+
+                        Log.i("containt", "r.getId() :"+r.getId()+", rt.getId() : "+rt.getId());
+
+                        if(r.getId() == rt.getId()){
+                            dataRespuesta = r.getRespuesta();
+                            break;
+                        }
+                    }
+                    break;
+                case "F":
+                    for(RespuestasTab r : i.getFooter()){
+
+                        Log.i("containt", "r.getId() :"+r.getId()+", rt.getId() : "+rt.getId());
+
+                        if(r.getId() == rt.getId()){
+                            dataRespuesta = r.getRespuesta();
+                            break;
+                        }
+                    }
+                    break;
+            }
+
+            Log.i("containt", "r.getId() : "+dataRespuesta);
+
+
             dataRespuesta =  dataRespuesta != null ? dataRespuesta+respuesta+";" : respuesta+";";
             String valor = "" + (dataValor + 1);
 
+            String[] data = dataRespuesta.split(";");
+
+            for(String d : data){
+                Log.i("foto", "fotografia : "+d);
+            }
+
             registro(dataRespuesta, valor);
 
-            txtCantidadPhoto.setText("Cantidad de fotos: "+valor);
-
-            File f = new File(getPathPhoto() + "/fotos", respuesta);
-
-            Toast.makeText(context, "fotografia creada : "+f.getAbsolutePath(), Toast.LENGTH_LONG).show();
+            File f = new File(getPathPhoto(), respuesta);
 
             return f;
         }catch (Exception e) {
@@ -157,7 +205,8 @@ public class CAM extends ContextWrapper {
 
     public int validateFiles(){
         try{
-            String pathImage = getPathPhoto()+"/fotos/";
+            //String pathImage = getPathPhoto()+"/fotos/";
+            String pathImage = getPathPhoto();
             int countFiles = 0;
             File file = new File(pathImage);
 

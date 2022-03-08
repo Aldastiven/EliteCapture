@@ -1,5 +1,7 @@
 package com.example.eliteCapture.Config;
 
+import static android.os.Environment.DIRECTORY_DCIM;
+
 import android.app.Activity;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -36,6 +38,7 @@ public class ftpConect extends Thread {
         FTPClient conexion = getConexion();
         pathSend = validateDirectoryPhotos();
         syncronizedPhoto(conexion);
+        //syncronizedPhoto();
     }
 
     public static FTPClient getConexion(){
@@ -64,24 +67,44 @@ public class ftpConect extends Thread {
         }
     }
 
+    public void syncronizedPhoto(){
+        try{
+
+            String path = Environment.getExternalStorageDirectory().toString()+"/Pictures";
+            Log.d("Files", "Path: " + path);
+            File directory = new File(path);
+            File[] files = directory.listFiles();
+            Log.d("Files", "Size: "+ files.length);
+
+            for (int i = 0; i < files.length; i++) {
+                Log.d("Files", "FileName:" + files[i].getName());
+            }
+        }catch (Exception e){
+            Log.i("FTPSUPREMO", "ERROR : "+e.toString());
+        }
+    }
+
 
     public void syncronizedPhoto(FTPClient ftp) {
-        File dcim = new File(getPathPhoto()+"/fotos/");
-        File[] lstFiles = dcim.listFiles();
+        try {
+            File dcim = new File(getPathPhoto());
 
-        Log.i("FTPSUPREMO", "ruta de la imagenes : "+dcim.getAbsolutePath());
+            File[] lstFiles = dcim.listFiles();
+
+            Log.i("FTPSUPREMO", "ruta de la imagenes : " + dcim.getAbsolutePath());
 
 
-        if (lstFiles != null){
-            for (File foto: Objects.requireNonNull(dcim.listFiles())){
-                Log.i("FTPSUPREMO",foto.getName());
+            for (File foto : Objects.requireNonNull(lstFiles)) {
+                Log.i("FTPSUPREMO", foto.getName());
                 String fileName = foto.getName().toUpperCase();
                 boolean extension = fileName.endsWith(".JPG") || fileName.endsWith(".JPEG");
 
-                if(extension){
+                if (extension) {
                     trasnferFtpFile(foto, ftp);
                 }
             }
+        }catch (Exception e){
+            Log.i("FTPSUPREMO", "Exception : "+e.toString());
         }
     }
 
@@ -116,6 +139,8 @@ public class ftpConect extends Thread {
 
                 System.out.println("enviando fotografia");
                 FileUtils.copyFileToDirectory(src, pathSend);
+                src.delete();
+
                 System.out.println("termino de enviar fotografia");
             }
             srcStream.close();
@@ -134,6 +159,8 @@ public class ftpConect extends Thread {
     }
 
     public String getPathPhoto() {
-        return Environment.getExternalStorageDirectory()+ "/" + Environment.DIRECTORY_DCIM;// + "/Camera/Elite/";
+        //return Environment.getExternalStorageDirectory()+ "/" + DIRECTORY_DCIM;// + "/Camera/Elite/";
+
+        return Environment.getExternalStoragePublicDirectory(DIRECTORY_DCIM).getAbsolutePath();
     }
 }

@@ -234,7 +234,7 @@ public class splash_activity extends AppCompatActivity {
 
     private void obtenerListFincas() {
       try{
-        new iJsonPlan(path, idUsuario, cn).localListFincas(idFinca);
+        //new iJsonPlan(path, idUsuario, cn).localListFincas(idFinca);
       }catch (Exception e){
         Log.i("Error Splash Carge", e.toString());
       }

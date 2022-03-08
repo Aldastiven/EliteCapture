@@ -24,6 +24,7 @@ import com.example.eliteCapture.Config.Util.Controls.DPV;
 import com.example.eliteCapture.Config.Util.Controls.ETN_ETA;
 import com.example.eliteCapture.Config.Util.Controls.GPS;
 import com.example.eliteCapture.Config.Util.Controls.JSO;
+import com.example.eliteCapture.Config.Util.Controls.MUL;
 import com.example.eliteCapture.Config.Util.Controls.RB;
 import com.example.eliteCapture.Config.Util.Controls.RS_RSE_RSC;
 import com.example.eliteCapture.Config.Util.Controls.SCA_FIL;
@@ -115,7 +116,7 @@ public class formAdmin {
             }
 
             for (RespuestasTab r : lista) {
-                Log.i("paintCamps", "va a pintar campo : " + r.getTipo()+", desde_hasta : " + r.getDesde_hasta());
+                Log.i("paintCamps", "id proceso : "+r.getIdProceso()+" va a pintar campo : " + r.getTipo()+", desde_hasta : " + r.getDesde_hasta());
 
                 View v;
                 switch (r.getTipo().trim()) {
@@ -130,6 +131,7 @@ public class formAdmin {
                         break;
                     case "ETN":// campo de texto numerico
                     case "ETA":// campo de texto alfanumerico
+                    case "ETP":// campo de texto alfanumerico (para las obsevaciones)
                         v = new ETN_ETA(context, ubicacion, r, path, inicial).crear();
                         break;
                     case "FIL":// campo busqueda con teclado alfanumerico
@@ -161,6 +163,10 @@ public class formAdmin {
                         break;
                     case "CAM"://captura de fotos
                         v = new CAM(context, ubicacion, r, path, inicial, usu, consecutivo).crear();
+                        break;
+                    case "MUL"://generador de campos dinamicos
+                        Log.i("paintCamps", "llego a MUL");
+                        v = new MUL(context, ubicacion, r, path, inicial).getTextField();
                         break;
                     default:
                         v = noCreate(r.getTipo());// El campo asignado en la base no existe

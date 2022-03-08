@@ -186,7 +186,6 @@ public class genated extends AppCompatActivity {
         }
     }
 
-
     public void CrearEncabezado() {
         linearBodypop.removeAllViews();
         formA.CrearForm("H");

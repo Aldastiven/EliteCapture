@@ -468,7 +468,13 @@ public class RS_RSE_RSC {
 
     public void registro(String rta, String valor, String causa) {//REGISTRO
         int regla = rt.getTipo().equals("RSE") ? modalEditarRegla.getRegla() : rt.getReglas();
-        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, causa, regla);
+
+        String respuestaConcat ="tipoCampo : "+rt.getTipo()+" Rta : "+rta+", valor : "+valor+", causa : "+causa;
+
+        //Toast.makeText(context,respuestaConcat , Toast.LENGTH_SHORT).show();
+        Log.i("repuestaRSC", respuestaConcat);
+
+        new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, rt.getTipo().equals("RSC") ? causa : valor, causa, regla);
     }
 
 }

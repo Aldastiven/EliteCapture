@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -98,7 +99,7 @@ public class CBE {
             FunsDesp(campSpin);
 
             edt = (EditText) pp.campoEdtable("Edit", "grisClear");
-            edt.setText("");
+            edt.setText(vacio ? rt.getRespuesta() : "");
             edt.setLayoutParams(llcamp);
             edt.setRawInputType(Configuration.KEYBOARD_QWERTY);
             respuestaPonderado.setText(edt.getText().toString().isEmpty() ? "Resultado : " : "Resultado : " + rt.getPonderado());
@@ -205,6 +206,9 @@ public class CBE {
     }
 
     public void registro(String rta, String valor) {//REGISTRO AL JSON TEMPORAL
+
+        Log.i("registrando", "respuesta : "+rta+", valor : "+valor);
+
         new iContenedor(path).editarTemporal(ubicacion, rt.getId().intValue(), rta, valor, null, rt.getReglas());
     }
 

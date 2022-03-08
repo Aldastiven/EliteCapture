@@ -3,6 +3,8 @@ package com.example.eliteCapture.Config.Util.Controls;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -60,7 +62,7 @@ public class ETN_ETA extends ContextWrapper {
             contenedorCamp.setGravity(Gravity.CENTER_HORIZONTAL);
 
             contenedorCamp.addView(pp.Line(respuestaPonderado));//Crea la seccion de pregunta ponderado y resultado
-            contenedorCamp.addView(campo());
+            contenedorCamp.addView(rt.getTipo().equals("ETP") ? crearETP() : campo());
             contenedorCamp.addView(noti);
             pp.validarColorContainer(contenedorCamp, vacio, initial);//pinta el contenedor del item si esta vacio o no
 
@@ -68,6 +70,26 @@ public class ETN_ETA extends ContextWrapper {
         }catch (Exception e){
             return new GIDGET(context, "", null, path).problemCamp(rt.getTipo(), e.toString());
         }
+    }
+
+    public View crearETP() throws Exception{
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(10,10,0,5);
+
+        camp = new EditText(context);
+        camp.setId(rt.getCodigo());
+        camp.setTypeface(null, Typeface.BOLD);
+        camp.setTextColor(Color.parseColor("#34495E"));
+        camp.setBackgroundResource(R.drawable.border5sp);
+        camp.setVerticalFadingEdgeEnabled(true);
+        camp.setPadding(25,80,25,80);
+        camp.setBackgroundColor(Color.parseColor("#e9ecef"));
+        camp.setText(vacio ? rt.getRespuesta() : "");
+        camp.setLayoutParams(layoutParams);
+
+        validateHasFocus();
+
+        return camp;
     }
 
     public EditText campo(){//CAMPO DE USUARIO
