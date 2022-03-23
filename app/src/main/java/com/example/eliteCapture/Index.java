@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eliteCapture.Config.Util.Container.containerAdmin;
 import com.example.eliteCapture.Config.Util.Controls.GIDGET;
+import com.example.eliteCapture.Config.Util.secondTaks.photoAdmin;
 import com.example.eliteCapture.Config.Util.text.textAdmin;
 import com.example.eliteCapture.Config.ftpConect;
 import com.example.eliteCapture.Model.Data.Admin;
@@ -109,6 +110,8 @@ public class Index extends AppCompatActivity {
             new Thread(
                     () -> new ftpConect(Index.this, path, "").start()
             ).start();
+
+            new Thread(() -> new photoAdmin());
 
             String farmWorking = sp.getString("farmWorkingPathName", "");
             txtFarmWork.setText(farmWorking.isEmpty() ? "No estas trabajando con ninguna finca" : "Trabajando con la finca : "+farmWorking);
