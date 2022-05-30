@@ -3,57 +3,54 @@ package com.example.eliteCapture.Config;
 import android.content.Context;
 import android.os.StrictMode;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class sqlConect {
     //================ CONEXION 123 ====================
 
+    String direccion = "10.50.1.132";
+    String url = "jdbc:jtds:sqlserver://"+direccion+";instance=Production;databaseName=Formularios";
+    String user = "servicios_app";
+    String pass = "S3rv!c!0s4pp?";
 
-    String url = "jdbc:jtds:sqlserver://10.50.1.123;instance=Mercedes;databaseName=Formularios";
-    String user = "Inventarios";
-    String pass = "Inventarios2016*";
 
-
-    //================ CONEXION 120 ====================
-
-    //Variables de conexion.
-    /*String server = "10.50.1.120";
-    String db = "Formularios";
-    String pass = "4dm1nPr0c";
-    String user = "sa";
-    // Tiempo de espera en  segundos
-    int socketTimeout = 1;
-
-    //Creacion de cadena de  de conexion.
-    String ConnectionURL = "jdbc:jtds:sqlserver://" + server + "/" + db
-            + ";user=" + user
-            + ";password=" + pass + ";"
-            + ";socketTimeout=" + socketTimeout + ";";
-    */
 
     public Connection getConexion() {
         try {
-            Log.i("CONEXION", "intentando conectar");
+            Log.i("CONEXION", "intentando conectar : "+getTime());
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
             DriverManager.registerDriver(new net.sourceforge.jtds.jdbc.Driver());
-            Connection c = DriverManager.getConnection(url,user,pass);;
-            Log.i("CONEXION", "nos conectamos");
+            Connection c = DriverManager.getConnection(url, user, pass);
+            Log.i("CONEXION", "nos conectamos : "+getTime());
             return c;
         } catch (Exception e) {
             Log.i("CONEXION_ERROR", "error de conexion \n" + e);
             return null;
+        }
+    }
+
+
+    public String getTime(){
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+                LocalDateTime now = LocalDateTime.now();
+                return dtf.format(now);
+            }else{
+                return "Error time else";
+            }
+
+        }catch (Exception e){
+            Log.i("Error_Time", e.toString());
+            return "Error Time : "+e.toString();
         }
     }
 

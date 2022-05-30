@@ -133,7 +133,7 @@ public class getConexion{
                 //OBTIENE TIEMPOS DE LA CONEXION EN SEGUNTOS Y TERMINA LA EJECUCION DE ESTA
                 setTimeSeconds((System.currentTimeMillis() - initialTimeConexion) / 1000);
                 Thread.sleep(1000);
-                if(timeSeconds < 10){
+                if(timeSeconds < 3600){
                     getTime();
                 }
             }catch (Exception e){
